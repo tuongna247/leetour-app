@@ -19,17 +19,28 @@ const AuthSocialButtons = ({ title }) => {
     setError(null);
     
     try {
-      // For demo purposes, use test Google account
-      // In a real app, this would integrate with Google OAuth
-      const result = await login('admin', 'admin123');
+      // Create a demo account for Google login
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: 'google_user',
+          email: 'google@demo.com', 
+          password: 'demo123',
+          role: 'user'
+        })
+      });
+
+      // Try to login with demo account
+      const result = await login('google_user', 'demo123');
       
       if (result.success) {
         router.push('/');
       } else {
-        setError('Google login failed. Please try manual login.');
+        setError('Google login is not configured yet. Please use manual login.');
       }
     } catch (error) {
-      setError('Google login failed. Please try manual login.');
+      setError('Google login is not configured yet. Please use manual login.');
     } finally {
       setLoading({ ...loading, google: false });
     }
@@ -40,17 +51,28 @@ const AuthSocialButtons = ({ title }) => {
     setError(null);
     
     try {
-      // For demo purposes, use test Facebook account
-      // In a real app, this would integrate with Facebook OAuth
-      const result = await login('user', 'user123');
+      // Create a demo account for Facebook login  
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: 'facebook_user',
+          email: 'facebook@demo.com',
+          password: 'demo123', 
+          role: 'user'
+        })
+      });
+
+      // Try to login with demo account
+      const result = await login('facebook_user', 'demo123');
       
       if (result.success) {
         router.push('/');
       } else {
-        setError('Facebook login failed. Please try manual login.');
+        setError('Facebook login is not configured yet. Please use manual login.');
       }
     } catch (error) {
-      setError('Facebook login failed. Please try manual login.');
+      setError('Facebook login is not configured yet. Please use manual login.');
     } finally {
       setLoading({ ...loading, facebook: false });
     }
