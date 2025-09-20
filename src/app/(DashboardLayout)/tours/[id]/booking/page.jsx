@@ -698,10 +698,10 @@ const BookingPage = () => {
                           <strong>Tour:</strong> {completedBooking.booking.tour.title}
                         </Typography>
                         <Typography variant="body2" gutterBottom>
-                          <strong>Date:</strong> {new Date(completedBooking.booking.tour.date).toLocaleDateString()}
+                          <strong>Date:</strong> {new Date(completedBooking.booking.tour.selectedDate).toLocaleDateString()}
                         </Typography>
                         <Typography variant="body2" gutterBottom>
-                          <strong>Time:</strong> {completedBooking.booking.tour.timeSlot}
+                          <strong>Time:</strong> {completedBooking.booking.tour.selectedTimeSlot}
                         </Typography>
                         <Typography variant="body2" gutterBottom>
                           <strong>Total Paid:</strong> ${completedBooking.booking.pricing.total}

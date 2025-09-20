@@ -175,7 +175,7 @@ export async function POST(request) {
     
     // Populate tour details for response
     const populatedBooking = await Booking.findById(newBooking._id)
-      .populate('tour.tourId', 'title images location rating guide');
+      .populate('tour.tourId', 'title images location rating guide currency price');
     
     return NextResponse.json({
       status: 201,

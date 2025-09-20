@@ -203,7 +203,7 @@ tourSchema.virtual('discountPercentage').get(function() {
 tourSchema.virtual('formattedPrice').get(function() {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: this.currency
+    currency: this.currency || 'USD'
   }).format(this.price);
 });
 
