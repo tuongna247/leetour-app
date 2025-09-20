@@ -50,7 +50,7 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
       tourId: tourId,
       title: '',
       price: 0,
-      selectedDate: '',
+      selectedDate: new Date().toISOString().split('T')[0], // Default to today
       selectedTimeSlot: '09:00 AM'
     },
     customer: {
@@ -141,13 +141,25 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
   const validateStep = (step) => {
     const newErrors = {};
     
+    console.log('Validating step:', step, 'with form data:', formData);
+    
     switch (step) {
       case 0: // Customer Info
         if (!formData.customer.firstName) newErrors.firstName = 'First name is required';
         if (!formData.customer.lastName) newErrors.lastName = 'Last name is required';
         if (!formData.customer.email) newErrors.email = 'Email is required';
         if (!formData.customer.phone) newErrors.phone = 'Phone is required';
-        if (!formData.tour.selectedDate) newErrors.selectedDate = 'Tour date is required';
+        if (!formData.tour.selectedDate) {
+          newErrors.selectedDate = 'Tour date is required';
+        } else {
+          // Check if date is in the past
+          const selectedDate = new Date(formData.tour.selectedDate);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          if (selectedDate < today) {
+            newErrors.selectedDate = 'Please select a future date';
+          }
+        }
         break;
         
       case 1: // Participants
@@ -159,6 +171,7 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
         break;
     }
     
+    console.log('Validation errors found:', newErrors);
     setErrors(newErrors);
     
     // Show validation errors as notifications
@@ -270,19 +283,31 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
 
   // Handle input changes
   const handleInputChange = (section, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value
-      }
-    }));
+    console.log('Input change:', section, field, value);
     
-    // Clear related errors
-    if (errors[field]) {
+    if (section === '') {
+      // Handle top-level fields like specialRequests
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    } else {
+      // Handle nested fields
+      setFormData(prev => ({
+        ...prev,
+        [section]: {
+          ...prev[section],
+          [field]: value
+        }
+      }));
+    }
+    
+    // Clear related errors  
+    const errorKey = section === 'tour' && field === 'selectedDate' ? 'selectedDate' : field;
+    if (errors[errorKey]) {
       setErrors(prev => ({
         ...prev,
-        [field]: undefined
+        [errorKey]: undefined
       }));
     }
   };
@@ -366,8 +391,11 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
                 value={formData.tour.selectedDate}
                 onChange={(e) => handleInputChange('tour', 'selectedDate', e.target.value)}
                 error={!!errors.selectedDate}
-                helperText={errors.selectedDate}
+                helperText={errors.selectedDate || `Selected: ${formData.tour.selectedDate || 'No date selected'}`}
                 InputLabelProps={{ shrink: true }}
+                inputProps={{ 
+                  min: new Date().toISOString().split('T')[0] // Prevent past dates
+                }}
                 data-testid="tour-date"
               />
             </Grid>
