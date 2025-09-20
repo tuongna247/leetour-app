@@ -112,7 +112,7 @@ export default function AdminToursPage() {
 
   const handleDeleteTour = async (tourId) => {
     try {
-      const response = await fetch(`/api/tours/${tourId}`, {
+      const response = await fetch(`/api/admin/tours/${tourId}`, {
         method: 'DELETE',
       });
 
@@ -355,7 +355,7 @@ export default function AdminToursPage() {
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <StarIcon fontSize="small" color="warning" />
                         <Typography variant="body2">
-                          {tour.rating.average.toFixed(1)} ({tour.rating.count})
+                          {(tour.rating?.average || 0).toFixed(1)} ({tour.rating?.count || 0})
                         </Typography>
                       </Box>
                     </TableCell>
