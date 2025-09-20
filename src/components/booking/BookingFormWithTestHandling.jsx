@@ -50,7 +50,12 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
       tourId: tourId,
       title: '',
       price: 0,
-      selectedDate: new Date().toISOString().split('T')[0], // Default to today
+      selectedDate: (() => {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1); // Default to tomorrow to avoid past date issues
+        return tomorrow.toISOString().split('T')[0];
+      })(),
       selectedTimeSlot: '09:00 AM'
     },
     customer: {
@@ -98,6 +103,13 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
     { label: 'Confirmation', icon: <SuccessIcon /> }
   ];
 
+  // Clear any initial errors when component mounts and ensure form is properly initialized
+  useEffect(() => {
+    console.log('Component mounted, clearing errors and checking form state');
+    console.log('Initial form data:', formData);
+    setErrors({});
+  }, []);
+
   // Test the booking API endpoint
   const testBookingAPI = async () => {
     setTestStatus('running');
@@ -142,6 +154,7 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
     const newErrors = {};
     
     console.log('Validating step:', step, 'with form data:', formData);
+    console.log('Tour selectedDate:', formData.tour?.selectedDate, 'Type:', typeof formData.tour?.selectedDate);
     
     switch (step) {
       case 0: // Customer Info
@@ -149,15 +162,22 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
         if (!formData.customer.lastName) newErrors.lastName = 'Last name is required';
         if (!formData.customer.email) newErrors.email = 'Email is required';
         if (!formData.customer.phone) newErrors.phone = 'Phone is required';
-        if (!formData.tour.selectedDate) {
+        const dateValue = formData.tour?.selectedDate;
+        if (!dateValue || dateValue === '' || dateValue === null || dateValue === undefined) {
           newErrors.selectedDate = 'Tour date is required';
         } else {
           // Check if date is in the past
-          const selectedDate = new Date(formData.tour.selectedDate);
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          if (selectedDate < today) {
-            newErrors.selectedDate = 'Please select a future date';
+          try {
+            const selectedDate = new Date(dateValue);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (isNaN(selectedDate.getTime())) {
+              newErrors.selectedDate = 'Please select a valid date';
+            } else if (selectedDate < today) {
+              newErrors.selectedDate = 'Please select a future date';
+            }
+          } catch (error) {
+            newErrors.selectedDate = 'Please select a valid date';
           }
         }
         break;
@@ -314,8 +334,14 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
 
   // Handle next step
   const handleNext = () => {
+    console.log('Attempting to go to next step, current step:', activeStep);
+    console.log('Current form data before validation:', formData);
+    
     if (validateStep(activeStep)) {
+      console.log('Validation passed, moving to next step');
       setActiveStep(prev => prev + 1);
+    } else {
+      console.log('Validation failed, staying on current step');
     }
   };
 

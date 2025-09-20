@@ -46,6 +46,44 @@ import PageContainer from '@/app/components/container/PageContainer';
 
 const steps = ['Tour Details', 'Participants', 'Payment', 'Confirmation'];
 
+// Helper function to get next available date based on tour's available days
+const getNextAvailableDate = (availableDays) => {
+  if (!availableDays || availableDays.length === 0) {
+    // If no available days specified, default to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow;
+  }
+  
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const today = new Date();
+  
+  // Find the next available date
+  for (let i = 1; i <= 14; i++) { // Check next 14 days
+    const checkDate = new Date(today);
+    checkDate.setDate(today.getDate() + i);
+    const dayName = dayNames[checkDate.getDay()];
+    
+    if (availableDays.includes(dayName)) {
+      return checkDate;
+    }
+  }
+  
+  // Fallback to tomorrow if no available day found
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return tomorrow;
+};
+
+// Helper function to check if a date is available
+const isDateAvailable = (date, availableDays) => {
+  if (!availableDays || availableDays.length === 0) return true;
+  
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dayName = dayNames[date.getDay()];
+  return availableDays.includes(dayName);
+};
+
 const BookingPage = () => {
   const router = useRouter();
   const params = useParams();
@@ -61,8 +99,8 @@ const BookingPage = () => {
   const [bookingData, setBookingData] = useState({
     tour: {
       tourId: id,
-      date: null,
-      timeSlot: ''
+      date: null, // Will be set after tour data is loaded
+      timeSlot: '' // Will be set from tour's available time slots
     },
     participants: {
       adults: 1,
@@ -110,11 +148,18 @@ const BookingPage = () => {
 
       if (data.status === 200) {
         setTour(data.data);
+        
+        // Set default date and time based on tour schedule
+        const defaultDate = getNextAvailableDate(data.data.schedule?.availableDays);
+        const defaultTimeSlot = data.data.schedule?.timeSlots?.[0] || '09:00 AM';
+        
         setBookingData(prev => ({
           ...prev,
           tour: {
             ...prev.tour,
-            tourId: data.data._id
+            tourId: data.data._id,
+            date: defaultDate,
+            timeSlot: defaultTimeSlot
           }
         }));
       } else {
@@ -164,17 +209,35 @@ const BookingPage = () => {
     setProcessing(true);
     try {
       // Create booking
+      // Map the booking data to match the API expectations
+      const apiBookingData = {
+        tour: {
+          tourId: bookingData.tour.tourId,
+          title: tour.title,
+          price: tour.price,
+          selectedDate: bookingData.tour.date ? bookingData.tour.date.toISOString().split('T')[0] : null,
+          selectedTimeSlot: bookingData.tour.timeSlot || '09:00 AM'
+        },
+        customer: {
+          firstName: bookingData.customer.firstName,
+          lastName: bookingData.customer.lastName,
+          email: bookingData.customer.email,
+          phone: bookingData.customer.phone
+        },
+        participants: {
+          adults: bookingData.participants.adults,
+          children: bookingData.participants.children,
+          infants: bookingData.participants.infants
+        },
+        specialRequests: bookingData.customer.specialRequests || ''
+      };
+
+      console.log('Sending booking data to API:', apiBookingData);
+
       const bookingResponse = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...bookingData,
-          tour: {
-            ...bookingData.tour,
-            title: tour.title,
-            price: tour.price
-          }
-        })
+        body: JSON.stringify(apiBookingData)
       });
 
       const bookingResult = await bookingResponse.json();
@@ -283,19 +346,35 @@ const BookingPage = () => {
                     <Typography variant="h6" gutterBottom>
                       Select Tour Date & Time
                     </Typography>
+                    {tour?.schedule?.meetingPoint && (
+                      <Alert severity="info" sx={{ mb: 2 }}>
+                        <strong>Meeting Point:</strong> {tour.schedule.meetingPoint}<br/>
+                        <strong>Duration:</strong> {tour.schedule.startTime} - {tour.schedule.endTime}
+                      </Alert>
+                    )}
                     <Grid container spacing={2}>
                       <Grid size={{ xs: 12, md: 6 }}>
                         <TextField
                           label="Tour Date"
                           type="date"
                           value={bookingData.tour.date ? bookingData.tour.date.toISOString().split('T')[0] : ''}
-                          onChange={(e) => setBookingData(prev => ({
-                            ...prev,
-                            tour: { ...prev.tour, date: new Date(e.target.value) }
-                          }))}
+                          onChange={(e) => {
+                            const selectedDate = new Date(e.target.value);
+                            if (isDateAvailable(selectedDate, tour?.schedule?.availableDays)) {
+                              setBookingData(prev => ({
+                                ...prev,
+                                tour: { ...prev.tour, date: selectedDate }
+                              }));
+                            }
+                          }}
                           fullWidth
                           InputLabelProps={{ shrink: true }}
                           inputProps={{ min: new Date().toISOString().split('T')[0] }}
+                          helperText={
+                            tour?.schedule?.availableDays?.length > 0 
+                              ? `Available on: ${tour.schedule.availableDays.join(', ')}`
+                              : "Select your preferred date"
+                          }
                         />
                       </Grid>
                       <Grid size={{ xs: 12, md: 6 }}>
@@ -309,14 +388,18 @@ const BookingPage = () => {
                               tour: { ...prev.tour, timeSlot: e.target.value }
                             }))}
                           >
-                            {tour?.availability?.timeSlots?.map((slot) => (
-                              <MenuItem key={slot} value={slot}>
-                                {slot}
-                              </MenuItem>
-                            )) || [
-                              <MenuItem key="09:00" value="09:00">09:00 AM</MenuItem>,
-                              <MenuItem key="14:00" value="14:00">02:00 PM</MenuItem>
-                            ]}
+                            {tour?.schedule?.timeSlots?.length > 0 ? (
+                              tour.schedule.timeSlots.map((slot) => (
+                                <MenuItem key={slot} value={slot}>
+                                  {slot}
+                                </MenuItem>
+                              ))
+                            ) : (
+                              [
+                                <MenuItem key="09:00" value="09:00 AM">09:00 AM</MenuItem>,
+                                <MenuItem key="14:00" value="02:00 PM">02:00 PM</MenuItem>
+                              ]
+                            )}
                           </Select>
                         </FormControl>
                       </Grid>
