@@ -22,7 +22,19 @@ export async function POST(request) {
       isActive: true
     });
 
+    console.log('User found:', !!user);
+    if (user) {
+      console.log('User details:', {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        hasPassword: !!user.password
+      });
+    }
+
     if (!user) {
+      console.log('User not found or inactive');
       return NextResponse.json({
         status: 401,
         msg: 'Invalid credentials'
@@ -30,8 +42,12 @@ export async function POST(request) {
     }
 
     // Check password
+    console.log('Checking password...');
     const isMatch = await user.comparePassword(password);
+    console.log('Password match:', isMatch);
+    
     if (!isMatch) {
+      console.log('Password mismatch');
       return NextResponse.json({
         status: 401,
         msg: 'Invalid credentials'
@@ -39,8 +55,10 @@ export async function POST(request) {
     }
 
     // Update last login
+    console.log('Updating last login...');
     user.lastLogin = new Date();
     await user.save();
+    console.log('Last login updated');
 
     // Generate JWT token
     const payload = {
@@ -49,9 +67,14 @@ export async function POST(request) {
       role: user.role
     };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET || 'your-secret-key', {
+    const jwtSecret = process.env.JWT_SECRET || 'your-secret-key';
+    console.log('Generating token with secret length:', jwtSecret.length);
+    
+    const token = jwt.sign(payload, jwtSecret, {
       expiresIn: '24h'
     });
+
+    console.log('Token generated successfully');
 
     return NextResponse.json({
       status: 200,
@@ -69,11 +92,19 @@ export async function POST(request) {
     });
 
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('=== Login error ===');
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    console.error('Error name:', error.name);
+    
     return NextResponse.json({
       status: 500,
       msg: 'Server error',
-      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
+      details: process.env.NODE_ENV === 'development' ? {
+        name: error.name,
+        stack: error.stack
+      } : undefined
     }, { status: 500 });
   }
 }

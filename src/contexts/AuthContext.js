@@ -75,7 +75,8 @@ const authReducer = (state, action) => {
 const AuthContext = createContext();
 
 // API base URL - using Next.js API routes
-const API_BASE_URL = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001';
+const API_BASE_URL = typeof window !== 'undefined' ? window.location.origin : 
+  process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001';
 
 // Auth provider component
 export const AuthProvider = ({ children }) => {
@@ -127,9 +128,16 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (username, password) => {
     try {
+      console.log('=== Client Login Start ===');
+      console.log('API Base URL:', API_BASE_URL);
+      console.log('Login attempt for:', username);
+      
       dispatch({ type: AUTH_ACTIONS.LOGIN_START });
 
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      const loginUrl = `${API_BASE_URL}/api/auth/login`;
+      console.log('Making request to:', loginUrl);
+
+      const response = await fetch(loginUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -137,10 +145,16 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ username, password }),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (!response.ok) {
-        throw new Error(data.msg || 'Login failed');
+        const errorMsg = data.msg || data.error || 'Login failed';
+        console.log('Login failed:', errorMsg);
+        throw new Error(errorMsg);
       }
 
       // Store token and user data
@@ -155,8 +169,13 @@ export const AuthProvider = ({ children }) => {
         }
       });
 
+      console.log('Login successful:', data.data.user.username);
       return { success: true, data: data.data };
     } catch (error) {
+      console.error('=== Client Login Error ===');
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+      
       dispatch({
         type: AUTH_ACTIONS.LOGIN_FAILURE,
         payload: error.message
