@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/modernize_tours';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
@@ -25,13 +25,24 @@ async function connectDB() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 5000, // 5 seconds
+      socketTimeoutMS: 45000, // 45 seconds
+      maxPoolSize: 10,
+      minPoolSize: 2,
     };
+
+    console.log('Connecting to MongoDB...');
+    console.log('URI exists:', !!MONGODB_URI);
+    console.log('URI starts with mongodb+srv:', MONGODB_URI?.startsWith('mongodb+srv://'));
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
       console.log(`MongoDB Connected: ${mongoose.connection.host}`);
+      console.log(`Database: ${mongoose.connection.name}`);
       return mongoose;
     }).catch((error) => {
       console.error('MongoDB connection error:', error);
+      console.error('Error name:', error.name);
+      console.error('Error message:', error.message);
       throw error;
     });
   }

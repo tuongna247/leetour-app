@@ -5,11 +5,19 @@ import User from '@/models/User';
 
 export async function POST(request) {
   try {
+    console.log('=== Login API called ===');
+    console.log('Environment:', process.env.NODE_ENV);
+    console.log('MongoDB URI exists:', !!process.env.MONGODB_URI);
+    console.log('JWT Secret exists:', !!process.env.JWT_SECRET);
+    
     await connectDB();
+    console.log('=== Database connected ===');
     
     const { username, password } = await request.json();
+    console.log('Login attempt for:', username);
 
     if (!username || !password) {
+      console.log('Missing credentials');
       return NextResponse.json({
         status: 400,
         msg: 'Username and password are required'
@@ -17,6 +25,7 @@ export async function POST(request) {
     }
 
     // Find user by username or email
+    console.log('Searching for user...');
     const user = await User.findOne({
       $or: [{ username }, { email: username }],
       isActive: true
