@@ -1,3 +1,6 @@
+'use client'
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
@@ -7,8 +10,24 @@ import PageContainer from '@/app/components/container/PageContainer';
 import Logo from '@/app/(DashboardLayout)/layout/shared/logo/Logo';
 import AuthLogin from '../../authForms/AuthLogin';
 import Image from 'next/image';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Login() {
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  useEffect(() => {
+    // Redirect to dashboard if already authenticated or after auto-login
+    if (!isLoading && isAuthenticated) {
+      router.push('/');
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  // Don't show login form if already authenticated
+  if (isAuthenticated) {
+    return null;
+  }
+
   return (
     (<PageContainer title="Login Page" description="this is Sample page">
       <Grid container spacing={0} justifyContent="center" sx={{ height: '100vh' }}>
