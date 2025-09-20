@@ -147,6 +147,7 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
         if (!formData.customer.lastName) newErrors.lastName = 'Last name is required';
         if (!formData.customer.email) newErrors.email = 'Email is required';
         if (!formData.customer.phone) newErrors.phone = 'Phone is required';
+        if (!formData.tour.selectedDate) newErrors.selectedDate = 'Tour date is required';
         break;
         
       case 1: // Participants
@@ -194,7 +195,9 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
         ...formData,
         tour: {
           ...formData.tour,
-          price: basePrice
+          price: basePrice,
+          selectedDate: formData.tour.selectedDate || new Date().toISOString().split('T')[0],
+          selectedTimeSlot: formData.tour.selectedTimeSlot || '09:00 AM'
         },
         participants: {
           ...formData.participants,
@@ -213,6 +216,8 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
           currency: 'USD'
         }
       };
+      
+      console.log('Sending booking data:', JSON.stringify(bookingData, null, 2));
 
       const response = await fetch('/api/bookings', {
         method: 'POST',
@@ -223,9 +228,12 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
       });
 
       const responseData = await response.json();
+      
+      console.log('Booking API response:', responseData);
 
       if (!response.ok) {
-        throw new Error(responseData.msg || 'Booking failed');
+        console.error('Booking failed:', responseData);
+        throw new Error(responseData.msg || responseData.error || 'Booking failed');
       }
 
       setTestStatus('success');
@@ -349,6 +357,36 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
                 helperText={errors.phone}
                 data-testid="customer-phone"
               />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Tour Date"
+                type="date"
+                value={formData.tour.selectedDate}
+                onChange={(e) => handleInputChange('tour', 'selectedDate', e.target.value)}
+                error={!!errors.selectedDate}
+                helperText={errors.selectedDate}
+                InputLabelProps={{ shrink: true }}
+                data-testid="tour-date"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Time Slot</InputLabel>
+                <Select
+                  value={formData.tour.selectedTimeSlot}
+                  onChange={(e) => handleInputChange('tour', 'selectedTimeSlot', e.target.value)}
+                  data-testid="tour-time-slot"
+                >
+                  <MenuItem value="09:00 AM">09:00 AM</MenuItem>
+                  <MenuItem value="10:00 AM">10:00 AM</MenuItem>
+                  <MenuItem value="11:00 AM">11:00 AM</MenuItem>
+                  <MenuItem value="02:00 PM">02:00 PM</MenuItem>
+                  <MenuItem value="03:00 PM">03:00 PM</MenuItem>
+                  <MenuItem value="04:00 PM">04:00 PM</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
         );

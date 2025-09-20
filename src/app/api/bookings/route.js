@@ -79,6 +79,8 @@ export async function POST(request) {
     await connectDB();
     const data = await request.json();
     
+    console.log('Booking creation request:', JSON.stringify(data, null, 2));
+    
     // Validate required fields
     if (!data.tour?.tourId) {
       return NextResponse.json({
@@ -87,10 +89,10 @@ export async function POST(request) {
       });
     }
     
-    if (!data.customer?.firstName || !data.customer?.lastName || !data.customer?.email) {
+    if (!data.customer?.firstName || !data.customer?.lastName || !data.customer?.email || !data.customer?.phone) {
       return NextResponse.json({
         status: 400,
-        msg: "Customer first name, last name, and email are required"
+        msg: "Customer first name, last name, email, and phone are required"
       });
     }
     
@@ -98,6 +100,13 @@ export async function POST(request) {
       return NextResponse.json({
         status: 400,
         msg: "At least 1 adult participant is required"
+      });
+    }
+    
+    if (!data.tour?.selectedDate) {
+      return NextResponse.json({
+        status: 400,
+        msg: "Tour date is required"
       });
     }
     
@@ -121,19 +130,35 @@ export async function POST(request) {
         totalCount: (data.participants.adults || 0) + (data.participants.children || 0) + (data.participants.infants || 0),
         ...data.participants
       },
-      pricing: {
-        basePrice: data.pricing?.basePrice || data.tour?.price || 0,
-        adultPrice: data.pricing?.adultPrice || data.tour?.price || 0,
-        childPrice: data.pricing?.childPrice || 0,
-        infantPrice: data.pricing?.infantPrice || 0,
-        subtotal: data.pricing?.subtotal || 0,
-        taxes: data.pricing?.taxes || 0,
-        fees: data.pricing?.fees || 0,
-        discount: data.pricing?.discount || 0,
-        total: data.pricing?.total || 0,
-        currency: data.pricing?.currency || 'USD',
-        ...data.pricing
-      },
+      pricing: (() => {
+        const basePrice = data.pricing?.basePrice || data.tour?.price || 0;
+        const adultPrice = data.pricing?.adultPrice || data.tour?.price || basePrice;
+        const childPrice = data.pricing?.childPrice || Math.round(adultPrice * 0.7); // 70% of adult price
+        const infantPrice = data.pricing?.infantPrice || 0;
+        
+        const adults = data.participants?.adults || 0;
+        const children = data.participants?.children || 0;
+        const infants = data.participants?.infants || 0;
+        
+        const subtotal = (adults * adultPrice) + (children * childPrice) + (infants * infantPrice);
+        const taxes = data.pricing?.taxes || Math.round(subtotal * 0.1); // 10% tax
+        const fees = data.pricing?.fees || 0;
+        const discount = data.pricing?.discount || 0;
+        const total = subtotal + taxes + fees - discount;
+        
+        return {
+          basePrice,
+          adultPrice,
+          childPrice,
+          infantPrice,
+          subtotal,
+          taxes,
+          fees,
+          discount,
+          total,
+          currency: data.pricing?.currency || 'USD'
+        };
+      })(),
       status: data.payment?.method ? "confirmed" : "pending",
       payment: data.payment || { status: 'pending' },
       specialRequests: data.specialRequests || "",
