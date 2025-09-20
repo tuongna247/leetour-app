@@ -6,9 +6,13 @@ import Tour from '@/models/Tour';
 export async function GET(request, { params }) {
   try {
     await connectDB();
-    const { id } = await params;
+    const { id } = params;
+    
+    console.log('Admin API: Looking for tour with ID:', id);
     
     const tour = await Tour.findById(id); // Admin can see all tours, including inactive ones
+    
+    console.log('Admin API: Tour found:', !!tour);
     
     if (!tour) {
       return NextResponse.json({
@@ -37,7 +41,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     await connectDB();
-    const { id } = await params;
+    const { id } = params;
     const data = await request.json();
     
     const tour = await Tour.findById(id);
@@ -90,7 +94,7 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     await connectDB();
-    const { id } = await params;
+    const { id } = params;
     
     const tour = await Tour.findById(id);
     if (!tour) {
