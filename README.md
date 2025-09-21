@@ -103,3 +103,7 @@ frontend/
 - `POST /api/admin/tours` - Create new tour
 - `PUT /api/admin/tours/[id]` - Update tour
 - `DELETE /api/admin/tours/[id]` - Delete tour
+
+
+taskkill //F //IM node.exe
+taskkill /f /im node.exe

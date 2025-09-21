@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { signIn, getSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Box,
   Card,
@@ -20,11 +20,15 @@ import { useAuth } from '@/contexts/AuthContext'
 
 export default function SignInPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { login } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
+  
+  // Get redirect URL from query parameters
+  const redirectUrl = searchParams.get('redirect') || null
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -56,8 +60,10 @@ export default function SignInPage() {
           // Update our custom auth context
           await login(formData.email, formData.password)
           
-          // Redirect based on user role
-          if (session.user.role === 'customer') {
+          // Redirect to intended page or default based on role
+          if (redirectUrl) {
+            router.push(redirectUrl)
+          } else if (session.user.role === 'customer') {
             router.push('/tours')
           } else {
             router.push('/dashboard-main')
@@ -114,8 +120,10 @@ export default function SignInPage() {
         // Update auth context
         await login(data.data.user.email, 'testpassword123')
         
-        // Redirect based on user role
-        if (data.data.user.role === 'customer') {
+        // Redirect to intended page or default based on role
+        if (redirectUrl) {
+          router.push(redirectUrl)
+        } else if (data.data.user.role === 'customer') {
           router.push('/tours')
         } else {
           router.push('/dashboard-main')

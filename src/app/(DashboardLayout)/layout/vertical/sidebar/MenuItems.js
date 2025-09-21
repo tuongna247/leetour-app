@@ -44,10 +44,11 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: 'Tours',
+    title: 'Public Tours',
     icon: IconMapPin,
     href: '/tours',
-    chip: 'New',
+    external: true,
+    chip: 'Public',
     chipColor: 'success',
   },
 

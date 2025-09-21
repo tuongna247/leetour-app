@@ -16,7 +16,7 @@ export async function GET(request) {
     const maxPrice = searchParams.get('maxPrice');
     const search = searchParams.get('search');
     const featured = searchParams.get('featured');
-    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const sortBy = searchParams.get('sortBy') || searchParams.get('sort') || 'createdAt';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 
     // Build filter object
@@ -27,10 +27,7 @@ export async function GET(request) {
     }
 
     if (location) {
-      filter.$or = [
-        { 'location.city': new RegExp(location, 'i') },
-        { 'location.country': new RegExp(location, 'i') }
-      ];
+      filter.location = { $regex: location, $options: 'i' };
     }
 
     if (minPrice || maxPrice) {
@@ -49,7 +46,19 @@ export async function GET(request) {
 
     // Build sort object
     const sort = {};
-    sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
+    
+    // Handle special sort cases
+    if (sortBy === 'latest') {
+      sort['createdAt'] = -1;
+    } else if (sortBy === 'price_low') {
+      sort['price'] = 1;
+    } else if (sortBy === 'price_high') {
+      sort['price'] = -1;
+    } else if (sortBy === 'rating') {
+      sort['averageRating'] = -1;
+    } else {
+      sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
+    }
 
     // Execute query with pagination
     const skip = (page - 1) * limit;
@@ -65,6 +74,9 @@ export async function GET(request) {
       status: 200,
       data: {
         tours,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page,
+        total,
         pagination: {
           page,
           limit,
