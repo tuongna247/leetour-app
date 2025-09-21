@@ -105,8 +105,6 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
 
   // Clear any initial errors when component mounts and ensure form is properly initialized
   useEffect(() => {
-    console.log('Component mounted, clearing errors and checking form state');
-    console.log('Initial form data:', formData);
     setErrors({});
   }, []);
 
@@ -153,8 +151,6 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
   const validateStep = (step) => {
     const newErrors = {};
     
-    console.log('Validating step:', step, 'with form data:', formData);
-    console.log('Tour selectedDate:', formData.tour?.selectedDate, 'Type:', typeof formData.tour?.selectedDate);
     
     switch (step) {
       case 0: // Customer Info
@@ -191,7 +187,6 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
         break;
     }
     
-    console.log('Validation errors found:', newErrors);
     setErrors(newErrors);
     
     // Show validation errors as notifications
@@ -250,7 +245,6 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
         }
       };
       
-      console.log('Sending booking data:', JSON.stringify(bookingData, null, 2));
 
       const response = await fetch('/api/bookings', {
         method: 'POST',
@@ -262,7 +256,6 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
 
       const responseData = await response.json();
       
-      console.log('Booking API response:', responseData);
 
       if (!response.ok) {
         console.error('Booking failed:', responseData);
@@ -303,7 +296,6 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
 
   // Handle input changes
   const handleInputChange = (section, field, value) => {
-    console.log('Input change:', section, field, value);
     
     if (section === '') {
       // Handle top-level fields like specialRequests
@@ -334,14 +326,10 @@ const BookingFormWithTestHandling = ({ tourId, onSuccess = null }) => {
 
   // Handle next step
   const handleNext = () => {
-    console.log('Attempting to go to next step, current step:', activeStep);
-    console.log('Current form data before validation:', formData);
     
     if (validateStep(activeStep)) {
-      console.log('Validation passed, moving to next step');
       setActiveStep(prev => prev + 1);
     } else {
-      console.log('Validation failed, staying on current step');
     }
   };
 

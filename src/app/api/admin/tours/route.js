@@ -22,7 +22,6 @@ async function getUserFromRequest(request) {
         }
       }
     } catch (sessionError) {
-      console.log('No NextAuth session, trying JWT token...');
     }
     
     // Fallback to JWT token for local authentication

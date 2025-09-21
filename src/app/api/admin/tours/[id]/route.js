@@ -8,11 +8,9 @@ export async function GET(request, { params }) {
     await connectDB();
     const { id } = params;
     
-    console.log('Admin API: Looking for tour with ID:', id);
     
     const tour = await Tour.findById(id); // Admin can see all tours, including inactive ones
     
-    console.log('Admin API: Tour found:', !!tour);
     
     if (!tour) {
       return NextResponse.json({

@@ -79,7 +79,6 @@ export async function POST(request) {
     await connectDB();
     const data = await request.json();
     
-    console.log('Booking creation request:', JSON.stringify(data, null, 2));
     
     // Validate required fields
     if (!data.tour?.tourId) {

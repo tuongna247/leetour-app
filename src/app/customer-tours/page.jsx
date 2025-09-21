@@ -35,8 +35,7 @@ import {
   Favorite as FavoriteIcon,
   FavoriteBorder as FavoriteBorderIcon,
   Login as LoginIcon,
-  AccountCircle as AccountIcon,
-  Logout as LogoutIcon
+  AccountCircle as AccountIcon
 } from '@mui/icons-material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -48,15 +47,15 @@ const TourCard = ({ tour, onFavoriteToggle, isAuthenticated }) => {
 
   const handleBookNow = () => {
     if (isAuthenticated) {
-      router.push(`/customer-tours/${tour._id}/booking`);
+      router.push(`/tours/${tour._id}/booking`);
     } else {
       // For non-authenticated users, redirect to login first
-      router.push(`/auth/signin?redirect=/customer-tours/${tour._id}/booking`);
+      router.push(`/auth/signin?redirect=/tours/${tour._id}/booking`);
     }
   };
 
   const handleViewDetails = () => {
-    router.push(`/customer-tours/${tour._id}`);
+    router.push(`/tours/${tour._id}`);
   };
 
   return (
@@ -197,9 +196,9 @@ const TourCard = ({ tour, onFavoriteToggle, isAuthenticated }) => {
   );
 };
 
-const HomePage = () => {
+const PublicToursPage = () => {
   const router = useRouter();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { data: session } = useSession();
   
   const [tours, setTours] = useState([]);
@@ -280,16 +279,11 @@ const HomePage = () => {
     router.push('/auth/signin');
   };
 
-  const handleLogout = async () => {
-    await logout();
-    router.push('/');
-  };
-
   const handleDashboard = () => {
     if (currentUser?.role === 'admin' || currentUser?.role === 'mod') {
       router.push('/dashboard-main');
     } else {
-      router.push('/'); // Stay on homepage for customers
+      router.push('/tours'); // Stay on tours for customers
     }
   };
 
@@ -318,15 +312,6 @@ const HomePage = () => {
                     Dashboard
                   </Button>
                 )}
-                <Button 
-                  startIcon={<LogoutIcon />}
-                  onClick={handleLogout}
-                  variant="outlined"
-                  size="small"
-                  color="error"
-                >
-                  Logout
-                </Button>
               </Box>
             ) : (
               <Button 
@@ -384,7 +369,6 @@ const HomePage = () => {
                   <MenuItem value="Tokyo">Tokyo</MenuItem>
                   <MenuItem value="New York">New York</MenuItem>
                   <MenuItem value="London">London</MenuItem>
-                  <MenuItem value="Delhi">Delhi</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -492,4 +476,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default PublicToursPage;
