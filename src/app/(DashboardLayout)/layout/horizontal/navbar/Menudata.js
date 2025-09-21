@@ -8,8 +8,8 @@ export const getMenuItemsByRole = (userRole) => {
       id: uniqueId(),
       title: "Tours",
       icon: IconMapPin,
-      href: "/tours",
-      roles: ['admin', 'mod', 'customer'], // All roles can view tours
+      href: "/admin/tours",
+      roles: ['admin', 'mod'], // Admin and moderators can manage tours
     },
   ];
 
@@ -97,7 +97,7 @@ const Menuitems = [
     id: uniqueId(),
     title: "Tours",
     icon: IconMapPin,
-    href: "/tours",
+    href: "/admin/tours",
   },
   {
     id: uniqueId(),
