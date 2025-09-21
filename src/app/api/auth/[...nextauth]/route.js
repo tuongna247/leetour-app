@@ -8,14 +8,19 @@ import connectDB from '@/lib/mongodb'
 import User from '@/models/User'
 import bcrypt from 'bcryptjs'
 
-const client = new MongoClient(process.env.MONGODB_URI)
-const clientPromise = client.connect()
+// Check for required environment variables
+if (!process.env.MONGODB_URI) {
+  console.warn('MONGODB_URI environment variable is not set')
+}
+
+const client = process.env.MONGODB_URI ? new MongoClient(process.env.MONGODB_URI) : null
+const clientPromise = client ? client.connect() : null
 
 const authOptions = {
   // Temporarily disable adapter to test OAuth flow
   // adapter: MongoDBAdapter(clientPromise),
   providers: [
-    GoogleProvider({
+    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? [GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       profile(profile) {
@@ -30,7 +35,7 @@ const authOptions = {
           isEmailVerified: profile.email_verified || false
         }
       }
-    }),
+    })] : []),
     // Facebook temporarily disabled
     // FacebookProvider({
     //   clientId: process.env.FACEBOOK_CLIENT_ID,
@@ -199,7 +204,7 @@ const authOptions = {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-build',
 }
 
 const handler = NextAuth(authOptions)
