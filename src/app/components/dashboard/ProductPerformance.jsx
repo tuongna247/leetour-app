@@ -10,42 +10,42 @@ import {
 } from '@mui/material';
 import DashboardCard from '@/app/components/shared/DashboardCard';
 
-const products = [
+const tours = [
     {
         id: "1",
-        name: "Sunil Joshi",
-        post: "Web Designer",
-        pname: "Elite Admin",
-        priority: "Low",
-        pbg: "primary.main",
-        budget: "3.9",
+        name: "Amazing Bali Adventure",
+        duration: "7 Days",
+        location: "Bali, Indonesia",
+        status: "Active",
+        statusColor: "success.main",
+        price: "1299",
     },
     {
         id: "2",
-        name: "Andrew McDownland",
-        post: "Project Manager",
-        pname: "Real Homes WP Theme",
-        priority: "Medium",
-        pbg: "secondary.main",
-        budget: "24.5",
+        name: "Paris City Tour",
+        duration: "5 Days",
+        location: "Paris, France",
+        status: "Popular",
+        statusColor: "primary.main",
+        price: "1899",
     },
     {
         id: "3",
-        name: "Christopher Jamil",
-        post: "Project Manager",
-        pname: "MedicalPro WP Theme",
-        priority: "High",
-        pbg: "error.main",
-        budget: "12.8",
+        name: "Tokyo Culture Experience",
+        duration: "10 Days",
+        location: "Tokyo, Japan",
+        status: "Premium",
+        statusColor: "warning.main",
+        price: "2499",
     },
     {
         id: "4",
-        name: "Nirav Joshi",
-        post: "Frontend Engineer",
-        pname: "Hosting Press HTML",
-        priority: "Critical",
-        pbg: "success.main",
-        budget: "2.4",
+        name: "Maldives Beach Resort",
+        duration: "6 Days",
+        location: "Maldives",
+        status: "Luxury",
+        statusColor: "error.main",
+        price: "3299",
     },
 ];
 
@@ -53,7 +53,7 @@ const products = [
 const ProductPerformance = () => {
     return (
 
-        <DashboardCard title="Product Performance">
+        <DashboardCard title="Tour List">
             <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
                 <Table
                     aria-label="simple table"
@@ -71,29 +71,29 @@ const ProductPerformance = () => {
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Assigned
+                                    Tour Name
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Name
+                                    Location
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Priority
+                                    Status
                                 </Typography>
                             </TableCell>
                             <TableCell align="right">
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Budget
+                                    Price
                                 </Typography>
                             </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {products.map((product) => (
-                            <TableRow key={product.name}>
+                        {tours.map((tour) => (
+                            <TableRow key={tour.name}>
                                 <TableCell>
                                     <Typography
                                         sx={{
@@ -101,7 +101,7 @@ const ProductPerformance = () => {
                                             fontWeight: "500",
                                         }}
                                     >
-                                        {product.id}
+                                        {tour.id}
                                     </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -113,7 +113,7 @@ const ProductPerformance = () => {
                                     >
                                         <Box>
                                             <Typography variant="subtitle2" fontWeight={600}>
-                                                {product.name}
+                                                {tour.name}
                                             </Typography>
                                             <Typography
                                                 color="textSecondary"
@@ -121,29 +121,29 @@ const ProductPerformance = () => {
                                                     fontSize: "13px",
                                                 }}
                                             >
-                                                {product.post}
+                                                {tour.duration}
                                             </Typography>
                                         </Box>
                                     </Box>
                                 </TableCell>
                                 <TableCell>
                                     <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
-                                        {product.pname}
+                                        {tour.location}
                                     </Typography>
                                 </TableCell>
                                 <TableCell>
                                     <Chip
                                         sx={{
                                             px: "4px",
-                                            backgroundColor: product.pbg,
+                                            backgroundColor: tour.statusColor,
                                             color: "#fff",
                                         }}
                                         size="small"
-                                        label={product.priority}
+                                        label={tour.status}
                                     ></Chip>
                                 </TableCell>
                                 <TableCell align="right">
-                                    <Typography variant="h6">${product.budget}k</Typography>
+                                    <Typography variant="h6">${tour.price}</Typography>
                                 </TableCell>
                             </TableRow>
                         ))}
