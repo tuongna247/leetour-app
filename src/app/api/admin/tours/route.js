@@ -1,11 +1,64 @@
 import { NextResponse } from "next/server";
 import connectDB from '@/lib/mongodb';
 import Tour from '@/models/Tour';
+import jwt from 'jsonwebtoken';
+import User from '@/models/User';
+
+// Helper function to get user from session or JWT token
+async function getUserFromRequest(request) {
+  try {
+    // First try to get user from NextAuth session
+    const { getServerSession } = await import('next-auth');
+    
+    // Import authOptions from the NextAuth configuration
+    const { authOptions } = await import('../../auth/[...nextauth]/route.js');
+    
+    try {
+      const session = await getServerSession(authOptions);
+      if (session?.user?.id) {
+        const user = await User.findById(session.user.id).select('-password');
+        if (user && user.isActive) {
+          return user;
+        }
+      }
+    } catch (sessionError) {
+      console.log('No NextAuth session, trying JWT token...');
+    }
+    
+    // Fallback to JWT token for local authentication
+    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    if (!token) {
+      throw new Error('No authentication provided');
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const user = await User.findById(decoded.userId).select('-password');
+    
+    if (!user || !user.isActive) {
+      throw new Error('Invalid token');
+    }
+    
+    return user;
+  } catch (error) {
+    throw new Error('Authentication failed');
+  }
+}
 
 // GET all tours for admin (including inactive ones)
 export async function GET(request) {
   try {
     await connectDB();
+    
+    // Get user from session or token for role-based filtering
+    let user = null;
+    try {
+      user = await getUserFromRequest(request);
+    } catch (authError) {
+      return NextResponse.json({
+        status: 401,
+        msg: "Authentication required"
+      }, { status: 401 });
+    }
     
     const { searchParams } = new URL(request.url);
     
@@ -20,8 +73,14 @@ export async function GET(request) {
     const sortBy = searchParams.get('sortBy') || 'createdAt';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 
-    // Build filter object (admin can see all tours)
+    // Build filter object based on user role
     let filter = {};
+    
+    // Role-based filtering: mods can only see their own tours
+    if (user.role === 'mod') {
+      filter.createdBy = user._id;
+    }
+    // Admins can see all tours, customers shouldn't access this endpoint
 
     // Filter by status for admin
     if (status === 'active') {
@@ -65,12 +124,13 @@ export async function GET(request) {
 
     const total = await Tour.countDocuments(filter);
 
-    // Get stats for admin dashboard
+    // Get stats for admin dashboard (filtered by user role)
+    const baseStatsFilter = user.role === 'mod' ? { createdBy: user._id } : {};
     const stats = {
-      total: await Tour.countDocuments(),
-      active: await Tour.countDocuments({ isActive: true }),
-      inactive: await Tour.countDocuments({ isActive: false }),
-      featured: await Tour.countDocuments({ isFeatured: true }),
+      total: await Tour.countDocuments(baseStatsFilter),
+      active: await Tour.countDocuments({ ...baseStatsFilter, isActive: true }),
+      inactive: await Tour.countDocuments({ ...baseStatsFilter, isActive: false }),
+      featured: await Tour.countDocuments({ ...baseStatsFilter, isFeatured: true }),
     };
 
     return NextResponse.json({
@@ -102,6 +162,26 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     await connectDB();
+    
+    // Get user from session or token for authentication
+    let user = null;
+    try {
+      user = await getUserFromRequest(request);
+    } catch (authError) {
+      return NextResponse.json({
+        status: 401,
+        msg: "Authentication required"
+      }, { status: 401 });
+    }
+    
+    // Check if user has permission to create tours (admin or mod)
+    if (!['admin', 'mod'].includes(user.role)) {
+      return NextResponse.json({
+        status: 403,
+        msg: "Access denied. Only admins and moderators can create tours."
+      }, { status: 403 });
+    }
+    
     const data = await request.json();
     
     // Validate required fields
@@ -138,6 +218,7 @@ export async function POST(request) {
       totalReviews: data.totalReviews || 0,
       isActive: data.isActive !== undefined ? data.isActive : true,
       isFeatured: data.isFeatured || false,
+      createdBy: user._id,
       ...data
     };
     

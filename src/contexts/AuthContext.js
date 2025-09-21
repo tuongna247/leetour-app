@@ -1,5 +1,6 @@
 'use client'
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 
 // Initial state
 const initialState = {
@@ -81,28 +82,56 @@ const API_BASE_URL = typeof window !== 'undefined' ? window.location.origin :
 // Auth provider component
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const { data: session, status } = useSession();
 
-  // Check for existing token on mount
+  // Sync NextAuth session with our auth context
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    
-    if (token && userData) {
-      try {
-        const user = JSON.parse(userData);
-        dispatch({
-          type: AUTH_ACTIONS.LOGIN_SUCCESS,
-          payload: { user, token }
-        });
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+    if (status === 'loading') {
+      dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: true });
+      return;
+    }
+
+    if (status === 'authenticated' && session?.user) {
+      // Update our auth context with NextAuth session
+      dispatch({
+        type: AUTH_ACTIONS.LOGIN_SUCCESS,
+        payload: { 
+          user: {
+            id: session.user.id,
+            name: session.user.name,
+            email: session.user.email,
+            role: session.user.role,
+            provider: session.user.provider,
+            profilePicture: session.user.image
+          },
+          token: 'nextauth-session' // Placeholder since NextAuth handles tokens
+        }
+      });
+    } else if (status === 'unauthenticated') {
+      // Check for existing local token for backwards compatibility
+      const token = localStorage.getItem('token');
+      const userData = localStorage.getItem('user');
+      
+      if (token && userData) {
+        try {
+          const user = JSON.parse(userData);
+          dispatch({
+            type: AUTH_ACTIONS.LOGIN_SUCCESS,
+            payload: { user, token }
+          });
+        } catch (error) {
+          console.error('Error parsing stored user data:', error);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          dispatch({ type: AUTH_ACTIONS.LOGOUT });
+        }
+      } else {
+        dispatch({ type: AUTH_ACTIONS.LOGOUT });
       }
     }
     
     dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: false });
-  }, []);
+  }, [session, status]);
 
   // Login function
   const login = async (username, password) => {
@@ -166,20 +195,29 @@ export const AuthProvider = ({ children }) => {
   // Logout function
   const logout = async () => {
     try {
-      // Call logout API if token exists
-      if (state.token) {
-        await fetch(`${API_BASE_URL}/api/auth/logout`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${state.token}`,
-            'Content-Type': 'application/json',
-          },
-        });
+      // If using NextAuth session, use NextAuth signOut
+      if (session) {
+        await signOut({ callbackUrl: '/auth/signin' });
+      } else {
+        // Call logout API if local token exists
+        if (state.token && state.token !== 'nextauth-session') {
+          await fetch(`${API_BASE_URL}/api/auth/logout`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${state.token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+        }
+        
+        // Clear local storage and state
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        dispatch({ type: AUTH_ACTIONS.LOGOUT });
       }
     } catch (error) {
-      console.error('Logout API error:', error);
-    } finally {
-      // Clear local storage and state
+      console.error('Logout error:', error);
+      // Fallback: clear local state anyway
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       dispatch({ type: AUTH_ACTIONS.LOGOUT });
@@ -259,13 +297,69 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Authenticated fetch function
+  const authenticatedFetch = async (url, options = {}) => {
+    let token = state.token;
+    
+    // For NextAuth sessions, we don't use a token but rely on cookies
+    if (session && state.token === 'nextauth-session') {
+      // NextAuth handles authentication via cookies, no need for explicit token
+      const config = {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+      };
+
+      const response = await fetch(url, config);
+      
+      // If unauthorized, logout user
+      if (response.status === 401) {
+        logout();
+        throw new Error('Authentication failed');
+      }
+
+      return response;
+    } else {
+      // Use traditional token-based auth for local accounts
+      if (!token || token === 'nextauth-session') {
+        throw new Error('No authentication token available');
+      }
+
+      const defaultHeaders = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      };
+
+      const config = {
+        ...options,
+        headers: {
+          ...defaultHeaders,
+          ...options.headers,
+        },
+      };
+
+      const response = await fetch(url, config);
+      
+      // If unauthorized, logout user
+      if (response.status === 401) {
+        logout();
+        throw new Error('Authentication failed');
+      }
+
+      return response;
+    }
+  };
+
   const value = {
     ...state,
     login,
     logout,
     register,
     clearError,
-    getCurrentUser
+    getCurrentUser,
+    authenticatedFetch
   };
 
   return (

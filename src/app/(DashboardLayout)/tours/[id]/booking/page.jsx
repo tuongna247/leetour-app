@@ -43,6 +43,7 @@ import {
 import { useRouter, useParams } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/components/container/PageContainer';
+import RoleBasedAccess from '@/components/auth/RoleBasedAccess';
 
 const steps = ['Tour Details', 'Participants', 'Payment', 'Confirmation'];
 
@@ -317,10 +318,11 @@ const BookingPage = () => {
   ];
 
   return (
-    <PageContainer title={`Book ${tour?.title}`} description="Complete your tour booking">
-      <Breadcrumb title="Booking" items={BCrumb} />
-      
-      <Box sx={{ mt: 3 }}>
+    <RoleBasedAccess allowedRoles={['admin', 'mod', 'customer']}>
+      <PageContainer title={`Book ${tour?.title}`} description="Complete your tour booking">
+        <Breadcrumb title="Booking" items={BCrumb} />
+        
+        <Box sx={{ mt: 3 }}>
         <Grid container spacing={3}>
           {/* Main Content */}
           <Grid size={{ xs: 12, md: 8 }}>
@@ -848,7 +850,8 @@ const BookingPage = () => {
           </Grid>
         </Grid>
       </Box>
-    </PageContainer>
+      </PageContainer>
+    </RoleBasedAccess>
   );
 };
 

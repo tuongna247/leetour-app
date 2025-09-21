@@ -155,7 +155,12 @@ const tourSchema = new mongoose.Schema({
     default: false
   },
   booking: bookingSchema,
-  seo: seoSchema
+  seo: seoSchema,
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
 }, {
   timestamps: true,
   toJSON: { virtuals: true },
@@ -167,6 +172,7 @@ tourSchema.index({ title: 'text', description: 'text' });
 tourSchema.index({ category: 1, isActive: 1 });
 tourSchema.index({ 'location.country': 1, 'location.city': 1 });
 tourSchema.index({ price: 1 });
+tourSchema.index({ createdBy: 1 });
 tourSchema.index({ 'rating.average': -1 });
 tourSchema.index({ createdAt: -1 });
 

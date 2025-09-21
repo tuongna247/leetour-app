@@ -44,6 +44,7 @@ import {
 import { useRouter } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/components/container/PageContainer';
+import { useAuth } from '@/contexts/AuthContext';
 
 const BCrumb = [
   {
@@ -61,6 +62,7 @@ const BCrumb = [
 
 export default function AdminToursPage() {
   const router = useRouter();
+  const { authenticatedFetch } = useAuth();
   const [tours, setTours] = useState([]);
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
@@ -84,7 +86,7 @@ export default function AdminToursPage() {
         ...(categoryFilter && { category: categoryFilter })
       });
 
-      const response = await fetch(`/api/admin/tours?${params}`);
+      const response = await authenticatedFetch(`/api/admin/tours?${params}`);
       const data = await response.json();
 
       if (data.status === 200) {
@@ -112,7 +114,7 @@ export default function AdminToursPage() {
 
   const handleDeleteTour = async (tourId) => {
     try {
-      const response = await fetch(`/api/admin/tours/${tourId}`, {
+      const response = await authenticatedFetch(`/api/admin/tours/${tourId}`, {
         method: 'DELETE',
       });
 

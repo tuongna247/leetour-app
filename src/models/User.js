@@ -25,8 +25,32 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: function() {
+      return !this.googleId && !this.facebookId;
+    },
     minlength: 6
+  },
+  // OAuth provider information
+  googleId: {
+    type: String,
+    sparse: true
+  },
+  facebookId: {
+    type: String,
+    sparse: true
+  },
+  provider: {
+    type: String,
+    enum: ['local', 'google', 'facebook'],
+    default: 'local'
+  },
+  profilePicture: {
+    type: String,
+    default: ''
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
   },
   role: {
     type: String,
@@ -47,10 +71,12 @@ const UserSchema = new mongoose.Schema({
 // Index for performance
 UserSchema.index({ username: 1 });
 UserSchema.index({ email: 1 });
+UserSchema.index({ googleId: 1 });
+UserSchema.index({ facebookId: 1 });
 
-// Hash password before saving
+// Hash password before saving (only for local auth)
 UserSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password') || !this.password) return next();
   
   try {
     const salt = await bcrypt.genSalt(12);

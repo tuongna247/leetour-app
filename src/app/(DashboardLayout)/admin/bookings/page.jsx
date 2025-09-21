@@ -42,6 +42,7 @@ import {
 } from '@tabler/icons-react';
 import PageContainer from '@/app/components/container/PageContainer';
 import DashboardCard from '@/app/components/shared/DashboardCard';
+import RoleBasedAccess from '@/components/auth/RoleBasedAccess';
 
 const BookingListPage = () => {
   const searchParams = useSearchParams();
@@ -181,8 +182,9 @@ const BookingListPage = () => {
   };
 
   return (
-    <PageContainer title="Booking List" description="Manage all tour bookings">
-      <Box>
+    <RoleBasedAccess allowedRoles={['admin']}>
+      <PageContainer title="Booking List" description="Manage all tour bookings">
+        <Box>
         {/* Stats Cards */}
         <Grid container spacing={3} mb={4}>
           <Grid item xs={12} sm={6} md={2.4}>
@@ -494,8 +496,9 @@ const BookingListPage = () => {
             <Button onClick={() => setDetailsOpen(false)}>Close</Button>
           </DialogActions>
         </Dialog>
-      </Box>
-    </PageContainer>
+        </Box>
+      </PageContainer>
+    </RoleBasedAccess>
   );
 };
 

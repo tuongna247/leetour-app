@@ -9,8 +9,11 @@ import Link from "next/link";
 import { IconChevronDown, IconHelp } from "@tabler/icons-react";
 import AppLinks from "./AppLinks";
 import QuickLinks from "./QuickLinks";
+import { useAuth } from '@/contexts/AuthContext';
+import { getMenuItemsByRole } from '../../horizontal/navbar/Menudata';
 
 const AppDD = () => {
+  const { user } = useAuth();
   const [anchorEl2, setAnchorEl2] = useState(null);
 
   const handleClick2 = (event) => {
@@ -21,7 +24,16 @@ const AppDD = () => {
     setAnchorEl2(null);
   };
 
+  // Get menu items based on user role
+  const menuItems = getMenuItemsByRole(user?.role);
+  
+  // Find the management menu item (Tour Management or My Tours)
+  const managementMenu = menuItems.find(item => 
+    item.title === 'Tour Management' || item.title === 'My Tours'
+  );
+
   return (<>
+    {/* Tours Button - Available to all roles */}
     <Button
       color="inherit"
       sx={{ color: (theme) => theme.palette.text.secondary }}
@@ -31,52 +43,66 @@ const AppDD = () => {
     >
       Tours
     </Button>
-    <Box>
+    
+    {/* Bookings Button - Only for Admin */}
+    {user?.role === 'admin' && (
       <Button
-        aria-label="tour management menu"
         color="inherit"
+        sx={{ color: (theme) => theme.palette.text.secondary }}
         variant="text"
-        aria-controls="tour-menu"
-        aria-haspopup="true"
-        sx={{
-          bgcolor: anchorEl2 ? "primary.light" : "",
-          color: anchorEl2
-            ? "primary.main"
-            : (theme) => theme.palette.text.secondary,
-        }}
-        onClick={handleClick2}
-        endIcon={
-          <IconChevronDown
-            size="15"
-            style={{ marginLeft: "-5px", marginTop: "2px" }}
-          />
-        }
+        href="/admin/bookings"
+        component={Link}
       >
-        Tour Management
+        Bookings
       </Button>
-      <Menu
-        id="tour-menu"
-        anchorEl={anchorEl2}
-        keepMounted
-        open={Boolean(anchorEl2)}
-        onClose={handleClose2}
-        anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
-        transformOrigin={{ horizontal: "left", vertical: "top" }}
-      >
-        <Box p={2}>
-          <Link href="/admin/tours" style={{ textDecoration: 'none' }}>
-            <Button fullWidth sx={{ justifyContent: 'flex-start', mb: 1 }}>
-              All Tours
-            </Button>
-          </Link>
-          <Link href="/admin/tours/new" style={{ textDecoration: 'none' }}>
-            <Button fullWidth sx={{ justifyContent: 'flex-start' }}>
-              Add New Tour
-            </Button>
-          </Link>
-        </Box>
-      </Menu>
-    </Box>
+    )}
+
+    {/* Tour Management - For Admin and Mod */}
+    {managementMenu && (user?.role === 'admin' || user?.role === 'mod') && (
+      <Box>
+        <Button
+          aria-label="tour management menu"
+          color="inherit"
+          variant="text"
+          aria-controls="tour-menu"
+          aria-haspopup="true"
+          sx={{
+            bgcolor: anchorEl2 ? "primary.light" : "",
+            color: anchorEl2
+              ? "primary.main"
+              : (theme) => theme.palette.text.secondary,
+          }}
+          onClick={handleClick2}
+          endIcon={
+            <IconChevronDown
+              size="15"
+              style={{ marginLeft: "-5px", marginTop: "2px" }}
+            />
+          }
+        >
+          {managementMenu.title}
+        </Button>
+        <Menu
+          id="tour-menu"
+          anchorEl={anchorEl2}
+          keepMounted
+          open={Boolean(anchorEl2)}
+          onClose={handleClose2}
+          anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
+          transformOrigin={{ horizontal: "left", vertical: "top" }}
+        >
+          <Box p={2}>
+            {managementMenu.children?.map((child) => (
+              <Link key={child.id} href={child.href} style={{ textDecoration: 'none' }}>
+                <Button fullWidth sx={{ justifyContent: 'flex-start', mb: 1 }}>
+                  {child.title}
+                </Button>
+              </Link>
+            ))}
+          </Box>
+        </Menu>
+      </Box>
+    )}
   </>);
 };
 
