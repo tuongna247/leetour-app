@@ -20,10 +20,8 @@ export default function OAuthRedirectPage() {
     if (session?.user) {
       // Redirect based on user role
       if (session.user.role === 'customer') {
-        console.log('Redirecting customer to tours page')
         router.replace('/tours')
       } else {
-        console.log(`Redirecting ${session.user.role} to dashboard`)
         router.replace('/dashboard-main')
       }
     }

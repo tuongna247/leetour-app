@@ -5,19 +5,11 @@ import User from '@/models/User';
 
 export async function POST(request) {
   try {
-    console.log('=== Login API called ===');
-    console.log('Environment:', process.env.NODE_ENV);
-    console.log('MongoDB URI exists:', !!process.env.MONGODB_URI);
-    console.log('JWT Secret exists:', !!process.env.JWT_SECRET);
-    
     await connectDB();
-    console.log('=== Database connected ===');
     
     const { username, password } = await request.json();
-    console.log('Login attempt for:', username);
 
     if (!username || !password) {
-      console.log('Missing credentials');
       return NextResponse.json({
         status: 400,
         msg: 'Username and password are required'
@@ -25,25 +17,12 @@ export async function POST(request) {
     }
 
     // Find user by username or email
-    console.log('Searching for user...');
     const user = await User.findOne({
       $or: [{ username }, { email: username }],
       isActive: true
     });
 
-    console.log('User found:', !!user);
-    if (user) {
-      console.log('User details:', {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        hasPassword: !!user.password
-      });
-    }
-
     if (!user) {
-      console.log('User not found or inactive');
       return NextResponse.json({
         status: 401,
         msg: 'Invalid credentials'
@@ -51,12 +30,9 @@ export async function POST(request) {
     }
 
     // Check password
-    console.log('Checking password...');
     const isMatch = await user.comparePassword(password);
-    console.log('Password match:', isMatch);
     
     if (!isMatch) {
-      console.log('Password mismatch');
       return NextResponse.json({
         status: 401,
         msg: 'Invalid credentials'
@@ -64,10 +40,8 @@ export async function POST(request) {
     }
 
     // Update last login
-    console.log('Updating last login...');
     user.lastLogin = new Date();
     await user.save();
-    console.log('Last login updated');
 
     // Generate JWT token
     const payload = {
@@ -77,13 +51,10 @@ export async function POST(request) {
     };
 
     const jwtSecret = process.env.JWT_SECRET || 'your-secret-key';
-    console.log('Generating token with secret length:', jwtSecret.length);
     
     const token = jwt.sign(payload, jwtSecret, {
       expiresIn: '24h'
     });
-
-    console.log('Token generated successfully');
 
     return NextResponse.json({
       status: 200,

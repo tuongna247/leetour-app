@@ -19,7 +19,6 @@ const authOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       profile(profile) {
-        console.log('Google OAuth profile:', profile);
         return {
           id: profile.sub,
           name: profile.name,
@@ -107,11 +106,6 @@ const authOptions = {
           const providerId = profile.sub
           const providerField = 'googleId'
           
-          console.log('Google OAuth sign in attempt:', { 
-            email: user.email, 
-            providerId,
-            profileData: profile 
-          })
           
           // Check if user already exists with this provider ID
           let existingUser = await User.findOne({ [providerField]: providerId })
@@ -127,7 +121,6 @@ const authOptions = {
               existingUser.isEmailVerified = user.isEmailVerified || existingUser.isEmailVerified
               if (user.image) existingUser.profilePicture = user.image
               await existingUser.save()
-              console.log('Linked Google account to existing user:', existingUser.email)
             } else {
               // Create new user
               const newUser = new User({
@@ -144,10 +137,8 @@ const authOptions = {
               
               await newUser.save()
               existingUser = newUser
-              console.log('Created new Google user:', existingUser.email)
             }
           } else {
-            console.log('Existing Google user found:', existingUser.email)
           }
           
           // Update last login
@@ -178,7 +169,6 @@ const authOptions = {
     
     async redirect({ url, baseUrl }) {
       // Custom redirect logic based on user role
-      console.log('NextAuth redirect called with url:', url, 'baseUrl:', baseUrl)
       
       // If it's a callback URL, check if it should redirect based on role
       if (url.startsWith(baseUrl)) {
