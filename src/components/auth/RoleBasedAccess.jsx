@@ -54,7 +54,7 @@ const RoleBasedAccess = ({
         <Button
           variant="contained"
           component={Link}
-          href="/auth/auth1/login"
+          href="/auth/signin"
           startIcon={<IconHome />}
         >
           Go to Login
@@ -88,7 +88,7 @@ const RoleBasedAccess = ({
           Access Denied
         </Typography>
         <Typography variant="body1" color="text.secondary" textAlign="center">
-          You don't have permission to access this content.
+          You don&apos;t have permission to access this content.
           <br />
           Required role(s): {allowedRoles.join(', ')}
           <br />
