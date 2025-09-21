@@ -1,5 +1,6 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import jwt from 'jsonwebtoken';
+import User from '../models/User';
+import connectDB from './mongodb';
 
 const auth = async (req, res, next) => {
   try {
@@ -50,6 +51,50 @@ const adminAuth = async (req, res, next) => {
       status: 401,
       msg: 'Authentication required'
     });
+  }
+};
+
+// Next.js API route compatible token verification
+export const verifyToken = async (request) => {
+  try {
+    await connectDB();
+    
+    const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');
+    const token = authHeader?.replace('Bearer ', '');
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'No token provided'
+      };
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const user = await User.findById(decoded.userId).select('-password');
+    
+    if (!user || !user.isActive) {
+      return {
+        success: false,
+        message: 'Invalid token or user inactive'
+      };
+    }
+
+    return {
+      success: true,
+      user: {
+        userId: user._id.toString(),
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        name: user.name
+      }
+    };
+  } catch (error) {
+    console.error('Token verification error:', error);
+    return {
+      success: false,
+      message: 'Token verification failed'
+    };
   }
 };
 

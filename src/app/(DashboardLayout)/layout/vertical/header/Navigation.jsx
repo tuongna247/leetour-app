@@ -44,6 +44,19 @@ const AppDD = () => {
       Tours
     </Button>
     
+    {/* User Management Button - Only for Admin */}
+    {user?.role === 'admin' && (
+      <Button
+        color="inherit"
+        sx={{ color: (theme) => theme.palette.text.secondary }}
+        variant="text"
+        href="/admin/users"
+        component={Link}
+      >
+        User Management
+      </Button>
+    )}
+    
     {/* Bookings Button - Only for Admin */}
     {user?.role === 'admin' && (
       <Button

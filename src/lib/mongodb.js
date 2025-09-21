@@ -27,13 +27,7 @@ async function connectDB() {
       minPoolSize: 2,
     };
 
-    console.log('Connecting to MongoDB...');
-    console.log('URI exists:', !!MONGODB_URI);
-    console.log('URI starts with mongodb+srv:', MONGODB_URI?.startsWith('mongodb+srv://'));
-
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      console.log(`MongoDB Connected: ${mongoose.connection.host}`);
-      console.log(`Database: ${mongoose.connection.name}`);
       return mongoose;
     }).catch((error) => {
       console.error('MongoDB connection error:', error);
