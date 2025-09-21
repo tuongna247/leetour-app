@@ -269,7 +269,7 @@ export default function SignInPage() {
           </Box>
 
           <Typography variant="body2" align="center">
-            Don&apos;t have an account?{' '}
+            Don&apos;t have an account?
             <Link href="/auth/signup" underline="hover">
               Sign up here
             </Link>
