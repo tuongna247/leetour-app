@@ -76,6 +76,12 @@ const Menuitems = [
       },
     ],
   },
+  {
+    id: uniqueId(),
+    title: 'Bookings',
+    icon: IconClipboardList,
+    href: '/admin/bookings',
+  },
 
   {
     navlabel: true,
