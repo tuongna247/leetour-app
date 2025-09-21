@@ -47,13 +47,18 @@ const Profile = () => {
         onClick={handleClick2}
       >
         <Avatar
-          src={"/images/profile/user-1.jpg"}
-          alt={'ProfileImg'}
+          src={user?.avatar || "/images/profile/user-1.jpg"}
+          alt={user?.name || user?.username || 'User'}
           sx={{
             width: 35,
             height: 35,
           }}
-        />
+        >
+          {!user?.avatar && (user?.name || user?.username) ? 
+            (user?.name || user?.username).charAt(0).toUpperCase() : 
+            'U'
+          }
+        </Avatar>
       </IconButton>
       {/* ------------------------------------------- */}
       {/* Message Dropdown */}
@@ -75,10 +80,19 @@ const Profile = () => {
       >
         <Typography variant="h5">User Profile</Typography>
         <Stack direction="row" py={3} spacing={2} alignItems="center">
-        <Avatar src={"/images/profile/user-1.jpg"} alt={"ProfileImg"} sx={{ width: 95, height: 95 }} />
+        <Avatar 
+          src={user?.avatar || "/images/profile/user-1.jpg"} 
+          alt={user?.name || user?.username || 'User'} 
+          sx={{ width: 95, height: 95 }}
+        >
+          {!user?.avatar && (user?.name || user?.username) ? 
+            (user?.name || user?.username).charAt(0).toUpperCase() : 
+            'U'
+          }
+        </Avatar>
           <Box>
             <Typography variant="subtitle2" color="textPrimary" fontWeight={600}>
-              {user?.username || 'User'}
+              {user?.name || user?.username || 'User'}
             </Typography>
             <Typography variant="subtitle2" color="textSecondary">
               {user?.role || 'Member'}
@@ -149,20 +163,6 @@ const Profile = () => {
           </Box>
         ))}
         <Box mt={2}>
-          <Box bgcolor="primary.light" p={3} mb={3} overflow="hidden" position="relative">
-            <Box display="flex" justifyContent="space-between">
-              <Box>
-                <Typography variant="h5" mb={2}>
-                  Unlimited <br />
-                  Access
-                </Typography>
-                <Button variant="contained" color="primary">
-                  Upgrade
-                </Button>
-              </Box>
-              <Image src={"/images/backgrounds/unlimited-bg.png"} width={150} height={183} alt="unlimited" className="signup-bg" />
-            </Box>
-          </Box>
           <Button 
             variant="outlined" 
             color="primary" 

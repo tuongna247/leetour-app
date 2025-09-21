@@ -53,18 +53,6 @@ const profile = [
     subtitle: "Account Settings",
     icon: "/images/svgs/icon-account.svg",
   },
-  {
-    href: "/",
-    title: "My Inbox",
-    subtitle: "Messages & Emails",
-    icon: "/images/svgs/icon-inbox.svg",
-  },
-  {
-    href: "/",
-    title: "My Tasks",
-    subtitle: "To-do and Daily Tasks",
-    icon: "/images/svgs/icon-tasks.svg",
-  },
 ];
 
 // apps dropdown

@@ -81,21 +81,6 @@ const Header = () => {
           {/* End Ecommerce Dropdown */}
           {/* ------------------------------------------- */}
 
-          <IconButton size="large" color="inherit">
-            {activeMode === "light" ? (
-              <IconMoon
-                size="21"
-                stroke="1.5"
-                onClick={() => setActiveMode("dark")}
-              />
-            ) : (
-              <IconSun
-                size="21"
-                stroke="1.5"
-                onClick={() => setActiveMode("light")}
-              />
-            )}
-          </IconButton>
           <Notifications />
           <Profile />
         </Stack>

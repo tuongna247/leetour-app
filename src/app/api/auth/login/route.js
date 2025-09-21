@@ -93,6 +93,7 @@ export async function POST(request) {
         user: {
           id: user._id,
           username: user.username,
+          name: user.name,
           email: user.email,
           role: user.role,
           lastLogin: user.lastLogin

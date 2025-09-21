@@ -59,8 +59,6 @@ export default function RootLayout({ children }) {
         {/* Header */}
         {/* ------------------------------------------- */}
         {activeLayout === 'horizontal' ? <HorizontalHeader /> : <Header />}
-        {/* PageContent */}
-        {activeLayout === 'horizontal' ? <Navigation /> : ""}
         <Container
           sx={{
             maxWidth: isLayout === "boxed" ? "lg" : "100%!important",
@@ -80,7 +78,6 @@ export default function RootLayout({ children }) {
           {/* End Page */}
           {/* ------------------------------------------- */}
         </Container>
-        <Customizer />
       </PageWrapper>
     </MainWrapper>
     </ProtectedRoute>

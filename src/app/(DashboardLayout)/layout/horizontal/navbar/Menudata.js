@@ -1,58 +1,30 @@
-import { IconPoint, IconAperture, IconBoxMultiple } from "@tabler/icons-react";
+import { IconPoint, IconAperture, IconBoxMultiple, IconMapPin, IconSettings, IconList, IconPlus } from "@tabler/icons-react";
 import { uniqueId } from "lodash";
 
 const Menuitems = [
   {
     id: uniqueId(),
-    title: "Starter",
-    icon: IconAperture,
-    href: "/",
+    title: "Tours",
+    icon: IconMapPin,
+    href: "/tours",
   },
   {
     id: uniqueId(),
-    title: "Menu Level",
-    icon: IconBoxMultiple,
-    href: "/menulevel/",
+    title: "Tour Management",
+    icon: IconSettings,
+    href: "/admin/tours",
     children: [
       {
         id: uniqueId(),
-        title: "Level 1",
-        icon: IconPoint,
-        href: "/l1",
+        title: "All Tours",
+        icon: IconList,
+        href: "/admin/tours",
       },
       {
         id: uniqueId(),
-        title: "Level 1.1",
-        icon: IconPoint,
-        href: "/l1.1",
-        children: [
-          {
-            id: uniqueId(),
-            title: "Level 2",
-            icon: IconPoint,
-            href: "/l2",
-          },
-          {
-            id: uniqueId(),
-            title: "Level 2.1",
-            icon: IconPoint,
-            href: "/l2.1",
-            children: [
-              {
-                id: uniqueId(),
-                title: "Level 3",
-                icon: IconPoint,
-                href: "/l3",
-              },
-              {
-                id: uniqueId(),
-                title: "Level 3.1",
-                icon: IconPoint,
-                href: "/l3.1",
-              },
-            ],
-          },
-        ],
+        title: "Add New Tour",
+        icon: IconPlus,
+        href: "/admin/tours/new",
       },
     ],
   },

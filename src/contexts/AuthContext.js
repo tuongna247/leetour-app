@@ -99,27 +99,6 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
-    } else {
-      // Auto-login with default admin user
-      const defaultAdminUser = {
-        id: 'admin-1',
-        username: 'admin',
-        email: 'admin@leetour.com',
-        role: 'admin',
-        name: 'Administrator',
-        isActive: true
-      };
-      const defaultToken = 'admin-default-token-' + Date.now();
-      
-      // Store in localStorage
-      localStorage.setItem('token', defaultToken);
-      localStorage.setItem('user', JSON.stringify(defaultAdminUser));
-      
-      // Update state
-      dispatch({
-        type: AUTH_ACTIONS.LOGIN_SUCCESS,
-        payload: { user: defaultAdminUser, token: defaultToken }
-      });
     }
     
     dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: false });

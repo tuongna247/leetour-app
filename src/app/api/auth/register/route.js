@@ -7,7 +7,7 @@ export async function POST(request) {
   try {
     await connectDB();
     
-    const { username, email, password, role = 'user' } = await request.json();
+    const { username, name, email, password, role = 'user' } = await request.json();
 
     // Basic validation
     if (!username || username.length < 3 || username.length > 30) {
@@ -31,6 +31,13 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
+    if (!name || name.trim().length === 0) {
+      return NextResponse.json({
+        status: 400,
+        msg: 'Name is required'
+      }, { status: 400 });
+    }
+
     // Check if user already exists
     const existingUser = await User.findOne({
       $or: [{ email }, { username }]
@@ -46,6 +53,7 @@ export async function POST(request) {
     // Create new user
     const user = new User({
       username,
+      name: name.trim(),
       email,
       password,
       role
@@ -72,6 +80,7 @@ export async function POST(request) {
         user: {
           id: user._id,
           username: user.username,
+          name: user.name,
           email: user.email,
           role: user.role
         }
