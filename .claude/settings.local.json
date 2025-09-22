@@ -10,7 +10,8 @@
       "Bash(pkill:*)",
       "Bash(rm:*)",
       "Bash(npm run build:*)",
-      "Bash(npm ci:*)"
+      "Bash(npm ci:*)",
+      "Bash(gh:*)"
     ],
     "deny": [],
     "ask": []
