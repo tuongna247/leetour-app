@@ -1,4 +1,4 @@
-import { IconPoint, IconAperture, IconBoxMultiple, IconMapPin, IconSettings, IconList, IconPlus } from "@tabler/icons-react";
+import { IconPoint, IconAperture, IconBoxMultiple, IconMapPin, IconSettings, IconList, IconPlus, IconClipboardList } from "@tabler/icons-react";
 import { uniqueId } from "lodash";
 
 const Menuitems = [
@@ -7,6 +7,12 @@ const Menuitems = [
     title: "Tours",
     icon: IconMapPin,
     href: "/tours",
+  },
+  {
+    id: uniqueId(),
+    title: "Bookings",
+    icon: IconClipboardList,
+    href: "/admin/bookings",
   },
   {
     id: uniqueId(),

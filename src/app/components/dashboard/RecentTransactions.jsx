@@ -115,7 +115,11 @@ const RecentTransactions = () => {
                 {booking.bookingReference && (
                   <>
                     {' '}
-                    <Link href="#" underline="none">
+                    <Link 
+                      href={`/admin/bookings?search=${booking.bookingReference}`} 
+                      underline="none"
+                      sx={{ color: 'primary.main', fontWeight: 600 }}
+                    >
                       #{booking.bookingReference}
                     </Link>
                   </>
