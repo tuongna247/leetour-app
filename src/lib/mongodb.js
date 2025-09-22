@@ -1,6 +1,12 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = 'mongodb+srv://leetour:RN1vmYdHHjnTwEqM@cluster0.nz7bupo.mongodb.net/leetour?retryWrites=true&w=majority&appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('MONGODB_URI environment variable is not set');
+  // For build time, we'll provide a placeholder
+  // In production, this must be set as an environment variable
+}
 
 /**
  * Global is used here to maintain a cached connection across hot reloads
@@ -16,6 +22,12 @@ if (!cached) {
 async function connectDB() {
   if (cached.conn) {
     return cached.conn;
+  }
+
+  // Skip connection during build if no URI is provided
+  if (!MONGODB_URI) {
+    console.warn('Skipping MongoDB connection - MONGODB_URI not set');
+    return null;
   }
 
   if (!cached.promise) {
