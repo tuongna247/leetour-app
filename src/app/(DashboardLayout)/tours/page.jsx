@@ -397,12 +397,12 @@ const ToursPage = () => {
           <Grid container spacing={3}>
             {loading
               ? Array.from(new Array(9)).map((_, index) => (
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+                  <Grid size={{ xs: 4, sm: 4, md: 4 }} key={index}>
                     <TourSkeleton />
                   </Grid>
                 ))
               : tours.map((tour) => (
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }} key={tour._id}>
+                  <Grid size={{ xs: 4, sm: 4, md: 4 }} key={tour._id}>
                     <TourCard tour={tour} onFavoriteToggle={handleFavoriteToggle} />
                   </Grid>
                 ))}
