@@ -8,8 +8,7 @@
       "Bash(taskkill:*)",
       "Bash(del test-connection.js test-google-oauth.js test-auth-flow.js)",
       "Bash(pkill:*)",
-      "Bash(rm:*)",
-      "Bash(npm run build:*)"
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []
