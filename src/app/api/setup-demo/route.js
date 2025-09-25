@@ -6,37 +6,37 @@ export async function POST(request) {
   try {
     await connectDB();
     
-    // Create demo users if they don't exist
-    const demoUsers = [
+    // Create initial users for the system
+    const initialUsers = [
       {
         username: 'admin',
-        email: 'admin@demo.com',
+        name: 'Administrator',
+        email: 'admin@leetour.com',
         password: 'admin123',
-        role: 'admin'
+        role: 'admin',
+        isEmailVerified: true
       },
       {
         username: 'user',
-        email: 'user@demo.com', 
+        name: 'User Account',
+        email: 'user@leetour.com', 
         password: 'user123',
-        role: 'user'
+        role: 'mod',
+        isEmailVerified: true
       },
       {
-        username: 'google_user',
-        email: 'google@demo.com',
-        password: 'demo123',
-        role: 'user'
-      },
-      {
-        username: 'facebook_user',
-        email: 'facebook@demo.com',
-        password: 'demo123', 
-        role: 'user'
+        username: 'customer',
+        name: 'Customer Account',
+        email: 'customer@leetour.com',
+        password: 'customer123',
+        role: 'customer',
+        isEmailVerified: true
       }
     ];
 
     const results = [];
     
-    for (const userData of demoUsers) {
+    for (const userData of initialUsers) {
       try {
         // Check if user already exists
         const existingUser = await User.findOne({
@@ -48,7 +48,14 @@ export async function POST(request) {
           await user.save();
           results.push(`✅ Created user: ${userData.username}`);
         } else {
-          results.push(`ℹ️ User already exists: ${userData.username}`);
+          // Update existing user with missing fields
+          if (!existingUser.name) {
+            existingUser.name = userData.name;
+            await existingUser.save();
+            results.push(`✅ Updated user: ${userData.username}`);
+          } else {
+            results.push(`ℹ️ User already exists: ${userData.username}`);
+          }
         }
       } catch (error) {
         results.push(`❌ Failed to create ${userData.username}: ${error.message}`);
@@ -57,7 +64,7 @@ export async function POST(request) {
 
     return NextResponse.json({
       status: 200,
-      msg: 'Demo setup completed',
+      msg: 'Initial users setup completed',
       results
     });
 

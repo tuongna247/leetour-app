@@ -87,7 +87,7 @@ export default function SignUpPage() {
         if (result?.ok) {
           router.push('/dashboard-main')
         } else {
-          router.push('/auth/signin')
+          router.push('/auth/auth1/login')
         }
       }, 2000)
 
@@ -253,7 +253,7 @@ export default function SignUpPage() {
 
           <Typography variant="body2" align="center">
             Already have an account?{' '}
-            <Link href="/auth/signin" underline="hover">
+            <Link href="/auth/auth1/login" underline="hover">
               Sign in here
             </Link>
           </Typography>

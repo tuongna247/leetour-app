@@ -68,11 +68,7 @@ const UserSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for performance
-UserSchema.index({ username: 1 });
-UserSchema.index({ email: 1 });
-UserSchema.index({ googleId: 1 });
-UserSchema.index({ facebookId: 1 });
+// Indexes are automatically created by unique: true and sparse: true properties above
 
 // Hash password before saving (only for local auth)
 UserSchema.pre('save', async function(next) {
