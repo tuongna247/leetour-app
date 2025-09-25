@@ -54,7 +54,15 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'mod', 'customer'],
+    enum: [
+      'admin',           // Master Admin - full system access
+      'country_admin',   // Country Admin - regional management
+      'supplier',        // Supplier - manage tours/activities 
+      'supervisor',      // Supervisor - manage supplier users
+      'accountant',      // Accountant - financial access
+      'mod',            // Moderator - legacy role
+      'customer'        // End user - book activities
+    ],
     default: 'customer'
   },
   isActive: {
@@ -63,7 +71,29 @@ const UserSchema = new mongoose.Schema({
   },
   lastLogin: {
     type: Date
-  }
+  },
+  // Basic profile fields
+  phone: {
+    type: String,
+    trim: true
+  },
+  locale: {
+    type: String,
+    default: 'en',
+    enum: ['en', 'vi', 'zh', 'ko', 'ja', 'th']
+  },
+  country_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Country'
+  },
+  // Role-specific permissions
+  permissions: [{
+    type: String,
+    enum: [
+      'manage_users', 'manage_tours', 'manage_bookings', 'manage_finances',
+      'view_analytics', 'approve_suppliers', 'manage_countries', 'system_admin'
+    ]
+  }]
 }, {
   timestamps: true
 });
