@@ -29,6 +29,7 @@ import {
 import { useRouter, useParams } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/components/container/PageContainer';
+import { useAuth } from '@/contexts/AuthContext';
 
 const categories = [
   'Cultural',
@@ -45,6 +46,7 @@ const difficulties = ['Easy', 'Medium', 'Hard'];
 const currencies = ['USD', 'EUR', 'GBP', 'JPY', 'AUD'];
 
 export default function EditTourPage() {
+  const { authenticatedFetch } = useAuth();
   const router = useRouter();
   const params = useParams();
   const tourId = params.id;
@@ -77,7 +79,7 @@ export default function EditTourPage() {
     const fetchTour = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/admin/tours/${tourId}`);
+        const response = await authenticatedFetch(`/api/admin/tours/${tourId}`);
         const data = await response.json();
 
         if (data.status === 200) {

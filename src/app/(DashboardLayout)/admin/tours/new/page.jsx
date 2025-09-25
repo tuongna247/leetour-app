@@ -31,6 +31,7 @@ import {
 import { useRouter } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/components/container/PageContainer';
+import { useAuth } from '@/contexts/AuthContext';
 
 const BCrumb = [
   {
@@ -67,6 +68,7 @@ const timeSlots = ['09:00 AM', '11:00 AM', '02:00 PM', '04:00 PM', '06:00 PM'];
 const availableDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 export default function AddNewTourPage() {
+  const { authenticatedFetch } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
@@ -195,7 +197,7 @@ export default function AddNewTourPage() {
         images: formData.images.filter(img => img.url.trim())
       };
 
-      const response = await fetch('/api/admin/tours', {
+      const response = await authenticatedFetch('/api/admin/tours', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
