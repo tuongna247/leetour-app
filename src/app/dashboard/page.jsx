@@ -13,7 +13,7 @@ export default function DashboardPage() {
     if (status === 'loading') return
 
     if (status === 'unauthenticated') {
-      router.replace('/auth/signin')
+      router.replace('/auth/auth1/login')
       return
     }
 

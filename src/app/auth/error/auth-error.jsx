@@ -75,7 +75,7 @@ export default function AuthErrorPage() {
               <Button
                 variant="contained"
                 component={Link}
-                href="/auth/signin"
+                href="/auth/auth1/login"
               >
                 Try Again
               </Button>
@@ -113,7 +113,7 @@ export default function AuthErrorPage() {
           color="primary"
           variant="contained"
           component={Link}
-          href="/auth/signin"
+          href="/auth/auth1/login"
           disableElevation
         >
           Go Back to Sign In

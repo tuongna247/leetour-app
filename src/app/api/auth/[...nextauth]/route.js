@@ -195,7 +195,7 @@ const authOptions = {
     }
   },
   pages: {
-    signIn: '/auth/signin',
+    signIn: '/auth/auth1/login',
     signUp: '/auth/signup',
     error: '/auth/error',
   },
