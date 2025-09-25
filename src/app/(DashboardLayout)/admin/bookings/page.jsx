@@ -43,8 +43,10 @@ import {
 import PageContainer from '@/app/components/container/PageContainer';
 import DashboardCard from '@/app/components/shared/DashboardCard';
 import RoleBasedAccess from '@/components/auth/RoleBasedAccess';
+import { useAuth } from '@/contexts/AuthContext';
 
 const BookingListPage = () => {
+  const { authenticatedFetch } = useAuth();
   const searchParams = useSearchParams();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -94,7 +96,7 @@ const BookingListPage = () => {
       }
       if (statusFilter) params.append('status', statusFilter);
       
-      const response = await fetch(`/api/bookings?${params}`);
+      const response = await authenticatedFetch(`/api/bookings?${params}`);
       const data = await response.json();
 
       if (data.status === 200) {

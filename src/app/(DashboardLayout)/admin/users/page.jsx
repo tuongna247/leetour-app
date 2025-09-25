@@ -39,7 +39,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import RoleBasedAccess from '@/components/auth/RoleBasedAccess'
 
 export default function UserManagementPage() {
-  const { user } = useAuth()
+  const { user, authenticatedFetch } = useAuth()
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -58,7 +58,7 @@ export default function UserManagementPage() {
   const fetchUsers = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/admin/users')
+      const response = await authenticatedFetch('/api/admin/users')
       const data = await response.json()
       
       if (data.status === 200) {
@@ -129,7 +129,7 @@ export default function UserManagementPage() {
         delete payload.password // Don't update password if empty
       }
 
-      const response = await fetch(url, {
+      const response = await authenticatedFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -150,7 +150,7 @@ export default function UserManagementPage() {
 
   const handleToggleActive = async (userId, isActive) => {
     try {
-      const response = await fetch(`/api/admin/users/${userId}`, {
+      const response = await authenticatedFetch(`/api/admin/users/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive: !isActive })
