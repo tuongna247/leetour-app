@@ -185,7 +185,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // If using NextAuth session, use NextAuth signOut
       if (session) {
-        await signOut({ callbackUrl: '/auth/signin' });
+        await signOut({ callbackUrl: '/auth/auth1/login' });
       } else {
         // Call logout API if local token exists
         if (state.token && state.token !== 'nextauth-session') {

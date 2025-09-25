@@ -20,10 +20,7 @@ import {
   Skeleton,
   Pagination,
   Stack,
-  InputAdornment,
-  AppBar,
-  Toolbar,
-  Container
+  InputAdornment
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -33,463 +30,400 @@ import {
   AttachMoney as MoneyIcon,
   Star as StarIcon,
   Favorite as FavoriteIcon,
-  FavoriteBorder as FavoriteBorderIcon,
-  Login as LoginIcon,
-  AccountCircle as AccountIcon,
-  Logout as LogoutIcon
+  FavoriteBorder as FavoriteBorderIcon
 } from '@mui/icons-material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
-import { useSession } from 'next-auth/react';
+import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
+import PageContainer from '@/app/components/container/PageContainer';
 
-const TourCard = ({ tour, onFavoriteToggle, isAuthenticated }) => {
+const BCrumb = [
+  {
+    to: '/',
+    title: 'Home',
+  },
+  {
+    title: 'Tours',
+  },
+];
+
+const TourCard = ({ tour, onFavoriteToggle }) => {
   const router = useRouter();
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleBookNow = () => {
-    if (isAuthenticated) {
-      router.push(`/customer-tours/${tour._id}/booking`);
-    } else {
-      // For non-authenticated users, redirect to login first
-      router.push(`/auth/signin?redirect=/customer-tours/${tour._id}/booking`);
-    }
+    router.push(`/tours/${tour._id}/booking`);
   };
 
-  const handleViewDetails = () => {
-    router.push(`/customer-tours/${tour._id}`);
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    onFavoriteToggle?.(tour._id, !isFavorite);
   };
+
+  const primaryImage = tour.images?.find(img => img.isPrimary) || tour.images?.[0];
 
   return (
-    <Grid item xs={12} sm={6} md={4} key={tour._id}>
-      <Card 
-        sx={{ 
-          height: '100%', 
-          display: 'flex', 
-          flexDirection: 'column',
-          transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-          '&:hover': {
-            transform: 'translateY(-4px)',
-            boxShadow: (theme) => theme.shadows[8],
-          }
-        }}
-      >
+    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ position: 'relative' }}>
         <CardMedia
           component="img"
           height="200"
-          image={tour.images?.[0]?.url || '/images/tours/default-tour.jpg'}
+          image={primaryImage?.url || '/images/tours/default-tour.jpg'}
           alt={tour.title}
           sx={{ objectFit: 'cover' }}
         />
-        
-        <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-          <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
-            <Typography variant="h6" component="h2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
-              {tour.title}
-            </Typography>
-            {isAuthenticated && onFavoriteToggle && (
-              <IconButton 
-                onClick={() => onFavoriteToggle(tour._id, tour.isFavorite)}
-                size="small"
-                sx={{ color: tour.isFavorite ? 'error.main' : 'grey.400' }}
-              >
-                {tour.isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-              </IconButton>
-            )}
-          </Box>
-
-          <Box display="flex" alignItems="center" gap={0.5} mb={1}>
-            <LocationIcon color="action" fontSize="small" />
-            <Typography variant="body2" color="text.secondary">
-              {tour.location?.city}, {tour.location?.country}
-            </Typography>
-          </Box>
-
-          <Box display="flex" alignItems="center" gap={2} mb={2}>
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <TimeIcon color="action" fontSize="small" />
-              <Typography variant="body2" color="text.secondary">
-                {tour.duration}
-              </Typography>
-            </Box>
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <GroupIcon color="action" fontSize="small" />
-              <Typography variant="body2" color="text.secondary">
-                Max {tour.capacity?.maximum || 20}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box display="flex" alignItems="center" gap={1} mb={2}>
-            <Rating 
-              value={tour.rating?.average || 0} 
-              readOnly 
-              size="small" 
-              precision={0.1}
-            />
-            <Typography variant="body2" color="text.secondary">
-              ({tour.rating?.count || 0} reviews)
-            </Typography>
-          </Box>
-
-          <Typography 
-            variant="body2" 
-            color="text.secondary" 
-            sx={{ 
-              mb: 2, 
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden'
+        <IconButton
+          sx={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            '&:hover': { backgroundColor: 'rgba(255, 255, 255, 1)' }
+          }}
+          onClick={toggleFavorite}
+        >
+          {isFavorite ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
+        </IconButton>
+        {tour.isFeatured && (
+          <Chip
+            label="Featured"
+            color="primary"
+            size="small"
+            sx={{
+              position: 'absolute',
+              top: 8,
+              left: 8,
+              backgroundColor: 'primary.main',
+              color: 'white'
             }}
-          >
-            {tour.description}
+          />
+        )}
+      </Box>
+
+      <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="h6" component="h2" gutterBottom>
+            {tour.title}
           </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+            {tour.shortDescription}
+          </Typography>
+        </Box>
 
-          <Box display="flex" alignItems="center" gap={1} mb={2}>
-            {tour.difficulty && (
-              <Chip 
-                label={tour.difficulty} 
-                size="small" 
-                color={
-                  tour.difficulty === 'Easy' ? 'success' : 
-                  tour.difficulty === 'Moderate' ? 'warning' : 'error'
-                }
-              />
-            )}
-            {tour.category && (
-              <Chip label={tour.category} size="small" variant="outlined" />
-            )}
-          </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <LocationIcon fontSize="small" color="action" sx={{ mr: 0.5 }} />
+          <Typography variant="body2" color="text.secondary">
+            {tour.location.city}, {tour.location.country}
+          </Typography>
+        </Box>
 
-          <Box display="flex" alignItems="center" justifyContent="space-between" mt="auto">
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <MoneyIcon color="primary" fontSize="small" />
-              <Typography variant="h6" color="primary" fontWeight="bold">
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <TimeIcon fontSize="small" color="action" sx={{ mr: 0.5 }} />
+          <Typography variant="body2" color="text.secondary">
+            {tour.duration}
+          </Typography>
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <GroupIcon fontSize="small" color="action" sx={{ mr: 0.5 }} />
+          <Typography variant="body2" color="text.secondary">
+            Max {tour.capacity?.maximum || tour.groupSize?.max || 20} people
+          </Typography>
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Rating
+            value={tour.rating.average}
+            precision={0.1}
+            readOnly
+            size="small"
+            sx={{ mr: 1 }}
+          />
+          <Typography variant="body2" color="text.secondary">
+            ({tour.rating.count} reviews)
+          </Typography>
+        </Box>
+
+        <Box sx={{ mt: 'auto' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Box>
+              {tour.originalPrice && tour.originalPrice > tour.price && (
+                <Typography
+                  variant="body2"
+                  sx={{ textDecoration: 'line-through', color: 'text.secondary' }}
+                >
+                  ${tour.originalPrice}
+                </Typography>
+              )}
+              <Typography variant="h6" color="primary.main" sx={{ fontWeight: 'bold' }}>
                 ${tour.price}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                /person
+                <Typography component="span" variant="body2" color="text.secondary">
+                  /person
+                </Typography>
               </Typography>
             </Box>
+            <Chip
+              label={tour.category}
+              size="small"
+              variant="outlined"
+              color="primary"
+            />
           </Box>
 
-          <Box display="flex" gap={1} mt={2}>
-            <Button 
-              variant="outlined" 
-              size="small" 
-              onClick={handleViewDetails}
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              variant="outlined"
+              size="small"
+              component={Link}
+              href={`/tours/${tour._id}`}
               sx={{ flex: 1 }}
             >
               View Details
             </Button>
-            <Button 
-              variant="contained" 
-              size="small" 
+            <Button
+              variant="contained"
+              size="small"
               onClick={handleBookNow}
               sx={{ flex: 1 }}
             >
-              {isAuthenticated ? 'Book Now' : 'Login to Book'}
+              Book Now
             </Button>
           </Box>
-        </CardContent>
-      </Card>
-    </Grid>
+        </Box>
+      </CardContent>
+    </Card>
   );
 };
 
-const HomePage = () => {
-  const router = useRouter();
-  const { isAuthenticated, user, logout } = useAuth();
-  const { data: session } = useSession();
-  
+const TourSkeleton = () => (
+  <Card sx={{ height: '100%' }}>
+    <Skeleton variant="rectangular" height={200} />
+    <CardContent>
+      <Skeleton variant="text" sx={{ fontSize: '1.5rem', mb: 1 }} />
+      <Skeleton variant="text" sx={{ mb: 2 }} />
+      <Skeleton variant="text" width="60%" sx={{ mb: 1 }} />
+      <Skeleton variant="text" width="40%" sx={{ mb: 1 }} />
+      <Skeleton variant="text" width="50%" sx={{ mb: 2 }} />
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Skeleton variant="text" width="30%" />
+        <Skeleton variant="rectangular" width={60} height={24} />
+      </Box>
+    </CardContent>
+  </Card>
+);
+
+const ToursPage = () => {
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [sortBy, setSortBy] = useState('latest');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({
+    search: '',
+    category: '',
+    location: '',
+    minPrice: '',
+    maxPrice: '',
+    featured: false
+  });
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 12,
+    total: 0,
+    pages: 0
+  });
 
-  const isUserAuthenticated = isAuthenticated || session?.user;
-  const currentUser = user || session?.user;
-
-  useEffect(() => {
-    fetchTours();
-  }, [searchTerm, locationFilter, categoryFilter, sortBy, currentPage]);
+  const categories = ['Adventure', 'Cultural', 'Historical', 'Nature', 'Food & Drink', 'Family', 'Romantic'];
 
   const fetchTours = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
+      const queryParams = new URLSearchParams();
+      queryParams.append('page', pagination.page);
+      queryParams.append('limit', pagination.limit);
       
-      const queryParams = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: '12',
-        ...(searchTerm && { search: searchTerm }),
-        ...(locationFilter && { location: locationFilter }),
-        ...(categoryFilter && { category: categoryFilter }),
-        ...(sortBy && { sort: sortBy })
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value && value !== '') {
+          queryParams.append(key, value);
+        }
       });
 
       const response = await fetch(`/api/tours?${queryParams}`);
       const data = await response.json();
 
       if (data.status === 200) {
-        setTours(data.data.tours || []);
-        setTotalPages(data.data.totalPages || 1);
+        setTours(data.data.tours);
+        setPagination(prev => ({
+          ...prev,
+          total: data.data.pagination.total,
+          pages: data.data.pagination.pages
+        }));
       } else {
-        setError(data.msg || 'Failed to fetch tours');
+        setError(data.msg);
       }
     } catch (err) {
       setError('Failed to fetch tours');
+      console.error('Error fetching tours:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleFavoriteToggle = async (tourId, isFavorite) => {
-    if (!isUserAuthenticated) {
-      router.push('/auth/signin');
-      return;
-    }
+  useEffect(() => {
+    fetchTours();
+  }, [pagination.page, filters]);
 
-    try {
-      const response = await fetch(`/api/tours/${tourId}/favorite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ isFavorite: !isFavorite })
-      });
-
-      if (response.ok) {
-        setTours(tours.map(tour => 
-          tour._id === tourId 
-            ? { ...tour, isFavorite: !isFavorite }
-            : tour
-        ));
-      }
-    } catch (err) {
-      // Handle error silently for non-authenticated users
-    }
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: value
+    }));
+    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const handleLogin = () => {
-    router.push('/auth/signin');
+  const handlePageChange = (event, newPage) => {
+    setPagination(prev => ({ ...prev, page: newPage }));
   };
 
-  const handleLogout = async () => {
-    await logout();
-    router.push('/');
-  };
-
-  const handleDashboard = () => {
-    if (currentUser?.role === 'admin' || currentUser?.role === 'mod') {
-      router.push('/dashboard-main');
-    } else {
-      router.push('/'); // Stay on homepage for customers
-    }
+  const handleFavoriteToggle = (tourId, isFavorite) => {
+    // In a real app, you'd save favorites to user preferences or backend
+    console.log(`Tour ${tourId} ${isFavorite ? 'added to' : 'removed from'} favorites`);
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'grey.50' }}>
-      {/* Public Header */}
-      <AppBar position="static" sx={{ bgcolor: 'white', color: 'text.primary' }} elevation={1}>
-        <Container maxWidth="lg">
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'primary.main', fontWeight: 'bold' }}>
-              LeeTour
-            </Typography>
-            
-            {isUserAuthenticated ? (
-              <Box display="flex" alignItems="center" gap={2}>
-                <Typography variant="body2">
-                  Welcome, {currentUser?.name || currentUser?.username}
-                </Typography>
-                {(currentUser?.role === 'admin' || currentUser?.role === 'mod') && (
-                  <Button 
-                    startIcon={<AccountIcon />}
-                    onClick={handleDashboard}
-                    variant="outlined"
-                    size="small"
-                  >
-                    Dashboard
-                  </Button>
-                )}
-                <Button 
-                  startIcon={<LogoutIcon />}
-                  onClick={handleLogout}
-                  variant="outlined"
-                  size="small"
-                  color="error"
-                >
-                  Logout
-                </Button>
-              </Box>
-            ) : (
-              <Button 
-                startIcon={<LoginIcon />}
-                onClick={handleLogin}
-                variant="contained"
-                size="small"
-              >
-                Login
-              </Button>
-            )}
-          </Toolbar>
-        </Container>
-      </AppBar>
-
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Hero Section */}
-        <Box textAlign="center" mb={6}>
-          <Typography variant="h3" component="h1" gutterBottom fontWeight="bold">
-            Discover Amazing Tours
-          </Typography>
-          <Typography variant="h6" color="text.secondary" mb={4}>
-            Explore the world with our carefully curated travel experiences
-          </Typography>
-        </Box>
-
+    <PageContainer title="Tours" description="Browse and book amazing day trips and tours">
+      <Breadcrumb title="Tours" items={BCrumb} />
+      
+      <Box sx={{ mt: 3 }}>
         {/* Filters */}
-        <Box mb={4}>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} md={4}>
-              <TextField
-                fullWidth
-                placeholder="Search tours..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} md={2}>
-              <FormControl fullWidth>
-                <InputLabel>Location</InputLabel>
-                <Select
-                  value={locationFilter}
-                  label="Location"
-                  onChange={(e) => setLocationFilter(e.target.value)}
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Grid container spacing={2} alignItems="center">
+              <Grid size={{ xs: 12, md: 3 }}>
+                <TextField
+                  fullWidth
+                  placeholder="Search tours..."
+                  value={filters.search}
+                  onChange={(e) => handleFilterChange('search', e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, md: 2 }}>
+                <FormControl fullWidth>
+                  <InputLabel>Category</InputLabel>
+                  <Select
+                    value={filters.category}
+                    label="Category"
+                    onChange={(e) => handleFilterChange('category', e.target.value)}
+                  >
+                    <MenuItem value="">All Categories</MenuItem>
+                    {categories.map((category) => (
+                      <MenuItem key={category} value={category}>
+                        {category}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid size={{ xs: 12, md: 2 }}>
+                <TextField
+                  fullWidth
+                  placeholder="Location"
+                  value={filters.location}
+                  onChange={(e) => handleFilterChange('location', e.target.value)}
+                />
+              </Grid>
+              <Grid size={{ xs: 6, md: 2 }}>
+                <TextField
+                  fullWidth
+                  placeholder="Min Price"
+                  type="number"
+                  value={filters.minPrice}
+                  onChange={(e) => handleFilterChange('minPrice', e.target.value)}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                />
+              </Grid>
+              <Grid size={{ xs: 6, md: 2 }}>
+                <TextField
+                  fullWidth
+                  placeholder="Max Price"
+                  type="number"
+                  value={filters.maxPrice}
+                  onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, md: 1 }}>
+                <Button
+                  variant={filters.featured ? 'contained' : 'outlined'}
+                  onClick={() => handleFilterChange('featured', !filters.featured)}
+                  startIcon={<StarIcon />}
+                  size="small"
                 >
-                  <MenuItem value="">All Locations</MenuItem>
-                  <MenuItem value="Paris">Paris</MenuItem>
-                  <MenuItem value="Tokyo">Tokyo</MenuItem>
-                  <MenuItem value="New York">New York</MenuItem>
-                  <MenuItem value="London">London</MenuItem>
-                  <MenuItem value="Delhi">Delhi</MenuItem>
-                </Select>
-              </FormControl>
+                  Featured
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={2}>
-              <FormControl fullWidth>
-                <InputLabel>Category</InputLabel>
-                <Select
-                  value={categoryFilter}
-                  label="Category"
-                  onChange={(e) => setCategoryFilter(e.target.value)}
-                >
-                  <MenuItem value="">All Categories</MenuItem>
-                  <MenuItem value="Adventure">Adventure</MenuItem>
-                  <MenuItem value="Cultural">Cultural</MenuItem>
-                  <MenuItem value="Food & Drink">Food & Drink</MenuItem>
-                  <MenuItem value="Nature">Nature</MenuItem>
-                  <MenuItem value="Historical">Historical</MenuItem>
-                  <MenuItem value="Entertainment">Entertainment</MenuItem>
-                  <MenuItem value="Sports">Sports</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={2}>
-              <FormControl fullWidth>
-                <InputLabel>Sort By</InputLabel>
-                <Select
-                  value={sortBy}
-                  label="Sort By"
-                  onChange={(e) => setSortBy(e.target.value)}
-                >
-                  <MenuItem value="latest">Latest</MenuItem>
-                  <MenuItem value="price_low">Price: Low to High</MenuItem>
-                  <MenuItem value="price_high">Price: High to Low</MenuItem>
-                  <MenuItem value="rating">Highest Rated</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </Box>
+          </CardContent>
+        </Card>
 
-        {/* Error Message */}
-        {error && (
-          <Box mb={4}>
-            <Typography color="error" align="center">
-              {error}
+        {/* Results Summary */}
+        {!loading && (
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="body1" color="text.secondary">
+              Showing {tours.length} of {pagination.total} tours
             </Typography>
           </Box>
         )}
 
         {/* Tours Grid */}
-        {loading ? (
-          <Grid container spacing={3}>
-            {[...Array(6)].map((_, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card>
-                  <Skeleton variant="rectangular" width="100%" height={200} />
-                  <CardContent>
-                    <Skeleton variant="text" width="80%" height={32} />
-                    <Skeleton variant="text" width="60%" height={20} />
-                    <Skeleton variant="text" width="40%" height={20} />
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+        {error ? (
+          <Card>
+            <CardContent>
+              <Typography color="error" align="center">
+                {error}
+              </Typography>
+            </CardContent>
+          </Card>
         ) : (
-          <>
-            <Grid container spacing={3}>
-              {tours.map((tour) => (
-                <TourCard 
-                  key={tour._id} 
-                  tour={tour} 
-                  onFavoriteToggle={handleFavoriteToggle}
-                  isAuthenticated={isUserAuthenticated}
-                />
-              ))}
-            </Grid>
-
-            {tours.length === 0 && !loading && (
-              <Box textAlign="center" py={8}>
-                <Typography variant="h6" color="text.secondary">
-                  No tours found
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Try adjusting your search criteria
-                </Typography>
-              </Box>
-            )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <Box display="flex" justifyContent="center" mt={4}>
-                <Pagination
-                  count={totalPages}
-                  page={currentPage}
-                  onChange={(event, value) => setCurrentPage(value)}
-                  color="primary"
-                />
-              </Box>
-            )}
-          </>
+          <Grid container spacing={3}>
+            {loading
+              ? Array.from(new Array(9)).map((_, index) => (
+                  <Grid size={{ xs: 4, sm: 4, md: 4 }} key={index}>
+                    <TourSkeleton />
+                  </Grid>
+                ))
+              : tours.map((tour) => (
+                  <Grid size={{ xs: 4, sm: 4, md: 4 }} key={tour._id}>
+                    <TourCard tour={tour} onFavoriteToggle={handleFavoriteToggle} />
+                  </Grid>
+                ))}
+          </Grid>
         )}
-      </Container>
-    </Box>
+
+        {/* Pagination */}
+        {!loading && pagination.pages > 1 && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Pagination
+              count={pagination.pages}
+              page={pagination.page}
+              onChange={handlePageChange}
+              color="primary"
+              size="large"
+            />
+          </Box>
+        )}
+      </Box>
+    </PageContainer>
   );
 };
 
-export default HomePage;
+export default ToursPage;
