@@ -37,6 +37,7 @@ import {
 } from '@mui/icons-material'
 import { useAuth } from '@/contexts/AuthContext'
 import RoleBasedAccess from '@/components/auth/RoleBasedAccess'
+import { ROLE_DEFINITIONS, getManageableRoles, hasPermission, PERMISSIONS } from '@/lib/roles'
 
 export default function UserManagementPage() {
   const { user, authenticatedFetch } = useAuth()
@@ -51,8 +52,16 @@ export default function UserManagementPage() {
     email: '',
     password: '',
     role: 'customer',
-    isActive: true
+    isActive: true,
+    country: '',
+    companyName: '',
+    department: '',
+    managedBy: '',
+    permissions: []
   })
+  
+  const [availableRoles, setAvailableRoles] = useState([])
+  const [supervisors, setSupervisors] = useState([])
 
   // Fetch users
   const fetchUsers = async () => {
@@ -73,9 +82,29 @@ export default function UserManagementPage() {
     }
   }
 
+  // Fetch supervisors for supplier assignment
+  const fetchSupervisors = async () => {
+    try {
+      const response = await authenticatedFetch('/api/admin/users?role=supervisor')
+      const data = await response.json()
+      if (data.status === 200) {
+        setSupervisors(data.data)
+      }
+    } catch (err) {
+      console.error('Failed to fetch supervisors:', err)
+    }
+  }
+
   useEffect(() => {
     fetchUsers()
-  }, [])
+    fetchSupervisors()
+    
+    // Set available roles based on current user's permissions
+    if (user) {
+      const manageable = getManageableRoles(user.role)
+      setAvailableRoles(manageable)
+    }
+  }, [user])
 
   const handleInputChange = (e) => {
     const { name, value, checked, type } = e.target
@@ -94,7 +123,12 @@ export default function UserManagementPage() {
         email: userToEdit.email,
         password: '',
         role: userToEdit.role,
-        isActive: userToEdit.isActive
+        isActive: userToEdit.isActive,
+        country: userToEdit.country || '',
+        companyName: userToEdit.companyName || '',
+        department: userToEdit.department || '',
+        managedBy: userToEdit.managedBy || '',
+        permissions: userToEdit.permissions || []
       })
     } else {
       setEditingUser(null)
@@ -104,7 +138,12 @@ export default function UserManagementPage() {
         email: '',
         password: '',
         role: 'customer',
-        isActive: true
+        isActive: true,
+        country: '',
+        companyName: '',
+        department: '',
+        managedBy: '',
+        permissions: []
       })
     }
     setOpenDialog(true)
@@ -171,6 +210,10 @@ export default function UserManagementPage() {
   const getRoleColor = (role) => {
     switch (role) {
       case 'admin': return 'error'
+      case 'country_admin': return 'secondary'
+      case 'supervisor': return 'warning'
+      case 'supplier': return 'primary'
+      case 'accountant': return 'success'
       case 'mod': return 'warning'
       case 'customer': return 'info'
       default: return 'default'
@@ -178,12 +221,7 @@ export default function UserManagementPage() {
   }
 
   const getRoleText = (role) => {
-    switch (role) {
-      case 'admin': return 'Administrator'
-      case 'mod': return 'Tour Guide'
-      case 'customer': return 'Customer'
-      default: return role
-    }
+    return ROLE_DEFINITIONS[role]?.name || role.charAt(0).toUpperCase() + role.slice(1)
   }
 
   return (
@@ -218,6 +256,7 @@ export default function UserManagementPage() {
                     <TableCell>Username</TableCell>
                     <TableCell>Email</TableCell>
                     <TableCell>Role</TableCell>
+                    <TableCell>Organization</TableCell>
                     <TableCell>Provider</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell>Last Login</TableCell>
@@ -227,13 +266,13 @@ export default function UserManagementPage() {
                 <TableBody>
                   {loading ? (
                     <TableRow>
-                      <TableCell colSpan={8} align="center">
+                      <TableCell colSpan={9} align="center">
                         Loading...
                       </TableCell>
                     </TableRow>
                   ) : users.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={8} align="center">
+                      <TableCell colSpan={9} align="center">
                         No users found
                       </TableCell>
                     </TableRow>
@@ -249,6 +288,12 @@ export default function UserManagementPage() {
                             color={getRoleColor(userItem.role)}
                             size="small"
                           />
+                        </TableCell>
+                        <TableCell>
+                          {userItem.country && <Typography variant="body2">🌍 {userItem.country}</Typography>}
+                          {userItem.companyName && <Typography variant="body2">🏢 {userItem.companyName}</Typography>}
+                          {userItem.department && <Typography variant="body2">🏛️ {userItem.department}</Typography>}
+                          {!userItem.country && !userItem.companyName && !userItem.department && <Typography variant="body2" color="textSecondary">-</Typography>}
                         </TableCell>
                         <TableCell>
                           <Chip
@@ -348,11 +393,71 @@ export default function UserManagementPage() {
                   label="Role"
                   onChange={handleInputChange}
                 >
-                  <MenuItem value="customer">Customer</MenuItem>
-                  <MenuItem value="mod">Tour Guide</MenuItem>
-                  <MenuItem value="admin">Administrator</MenuItem>
+                  {availableRoles.map((role) => (
+                    <MenuItem key={role.value} value={role.value}>
+                      {role.label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
+              
+              {/* Role-specific fields */}
+              {formData.role === 'country_admin' && (
+                <TextField
+                  fullWidth
+                  label="Country"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleInputChange}
+                  required
+                  sx={{ mb: 2 }}
+                  helperText="Country or region this admin manages"
+                />
+              )}
+              
+              {(['supplier', 'supervisor'].includes(formData.role)) && (
+                <TextField
+                  fullWidth
+                  label="Company Name"
+                  name="companyName"
+                  value={formData.companyName}
+                  onChange={handleInputChange}
+                  required
+                  sx={{ mb: 2 }}
+                  helperText="Tour company or organization name"
+                />
+              )}
+              
+              {formData.role === 'supplier' && supervisors.length > 0 && (
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                  <InputLabel>Managed By (Supervisor)</InputLabel>
+                  <Select
+                    name="managedBy"
+                    value={formData.managedBy}
+                    label="Managed By (Supervisor)"
+                    onChange={handleInputChange}
+                  >
+                    {supervisors.map((supervisor) => (
+                      <MenuItem key={supervisor._id} value={supervisor._id}>
+                        {supervisor.name} ({supervisor.companyName})
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              
+              {formData.role === 'accountant' && (
+                <TextField
+                  fullWidth
+                  label="Department"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleInputChange}
+                  required
+                  sx={{ mb: 2 }}
+                  helperText="Finance, Accounting, or Payroll department"
+                />
+              )}
               
               <TextField
                 fullWidth

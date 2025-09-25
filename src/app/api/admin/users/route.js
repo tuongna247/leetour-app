@@ -66,7 +66,18 @@ export async function POST(request) {
       }, { status: 403 })
     }
 
-    const { name, username, email, password, role = 'customer', isActive = true } = await request.json()
+    const { 
+      name, 
+      username, 
+      email, 
+      phone,
+      password, 
+      role = 'customer', 
+      locale = 'en',
+      country_id,
+      isActive = true,
+      permissions = []
+    } = await request.json()
 
     // Validation
     if (!name || !username || !email || !password) {
@@ -76,7 +87,8 @@ export async function POST(request) {
       }, { status: 400 })
     }
 
-    if (!['admin', 'mod', 'customer'].includes(role)) {
+    const validRoles = ['admin', 'country_admin', 'supplier', 'supervisor', 'accountant', 'mod', 'customer'];
+    if (!validRoles.includes(role)) {
       return NextResponse.json({
         status: 400,
         msg: 'Invalid role specified'
@@ -103,15 +115,23 @@ export async function POST(request) {
     }
 
     // Create new user
-    const newUser = new User({
+    const userData = {
       name: name.trim(),
-      username,
-      email,
+      username: username.toLowerCase(),
+      email: email.toLowerCase(),
       password,
       role,
+      locale,
       isActive,
-      provider: 'local'
-    })
+      provider: 'local',
+      permissions
+    };
+
+    // Add optional fields
+    if (phone) userData.phone = phone;
+    if (country_id) userData.country_id = country_id;
+
+    const newUser = new User(userData)
 
     await newUser.save()
 
