@@ -30,6 +30,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/components/container/PageContainer';
 import { useAuth } from '@/contexts/AuthContext';
+import TourOptionsSection from '@/components/forms/TourOptionsSection';
 
 const categories = [
   'Cultural',
@@ -367,6 +368,14 @@ export default function EditTourPage() {
               </Grid>
             </CardContent>
           </Card>
+
+          {/* Tour Pricing Options */}
+          <Box sx={{ mb: 3 }}>
+            <TourOptionsSection
+              tourOptions={formData.tourOptions || []}
+              onChange={(options) => handleInputChange('tourOptions', options)}
+            />
+          </Box>
 
           {/* Location */}
           <Card sx={{ mb: 3 }}>

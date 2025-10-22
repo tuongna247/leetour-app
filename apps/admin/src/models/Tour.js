@@ -78,6 +78,46 @@ const imageSchema = new mongoose.Schema({
   isPrimary: { type: Boolean, default: false }
 });
 
+// Tour Pricing Options Schema
+const tourOptionSchema = new mongoose.Schema({
+  optionName: {
+    type: String,
+    required: [true, 'Option name is required'],
+    trim: true
+  },
+  description: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  basePrice: {
+    type: Number,
+    required: [true, 'Base price is required'],
+    min: [0, 'Base price must be positive']
+  },
+  pricingTiers: [{
+    minPassengers: {
+      type: Number,
+      required: true,
+      min: 1
+    },
+    maxPassengers: {
+      type: Number,
+      required: true,
+      min: 1
+    },
+    pricePerPerson: {
+      type: Number,
+      required: true,
+      min: 0
+    }
+  }],
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, { _id: true });
+
 const tourSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -155,6 +195,7 @@ const tourSchema = new mongoose.Schema({
     default: false
   },
   booking: bookingSchema,
+  tourOptions: [tourOptionSchema],
   seo: seoSchema,
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,

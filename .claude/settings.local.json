@@ -9,7 +9,15 @@
       "Bash(del test-connection.js test-google-oauth.js test-auth-flow.js)",
       "Bash(pkill:*)",
       "Bash(rm:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(mkdir:*)",
+      "Bash(xcopy:*)",
+      "Bash(ln:*)",
+      "Bash(cmd //c \"mklink /D public ..\\..\\public\")",
+      "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\")",
+      "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\\[id]\")",
+      "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\\[id]\\edit\")",
+      "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\\new\")"
     ],
     "deny": [],
     "ask": []

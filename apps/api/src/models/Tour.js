@@ -75,8 +75,202 @@ const seoSchema = new mongoose.Schema({
 const imageSchema = new mongoose.Schema({
   url: { type: String, required: true },
   alt: { type: String, required: true },
-  isPrimary: { type: Boolean, default: false }
-});
+  isPrimary: { type: Boolean, default: false },
+  imageType: {
+    type: String,
+    enum: ['featured', 'banner', 'gallery'],
+    default: 'gallery'
+  },
+  displayOrder: { type: Number, default: 0 }
+}, { timestamps: true });
+
+// Tour Itinerary Schema (for multi-day tours)
+const itinerarySchema = new mongoose.Schema({
+  dayNumber: {
+    type: Number,
+    required: [true, 'Day number is required'],
+    min: 1
+  },
+  header: {
+    type: String,
+    required: [true, 'Day header is required'],
+    trim: true,
+    maxlength: [255, 'Header cannot exceed 255 characters']
+  },
+  textDetail: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  activities: [{ type: String }],
+  meals: {
+    breakfast: { type: Boolean, default: false },
+    lunch: { type: Boolean, default: false },
+    dinner: { type: Boolean, default: false }
+  },
+  accommodation: { type: String, default: '' }
+}, { timestamps: true });
+
+// Surcharge Schema
+const surchargeSchema = new mongoose.Schema({
+  surchargeName: {
+    type: String,
+    required: [true, 'Surcharge name is required'],
+    trim: true
+  },
+  surchargeType: {
+    type: String,
+    enum: ['holiday', 'weekend', 'peak_season', 'special_event', 'custom'],
+    default: 'custom'
+  },
+  startDate: {
+    type: Date,
+    required: [true, 'Start date is required']
+  },
+  endDate: {
+    type: Date,
+    required: [true, 'End date is required']
+  },
+  amountType: {
+    type: String,
+    enum: ['percentage', 'fixed'],
+    default: 'percentage'
+  },
+  amount: {
+    type: Number,
+    required: [true, 'Surcharge amount is required'],
+    min: [0, 'Amount must be positive']
+  },
+  description: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, { timestamps: true });
+
+// Promotion Schema
+const promotionSchema = new mongoose.Schema({
+  promotionName: {
+    type: String,
+    required: [true, 'Promotion name is required'],
+    trim: true
+  },
+  promotionType: {
+    type: String,
+    enum: ['early_bird', 'last_minute', 'seasonal', 'group_discount', 'custom'],
+    default: 'custom'
+  },
+  discountType: {
+    type: String,
+    enum: ['percentage', 'fixed'],
+    default: 'percentage'
+  },
+  discountAmount: {
+    type: Number,
+    required: [true, 'Discount amount is required'],
+    min: [0, 'Discount must be positive']
+  },
+  validFrom: {
+    type: Date,
+    required: [true, 'Valid from date is required']
+  },
+  validTo: {
+    type: Date,
+    required: [true, 'Valid to date is required']
+  },
+  bookingWindowStart: {
+    type: Date
+  },
+  bookingWindowEnd: {
+    type: Date
+  },
+  daysBeforeDeparture: {
+    type: Number,
+    min: 0,
+    default: 0
+  },
+  minPassengers: {
+    type: Number,
+    min: 1
+  },
+  conditions: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, { timestamps: true });
+
+// Cancellation Policy Schema
+const cancellationPolicySchema = new mongoose.Schema({
+  daysBeforeDeparture: {
+    type: Number,
+    required: [true, 'Days before departure is required'],
+    min: [0, 'Days must be non-negative']
+  },
+  refundPercentage: {
+    type: Number,
+    required: [true, 'Refund percentage is required'],
+    min: [0, 'Refund percentage must be between 0 and 100'],
+    max: [100, 'Refund percentage must be between 0 and 100']
+  },
+  description: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  displayOrder: {
+    type: Number,
+    default: 0
+  }
+}, { timestamps: true });
+
+// Tour Pricing Options Schema
+const tourOptionSchema = new mongoose.Schema({
+  optionName: {
+    type: String,
+    required: [true, 'Option name is required'],
+    trim: true
+  },
+  description: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  basePrice: {
+    type: Number,
+    required: [true, 'Base price is required'],
+    min: [0, 'Base price must be positive']
+  },
+  pricingTiers: [{
+    minPassengers: {
+      type: Number,
+      required: true,
+      min: 1
+    },
+    maxPassengers: {
+      type: Number,
+      required: true,
+      min: 1
+    },
+    pricePerPerson: {
+      type: Number,
+      required: true,
+      min: 0
+    }
+  }],
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, { _id: true });
 
 const tourSchema = new mongoose.Schema({
   title: {
@@ -155,6 +349,16 @@ const tourSchema = new mongoose.Schema({
     default: false
   },
   booking: bookingSchema,
+  tourOptions: [tourOptionSchema],
+  tourType: {
+    type: String,
+    enum: ['daytrip', 'tour'],
+    default: 'daytrip'
+  },
+  itinerary: [itinerarySchema],
+  surcharges: [surchargeSchema],
+  promotions: [promotionSchema],
+  cancellationPolicies: [cancellationPolicySchema],
   seo: seoSchema,
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,

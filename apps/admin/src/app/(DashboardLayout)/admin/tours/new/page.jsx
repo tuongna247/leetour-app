@@ -32,6 +32,7 @@ import { useRouter } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/components/container/PageContainer';
 import { useAuth } from '@/contexts/AuthContext';
+import TourOptionsSection from '@/components/forms/TourOptionsSection';
 
 const BCrumb = [
   {
@@ -130,7 +131,8 @@ export default function AddNewTourPage() {
       instantBooking: true,
       requiresApproval: false,
       advanceBooking: 1
-    }
+    },
+    tourOptions: []
   });
 
   const showAlert = (message, severity = 'success') => {
@@ -374,6 +376,14 @@ export default function AddNewTourPage() {
               </Grid>
             </CardContent>
           </Card>
+
+          {/* Tour Pricing Options */}
+          <Box sx={{ mb: 3 }}>
+            <TourOptionsSection
+              tourOptions={formData.tourOptions}
+              onChange={(options) => handleInputChange('tourOptions', options)}
+            />
+          </Box>
 
           {/* Location */}
           <Card sx={{ mb: 3 }}>

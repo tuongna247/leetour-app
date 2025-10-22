@@ -155,6 +155,33 @@ const BookingSchema = new mongoose.Schema({
     cancelledBy: { type: String, enum: ['customer', 'admin'] },
     refundStatus: { type: String },
     refundAmount: { type: Number }
+  },
+
+  // Staff Payment Processing
+  pointsEligible: {
+    type: Boolean,
+    default: true
+  },
+  processedByStaff: {
+    type: Boolean,
+    default: false
+  },
+  staffUser: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: false
+  },
+  staffNotes: {
+    type: String,
+    default: ''
+  },
+  pointsAwarded: {
+    type: Number,
+    default: 0
+  },
+  pointsWaived: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true
