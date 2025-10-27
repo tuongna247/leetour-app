@@ -24,13 +24,13 @@ import {
   Cancel as CancelIcon,
   Add as AddIcon,
   Delete as DeleteIcon,
-  ArrowBack as ArrowBackIcon
+  ArrowBack as ArrowBackIcon,
+  MonetizationOn as PricingIcon
 } from '@mui/icons-material';
 import { useRouter, useParams } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/components/container/PageContainer';
 import { useAuth } from '@/contexts/AuthContext';
-import TourOptionsSection from '@/components/forms/TourOptionsSection';
 
 const categories = [
   'Cultural',
@@ -237,6 +237,14 @@ export default function EditTourPage() {
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
             variant="outlined"
+            color="secondary"
+            startIcon={<PricingIcon />}
+            onClick={() => router.push(`/admin/tours/${tourId}/pricing`)}
+          >
+            Manage Pricing
+          </Button>
+          <Button
+            variant="outlined"
             startIcon={<CancelIcon />}
             onClick={() => router.push('/admin/tours')}
           >
@@ -369,13 +377,31 @@ export default function EditTourPage() {
             </CardContent>
           </Card>
 
-          {/* Tour Pricing Options */}
-          <Box sx={{ mb: 3 }}>
-            <TourOptionsSection
-              tourOptions={formData.tourOptions || []}
-              onChange={(options) => handleInputChange('tourOptions', options)}
-            />
-          </Box>
+          {/* Pricing Management Link */}
+          <Card sx={{ mb: 3, bgcolor: 'secondary.lighter', border: '2px solid', borderColor: 'secondary.main' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="h6" color="secondary.main" gutterBottom>
+                    <PricingIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+                    Pricing & Options Management
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Manage pricing options, surcharges, promotions, and cancellation policies in a dedicated interface.
+                  </Typography>
+                </Box>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<PricingIcon />}
+                  onClick={() => router.push(`/admin/tours/${tourId}/pricing`)}
+                  size="large"
+                >
+                  Open Pricing Manager
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
 
           {/* Location */}
           <Card sx={{ mb: 3 }}>

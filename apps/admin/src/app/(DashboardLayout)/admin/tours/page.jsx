@@ -39,7 +39,8 @@ import {
   Search as SearchIcon,
   FilterList as FilterIcon,
   Star as StarIcon,
-  LocationOn as LocationIcon
+  LocationOn as LocationIcon,
+  MonetizationOn as PricingIcon
 } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
@@ -369,6 +370,15 @@ export default function AdminToursPage() {
                             onClick={() => router.push(`/admin/tours/${tour._id}`)}
                           >
                             <ViewIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Manage Pricing">
+                          <IconButton
+                            size="small"
+                            color="secondary"
+                            onClick={() => router.push(`/admin/tours/${tour._id}/pricing`)}
+                          >
+                            <PricingIcon />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Tour">

@@ -174,23 +174,83 @@ const BookingPage = () => {
     }
   };
 
+  const calculateApplicableSurcharges = () => {
+    if (!tour || !tour.surcharges || !bookingData.tour.date) {
+      return { surcharges: [], totalSurcharge: 0 };
+    }
+
+    const selectedDate = new Date(bookingData.tour.date);
+    const applicableSurcharges = [];
+    let totalSurcharge = 0;
+
+    tour.surcharges.forEach((surcharge) => {
+      // Only apply active surcharges
+      if (!surcharge.isActive) return;
+
+      const startDate = new Date(surcharge.startDate);
+      const endDate = new Date(surcharge.endDate);
+
+      // Check if booking date falls within surcharge period
+      if (selectedDate >= startDate && selectedDate <= endDate) {
+        const basePrice = tour.price;
+        let surchargeAmount = 0;
+
+        if (surcharge.amountType === 'percentage') {
+          // Calculate percentage of base price
+          surchargeAmount = basePrice * (surcharge.amount / 100);
+        } else {
+          // Fixed amount
+          surchargeAmount = surcharge.amount;
+        }
+
+        totalSurcharge += surchargeAmount;
+        applicableSurcharges.push({
+          name: surcharge.surchargeName,
+          type: surcharge.surchargeType,
+          amountType: surcharge.amountType,
+          amount: surcharge.amount,
+          calculatedAmount: surchargeAmount,
+          description: surcharge.description
+        });
+      }
+    });
+
+    return { surcharges: applicableSurcharges, totalSurcharge };
+  };
+
   const calculatePricing = () => {
-    if (!tour) return { total: 0, subtotal: 0, taxes: 0, fees: 0 };
+    if (!tour) return { total: 0, subtotal: 0, taxes: 0, fees: 0, surchargeTotal: 0, appliedSurcharges: [] };
 
     const adultPrice = tour.price;
     const childPrice = tour.price * 0.7; // 30% discount
     const infantPrice = 0;
 
-    const subtotal = 
+    const subtotal =
       (bookingData.participants.adults * adultPrice) +
       (bookingData.participants.children * childPrice) +
       (bookingData.participants.infants * infantPrice);
-    
-    const taxes = subtotal * 0.1; // 10% tax
-    const fees = 5; // $5 booking fee
-    const total = subtotal + taxes + fees;
 
-    return { subtotal, taxes, fees, total, adultPrice, childPrice, infantPrice };
+    // Calculate applicable surcharges
+    const { surcharges: appliedSurcharges, totalSurcharge } = calculateApplicableSurcharges();
+
+    // Apply surcharge per person
+    const surchargeTotal = totalSurcharge * (bookingData.participants.adults + bookingData.participants.children);
+
+    const taxes = (subtotal + surchargeTotal) * 0.1; // 10% tax on subtotal + surcharges
+    const fees = 5; // $5 booking fee
+    const total = subtotal + surchargeTotal + taxes + fees;
+
+    return {
+      subtotal,
+      surchargeTotal,
+      appliedSurcharges,
+      taxes,
+      fees,
+      total,
+      adultPrice,
+      childPrice,
+      infantPrice
+    };
   };
 
   const handleNext = async () => {
@@ -352,6 +412,27 @@ const BookingPage = () => {
                       <Alert severity="info" sx={{ mb: 2 }}>
                         <strong>Meeting Point:</strong> {tour.schedule.meetingPoint}<br/>
                         <strong>Duration:</strong> {tour.schedule.startTime} - {tour.schedule.endTime}
+                      </Alert>
+                    )}
+
+                    {/* Display surcharge warning if applicable */}
+                    {pricing.appliedSurcharges && pricing.appliedSurcharges.length > 0 && (
+                      <Alert severity="warning" sx={{ mb: 2 }}>
+                        <Typography variant="subtitle2" gutterBottom>
+                          <strong>Surcharges Apply to Selected Date</strong>
+                        </Typography>
+                        {pricing.appliedSurcharges.map((surcharge, index) => (
+                          <Typography key={index} variant="body2">
+                            • {surcharge.name}:
+                            {surcharge.amountType === 'percentage'
+                              ? ` +${surcharge.amount}% `
+                              : ` +$${surcharge.amount} `}
+                            {surcharge.description && `(${surcharge.description})`}
+                          </Typography>
+                        ))}
+                        <Typography variant="body2" sx={{ mt: 1, fontWeight: 'bold' }}>
+                          Total additional charge: ${pricing.surchargeTotal.toFixed(2)}
+                        </Typography>
                       </Alert>
                     )}
                     <Grid container spacing={2}>
@@ -827,6 +908,39 @@ const BookingPage = () => {
                     <Typography variant="body2">Subtotal</Typography>
                     <Typography variant="body2">${pricing.subtotal.toFixed(2)}</Typography>
                   </Box>
+
+                  {/* Display applied surcharges */}
+                  {pricing.appliedSurcharges && pricing.appliedSurcharges.length > 0 && (
+                    <Box sx={{ mb: 1 }}>
+                      {pricing.appliedSurcharges.map((surcharge, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            mb: 0.5,
+                            pl: 1
+                          }}
+                        >
+                          <Typography variant="body2" color="warning.main">
+                            {surcharge.name} {surcharge.amountType === 'percentage' ? `(+${surcharge.amount}%)` : ''}
+                          </Typography>
+                          <Typography variant="body2" color="warning.main">
+                            +${(surcharge.calculatedAmount * (bookingData.participants.adults + bookingData.participants.children)).toFixed(2)}
+                          </Typography>
+                        </Box>
+                      ))}
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                        <Typography variant="body2" fontWeight="bold" color="warning.dark">
+                          Total Surcharges
+                        </Typography>
+                        <Typography variant="body2" fontWeight="bold" color="warning.dark">
+                          ${pricing.surchargeTotal.toFixed(2)}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  )}
+
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="body2">Taxes</Typography>
                     <Typography variant="body2">${pricing.taxes.toFixed(2)}</Typography>

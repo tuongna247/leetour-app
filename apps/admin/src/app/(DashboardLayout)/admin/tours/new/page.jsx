@@ -32,7 +32,6 @@ import { useRouter } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/components/container/PageContainer';
 import { useAuth } from '@/contexts/AuthContext';
-import TourOptionsSection from '@/components/forms/TourOptionsSection';
 
 const BCrumb = [
   {
@@ -131,8 +130,7 @@ export default function AddNewTourPage() {
       instantBooking: true,
       requiresApproval: false,
       advanceBooking: 1
-    },
-    tourOptions: []
+    }
   });
 
   const showAlert = (message, severity = 'success') => {
@@ -377,13 +375,26 @@ export default function AddNewTourPage() {
             </CardContent>
           </Card>
 
-          {/* Tour Pricing Options */}
-          <Box sx={{ mb: 3 }}>
-            <TourOptionsSection
-              tourOptions={formData.tourOptions}
-              onChange={(options) => handleInputChange('tourOptions', options)}
-            />
-          </Box>
+          {/* Pricing Management Note */}
+          <Card sx={{ mb: 3, bgcolor: 'info.lighter' }}>
+            <CardContent>
+              <Typography variant="h6" color="info.main" gutterBottom>
+                Tour Pricing & Options
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                After creating the tour, you can manage pricing options, surcharges, promotions, and cancellation policies separately.
+              </Typography>
+              <Alert severity="info">
+                <strong>Note:</strong> Create the tour first, then navigate to the Pricing Management section to set up:
+                <ul style={{ marginTop: 8, marginBottom: 0 }}>
+                  <li>Pricing Options (different price tiers based on group size)</li>
+                  <li>Surcharges (holiday, weekend, peak season fees)</li>
+                  <li>Promotions (early bird, last minute discounts)</li>
+                  <li>Cancellation Policies (refund rules)</li>
+                </ul>
+              </Alert>
+            </CardContent>
+          </Card>
 
           {/* Location */}
           <Card sx={{ mb: 3 }}>
