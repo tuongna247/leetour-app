@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = 'mongodb+srv://leetour:RN1vmYdHHjnTwEqM@cluster0.nz7bupo.mongodb.net/leetour?retryWrites=true&w=majority&appName=Cluster0';
+// Use environment variable or fallback to localhost
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/leetour';
 
 /**
  * Global is used here to maintain a cached connection across hot reloads

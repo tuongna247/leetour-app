@@ -36,8 +36,6 @@ import {
   FavoriteBorder as FavoriteBorderIcon
 } from '@mui/icons-material';
 import { useRouter, useParams } from 'next/navigation';
-import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
-import PageContainer from '@/app/components/container/PageContainer';
 
 const TabPanel = ({ children, value, index, ...other }) => (
   <div
@@ -133,54 +131,41 @@ const TourDetailPage = () => {
 
   if (loading) {
     return (
-      <PageContainer title="Tour Details" description="Tour details and booking">
-        <Box sx={{ mt: 3 }}>
-          <Skeleton variant="text" sx={{ fontSize: '2rem', mb: 2 }} />
-          <Skeleton variant="rectangular" height={400} sx={{ mb: 3 }} />
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
-              <Skeleton variant="rectangular" height={200} />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Skeleton variant="rectangular" height={300} />
-            </Grid>
+      <Box sx={{ p: 3 }}>
+        <Skeleton variant="text" sx={{ fontSize: '2rem', mb: 2 }} />
+        <Skeleton variant="rectangular" height={400} sx={{ mb: 3 }} />
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={8}>
+            <Skeleton variant="rectangular" height={200} />
           </Grid>
-        </Box>
-      </PageContainer>
+          <Grid item xs={12} md={4}>
+            <Skeleton variant="rectangular" height={300} />
+          </Grid>
+        </Grid>
+      </Box>
     );
   }
 
   if (error || !tour) {
     return (
-      <PageContainer title="Tour Not Found" description="Tour not found">
-        <Box sx={{ mt: 3, textAlign: 'center' }}>
-          <Typography variant="h4" gutterBottom>
-            Tour Not Found
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            {error || 'The tour you are looking for does not exist.'}
-          </Typography>
-          <Button variant="contained" onClick={() => router.push('/tours')}>
-            Browse All Tours
-          </Button>
-        </Box>
-      </PageContainer>
+      <Box sx={{ p: 3, textAlign: 'center' }}>
+        <Typography variant="h4" gutterBottom>
+          Tour Not Found
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          {error || 'The tour you are looking for does not exist.'}
+        </Typography>
+        <Button variant="contained" onClick={() => router.push('/tours')}>
+          Browse All Tours
+        </Button>
+      </Box>
     );
   }
-
-  const BCrumb = [
-    { to: '/', title: 'Home' },
-    { to: '/tours', title: 'Tours' },
-    { title: tour.title },
-  ];
 
   const primaryImage = tour.images?.find(img => img.isPrimary) || tour.images?.[0];
 
   return (
-    <PageContainer title={tour.title} description={tour.shortDescription}>
-      <Breadcrumb title={tour.title} items={BCrumb} />
-      
-      <Box sx={{ mt: 3 }}>
+    <Box sx={{ p: 3 }}>
         {/* Header */}
         <Box sx={{ mb: 3 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -422,8 +407,7 @@ const TourDetailPage = () => {
             </Card>
           </Grid>
         </Grid>
-      </Box>
-    </PageContainer>
+    </Box>
   );
 };
 

@@ -366,7 +366,7 @@ export default function AdminToursPage() {
                         <Tooltip title="View Tour">
                           <IconButton
                             size="small"
-                            onClick={() => router.push(`/tours/${tour._id}`)}
+                            onClick={() => router.push(`/admin/tours/${tour._id}`)}
                           >
                             <ViewIcon />
                           </IconButton>

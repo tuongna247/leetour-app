@@ -41,9 +41,6 @@ import {
 } from '@mui/icons-material';
 // Date picker imports removed - using native HTML date input instead
 import { useRouter, useParams } from 'next/navigation';
-import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
-import PageContainer from '@/app/components/container/PageContainer';
-import RoleBasedAccess from '@/components/auth/RoleBasedAccess';
 
 const steps = ['Tour Details', 'Participants', 'Payment', 'Confirmation'];
 
@@ -294,35 +291,28 @@ const BookingPage = () => {
 
   if (loading) {
     return (
-      <PageContainer title="Booking" description="Complete your tour booking">
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <CircularProgress />
-        </Box>
-      </PageContainer>
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+        <CircularProgress />
+      </Box>
     );
   }
 
   if (error && !tour) {
     return (
-      <PageContainer title="Booking Error" description="Booking error">
+      <Box sx={{ p: 3 }}>
         <Alert severity="error">{error}</Alert>
-      </PageContainer>
+      </Box>
     );
   }
 
-  const BCrumb = [
-    { to: '/', title: 'Home' },
-    { to: '/tours', title: 'Tours' },
-    { to: `/tours/${id}`, title: tour?.title },
-    { title: 'Booking' },
-  ];
-
   return (
-    <RoleBasedAccess allowedRoles={['admin', 'mod', 'customer']}>
-      <PageContainer title={`Book ${tour?.title}`} description="Complete your tour booking">
-        <Breadcrumb title="Booking" items={BCrumb} />
-        
-        <Box sx={{ mt: 3 }}>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4" gutterBottom>
+        Book {tour?.title}
+      </Typography>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        Complete your tour booking
+      </Typography>
         <Grid container spacing={3}>
           {/* Main Content */}
           <Grid size={{ xs: 12, md: 8 }}>
@@ -849,9 +839,7 @@ const BookingPage = () => {
             </Card>
           </Grid>
         </Grid>
-      </Box>
-      </PageContainer>
-    </RoleBasedAccess>
+    </Box>
   );
 };
 

@@ -17,7 +17,12 @@
       "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\")",
       "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\\[id]\")",
       "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\\[id]\\edit\")",
-      "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\\new\")"
+      "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\\new\")",
+      "Bash(ls:*)",
+      "Bash(npm run backup)",
+      "Bash(npm run seed:*)",
+      "Bash(npm run cleanup:*)",
+      "Bash(npm run verify:*)"
     ],
     "deny": [],
     "ask": []

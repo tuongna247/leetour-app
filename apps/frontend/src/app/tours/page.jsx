@@ -34,18 +34,6 @@ import {
 } from '@mui/icons-material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
-import PageContainer from '@/app/components/container/PageContainer';
-
-const BCrumb = [
-  {
-    to: '/',
-    title: 'Home',
-  },
-  {
-    title: 'Tours',
-  },
-];
 
 const TourCard = ({ tour, onFavoriteToggle }) => {
   const router = useRouter();
@@ -289,10 +277,13 @@ const ToursPage = () => {
   };
 
   return (
-    <PageContainer title="Tours" description="Browse and book amazing day trips and tours">
-      <Breadcrumb title="Tours" items={BCrumb} />
-      
-      <Box sx={{ mt: 3 }}>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4" gutterBottom>
+        Browse Tours
+      </Typography>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        Discover amazing day trips and tours
+      </Typography>
         {/* Filters */}
         <Card sx={{ mb: 3 }}>
           <CardContent>
@@ -421,8 +412,7 @@ const ToursPage = () => {
             />
           </Box>
         )}
-      </Box>
-    </PageContainer>
+    </Box>
   );
 };
 
