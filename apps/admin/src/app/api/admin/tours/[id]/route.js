@@ -88,6 +88,46 @@ export async function PUT(request, { params }) {
   }
 }
 
+// PATCH - Partial update for pricing management (surcharges, promotions, cancellation policies)
+export async function PATCH(request, { params }) {
+  try {
+    await connectDB();
+    const { id } = params;
+    const data = await request.json();
+
+    const tour = await Tour.findById(id);
+    if (!tour) {
+      return NextResponse.json({
+        status: 404,
+        msg: 'Tour not found'
+      }, { status: 404 });
+    }
+
+    // Partial update - only update provided fields
+    // runValidators: false allows partial updates without requiring all required fields
+    const updatedTour = await Tour.findByIdAndUpdate(
+      id,
+      { ...data, updatedAt: new Date() },
+      { new: true, runValidators: false }
+    );
+
+    return NextResponse.json({
+      status: 200,
+      data: updatedTour,
+      msg: "Tour pricing updated successfully"
+    });
+
+  } catch (error) {
+    console.error('Admin patch tour error:', error);
+
+    return NextResponse.json({
+      status: 500,
+      msg: "Failed to update tour pricing",
+      error: error.message
+    }, { status: 500 });
+  }
+}
+
 // DELETE - Delete tour (soft delete)
 export async function DELETE(request, { params }) {
   try {

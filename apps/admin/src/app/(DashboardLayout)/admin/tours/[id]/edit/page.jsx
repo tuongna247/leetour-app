@@ -25,7 +25,11 @@ import {
   Add as AddIcon,
   Delete as DeleteIcon,
   ArrowBack as ArrowBackIcon,
-  MonetizationOn as PricingIcon
+  MonetizationOn as PricingIcon,
+  LocalOffer as PromotionIcon,
+  TrendingUp as SurchargeIcon,
+  AttachMoney as OptionIcon,
+  EventBusy as CancellationIcon
 } from '@mui/icons-material';
 import { useRouter, useParams } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
@@ -377,29 +381,101 @@ export default function EditTourPage() {
             </CardContent>
           </Card>
 
-          {/* Pricing Management Link */}
-          <Card sx={{ mb: 3, bgcolor: 'secondary.lighter', border: '2px solid', borderColor: 'secondary.main' }}>
+          {/* Pricing Management Links */}
+          <Card sx={{ mb: 3 }}>
             <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography variant="h6" color="secondary.main" gutterBottom>
-                    <PricingIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-                    Pricing & Options Management
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Manage pricing options, surcharges, promotions, and cancellation policies in a dedicated interface.
-                  </Typography>
-                </Box>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<PricingIcon />}
-                  onClick={() => router.push(`/admin/tours/${tourId}/pricing`)}
-                  size="large"
-                >
-                  Open Pricing Manager
-                </Button>
-              </Box>
+              <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
+                Pricing & Options Management
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Manage different pricing aspects for this tour. Each section is independent.
+              </Typography>
+
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<OptionIcon />}
+                    onClick={() => router.push(`/admin/tours/${tourId}/pricing-options`)}
+                    sx={{
+                      height: '100%',
+                      py: 2,
+                      flexDirection: 'column',
+                      gap: 1
+                    }}
+                  >
+                    <Box>Pricing Options</Box>
+                    <Typography variant="caption" color="text.secondary">
+                      Group size pricing tiers
+                    </Typography>
+                  </Button>
+                </Grid>
+
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="warning"
+                    startIcon={<SurchargeIcon />}
+                    onClick={() => router.push(`/admin/tours/${tourId}/surcharges`)}
+                    sx={{
+                      height: '100%',
+                      py: 2,
+                      flexDirection: 'column',
+                      gap: 1
+                    }}
+                  >
+                    <Box>Surcharges</Box>
+                    <Typography variant="caption" color="text.secondary">
+                      Holiday & weekend fees
+                    </Typography>
+                  </Button>
+                </Grid>
+
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="success"
+                    startIcon={<PromotionIcon />}
+                    onClick={() => router.push(`/admin/tours/${tourId}/promotions`)}
+                    sx={{
+                      height: '100%',
+                      py: 2,
+                      flexDirection: 'column',
+                      gap: 1
+                    }}
+                  >
+                    <Box>Promotions</Box>
+                    <Typography variant="caption" color="text.secondary">
+                      Discounts & offers
+                    </Typography>
+                  </Button>
+                </Grid>
+
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="error"
+                    startIcon={<CancellationIcon />}
+                    onClick={() => router.push(`/admin/tours/${tourId}/cancellation-policies`)}
+                    sx={{
+                      height: '100%',
+                      py: 2,
+                      flexDirection: 'column',
+                      gap: 1
+                    }}
+                  >
+                    <Box>Cancellation</Box>
+                    <Typography variant="caption" color="text.secondary">
+                      Refund policies
+                    </Typography>
+                  </Button>
+                </Grid>
+              </Grid>
             </CardContent>
           </Card>
 

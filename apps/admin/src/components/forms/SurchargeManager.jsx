@@ -35,7 +35,8 @@ import {
 } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 const SURCHARGE_TYPES = [
   { value: 'holiday', label: 'Holiday' },
@@ -110,7 +111,7 @@ export default function SurchargeManager({ tourId, initialSurcharges = [], onCha
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
         <Typography variant="h6" gutterBottom>
           Surcharges

@@ -36,7 +36,8 @@ import {
 } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 const PROMOTION_TYPES = [
   { value: 'early_bird', label: 'Early Bird', description: 'Book X days in advance' },
@@ -58,8 +59,8 @@ export default function PromotionManager({ tourId, initialPromotions = [], onCha
     promotionType: 'custom',
     discountType: 'percentage',
     discountAmount: 0,
-    validFrom: null,
-    validTo: null,
+    validFrom: dayjs(),
+    validTo: dayjs().add(1, 'month'),
     daysBeforeDeparture: 0,
     minPassengers: null,
     conditions: '',
@@ -78,8 +79,8 @@ export default function PromotionManager({ tourId, initialPromotions = [], onCha
       promotionType: 'custom',
       discountType: 'percentage',
       discountAmount: 0,
-      validFrom: null,
-      validTo: null,
+      validFrom: dayjs(),
+      validTo: dayjs().add(1, 'month'),
       daysBeforeDeparture: 0,
       minPassengers: null,
       conditions: '',
@@ -125,7 +126,7 @@ export default function PromotionManager({ tourId, initialPromotions = [], onCha
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
         <Typography variant="h6" gutterBottom>
           Promotions & Discounts
