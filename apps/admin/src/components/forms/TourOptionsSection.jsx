@@ -169,8 +169,8 @@ export default function TourOptionsSection({ tourOptions = [], onChange }) {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Grid container spacing={2}>
-                    {/* Option Name */}
-                    <Grid item xs={12} md={6}>
+                    {/* Option Name and Base Price on same line */}
+                    <Grid size={{ xs: 12, md: 8 }}>
                       <TextField
                         fullWidth
                         label="Option Name"
@@ -181,8 +181,7 @@ export default function TourOptionsSection({ tourOptions = [], onChange }) {
                       />
                     </Grid>
 
-                    {/* Base Price */}
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 4 }}>
                       <TextField
                         fullWidth
                         label="Base Price per Person"
@@ -194,8 +193,8 @@ export default function TourOptionsSection({ tourOptions = [], onChange }) {
                       />
                     </Grid>
 
-                    {/* Description */}
-                    <Grid item xs={12}>
+                    {/* Description - separate row */}
+                    <Grid size={{ xs: 12 }}>
                       <TextField
                         fullWidth
                         label="Description"
@@ -207,8 +206,8 @@ export default function TourOptionsSection({ tourOptions = [], onChange }) {
                       />
                     </Grid>
 
-                    {/* Is Active */}
-                    <Grid item xs={12}>
+                    {/* Is Active - separate row */}
+                    <Grid size={{ xs: 12 }}>
                       <FormControlLabel
                         control={
                           <Switch
@@ -221,7 +220,7 @@ export default function TourOptionsSection({ tourOptions = [], onChange }) {
                     </Grid>
 
                     {/* Pricing Tiers Section */}
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                       <Divider sx={{ my: 2 }} />
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                         <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
@@ -246,7 +245,7 @@ export default function TourOptionsSection({ tourOptions = [], onChange }) {
                           {option.pricingTiers.map((tier, tierIndex) => (
                             <Card key={tierIndex} variant="outlined" sx={{ p: 2 }}>
                               <Grid container spacing={2} alignItems="center">
-                                <Grid item xs={12} sm={3}>
+                                <Grid size={{ xs: 12, sm: 3 }}>
                                   <TextField
                                     fullWidth
                                     label="Min Passengers"
@@ -257,7 +256,7 @@ export default function TourOptionsSection({ tourOptions = [], onChange }) {
                                     inputProps={{ min: 1 }}
                                   />
                                 </Grid>
-                                <Grid item xs={12} sm={3}>
+                                <Grid size={{ xs: 12, sm: 3 }}>
                                   <TextField
                                     fullWidth
                                     label="Max Passengers"
@@ -268,7 +267,7 @@ export default function TourOptionsSection({ tourOptions = [], onChange }) {
                                     inputProps={{ min: tier.minPassengers || 1 }}
                                   />
                                 </Grid>
-                                <Grid item xs={12} sm={4}>
+                                <Grid size={{ xs: 12, sm: 4 }}>
                                   <TextField
                                     fullWidth
                                     label="Price per Person"
@@ -279,7 +278,7 @@ export default function TourOptionsSection({ tourOptions = [], onChange }) {
                                     inputProps={{ min: 0, step: 0.01 }}
                                   />
                                 </Grid>
-                                <Grid item xs={12} sm={2}>
+                                <Grid size={{ xs: 12, sm: 2 }}>
                                   <IconButton
                                     onClick={() => handleRemovePricingTier(optionIndex, tierIndex)}
                                     color="error"

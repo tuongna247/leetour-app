@@ -6,7 +6,7 @@ import Tour from '@/models/Tour';
 export async function GET(request, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
     
     
     const tour = await Tour.findById(id); // Admin can see all tours, including inactive ones
@@ -39,7 +39,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
     const data = await request.json();
     
     const tour = await Tour.findById(id);
@@ -92,7 +92,7 @@ export async function PUT(request, { params }) {
 export async function PATCH(request, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
     const data = await request.json();
 
     const tour = await Tour.findById(id);
@@ -132,7 +132,7 @@ export async function PATCH(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
     
     const tour = await Tour.findById(id);
     if (!tour) {
