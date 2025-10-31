@@ -35,6 +35,12 @@ import { useRouter, useParams } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/components/container/PageContainer';
 import { useAuth } from '@/contexts/AuthContext';
+import dynamic from 'next/dynamic';
+
+const TiptapEditor = dynamic(() => import('@/components/editor/TiptapEditor'), {
+  ssr: false,
+  loading: () => <CircularProgress size={20} />
+});
 
 const categories = [
   'Cultural',
@@ -398,14 +404,14 @@ export default function EditTourPage() {
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12 }}>
-                  <TextField
-                    fullWidth
-                    label="Description *"
-                    multiline
-                    rows={3}
-                    value={formData.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                    required
+                  <Typography variant="subtitle2" gutterBottom sx={{ mb: 1 }}>
+                    Description *
+                  </Typography>
+                  <TiptapEditor
+                    content={formData.description}
+                    onChange={(html) => handleInputChange('description', html)}
+                    placeholder="Enter tour description with rich text formatting..."
+                    minHeight={150}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 8 }}>
