@@ -16,12 +16,23 @@ import {
   Grid,
   Switch,
   FormControlLabel,
-  Divider
+  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Chip
 } from '@mui/material';
 import {
   Add as AddIcon,
-  Delete as DeleteIcon
+  Delete as DeleteIcon,
+  ExpandMore as ExpandMoreIcon,
+  Event as EventIcon,
+  AttachMoney as MoneyIcon
 } from '@mui/icons-material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 const surchargeTypes = [
   { value: 'holiday', label: 'Holiday' },
@@ -41,10 +52,10 @@ const SurchargeSection = ({ surcharges = [], onChange }) => {
     const newSurcharge = {
       surchargeName: '',
       surchargeType: 'weekend',
-      startDate: '',
-      endDate: '',
+      startDate: dayjs(),
+      endDate: dayjs().add(1, 'month'),
       amountType: 'percentage',
-      amount: 0,
+      amount: 10,
       description: '',
       isActive: true
     };
@@ -67,72 +78,83 @@ const SurchargeSection = ({ surcharges = [], onChange }) => {
   };
 
   return (
-    <Card>
-      <CardContent>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Card elevation={3}>
+        <CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h6">
-            Surcharges (Phụ thu)
-          </Typography>
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Surcharges (Phụ thu)
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Add surcharges for holidays, weekends, or special periods
+            </Typography>
+          </Box>
           <Button
+            variant="contained"
             startIcon={<AddIcon />}
-            variant="outlined"
-            size="small"
             onClick={handleAddSurcharge}
+            size="small"
           >
             Add Surcharge
           </Button>
         </Box>
 
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Add surcharges for holidays, weekends, or special periods. Surcharges will be automatically applied when bookings fall within the specified dates.
-        </Typography>
+        <Divider sx={{ mb: 3 }} />
 
         {surcharges.length === 0 ? (
-          <Box
-            sx={{
-              textAlign: 'center',
-              py: 4,
-              border: '2px dashed',
-              borderColor: 'divider',
-              borderRadius: 1
-            }}
-          >
-            <Typography color="text.secondary">
-              No surcharges added yet. Click &quot;Add Surcharge&quot; to create one.
+          <Box sx={{ textAlign: 'center', py: 4 }}>
+            <Typography variant="body1" color="text.secondary">
+              No surcharges yet. Click "Add Surcharge" to create your first surcharge.
             </Typography>
           </Box>
         ) : (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {surcharges.map((surcharge, index) => (
-              <Card key={index} variant="outlined" sx={{ position: 'relative' }}>
-                <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      Surcharge #{index + 1}
+              <Accordion key={index} defaultExpanded={index === 0}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`surcharge-${index}-content`}
+                  id={`surcharge-${index}-header`}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                      {surcharge.surchargeName || `Surcharge ${index + 1}`}
                     </Typography>
-                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={surcharge.isActive}
-                            onChange={(e) => handleSurchargeChange(index, 'isActive', e.target.checked)}
-                            size="small"
-                          />
-                        }
-                        label="Active"
-                      />
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => handleRemoveSurcharge(index)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
+                    <Chip
+                      icon={<EventIcon />}
+                      label={surchargeTypes.find(t => t.value === surcharge.surchargeType)?.label || 'Custom'}
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<MoneyIcon />}
+                      label={surcharge.amountType === 'percentage' ? `${surcharge.amount}%` : `$${surcharge.amount}`}
+                      size="small"
+                      color="secondary"
+                      variant="outlined"
+                    />
+                    {!surcharge.isActive && (
+                      <Chip label="Inactive" size="small" color="default" variant="outlined" />
+                    )}
+                    <Box sx={{ flex: 1 }} />
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveSurcharge(index);
+                      }}
+                      color="error"
+                      size="small"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
                   </Box>
-
+                </AccordionSummary>
+                <AccordionDetails>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
+                    {/* Row 1: Name and Type */}
+                    <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         fullWidth
                         label="Surcharge Name"
@@ -143,7 +165,7 @@ const SurchargeSection = ({ surcharges = [], onChange }) => {
                       />
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                       <FormControl fullWidth>
                         <InputLabel>Surcharge Type</InputLabel>
                         <Select
@@ -160,31 +182,38 @@ const SurchargeSection = ({ surcharges = [], onChange }) => {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} md={4}>
-                      <TextField
-                        fullWidth
+                    {/* Row 2: Dates */}
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <DatePicker
                         label="Start Date"
-                        type="date"
-                        value={surcharge.startDate}
-                        onChange={(e) => handleSurchargeChange(index, 'startDate', e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                        required
+                        value={dayjs(surcharge.startDate)}
+                        onChange={(date) => handleSurchargeChange(index, 'startDate', date)}
+                        slotProps={{
+                          textField: {
+                            fullWidth: true,
+                            required: true
+                          }
+                        }}
                       />
                     </Grid>
 
-                    <Grid item xs={12} md={4}>
-                      <TextField
-                        fullWidth
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <DatePicker
                         label="End Date"
-                        type="date"
-                        value={surcharge.endDate}
-                        onChange={(e) => handleSurchargeChange(index, 'endDate', e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                        required
+                        value={dayjs(surcharge.endDate)}
+                        onChange={(date) => handleSurchargeChange(index, 'endDate', date)}
+                        minDate={dayjs(surcharge.startDate)}
+                        slotProps={{
+                          textField: {
+                            fullWidth: true,
+                            required: true
+                          }
+                        }}
                       />
                     </Grid>
 
-                    <Grid item xs={12} md={4}>
+                    {/* Row 3: Amount Type and Amount on same line */}
+                    <Grid size={{ xs: 12, md: 6 }}>
                       <FormControl fullWidth>
                         <InputLabel>Amount Type</InputLabel>
                         <Select
@@ -201,7 +230,7 @@ const SurchargeSection = ({ surcharges = [], onChange }) => {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         fullWidth
                         label={surcharge.amountType === 'percentage' ? 'Percentage (%)' : 'Fixed Amount ($)'}
@@ -222,7 +251,8 @@ const SurchargeSection = ({ surcharges = [], onChange }) => {
                       />
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
+                    {/* Row 4: Description - separate row */}
+                    <Grid size={{ xs: 12 }}>
                       <TextField
                         fullWidth
                         label="Description"
@@ -233,31 +263,46 @@ const SurchargeSection = ({ surcharges = [], onChange }) => {
                         rows={2}
                       />
                     </Grid>
-                  </Grid>
 
-                  {/* Preview */}
-                  <Box sx={{ mt: 2, p: 2, bgcolor: 'primary.light', borderRadius: 1 }}>
-                    <Typography variant="caption" color="primary.dark" fontWeight="bold">
-                      Preview:
-                    </Typography>
-                    <Typography variant="caption" color="primary.dark" sx={{ ml: 1 }}>
-                      {surcharge.surchargeName || 'Surcharge'} - {' '}
-                      {surcharge.amountType === 'percentage'
-                        ? `${surcharge.amount}% increase`
-                        : `$${surcharge.amount} extra`
-                      } from {surcharge.startDate || 'start date'} to {surcharge.endDate || 'end date'}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
+                    {/* Row 5: Active Toggle - separate row */}
+                    <Grid size={{ xs: 12 }}>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={surcharge.isActive}
+                            onChange={(e) => handleSurchargeChange(index, 'isActive', e.target.checked)}
+                          />
+                        }
+                        label="Active (visible to customers)"
+                      />
+                    </Grid>
+
+                    {/* Preview */}
+                    <Grid size={{ xs: 12 }}>
+                      <Box sx={{ mt: 1, p: 2, bgcolor: 'success.lighter', borderRadius: 1, border: 1, borderColor: 'success.light' }}>
+                        <Typography variant="caption" color="success.dark" fontWeight="bold" display="block" gutterBottom>
+                          Preview:
+                        </Typography>
+                        <Typography variant="body2" color="success.dark">
+                          {surcharge.surchargeName || 'Surcharge'} - {' '}
+                          {surcharge.amountType === 'percentage'
+                            ? `${surcharge.amount}% increase`
+                            : `$${surcharge.amount} extra`
+                          } from {surcharge.startDate ? dayjs(surcharge.startDate).format('MMM DD, YYYY') : 'start date'} to {surcharge.endDate ? dayjs(surcharge.endDate).format('MMM DD, YYYY') : 'end date'}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </AccordionDetails>
+              </Accordion>
             ))}
           </Box>
         )}
 
         <Divider sx={{ my: 3 }} />
 
-        <Box sx={{ bgcolor: 'info.light', p: 2, borderRadius: 1 }}>
-          <Typography variant="subtitle2" color="info.dark" gutterBottom>
+        <Box sx={{ bgcolor: 'info.lighter', p: 2, borderRadius: 1, border: 1, borderColor: 'info.light' }}>
+          <Typography variant="subtitle2" color="info.dark" gutterBottom sx={{ fontWeight: 600 }}>
             How Surcharges Work:
           </Typography>
           <Typography variant="body2" color="info.dark" component="ul" sx={{ pl: 2, mb: 0 }}>
@@ -268,8 +313,9 @@ const SurchargeSection = ({ surcharges = [], onChange }) => {
             <li>Only active surcharges will be applied to bookings</li>
           </Typography>
         </Box>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </LocalizationProvider>
   );
 };
 
