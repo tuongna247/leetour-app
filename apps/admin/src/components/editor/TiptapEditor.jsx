@@ -129,6 +129,7 @@ const TiptapEditor = ({ content, onChange, placeholder = 'Start typing...', minH
       })
     ],
     content,
+    immediatelyRender: false, // Fix SSR hydration mismatch
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       onChange(html);
@@ -138,10 +139,10 @@ const TiptapEditor = ({ content, onChange, placeholder = 'Start typing...', minH
         class: 'tiptap-editor'
       }
     }
-  }, [content]); // Add dependency array to prevent re-initialization
+  });
 
   // Return null during SSR
-  if (typeof window === 'undefined') {
+  if (!editor) {
     return null;
   }
 
