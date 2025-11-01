@@ -44,6 +44,11 @@ const TiptapEditor = dynamic(() => import('@/components/editor/TiptapEditor'), {
   loading: () => <CircularProgress size={20} />
 });
 
+const FeaturedSliderImageUploader = dynamic(() => import('@/components/forms/FeaturedSliderImageUploader'), {
+  ssr: false,
+  loading: () => <CircularProgress size={20} />
+});
+
 const categories = [
   'Cultural',
   'Adventure',
@@ -565,99 +570,16 @@ export default function EditTourPage() {
                 <ImageIcon /> Tour Images
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Add 1 featured image and 4 slider images for the tour gallery
+                Upload 1 featured image and 4 slider images for the tour gallery
               </Typography>
 
-              {/* Featured Image */}
-              <Box sx={{ mb: 3, p: 2, border: 1, borderColor: 'divider', borderRadius: 1, bgcolor: 'warning.lighter' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                  <StarIcon color="warning" />
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                    Featured Image (Main)
-                  </Typography>
-                </Box>
-                <Grid container spacing={2}>
-                  <Grid size={{ xs: 12, md: 8 }}>
-                    <TextField
-                      fullWidth
-                      label="Image URL"
-                      value={formData.featuredImage.url}
-                      onChange={(e) => handleFeaturedImageChange('url', e.target.value)}
-                      placeholder="https://example.com/featured-image.jpg"
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, md: 4 }}>
-                    <TextField
-                      fullWidth
-                      label="Alt Text"
-                      value={formData.featuredImage.alt}
-                      onChange={(e) => handleFeaturedImageChange('alt', e.target.value)}
-                      placeholder="Description for SEO"
-                      size="small"
-                    />
-                  </Grid>
-                </Grid>
-                {formData.featuredImage.url && (
-                  <Box sx={{ mt: 2, textAlign: 'center' }}>
-                    <img
-                      src={formData.featuredImage.url}
-                      alt={formData.featuredImage.alt || 'Featured preview'}
-                      style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 8 }}
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                  </Box>
-                )}
-              </Box>
-
-              {/* Slider Images */}
-              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>
-                Slider Images (4 required)
-              </Typography>
-              <Grid container spacing={2}>
-                {formData.sliderImages.map((image, index) => (
-                  <Grid size={{ xs: 12, md: 6 }} key={index}>
-                    <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, bgcolor: 'background.default' }}>
-                      <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
-                        Slider Image {index + 1}
-                      </Typography>
-                      <TextField
-                        fullWidth
-                        label="Image URL"
-                        value={image.url}
-                        onChange={(e) => handleSliderImageChange(index, 'url', e.target.value)}
-                        placeholder="https://example.com/slider-image.jpg"
-                        size="small"
-                        sx={{ mb: 1 }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Alt Text"
-                        value={image.alt}
-                        onChange={(e) => handleSliderImageChange(index, 'alt', e.target.value)}
-                        placeholder="Description for SEO"
-                        size="small"
-                      />
-                      {image.url && (
-                        <Box sx={{ mt: 1, textAlign: 'center' }}>
-                          <img
-                            src={image.url}
-                            alt={image.alt || `Slider ${index + 1} preview`}
-                            style={{ maxWidth: '100%', maxHeight: 120, borderRadius: 4 }}
-                            onError={(e) => { e.target.style.display = 'none'; }}
-                          />
-                        </Box>
-                      )}
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-
-              <Box sx={{ mt: 2, p: 2, bgcolor: 'info.lighter', borderRadius: 1, border: 1, borderColor: 'info.light' }}>
-                <Typography variant="caption" color="info.dark">
-                  <strong>Image Guidelines:</strong> Use high-quality images (minimum 1200x800px). Featured image appears on tour cards. Slider images create the banner carousel on the tour detail page.
-                </Typography>
-              </Box>
+              <FeaturedSliderImageUploader
+                tourId={tourId}
+                featuredImage={formData.featuredImage}
+                sliderImages={formData.sliderImages}
+                onFeaturedChange={(image) => setFormData(prev => ({ ...prev, featuredImage: image }))}
+                onSliderChange={(images) => setFormData(prev => ({ ...prev, sliderImages: images }))}
+              />
             </CardContent>
           </Card>
 
