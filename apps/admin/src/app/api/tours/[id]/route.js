@@ -5,8 +5,9 @@ import Tour from '@/models/Tour';
 export async function GET(request, { params }) {
   try {
     await connectDB();
-    
-    const tour = await Tour.findOne({ _id: params.id, isActive: true });
+    const { id } = await params;
+
+    const tour = await Tour.findOne({ _id: id, isActive: true });
     
     if (!tour) {
       return NextResponse.json({

@@ -278,7 +278,9 @@
             border-radius: 8px;
             font-size: 13px;
             line-height: 1.6;
-            max-width: 400px;
+            max-width: 500px;
+            max-height: 400px;
+            overflow-y: auto;
             z-index: 10000;
             pointer-events: none;
             display: none;
@@ -742,7 +744,16 @@
                         $content.html('<span class="input-placeholder">Click để chọn câu Kinh Thánh...</span>');
                     } else {
                         $.each(selectedVerses, function(index, verse) {
-                            const $tag = $('<span>', { class: 'verse-tag' });
+                            const $tag = $('<span>', {
+                                class: 'verse-tag',
+                                'data-index': index
+                            });
+
+                            // Use jQuery .data() to store objects directly
+                            $tag.data('book', verse.book);
+                            $tag.data('chapter', verse.chapter);
+                            $tag.data('verses', verse.verses); // Store as array, not JSON string
+
                             $tag.append($('<span>', { text: verse.text }));
 
                             const $remove = $('<span>', {
@@ -753,6 +764,15 @@
 
                             $tag.append($remove);
                             $content.append($tag);
+                        });
+
+                        // Add hover events to verse tags
+                        $('.verse-tag').on('mouseenter', function(e) {
+                            showVerseTagTooltip(e);
+                        }).on('mousemove', function(e) {
+                            updateTooltipPosition(e);
+                        }).on('mouseleave', function() {
+                            hideVerseTooltip();
                         });
                     }
                 }
@@ -793,6 +813,38 @@
                         content = `<span class="tooltip-verse-number">${verseNum}.</span>${verseText}`;
                     } else {
                         content = `<span class="tooltip-verse-number">${verseNum}.</span><span class="tooltip-no-content">Chưa có nội dung</span>`;
+                    }
+
+                    $tooltipContent.html(content);
+                    $tooltip.addClass('active');
+                    updateTooltipPosition(e);
+                }
+
+                function showVerseTagTooltip(e) {
+                    const $tag = $(e.currentTarget);
+                    const book = $tag.data('book');
+                    const chapter = String($tag.data('chapter'));
+                    const verses = $tag.data('verses'); // Already an array from jQuery .data()
+
+                    const $tooltip = $('#verseTooltip');
+                    const $tooltipContent = $tooltip.find('.tooltip-content');
+
+                    let content = '';
+                    let hasContent = false;
+
+                    // Build tooltip content with all verses
+                    if (bibleVerses[book] && bibleVerses[book][chapter]) {
+                        $.each(verses, function(i, verseNum) {
+                            const verseText = bibleVerses[book][chapter][String(verseNum)];
+                            if (verseText) {
+                                hasContent = true;
+                                content += `<div style="margin-bottom: 8px;"><span class="tooltip-verse-number">${verseNum}.</span> ${verseText}</div>`;
+                            }
+                        });
+                    }
+
+                    if (!hasContent) {
+                        content = `<span class="tooltip-no-content">Chưa có nội dung cho ${book} ${chapter}:${verses[0]}-${verses[verses.length-1]}</span>`;
                     }
 
                     $tooltipContent.html(content);
@@ -909,7 +961,15 @@
                         bibleData = data.structure || data;
                         bibleVerses = data.verses || {};
                         console.log('Bible data loaded successfully');
-                        console.log('Sample verse check - Ma-thi-ơ 1:1:', bibleVerses['Ma-thi-ơ']?.[1]?.[1]);
+                        console.log('bibleData:', bibleData);
+                        console.log('bibleVerses:', bibleVerses);
+
+                        // Test access to Ma-thi-ơ chapter 1
+                        if (bibleVerses['Ma-thi-ơ'] && bibleVerses['Ma-thi-ơ']['1']) {
+                            console.log('Sample verse - Ma-thi-ơ 1:1:', bibleVerses['Ma-thi-ơ']['1']['1']);
+                        } else {
+                            console.warn('Ma-thi-ơ chapter 1 not found in verses');
+                        }
 
                         // Initialize plugin after data is loaded
                         const selector = $('#bibleVerseInput').bibleVerseSelector();

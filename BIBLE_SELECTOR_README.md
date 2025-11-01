@@ -85,13 +85,15 @@ Simply open `bible-verse-selector-improved.html` in a web browser. The selector 
 
 ## Features
 
-- **Verse hover tooltips**: Hover over any verse number to see its content in a tooltip
+- **Verse hover tooltips**: Hover over any verse number button to see its content in a tooltip
+- **Verse tag tooltips**: Hover over selected verse tags (e.g., "Ma-thi-ơ 1:8-25") to see full content of all verses in that range
 - **Multiple verse selection**: Click verses to select/deselect
 - **Quick selection shortcuts**:
   - "Chọn toàn bộ đoạn" - Select entire chapter
   - "Bỏ chọn tất cả" - Deselect all
 - **Visual feedback**: Selected verses are highlighted
 - **Smart tooltip positioning**: Tooltips automatically adjust to stay on screen
+- **Scrollable tooltips**: Long verse ranges show in scrollable tooltip (max height 400px)
 - **Responsive design**: Works on desktop and mobile
 - **Fallback support**: Works even without bible.json file
 

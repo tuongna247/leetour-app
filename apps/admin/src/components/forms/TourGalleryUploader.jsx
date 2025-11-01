@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 import {
   Box,
   Card,
@@ -76,8 +77,7 @@ export default function TourGalleryUploader({
     }
   };
 
-  const handleGalleryUpload = async (e) => {
-    const files = Array.from(e.target.files || []);
+  const uploadFiles = async (files) => {
     if (files.length === 0) return;
 
     try {
@@ -119,6 +119,26 @@ export default function TourGalleryUploader({
       setUploading(false);
     }
   };
+
+  const handleGalleryUpload = async (e) => {
+    const files = Array.from(e.target.files || []);
+    await uploadFiles(files);
+  };
+
+  // Dropzone callback
+  const onDrop = useCallback(async (acceptedFiles) => {
+    await uploadFiles(acceptedFiles);
+  }, [tourId, galleryImages, onGalleryChange]);
+
+  // Configure dropzone
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp']
+    },
+    multiple: true,
+    disabled: uploading
+  });
 
   const handleDeleteFeatured = () => {
     onFeaturedChange({ url: '', alt: '' });
@@ -247,6 +267,46 @@ export default function TourGalleryUploader({
               disabled={uploading}
             />
           </Button>
+        </Box>
+
+        {/* Drag and Drop Zone */}
+        <Box
+          {...getRootProps()}
+          sx={{
+            border: '2px dashed',
+            borderColor: isDragActive ? 'primary.main' : 'grey.400',
+            borderRadius: 2,
+            p: 3,
+            mb: 2,
+            textAlign: 'center',
+            bgcolor: isDragActive ? 'action.hover' : 'background.paper',
+            cursor: uploading ? 'not-allowed' : 'pointer',
+            transition: 'all 0.2s',
+            '&:hover': {
+              borderColor: uploading ? 'grey.400' : 'primary.main',
+              bgcolor: uploading ? 'background.paper' : 'action.hover'
+            }
+          }}
+        >
+          <input {...getInputProps()} />
+          {uploading ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+              <CircularProgress />
+              <Typography variant="body2" color="text.secondary">
+                Uploading images...
+              </Typography>
+            </Box>
+          ) : (
+            <Box>
+              <UploadIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} />
+              <Typography variant="body1" gutterBottom>
+                {isDragActive ? 'Drop images here...' : 'Drag & drop images here, or click to select'}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Supports: JPG, PNG, GIF, WEBP (multiple files)
+              </Typography>
+            </Box>
+          )}
         </Box>
 
         {/* Summary by type */}

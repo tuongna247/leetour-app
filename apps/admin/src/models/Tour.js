@@ -135,6 +135,117 @@ const tourOptionSchema = new mongoose.Schema({
   }
 }, { _id: true });
 
+// Surcharges Schema
+const surchargeSchema = new mongoose.Schema({
+  surchargeName: {
+    type: String,
+    required: [true, 'Surcharge name is required'],
+    trim: true
+  },
+  surchargeType: {
+    type: String,
+    enum: ['holiday', 'weekend', 'peak_season', 'special_event', 'custom'],
+    default: 'weekend'
+  },
+  startDate: {
+    type: Date,
+    required: [true, 'Start date is required']
+  },
+  endDate: {
+    type: Date,
+    required: [true, 'End date is required']
+  },
+  amountType: {
+    type: String,
+    enum: ['percentage', 'fixed'],
+    default: 'percentage'
+  },
+  amount: {
+    type: Number,
+    required: [true, 'Amount is required'],
+    min: [0, 'Amount must be positive']
+  },
+  description: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, { _id: true });
+
+// Promotions Schema
+const promotionSchema = new mongoose.Schema({
+  promotionName: {
+    type: String,
+    required: [true, 'Promotion name is required'],
+    trim: true
+  },
+  promotionType: {
+    type: String,
+    enum: ['early_bird', 'last_minute', 'seasonal', 'group_discount', 'custom'],
+    default: 'custom'
+  },
+  discountType: {
+    type: String,
+    enum: ['percentage', 'fixed'],
+    default: 'percentage'
+  },
+  discountAmount: {
+    type: Number,
+    required: [true, 'Discount amount is required'],
+    min: [0, 'Discount amount must be positive']
+  },
+  validFrom: {
+    type: Date,
+    required: [true, 'Valid from date is required']
+  },
+  validTo: {
+    type: Date,
+    required: [true, 'Valid to date is required']
+  },
+  daysBeforeDeparture: {
+    type: Number,
+    default: 0,
+    min: [0, 'Days before departure must be positive']
+  },
+  minPassengers: {
+    type: Number,
+    min: [1, 'Minimum passengers must be at least 1']
+  },
+  conditions: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, { _id: true });
+
+// Cancellation Policies Schema
+const cancellationPolicySchema = new mongoose.Schema({
+  daysBeforeDeparture: {
+    type: Number,
+    required: [true, 'Days before departure is required'],
+    min: [0, 'Days must be 0 or greater']
+  },
+  refundPercentage: {
+    type: Number,
+    required: [true, 'Refund percentage is required'],
+    min: [0, 'Refund percentage must be 0 or greater'],
+    max: [100, 'Refund percentage cannot exceed 100']
+  },
+  description: {
+    type: String,
+    trim: true,
+    default: ''
+  }
+}, { _id: true });
+
 const tourSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -215,6 +326,9 @@ const tourSchema = new mongoose.Schema({
   },
   booking: bookingSchema,
   tourOptions: [tourOptionSchema],
+  surcharges: [surchargeSchema],
+  promotions: [promotionSchema],
+  cancellationPolicies: [cancellationPolicySchema],
   seo: seoSchema,
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
