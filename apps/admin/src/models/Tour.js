@@ -78,6 +78,16 @@ const imageSchema = new mongoose.Schema({
   isPrimary: { type: Boolean, default: false }
 });
 
+const featuredImageSchema = new mongoose.Schema({
+  url: { type: String, default: '' },
+  alt: { type: String, default: '' }
+});
+
+const sliderImageSchema = new mongoose.Schema({
+  url: { type: String, default: '' },
+  alt: { type: String, default: '' }
+});
+
 // Tour Pricing Options Schema
 const tourOptionSchema = new mongoose.Schema({
   optionName: {
@@ -167,6 +177,8 @@ const tourSchema = new mongoose.Schema({
     required: [true, 'Location is required']
   },
   images: [imageSchema],
+  featuredImage: featuredImageSchema,
+  sliderImages: [sliderImageSchema],
   schedule: scheduleSchema,
   capacity: capacitySchema,
   included: [{ type: String }],

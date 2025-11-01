@@ -84,6 +84,16 @@ const imageSchema = new mongoose.Schema({
   displayOrder: { type: Number, default: 0 }
 }, { timestamps: true });
 
+const featuredImageSchema = new mongoose.Schema({
+  url: { type: String, default: '' },
+  alt: { type: String, default: '' }
+});
+
+const sliderImageSchema = new mongoose.Schema({
+  url: { type: String, default: '' },
+  alt: { type: String, default: '' }
+});
+
 // Tour Itinerary Schema (for multi-day tours)
 const itinerarySchema = new mongoose.Schema({
   dayNumber: {
@@ -321,6 +331,8 @@ const tourSchema = new mongoose.Schema({
     required: [true, 'Location is required']
   },
   images: [imageSchema],
+  featuredImage: featuredImageSchema,
+  sliderImages: [sliderImageSchema],
   schedule: scheduleSchema,
   capacity: capacitySchema,
   included: [{ type: String }],

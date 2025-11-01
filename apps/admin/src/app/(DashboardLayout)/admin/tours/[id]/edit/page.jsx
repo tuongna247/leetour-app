@@ -29,7 +29,9 @@ import {
   LocalOffer as PromotionIcon,
   TrendingUp as SurchargeIcon,
   AttachMoney as OptionIcon,
-  EventBusy as CancellationIcon
+  EventBusy as CancellationIcon,
+  Image as ImageIcon,
+  Star as StarIcon
 } from '@mui/icons-material';
 import { useRouter, useParams } from 'next/navigation';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
@@ -101,7 +103,13 @@ export default function EditTourPage() {
             included: tourData.included || [''],
             excluded: tourData.excluded || [''],
             highlights: tourData.highlights || [''],
-            images: tourData.images || [{ url: '', alt: '', isPrimary: true }]
+            featuredImage: tourData.featuredImage || { url: '', alt: '' },
+            sliderImages: tourData.sliderImages || [
+              { url: '', alt: '' },
+              { url: '', alt: '' },
+              { url: '', alt: '' },
+              { url: '', alt: '' }
+            ]
           });
         } else {
           showAlert('Failed to fetch tour data', 'error');
@@ -163,6 +171,25 @@ export default function EditTourPage() {
     }));
   };
 
+  const handleFeaturedImageChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      featuredImage: {
+        ...prev.featuredImage,
+        [field]: value
+      }
+    }));
+  };
+
+  const handleSliderImageChange = (index, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      sliderImages: prev.sliderImages.map((img, i) =>
+        i === index ? { ...img, [field]: value } : img
+      )
+    }));
+  };
+
   const handleSubmit = async () => {
     try {
       setSaving(true);
@@ -180,7 +207,8 @@ export default function EditTourPage() {
         included: formData.included.filter(item => item.trim()),
         excluded: formData.excluded.filter(item => item.trim()),
         highlights: formData.highlights.filter(item => item.trim()),
-        images: formData.images.filter(img => img.url && img.url.trim())
+        featuredImage: formData.featuredImage?.url ? formData.featuredImage : null,
+        sliderImages: formData.sliderImages.filter(img => img.url && img.url.trim())
       };
 
       const response = await fetch(`/api/admin/tours/${tourId}`, {
@@ -527,6 +555,109 @@ export default function EditTourPage() {
                   />
                 </Grid>
               </Grid>
+            </CardContent>
+          </Card>
+
+          {/* Images Section */}
+          <Card sx={{ mb: 3 }}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <ImageIcon /> Tour Images
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Add 1 featured image and 4 slider images for the tour gallery
+              </Typography>
+
+              {/* Featured Image */}
+              <Box sx={{ mb: 3, p: 2, border: 1, borderColor: 'divider', borderRadius: 1, bgcolor: 'warning.lighter' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                  <StarIcon color="warning" />
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                    Featured Image (Main)
+                  </Typography>
+                </Box>
+                <Grid container spacing={2}>
+                  <Grid size={{ xs: 12, md: 8 }}>
+                    <TextField
+                      fullWidth
+                      label="Image URL"
+                      value={formData.featuredImage.url}
+                      onChange={(e) => handleFeaturedImageChange('url', e.target.value)}
+                      placeholder="https://example.com/featured-image.jpg"
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid size={{ xs: 12, md: 4 }}>
+                    <TextField
+                      fullWidth
+                      label="Alt Text"
+                      value={formData.featuredImage.alt}
+                      onChange={(e) => handleFeaturedImageChange('alt', e.target.value)}
+                      placeholder="Description for SEO"
+                      size="small"
+                    />
+                  </Grid>
+                </Grid>
+                {formData.featuredImage.url && (
+                  <Box sx={{ mt: 2, textAlign: 'center' }}>
+                    <img
+                      src={formData.featuredImage.url}
+                      alt={formData.featuredImage.alt || 'Featured preview'}
+                      style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 8 }}
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                  </Box>
+                )}
+              </Box>
+
+              {/* Slider Images */}
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>
+                Slider Images (4 required)
+              </Typography>
+              <Grid container spacing={2}>
+                {formData.sliderImages.map((image, index) => (
+                  <Grid size={{ xs: 12, md: 6 }} key={index}>
+                    <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, bgcolor: 'background.default' }}>
+                      <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
+                        Slider Image {index + 1}
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        label="Image URL"
+                        value={image.url}
+                        onChange={(e) => handleSliderImageChange(index, 'url', e.target.value)}
+                        placeholder="https://example.com/slider-image.jpg"
+                        size="small"
+                        sx={{ mb: 1 }}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Alt Text"
+                        value={image.alt}
+                        onChange={(e) => handleSliderImageChange(index, 'alt', e.target.value)}
+                        placeholder="Description for SEO"
+                        size="small"
+                      />
+                      {image.url && (
+                        <Box sx={{ mt: 1, textAlign: 'center' }}>
+                          <img
+                            src={image.url}
+                            alt={image.alt || `Slider ${index + 1} preview`}
+                            style={{ maxWidth: '100%', maxHeight: 120, borderRadius: 4 }}
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                          />
+                        </Box>
+                      )}
+                    </Box>
+                  </Grid>
+                ))}
+              </Grid>
+
+              <Box sx={{ mt: 2, p: 2, bgcolor: 'info.lighter', borderRadius: 1, border: 1, borderColor: 'info.light' }}>
+                <Typography variant="caption" color="info.dark">
+                  <strong>Image Guidelines:</strong> Use high-quality images (minimum 1200x800px). Featured image appears on tour cards. Slider images create the banner carousel on the tour detail page.
+                </Typography>
+              </Box>
             </CardContent>
           </Card>
 
