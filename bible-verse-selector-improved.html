@@ -779,9 +779,9 @@
                 // Tooltip functions
                 function showVerseTooltip(e) {
                     const $button = $(e.currentTarget);
-                    const verseNum = $button.data('verse');
+                    const verseNum = String($button.data('verse')); // Ensure string
                     const book = $button.data('book');
-                    const chapter = $button.data('chapter');
+                    const chapter = String($button.data('chapter')); // Ensure string
 
                     const $tooltip = $('#verseTooltip');
                     const $tooltipContent = $tooltip.find('.tooltip-content');
