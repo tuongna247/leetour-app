@@ -77,42 +77,61 @@ export async function POST(request, { params }) {
       );
     }
 
-    // Use Cloudinary for upload
+    // Upload image (Cloudinary or local storage)
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'leetour_preset';
+    let imageUrl;
 
-    if (!cloudName) {
-      return NextResponse.json(
-        { success: false, message: 'Cloudinary not configured' },
-        { status: 500 }
-      );
+    if (cloudName) {
+      // Use Cloudinary
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'leetour_preset';
+
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const base64 = buffer.toString('base64');
+      const dataURI = `data:${file.type};base64,${base64}`;
+
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+      const cloudinaryFormData = new FormData();
+      cloudinaryFormData.append('file', dataURI);
+      cloudinaryFormData.append('upload_preset', uploadPreset);
+      cloudinaryFormData.append('folder', `leetour/tours/${id}`);
+
+      const uploadResponse = await fetch(cloudinaryUrl, {
+        method: 'POST',
+        body: cloudinaryFormData
+      });
+
+      const uploadResult = await uploadResponse.json();
+
+      if (!uploadResponse.ok) {
+        throw new Error(uploadResult.error?.message || 'Upload to Cloudinary failed');
+      }
+
+      imageUrl = uploadResult.secure_url;
+    } else {
+      // Fallback to local storage for development
+      const { writeFile, mkdir } = await import('fs/promises');
+      const path = await import('path');
+      const { existsSync } = await import('fs');
+
+      const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'tours', id);
+
+      if (!existsSync(uploadDir)) {
+        await mkdir(uploadDir, { recursive: true });
+      }
+
+      const timestamp = Date.now();
+      const random = Math.random().toString(36).substring(7);
+      const ext = file.name.substring(file.name.lastIndexOf('.'));
+      const filename = `${timestamp}-${random}${ext}`;
+      const filePath = path.join(uploadDir, filename);
+
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      await writeFile(filePath, buffer);
+
+      imageUrl = `/uploads/tours/${id}/${filename}`;
     }
-
-    // Convert file to base64 for Cloudinary upload
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const base64 = buffer.toString('base64');
-    const dataURI = `data:${file.type};base64,${base64}`;
-
-    // Upload to Cloudinary
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
-    const cloudinaryFormData = new FormData();
-    cloudinaryFormData.append('file', dataURI);
-    cloudinaryFormData.append('upload_preset', uploadPreset);
-    cloudinaryFormData.append('folder', `leetour/tours/${id}`);
-
-    const uploadResponse = await fetch(cloudinaryUrl, {
-      method: 'POST',
-      body: cloudinaryFormData
-    });
-
-    const uploadResult = await uploadResponse.json();
-
-    if (!uploadResponse.ok) {
-      throw new Error(uploadResult.error?.message || 'Upload to Cloudinary failed');
-    }
-
-    const imageUrl = uploadResult.secure_url;
 
     // Save image data based on type
     if (imageType === 'featured') {
