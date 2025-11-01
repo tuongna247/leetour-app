@@ -11,7 +11,7 @@ export async function GET(request, { params }) {
     await connectDB();
     const { id } = await params;
 
-    const tour = await Tour.findById(id).select('featuredImage sliderImages images');
+    const tour = await Tour.findById(id).select('featuredImage galleryImages images');
 
     if (!tour) {
       return NextResponse.json(
@@ -24,7 +24,7 @@ export async function GET(request, { params }) {
       success: true,
       data: {
         featuredImage: tour.featuredImage,
-        sliderImages: tour.sliderImages,
+        galleryImages: tour.galleryImages,
         images: tour.images || []
       }
     });

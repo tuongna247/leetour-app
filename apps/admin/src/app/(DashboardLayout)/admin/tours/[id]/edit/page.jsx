@@ -44,11 +44,6 @@ const TiptapEditor = dynamic(() => import('@/components/editor/TiptapEditor'), {
   loading: () => <CircularProgress size={20} />
 });
 
-const FeaturedSliderImageUploader = dynamic(() => import('@/components/forms/FeaturedSliderImageUploader'), {
-  ssr: false,
-  loading: () => <CircularProgress size={20} />
-});
-
 const categories = [
   'Cultural',
   'Adventure',
@@ -107,14 +102,7 @@ export default function EditTourPage() {
             ...tourData,
             included: tourData.included || [''],
             excluded: tourData.excluded || [''],
-            highlights: tourData.highlights || [''],
-            featuredImage: tourData.featuredImage || { url: '', alt: '' },
-            sliderImages: tourData.sliderImages || [
-              { url: '', alt: '' },
-              { url: '', alt: '' },
-              { url: '', alt: '' },
-              { url: '', alt: '' }
-            ]
+            highlights: tourData.highlights || ['']
           });
         } else {
           showAlert('Failed to fetch tour data', 'error');
@@ -176,24 +164,6 @@ export default function EditTourPage() {
     }));
   };
 
-  const handleFeaturedImageChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      featuredImage: {
-        ...prev.featuredImage,
-        [field]: value
-      }
-    }));
-  };
-
-  const handleSliderImageChange = (index, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      sliderImages: prev.sliderImages.map((img, i) =>
-        i === index ? { ...img, [field]: value } : img
-      )
-    }));
-  };
 
   const handleSubmit = async () => {
     try {
@@ -211,9 +181,7 @@ export default function EditTourPage() {
         ...formData,
         included: formData.included.filter(item => item.trim()),
         excluded: formData.excluded.filter(item => item.trim()),
-        highlights: formData.highlights.filter(item => item.trim()),
-        featuredImage: formData.featuredImage?.url ? formData.featuredImage : null,
-        sliderImages: formData.sliderImages.filter(img => img.url && img.url.trim())
+        highlights: formData.highlights.filter(item => item.trim())
       };
 
       const response = await fetch(`/api/admin/tours/${tourId}`, {
@@ -274,14 +242,14 @@ export default function EditTourPage() {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            Pricing & Options Management
+            Tour Management Sections
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Manage different pricing aspects for this tour. Each section is independent.
+            Manage different aspects of this tour. Each section is independent.
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
               <Button
                 fullWidth
                 variant="outlined"
@@ -302,7 +270,7 @@ export default function EditTourPage() {
               </Button>
             </Grid>
 
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
               <Button
                 fullWidth
                 variant="outlined"
@@ -323,7 +291,7 @@ export default function EditTourPage() {
               </Button>
             </Grid>
 
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
               <Button
                 fullWidth
                 variant="outlined"
@@ -344,7 +312,7 @@ export default function EditTourPage() {
               </Button>
             </Grid>
 
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
               <Button
                 fullWidth
                 variant="outlined"
@@ -361,6 +329,27 @@ export default function EditTourPage() {
                 <Box>Cancellation</Box>
                 <Typography variant="caption" color="text.secondary">
                   Refund policies
+                </Typography>
+              </Button>
+            </Grid>
+
+            <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
+              <Button
+                fullWidth
+                variant="outlined"
+                color="info"
+                startIcon={<ImageIcon />}
+                onClick={() => router.push(`/admin/tours/${tourId}/images`)}
+                sx={{
+                  height: '100%',
+                  py: 2,
+                  flexDirection: 'column',
+                  gap: 1
+                }}
+              >
+                <Box>Tour Images</Box>
+                <Typography variant="caption" color="text.secondary">
+                  Featured & gallery
                 </Typography>
               </Button>
             </Grid>
@@ -560,26 +549,6 @@ export default function EditTourPage() {
                   />
                 </Grid>
               </Grid>
-            </CardContent>
-          </Card>
-
-          {/* Images Section */}
-          <Card sx={{ mb: 3 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <ImageIcon /> Tour Images
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Upload 1 featured image and 4 slider images for the tour gallery
-              </Typography>
-
-              <FeaturedSliderImageUploader
-                tourId={tourId}
-                featuredImage={formData.featuredImage}
-                sliderImages={formData.sliderImages}
-                onFeaturedChange={(image) => setFormData(prev => ({ ...prev, featuredImage: image }))}
-                onSliderChange={(images) => setFormData(prev => ({ ...prev, sliderImages: images }))}
-              />
             </CardContent>
           </Card>
 
