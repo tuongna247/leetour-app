@@ -71,9 +71,9 @@ module.exports = {
   deploy: {
     production: {
       user: 'deployer',
-      host: 'YOUR_SERVER_IP',
+      host: '157.173.124.250',
       ref: 'origin/main',
-      repo: 'YOUR_GIT_REPO_URL',
+      repo: 'https://github.com/tuongna247/leetour-app.git',
       path: '/var/www/leetour',
       'pre-deploy-local': '',
       'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --env production',
