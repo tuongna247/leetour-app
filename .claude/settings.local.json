@@ -1,7 +1,35 @@
 {
   "permissions": {
     "allow": [
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(npm install:*)",
+      "Bash(node:*)",
+      "Bash(npm run dev:*)",
+      "Bash(taskkill:*)",
+      "Bash(del test-connection.js test-google-oauth.js test-auth-flow.js)",
+      "Bash(pkill:*)",
+      "Bash(rm:*)",
+      "Bash(dir:*)",
+      "Bash(mkdir:*)",
+      "Bash(xcopy:*)",
+      "Bash(ln:*)",
+      "Bash(cmd //c \"mklink /D public ..\\..\\public\")",
+      "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\")",
+      "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\\[id]\")",
+      "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\\[id]\\edit\")",
+      "Bash(ls -la \"d:\\Projects\\GitLap\\leetour-app\\apps\\admin\\src\\app\\(DashboardLayout)\\admin\\tours\\new\")",
+      "Bash(ls:*)",
+      "Bash(npm run backup)",
+      "Bash(npm run seed:*)",
+      "Bash(npm run cleanup:*)",
+      "Bash(npm run verify:*)",
+      "Bash(npm config get:*)",
+      "Bash(cmd //c \"dir C:\\Users\\tuong\\AppData\\Local\\npm-cache /s 2>nul | findstr /C:\"\"bytes\"\"\")",
+      "Bash(cmd //c \"dir C:\\Users\\tuong\\AppData\\Roaming\\npm /s 2>nul | findstr /C:\"\"bytes\"\"\")",
+      "Bash(powershell:*)",
+      "Bash(git restore:*)",
+      "Bash(cat:*)",
+      "Bash(wc:*)"
     ],
     "deny": [],
     "ask": []

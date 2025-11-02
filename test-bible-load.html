@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Bible JSON Load</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Test Bible JSON Load</h1>
+    <div id="output"></div>
+
+    <script>
+        console.log('Starting test...');
+
+        $.ajax({
+            url: 'bible.json',
+            dataType: 'json',
+            success: function(data) {
+                console.log('✅ SUCCESS: bible.json loaded');
+                console.log('Full data:', data);
+                console.log('Structure:', data.structure);
+                console.log('Verses:', data.verses);
+
+                // Test accessing Ma-thi-ơ
+                if (data.verses && data.verses['Ma-thi-ơ']) {
+                    console.log('Ma-thi-ơ found:', data.verses['Ma-thi-ơ']);
+
+                    if (data.verses['Ma-thi-ơ']['1']) {
+                        console.log('Chapter 1 found:', data.verses['Ma-thi-ơ']['1']);
+
+                        if (data.verses['Ma-thi-ơ']['1']['1']) {
+                            console.log('✅ Verse 1:1:', data.verses['Ma-thi-ơ']['1']['1']);
+                            $('#output').html('<h2 style="color: green;">✅ SUCCESS!</h2><p><strong>Ma-thi-ơ 1:1:</strong> ' + data.verses['Ma-thi-ơ']['1']['1'] + '</p>');
+                        } else {
+                            console.error('❌ Verse 1 not found');
+                            $('#output').html('<h2 style="color: red;">❌ Verse 1 not found</h2>');
+                        }
+                    } else {
+                        console.error('❌ Chapter 1 not found');
+                        $('#output').html('<h2 style="color: red;">❌ Chapter 1 not found</h2>');
+                    }
+                } else {
+                    console.error('❌ Ma-thi-ơ not found in verses');
+                    $('#output').html('<h2 style="color: red;">❌ Ma-thi-ơ not found</h2>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('❌ ERROR loading bible.json:', error);
+                console.error('Status:', status);
+                console.error('Response:', xhr.responseText);
+                $('#output').html('<h2 style="color: red;">❌ ERROR</h2><p>' + error + '</p>');
+            }
+        });
+    </script>
+</body>
+</html>
