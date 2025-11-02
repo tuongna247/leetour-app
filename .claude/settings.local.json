@@ -22,7 +22,14 @@
       "Bash(npm run backup)",
       "Bash(npm run seed:*)",
       "Bash(npm run cleanup:*)",
-      "Bash(npm run verify:*)"
+      "Bash(npm run verify:*)",
+      "Bash(npm config get:*)",
+      "Bash(cmd //c \"dir C:\\Users\\tuong\\AppData\\Local\\npm-cache /s 2>nul | findstr /C:\"\"bytes\"\"\")",
+      "Bash(cmd //c \"dir C:\\Users\\tuong\\AppData\\Roaming\\npm /s 2>nul | findstr /C:\"\"bytes\"\"\")",
+      "Bash(powershell:*)",
+      "Bash(git restore:*)",
+      "Bash(cat:*)",
+      "Bash(wc:*)"
     ],
     "deny": [],
     "ask": []
