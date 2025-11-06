@@ -173,7 +173,7 @@ export async function POST(request, { params }) {
       tour.images.push(newImage);
     }
 
-    await tour.save();
+    await tour.save({ validateModifiedOnly: true });
 
     return NextResponse.json({
       success: true,
@@ -232,7 +232,7 @@ export async function DELETE(request, { params }) {
 
     // Remove image from tour
     image.deleteOne();
-    await tour.save();
+    await tour.save({ validateModifiedOnly: true });
 
     return NextResponse.json({
       success: true,
