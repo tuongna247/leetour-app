@@ -122,7 +122,7 @@ export default function TourOptionsSection({ tourOptions = [], onChange }) {
         {tourOptions.length === 0 ? (
           <Box sx={{ textAlign: 'center', py: 4 }}>
             <Typography variant="body1" color="text.secondary">
-              No pricing options yet. Click \"Add Option\" to create your first pricing tier.
+              No pricing options yet. Click &quot;Add Option&quot; to create your first pricing tier.
             </Typography>
           </Box>
         ) : (

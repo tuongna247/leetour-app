@@ -326,7 +326,7 @@ export default function TourGalleryUploader({
 
         {galleryImages.length === 0 ? (
           <Alert severity="info">
-            No gallery images uploaded yet. Click \"Upload Images\" to add images.
+            No gallery images uploaded yet. Click &quot;Upload Images&quot; to add images.
           </Alert>
         ) : (
           <Grid container spacing={2}>

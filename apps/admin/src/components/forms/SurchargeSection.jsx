@@ -105,7 +105,7 @@ const SurchargeSection = ({ surcharges = [], onChange }) => {
         {surcharges.length === 0 ? (
           <Box sx={{ textAlign: 'center', py: 4 }}>
             <Typography variant="body1" color="text.secondary">
-              No surcharges yet. Click "Add Surcharge" to create your first surcharge.
+              No surcharges yet. Click &quot;Add Surcharge&quot; to create your first surcharge.
             </Typography>
           </Box>
         ) : (

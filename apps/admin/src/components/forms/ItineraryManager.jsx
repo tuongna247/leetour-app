@@ -79,7 +79,7 @@ export default function ItineraryManager({ tourId, initialItinerary = [], tourTy
   if (tourType === 'daytrip') {
     return (
       <Alert severity="info">
-        Itinerary is only available for multi-day tours. Change tour type to "Tour" to add itinerary.
+        Itinerary is only available for multi-day tours. Change tour type to &quot;Tour&quot; to add itinerary.
       </Alert>
     );
   }
