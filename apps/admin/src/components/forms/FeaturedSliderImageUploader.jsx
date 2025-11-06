@@ -104,18 +104,48 @@ export default function FeaturedSliderImageUploader({
     disabled: uploading !== null
   });
 
-  // Dropzone for each slider image
-  const createSliderDropzone = (index) => {
-    return useDropzone({
-      onDrop: (files) => {
-        if (files.length > 0) handleUpload(files[0], 'slider', index);
-      },
-      accept: { 'image/*': ['.jpeg', '.jpg', '.png', '.webp'] },
-      maxSize: 10 * 1024 * 1024,
-      maxFiles: 1,
-      disabled: uploading !== null
-    });
-  };
+  // Dropzones for slider images - create all 4 at component level
+  const slider0Dropzone = useDropzone({
+    onDrop: (files) => {
+      if (files.length > 0) handleUpload(files[0], 'slider', 0);
+    },
+    accept: { 'image/*': ['.jpeg', '.jpg', '.png', '.webp'] },
+    maxSize: 10 * 1024 * 1024,
+    maxFiles: 1,
+    disabled: uploading !== null
+  });
+
+  const slider1Dropzone = useDropzone({
+    onDrop: (files) => {
+      if (files.length > 0) handleUpload(files[0], 'slider', 1);
+    },
+    accept: { 'image/*': ['.jpeg', '.jpg', '.png', '.webp'] },
+    maxSize: 10 * 1024 * 1024,
+    maxFiles: 1,
+    disabled: uploading !== null
+  });
+
+  const slider2Dropzone = useDropzone({
+    onDrop: (files) => {
+      if (files.length > 0) handleUpload(files[0], 'slider', 2);
+    },
+    accept: { 'image/*': ['.jpeg', '.jpg', '.png', '.webp'] },
+    maxSize: 10 * 1024 * 1024,
+    maxFiles: 1,
+    disabled: uploading !== null
+  });
+
+  const slider3Dropzone = useDropzone({
+    onDrop: (files) => {
+      if (files.length > 0) handleUpload(files[0], 'slider', 3);
+    },
+    accept: { 'image/*': ['.jpeg', '.jpg', '.png', '.webp'] },
+    maxSize: 10 * 1024 * 1024,
+    maxFiles: 1,
+    disabled: uploading !== null
+  });
+
+  const sliderDropzones = [slider0Dropzone, slider1Dropzone, slider2Dropzone, slider3Dropzone];
 
   const renderUploadBox = (dropzone, image, type, index = null, label) => {
     const uploadingThis = uploading === type + (index !== null ? `-${index}` : '');
@@ -232,7 +262,7 @@ export default function FeaturedSliderImageUploader({
       </Typography>
       <Grid container spacing={2}>
         {sliderImages.map((image, index) => {
-          const dropzone = createSliderDropzone(index);
+          const dropzone = sliderDropzones[index];
           return (
             <Grid item xs={12} md={6} key={index}>
               <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, bgcolor: 'background.default' }}>

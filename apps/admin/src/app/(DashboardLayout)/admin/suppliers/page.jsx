@@ -50,12 +50,12 @@ export default function SupplierManagementPage() {
   const [tabValue, setTabValue] = useState(0)
 
   // Fetch suppliers
-  const fetchSuppliers = async () => {
+  const fetchSuppliers = useCallback(async () => {
     try {
       setLoading(true)
       const response = await authenticatedFetch('/api/admin/suppliers')
       const data = await response.json()
-      
+
       if (data.status === 200) {
         setSuppliers(data.data)
       } else {
@@ -66,13 +66,13 @@ export default function SupplierManagementPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [authenticatedFetch])
 
   useEffect(() => {
     if (hasPermission(user, PERMISSIONS.APPROVE_SUPPLIERS)) {
       fetchSuppliers()
     }
-  }, [user])
+  }, [user, fetchSuppliers])
 
   const handleViewSupplier = async (supplierId) => {
     try {
