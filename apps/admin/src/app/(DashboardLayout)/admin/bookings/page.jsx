@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
   Box,
@@ -74,11 +74,7 @@ const BookingListPage = () => {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    fetchBookings();
-  }, [page, rowsPerPage, searchTerm, statusFilter, paymentFilter]);
-
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -109,7 +105,11 @@ const BookingListPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, rowsPerPage, searchTerm, statusFilter, paymentFilter, authenticatedFetch]);
+
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

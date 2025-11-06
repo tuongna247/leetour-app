@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Card,
@@ -54,11 +54,7 @@ export default function ReviewModerationPage() {
     total: 0
   });
 
-  useEffect(() => {
-    fetchReviews();
-  }, [page, rowsPerPage, statusFilter]);
-
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -80,7 +76,11 @@ export default function ReviewModerationPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, rowsPerPage, statusFilter]);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
 
   const handleApprove = async (reviewId) => {
     try {
