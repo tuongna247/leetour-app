@@ -2,7 +2,6 @@ import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import FacebookProvider from 'next-auth/providers/facebook'
 import CredentialsProvider from 'next-auth/providers/credentials'
-// import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
 import { MongoClient } from "mongodb"
 import connectDB from '@/lib/mongodb'
 import User from '@/models/User'
