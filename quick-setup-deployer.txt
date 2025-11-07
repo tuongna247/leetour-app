@@ -1,0 +1,59 @@
+# Quick Setup Commands - Copy and Paste
+
+# ============================================
+# Step 1: Connect as root
+# ============================================
+ssh root@157.173.124.250
+
+
+# ============================================
+# Step 2: Paste this entire block (all at once)
+# ============================================
+cat << 'EOF' | bash
+#!/bin/bash
+echo "Creating deployer user..."
+if ! id "deployer" &>/dev/null; then
+    useradd -m -s /bin/bash deployer
+    echo "Deployer user created"
+else
+    echo "Deployer user already exists"
+fi
+
+echo ""
+echo "Setting password for deployer..."
+passwd deployer
+
+echo ""
+echo "Configuring permissions..."
+usermod -aG sudo deployer
+echo "deployer ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+echo ""
+echo "Setting up SSH..."
+mkdir -p /home/deployer/.ssh
+chmod 700 /home/deployer/.ssh
+
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCFYWYSnebjjUbY6sWsMfEdjQzZQ5EVci6kHd6D6L45YcpUuaTx88UHSnaCukCUewEfA2ptyvLXc+BW0v2KPws4rMdOrTd2pqklA2w2YcLbuXIxGYv+01JB/y/q6JyrNEDVEe/hYDvQNcVv1YaTK5kUsOMnvs2xXzVj9I5dBzgTiSO3QKB2IMoR/pk8/nDj9Xmrn/ECs+41bAcokodxJikr7/U0Ru7CL+vEvtCVl4exyVej32cZFh23wKAbfLqqU4XQZsWuVRCBpxaQPr9a/FngyKx2ROwzY/hB2tbC/a3oZT1lRArJLr4rKuAwiF19jFREgfNbg9XfIM5Dh25coZWWzo63yJahvaBTc2jsH+VXeytHi8liAiI5xBAfQTuX6FHkJSPKPJV+nvozK0uib+WylV9fYOdwkyz9YJ9DqCod/oZQicurtUvDDw9Sbd2irAa4xYgMiifOzFpULjymeKt9YR3w7CvPptB2ANW50Pa0DKcLBWQyvG7PQGva90Z7Efh8vRRgPyW3R8CA5ElgT5HuBGOX2bNL5nxO4gmxkUjve5PSffJgg8AhBKH6AWptOAsAtu53FHtSJuPGZJP/kTPuoyaFFY2cqvQMLwPCkZQmwn11dgPWxacp2rzkO2kdupY2iKl7Q9mktZuOiI0jANFpzCsCozbD2rql8EiWs+vFJw== leetour-deployment" > /home/deployer/.ssh/authorized_keys
+
+chmod 600 /home/deployer/.ssh/authorized_keys
+chown -R deployer:deployer /home/deployer/.ssh
+
+echo ""
+echo "✓ Setup complete!"
+echo ""
+echo "Test connection from your local machine:"
+echo "  ssh deployer@157.173.124.250"
+echo "  or: ssh leetour"
+EOF
+
+
+# ============================================
+# Step 3: Exit and test from local machine
+# ============================================
+exit
+
+
+# ============================================
+# Step 4: Test connection (run on LOCAL machine)
+# ============================================
+ssh leetour

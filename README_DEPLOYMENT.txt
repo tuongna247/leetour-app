@@ -80,11 +80,11 @@
           Get familiar with the deployment process
 
 □ Step 2: Test Server Connection
-          ssh deployer@157.173.124.250
+          ssh leetour
 
 □ Step 3: Setup SSH Key (optional but recommended)
           ssh-keygen -t rsa -b 4096
-          ssh-copy-id deployer@157.173.124.250
+          ssh-copy-id leetour
 
 □ Step 4: Create Environment Files
           Follow ENV_SETUP.md to create:
@@ -104,10 +104,10 @@
 
 □ Step 7: Deploy Application
           Run: ./connect-server.sh (option 2)
-          OR: ssh deployer@157.173.124.250 "cd /var/www/leetour && ./deploy.sh"
+          OR: ssh leetour "cd /var/www/leetour && ./deploy.sh"
 
 □ Step 8: Setup SSL (HTTPS)
-          ssh deployer@157.173.124.250
+          ssh leetour
           sudo certbot --nginx -d admin.goreise.com
           sudo certbot --nginx -d api.goreise.com
           sudo certbot --nginx -d tour.goreise.com
@@ -144,24 +144,25 @@ Technology Stack:
 ═══════════════════════════════════════════════════════════════════════════
 
 CONNECT TO SERVER:
-ssh deployer@157.173.124.250
+ssh leetour
+ssh leetour
 
 DEPLOY UPDATES:
-ssh deployer@157.173.124.250 "cd /var/www/leetour && ./deploy.sh"
+ssh leetour "cd /var/www/leetour && ./deploy.sh"
 
 CHECK STATUS:
-ssh deployer@157.173.124.250 "pm2 status"
+ssh leetour "pm2 status"
 
 VIEW LOGS:
-ssh deployer@157.173.124.250 "pm2 logs"
+ssh leetour "pm2 logs"
 
 RESTART ALL APPS:
-ssh deployer@157.173.124.250 "pm2 restart all"
+ssh leetour "pm2 restart all"
 
 RESTART SPECIFIC APP:
-ssh deployer@157.173.124.250 "pm2 restart leetour-admin"
-ssh deployer@157.173.124.250 "pm2 restart leetour-api"
-ssh deployer@157.173.124.250 "pm2 restart leetour-frontend"
+ssh leetour "pm2 restart leetour-admin"
+ssh leetour "pm2 restart leetour-api"
+ssh leetour "pm2 restart leetour-frontend"
 
 ═══════════════════════════════════════════════════════════════════════════
 
@@ -278,3 +279,5 @@ After deployment, verify:
                          HAPPY DEPLOYING! 🚀
 
 ═══════════════════════════════════════════════════════════════════════════
+7FYq4p9f
+ssh leetour "echo 'SSH connection successful'"
