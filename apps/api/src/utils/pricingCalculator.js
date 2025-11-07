@@ -446,7 +446,7 @@ export function calculateCompleteBookingPrice({
   };
 }
 
-module.exports = {
+export {
   calculatePricePerPerson,
   calculateTotalPrice,
   getActiveOptionsWithPrices,
