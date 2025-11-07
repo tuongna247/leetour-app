@@ -227,14 +227,15 @@ const ToursPage = () => {
       const queryParams = new URLSearchParams();
       queryParams.append('page', pagination.page);
       queryParams.append('limit', pagination.limit);
-      
+
       Object.entries(filters).forEach(([key, value]) => {
         if (value && value !== '') {
           queryParams.append(key, value);
         }
       });
 
-      const response = await fetch(`/api/tours?${queryParams}`);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/tours?${queryParams}`);
       const data = await response.json();
 
       if (data.status === 200) {

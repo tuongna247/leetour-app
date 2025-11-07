@@ -91,7 +91,8 @@ const TourDetailPage = () => {
   const fetchTour = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/tours/${id}`);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/tours/${id}`);
       const data = await response.json();
 
       if (data.status === 200) {
