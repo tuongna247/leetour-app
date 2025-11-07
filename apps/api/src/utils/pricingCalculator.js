@@ -445,15 +445,3 @@ export function calculateCompleteBookingPrice({
     }
   };
 }
-
-export {
-  calculatePricePerPerson,
-  calculateTotalPrice,
-  getActiveOptionsWithPrices,
-  findCheapestOption,
-  validateTourOption,
-  calculateSurcharges,
-  calculatePromotions,
-  calculateCancellationRefund,
-  calculateCompleteBookingPrice
-};
