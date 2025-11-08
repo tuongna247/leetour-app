@@ -5,9 +5,21 @@ import Tour from '@/models/Tour';
 export async function GET(request, { params }) {
   try {
     await connectDB();
-    
-    const tour = await Tour.findOne({ _id: params.id, isActive: true });
-    
+
+    const identifier = params.id;
+    let tour;
+
+    // Check if identifier is a valid MongoDB ObjectId (24 hex characters)
+    const isObjectId = /^[0-9a-fA-F]{24}$/.test(identifier);
+
+    if (isObjectId) {
+      // Search by _id
+      tour = await Tour.findOne({ _id: identifier, isActive: true });
+    } else {
+      // Search by slug
+      tour = await Tour.findOne({ 'seo.slug': identifier, isActive: true });
+    }
+
     if (!tour) {
       return NextResponse.json({
         status: 404,

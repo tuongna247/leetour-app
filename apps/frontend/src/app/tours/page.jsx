@@ -163,7 +163,7 @@ const TourCard = ({ tour, onFavoriteToggle }) => {
               variant="outlined"
               size="small"
               component={Link}
-              href={`/tours/${tour._id}`}
+              href={`/tours/${tour.seo?.slug || tour._id}`}
               sx={{ flex: 1 }}
             >
               View Details
