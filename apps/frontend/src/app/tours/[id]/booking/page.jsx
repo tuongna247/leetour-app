@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
+  Container,
   Grid,
   Card,
   CardContent,
@@ -41,6 +42,7 @@ import {
 } from '@mui/icons-material';
 // Date picker imports removed - using native HTML date input instead
 import { useRouter, useParams } from 'next/navigation';
+import Breadcrumbs from '@/app/components/Breadcrumbs';
 
 const steps = ['Tour Details', 'Participants', 'Payment', 'Confirmation'];
 
@@ -306,14 +308,22 @@ const BookingPage = () => {
     );
   }
 
+  const breadcrumbItems = [
+    { label: 'Tours', href: '/tours' },
+    { label: tour?.title, href: `/tours/${id}` },
+    { label: 'Booking' }
+  ];
+
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Book {tour?.title}
-      </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Complete your tour booking
-      </Typography>
+    <>
+      <Breadcrumbs items={breadcrumbItems} />
+      <Container maxWidth="lg" sx={{ py: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          Book {tour?.title}
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          Complete your tour booking
+        </Typography>
         <Grid container spacing={3}>
           {/* Main Content */}
           <Grid size={{ xs: 12, md: 8 }}>
@@ -840,7 +850,8 @@ const BookingPage = () => {
             </Card>
           </Grid>
         </Grid>
-    </Box>
+      </Container>
+    </>
   );
 };
 

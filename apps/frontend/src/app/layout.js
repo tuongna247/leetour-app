@@ -3,7 +3,9 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
 import theme from '@/lib/theme';
+import Header from '@/app/components/Header';
 
 export default function RootLayout({ children }) {
   return (
@@ -20,7 +22,12 @@ export default function RootLayout({ children }) {
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            {children}
+            <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+              <Header />
+              <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default' }}>
+                {children}
+              </Box>
+            </Box>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

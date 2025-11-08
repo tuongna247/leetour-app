@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
+  Container,
   Grid,
   Card,
   CardContent,
@@ -36,6 +37,7 @@ import {
   FavoriteBorder as FavoriteBorderIcon
 } from '@mui/icons-material';
 import { useRouter, useParams } from 'next/navigation';
+import Breadcrumbs from '@/app/components/Breadcrumbs';
 
 const TabPanel = ({ children, value, index, ...other }) => (
   <div
@@ -132,7 +134,7 @@ const TourDetailPage = () => {
 
   if (loading) {
     return (
-      <Box sx={{ p: 3 }}>
+      <Container maxWidth="lg" sx={{ py: 3 }}>
         <Skeleton variant="text" sx={{ fontSize: '2rem', mb: 2 }} />
         <Skeleton variant="rectangular" height={400} sx={{ mb: 3 }} />
         <Grid container spacing={3}>
@@ -143,13 +145,13 @@ const TourDetailPage = () => {
             <Skeleton variant="rectangular" height={300} />
           </Grid>
         </Grid>
-      </Box>
+      </Container>
     );
   }
 
   if (error || !tour) {
     return (
-      <Box sx={{ p: 3, textAlign: 'center' }}>
+      <Container maxWidth="lg" sx={{ py: 3, textAlign: 'center' }}>
         <Typography variant="h4" gutterBottom>
           Tour Not Found
         </Typography>
@@ -159,14 +161,20 @@ const TourDetailPage = () => {
         <Button variant="contained" onClick={() => router.push('/tours')}>
           Browse All Tours
         </Button>
-      </Box>
+      </Container>
     );
   }
 
   const primaryImage = tour.images?.find(img => img.isPrimary) || tour.images?.[0];
+  const breadcrumbItems = [
+    { label: 'Tours', href: '/tours' },
+    { label: tour.title }
+  ];
 
   return (
-    <Box sx={{ p: 3 }}>
+    <>
+      <Breadcrumbs items={breadcrumbItems} />
+      <Container maxWidth="lg" sx={{ py: 3 }}>
         {/* Header */}
         <Box sx={{ mb: 3 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -408,7 +416,8 @@ const TourDetailPage = () => {
             </Card>
           </Grid>
         </Grid>
-    </Box>
+      </Container>
+    </>
   );
 };
 

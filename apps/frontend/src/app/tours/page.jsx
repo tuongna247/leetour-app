@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
+  Container,
   Grid,
   Card,
   CardContent,
@@ -34,6 +35,7 @@ import {
 } from '@mui/icons-material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Breadcrumbs from '@/app/components/Breadcrumbs';
 
 const TourCard = ({ tour, onFavoriteToggle }) => {
   const router = useRouter();
@@ -278,13 +280,15 @@ const ToursPage = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Browse Tours
-      </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Discover amazing day trips and tours
-      </Typography>
+    <>
+      <Breadcrumbs items={[{ label: 'Tours', href: '/tours' }]} />
+      <Container maxWidth="lg" sx={{ py: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          Browse Tours
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          Discover amazing day trips and tours
+        </Typography>
         {/* Filters */}
         <Card sx={{ mb: 3 }}>
           <CardContent>
@@ -413,7 +417,8 @@ const ToursPage = () => {
             />
           </Box>
         )}
-    </Box>
+      </Container>
+    </>
   );
 };
 
