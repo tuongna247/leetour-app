@@ -24,7 +24,7 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-black opacity-20"></div>
         <div className="absolute top-0 left-0 md:top-1/2 md:translate-y-[-50%] lg:left-1/2 lg:translate-x-[-50%] w-full pt-6 md:pt-0 px-2 md:px-10 flex flex-col items-center justify-center text-white">
           <h1 className="text-4xl font-bold mb-2 text-center">
-            From the pulse of Saigon to the poetry of the Mekong - savor Vietnam's treasures in unparalleled luxury.
+            From the pulse of Saigon to the poetry of the Mekong - savor Vietnam&apos;s treasures in unparalleled luxury.
           </h1>
           <p className="text-xl mb-8 hidden md:block text-center">
             Join expert-led tours across Southern Vietnam. Daily departures, local guides, unforgettable experiences

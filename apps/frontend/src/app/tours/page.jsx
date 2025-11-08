@@ -99,7 +99,7 @@ const ToursPageNew = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl font-bold mb-4">Free cancellation</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            You'll receive a full refund if you cancel at least 24 hours in advance of most experiences.
+            You&apos;ll receive a full refund if you cancel at least 24 hours in advance of most experiences.
           </p>
         </div>
       </section>
