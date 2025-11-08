@@ -45,6 +45,10 @@ const TourCard = ({ tour, onFavoriteToggle }) => {
     router.push(`/tours/${tour._id}/booking`);
   };
 
+  const handleViewDetails = () => {
+    router.push(`/tours/${tour.seo?.slug || tour._id}`);
+  };
+
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
     onFavoriteToggle?.(tour._id, !isFavorite);
@@ -60,7 +64,11 @@ const TourCard = ({ tour, onFavoriteToggle }) => {
           height="200"
           image={primaryImage?.url || '/images/tours/default-tour.jpg'}
           alt={tour.title}
-          sx={{ objectFit: 'cover' }}
+          sx={{
+            objectFit: 'cover',
+            cursor: 'pointer'
+          }}
+          onClick={handleViewDetails}
         />
         <IconButton
           sx={{
@@ -92,7 +100,19 @@ const TourCard = ({ tour, onFavoriteToggle }) => {
 
       <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ mb: 2 }}>
-          <Typography variant="h6" component="h2" gutterBottom>
+          <Typography
+            variant="h6"
+            component="h2"
+            gutterBottom
+            onClick={handleViewDetails}
+            sx={{
+              cursor: 'pointer',
+              '&:hover': {
+                color: 'primary.main',
+                textDecoration: 'underline'
+              }
+            }}
+          >
             {tour.title}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
