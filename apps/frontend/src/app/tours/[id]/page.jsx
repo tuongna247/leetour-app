@@ -34,7 +34,9 @@ import {
   Star as StarIcon,
   Share as ShareIcon,
   Favorite as FavoriteIcon,
-  FavoriteBorder as FavoriteBorderIcon
+  FavoriteBorder as FavoriteBorderIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon
 } from '@mui/icons-material';
 import { useRouter, useParams } from 'next/navigation';
 import Breadcrumbs from '@/app/components/Breadcrumbs';
@@ -83,6 +85,7 @@ const TourDetailPage = () => {
   const [error, setError] = useState(null);
   const [tabValue, setTabValue] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -132,6 +135,18 @@ const TourDetailPage = () => {
     }
   };
 
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? (tour?.images?.length || 1) - 1 : prev - 1
+    );
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === (tour?.images?.length || 1) - 1 ? 0 : prev + 1
+    );
+  };
+
   if (loading) {
     return (
       <Container maxWidth="lg" sx={{ py: 3 }}>
@@ -165,7 +180,8 @@ const TourDetailPage = () => {
     );
   }
 
-  const primaryImage = tour.images?.find(img => img.isPrimary) || tour.images?.[0];
+  const tourImages = tour.images || [];
+  const currentImage = tourImages[currentImageIndex] || { url: '/images/tours/default-tour.jpg', alt: tour.title };
   const breadcrumbItems = [
     { label: 'Tours', href: '/tours' },
     { label: tour.title }
@@ -210,9 +226,9 @@ const TourDetailPage = () => {
           </Box>
         </Box>
 
-        {/* Main Image */}
-        {primaryImage && (
-          <Card sx={{ mb: 3 }}>
+        {/* Image Carousel */}
+        {tourImages.length > 0 && (
+          <Card sx={{ mb: 3, position: 'relative' }}>
             <Box
               component="img"
               sx={{
@@ -220,9 +236,96 @@ const TourDetailPage = () => {
                 width: '100%',
                 objectFit: 'cover',
               }}
-              alt={tour.title}
-              src={primaryImage.url}
+              alt={currentImage.alt || tour.title}
+              src={currentImage.url}
             />
+
+            {/* Carousel Controls */}
+            {tourImages.length > 1 && (
+              <>
+                <IconButton
+                  onClick={handlePrevImage}
+                  sx={{
+                    position: 'absolute',
+                    left: 16,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 1)',
+                    },
+                  }}
+                >
+                  <ChevronLeftIcon />
+                </IconButton>
+                <IconButton
+                  onClick={handleNextImage}
+                  sx={{
+                    position: 'absolute',
+                    right: 16,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 1)',
+                    },
+                  }}
+                >
+                  <ChevronRightIcon />
+                </IconButton>
+
+                {/* Image Counter */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    bottom: 16,
+                    right: 16,
+                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    color: 'white',
+                    px: 2,
+                    py: 1,
+                    borderRadius: 1,
+                  }}
+                >
+                  <Typography variant="body2">
+                    {currentImageIndex + 1} / {tourImages.length}
+                  </Typography>
+                </Box>
+
+                {/* Thumbnail Navigation Dots */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    bottom: 16,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    display: 'flex',
+                    gap: 1,
+                  }}
+                >
+                  {tourImages.map((_, index) => (
+                    <Box
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      sx={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        backgroundColor: index === currentImageIndex
+                          ? 'white'
+                          : 'rgba(255, 255, 255, 0.5)',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s',
+                        '&:hover': {
+                          backgroundColor: 'white',
+                          transform: 'scale(1.2)',
+                        },
+                      }}
+                    />
+                  ))}
+                </Box>
+              </>
+            )}
           </Card>
         )}
 
