@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles to match TourIndex.cshtml */
+.hero-image {
+  background-image: url('/images/backgrounds/profilebg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Ensure Tailwind utilities work with MUI */
+.MuiBox-root,
+.MuiContainer-root {
+  @apply relative;
+}

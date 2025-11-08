@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import theme from '@/lib/theme';
 import Header from '@/app/components/Header';
+import './globals.css';
 
 export default function RootLayout({ children }) {
   return (
@@ -16,6 +17,10 @@ export default function RootLayout({ children }) {
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
       </head>
       <body>
