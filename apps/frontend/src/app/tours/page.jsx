@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import HeroSection from '@/app/components/HeroSection';
 import WhyUsSection from '@/app/components/WhyUsSection';
 import TopDestinations from '@/app/components/TopDestinations';
 import TourCardTailwind from '@/app/components/TourCardTailwind';
 
-const ToursPageNew = () => {
+const ToursContent = () => {
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -104,6 +104,31 @@ const ToursPageNew = () => {
         </div>
       </section>
     </div>
+  );
+};
+
+const ToursPageNew = () => {
+  return (
+    <Suspense fallback={
+      <div>
+        <HeroSection />
+        <div className="py-10 container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="bg-white rounded-lg overflow-hidden shadow-md animate-pulse">
+                <div className="h-48 bg-gray-300"></div>
+                <div className="p-4">
+                  <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    }>
+      <ToursContent />
+    </Suspense>
   );
 };
 
