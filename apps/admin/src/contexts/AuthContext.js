@@ -287,10 +287,19 @@ export const AuthProvider = ({ children }) => {
 
   // Authenticated fetch function
   const authenticatedFetch = async (url, options = {}) => {
+    console.log('🔐 AuthenticatedFetch called:', { url, method: options.method || 'GET' });
+    console.log('🔐 Current auth state:', {
+      hasToken: !!state.token,
+      tokenPreview: state.token?.substring(0, 20) + '...',
+      hasSession: !!session,
+      isAuthenticated: state.isAuthenticated
+    });
+
     let token = state.token;
-    
+
     // For NextAuth sessions, we don't use a token but rely on cookies
     if (session && state.token === 'nextauth-session') {
+      console.log('🔐 Using NextAuth session (cookie-based auth)');
       // NextAuth handles authentication via cookies, no need for explicit token
       const config = {
         ...options,
@@ -301,9 +310,11 @@ export const AuthProvider = ({ children }) => {
       };
 
       const response = await fetch(url, config);
-      
+      console.log('🔐 Response status:', response.status);
+
       // If unauthorized, logout user
       if (response.status === 401) {
+        console.error('🔐 Authentication failed - 401 Unauthorized');
         logout();
         throw new Error('Authentication failed');
       }
@@ -311,7 +322,9 @@ export const AuthProvider = ({ children }) => {
       return response;
     } else {
       // Use traditional token-based auth for local accounts
+      console.log('🔐 Using token-based auth');
       if (!token || token === 'nextauth-session') {
+        console.error('🔐 No authentication token available');
         throw new Error('No authentication token available');
       }
 
@@ -328,10 +341,13 @@ export const AuthProvider = ({ children }) => {
         },
       };
 
+      console.log('🔐 Request with Bearer token');
       const response = await fetch(url, config);
-      
+      console.log('🔐 Response status:', response.status);
+
       // If unauthorized, logout user
       if (response.status === 401) {
+        console.error('🔐 Authentication failed - 401 Unauthorized');
         logout();
         throw new Error('Authentication failed');
       }

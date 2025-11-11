@@ -125,11 +125,13 @@ export async function GET(request) {
 
     // Get stats for admin dashboard (filtered by user role)
     const baseStatsFilter = user.role === 'mod' ? { createdBy: user._id } : {};
+    const categories = await Tour.distinct('category', baseStatsFilter);
     const stats = {
       total: await Tour.countDocuments(baseStatsFilter),
       active: await Tour.countDocuments({ ...baseStatsFilter, isActive: true }),
       inactive: await Tour.countDocuments({ ...baseStatsFilter, isActive: false }),
       featured: await Tour.countDocuments({ ...baseStatsFilter, isFeatured: true }),
+      categories: categories || []
     };
 
     return NextResponse.json({

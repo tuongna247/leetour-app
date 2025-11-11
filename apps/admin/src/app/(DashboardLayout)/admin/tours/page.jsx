@@ -70,7 +70,7 @@ export default function AdminToursPage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('active'); // Changed from 'all' to 'active'
   const [categoryFilter, setCategoryFilter] = useState('');
   const [deleteDialog, setDeleteDialog] = useState({ open: false, tour: null });
   const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
@@ -115,19 +115,27 @@ export default function AdminToursPage() {
 
   const handleDeleteTour = async (tourId) => {
     try {
+      console.log('Attempting to delete tour:', tourId);
       const response = await authenticatedFetch(`/api/admin/tours/${tourId}`, {
         method: 'DELETE',
       });
+
+      console.log('Delete response status:', response.status);
+      const data = await response.json();
+      console.log('Delete response data:', data);
 
       if (response.ok) {
         showAlert('Tour deleted successfully');
         fetchTours();
       } else {
-        showAlert('Failed to delete tour', 'error');
+        const errorMsg = data.msg || data.error || 'Failed to delete tour';
+        console.error('Delete tour failed:', errorMsg, data);
+        showAlert(errorMsg, 'error');
       }
     } catch (error) {
       console.error('Error deleting tour:', error);
-      showAlert('Error deleting tour', 'error');
+      console.error('Error details:', error.message, error.stack);
+      showAlert(`Error deleting tour: ${error.message}`, 'error');
     } finally {
       setDeleteDialog({ open: false, tour: null });
     }

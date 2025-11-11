@@ -205,7 +205,9 @@ export default function AddNewTourPage() {
         body: JSON.stringify(cleanFormData),
       });
 
+      console.log('Create tour response status:', response.status);
       const data = await response.json();
+      console.log('Create tour response data:', data);
 
       if (data.status === 201) {
         showAlert('Tour created successfully!');
@@ -213,11 +215,14 @@ export default function AddNewTourPage() {
           router.push('/admin/tours');
         }, 1500);
       } else {
-        showAlert(data.msg || 'Failed to create tour', 'error');
+        const errorMsg = data.msg || data.error || 'Failed to create tour';
+        console.error('Create tour failed:', errorMsg, data);
+        showAlert(errorMsg, 'error');
       }
     } catch (error) {
       console.error('Error creating tour:', error);
-      showAlert('Error creating tour', 'error');
+      console.error('Error details:', error.message, error.stack);
+      showAlert(`Error creating tour: ${error.message}`, 'error');
     } finally {
       setLoading(false);
     }
