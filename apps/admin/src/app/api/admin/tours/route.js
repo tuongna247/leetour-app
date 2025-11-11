@@ -193,6 +193,9 @@ export async function POST(request) {
       }, { status: 400 });
     }
     
+    // Generate slug from title if not provided
+    const slug = data.seo?.slug || data.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || '';
+
     // Set defaults for optional fields
     const tourData = {
       title: data.title,
@@ -205,9 +208,15 @@ export async function POST(request) {
         country: data.location?.country || "",
         coordinates: data.location?.coordinates || [0, 0]
       },
+      seo: {
+        slug: slug,
+        metaTitle: data.seo?.metaTitle || data.title || "",
+        metaDescription: data.seo?.metaDescription || data.description?.substring(0, 160) || "",
+        keywords: data.seo?.keywords || []
+      },
       images: data.images || [],
       features: data.features || [],
-      schedule: data.schedule || [],
+      schedule: data.schedule || {},
       guide: {
         name: data.guide?.name || "",
         experience: data.guide?.experience || "",
