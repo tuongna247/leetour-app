@@ -70,3 +70,4 @@ Thumbs.db
 !.vscode/extensions.json
 .idea
 scripts
+apps/frontend/Models/

@@ -45,7 +45,10 @@
       "Bash(cmd //c \"taskkill /F /PID 7364\")",
       "Bash(del nul)",
       "Bash(git rm:*)",
-      "Bash(ren:*)"
+      "Bash(ren:*)",
+      "Bash(scp:*)",
+      "Bash(ping:*)",
+      "Bash(mv:*)"
     ],
     "deny": [],
     "ask": []
