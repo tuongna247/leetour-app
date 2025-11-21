@@ -1,0 +1,324 @@
+{
+  "title": "Ha Long Bay Luxury Day Cruise",
+  "description": "Experience the breathtaking beauty of Ha Long Bay, a UNESCO World Heritage Site, on this full-day luxury cruise. Explore stunning limestone karsts, hidden caves, and pristine beaches.",
+  "shortDescription": "Full-day luxury cruise through Ha Long Bay's stunning limestone formations",
+  "overview": "<p>Discover the magnificent Ha Long Bay, one of Vietnam's most iconic destinations. This luxury day cruise offers an unforgettable journey through emerald waters, towering limestone islands, and mysterious caves.</p><p><strong>Highlights:</strong></p><ul><li>Cruise through UNESCO World Heritage Site</li><li>Visit Sung Sot Cave (Surprise Cave)</li><li>Kayaking in Luon Cave</li><li>Swimming at Ti Top Island</li><li>Delicious seafood lunch onboard</li><li>Sunset party on sundeck</li></ul>",
+  "duration": "8 hours",
+  "price": 1800000,
+  "originalPrice": 2200000,
+  "currency": "VND",
+  "category": "Nature",
+  "subcategory": "Cruises",
+  "location": {
+    "country": "Vietnam",
+    "state": "Quang Ninh",
+    "city": "Ha Long",
+    "address": "Tuan Chau Marina, Ha Long City",
+    "coordinates": {
+      "lat": 20.9606,
+      "lng": 107.0428
+    }
+  },
+  "images": [
+    {
+      "url": "/images/tours/halong-bay-1.jpg",
+      "alt": "Ha Long Bay cruise ship",
+      "isPrimary": true,
+      "imageType": "banner",
+      "displayOrder": 0
+    },
+    {
+      "url": "/images/tours/halong-bay-2.jpg",
+      "alt": "Limestone formations",
+      "imageType": "gallery",
+      "displayOrder": 1
+    },
+    {
+      "url": "/images/tours/halong-bay-3.jpg",
+      "alt": "Kayaking in caves",
+      "imageType": "gallery",
+      "displayOrder": 2
+    }
+  ],
+  "schedule": {
+    "startTime": "08:00 AM",
+    "endTime": "05:00 PM",
+    "meetingPoint": "Tuan Chau Marina, Ha Long City",
+    "availableDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+  },
+  "capacity": {
+    "minimum": 2,
+    "maximum": 30
+  },
+  "included": [
+    "Hotel pickup and drop-off in Hanoi Old Quarter",
+    "Professional English-speaking guide",
+    "Luxury cruise boat with air-conditioned cabin",
+    "Welcome drink and fresh fruits",
+    "Seafood buffet lunch",
+    "Kayaking equipment and life jackets",
+    "Entrance fees to caves and islands",
+    "Bottled water",
+    "Travel insurance"
+  ],
+  "excluded": [
+    "Personal expenses",
+    "Tips and gratuities",
+    "Alcoholic beverages",
+    "Additional activities not mentioned",
+    "Hotel accommodation"
+  ],
+  "includeActivity": "<ul><li><strong>Transportation:</strong> Comfortable air-conditioned bus with hotel pickup</li><li><strong>Guide:</strong> Professional English-speaking tour guide</li><li><strong>Meals:</strong> Delicious seafood buffet lunch with fresh local ingredients</li><li><strong>Activities:</strong> Kayaking, cave exploration, swimming, tai chi session</li><li><strong>Boat:</strong> Modern luxury cruise with sundeck and restaurant</li></ul>",
+  "excludeActivity": "<ul><li>Personal travel insurance</li><li>Drinks and alcoholic beverages</li><li>Shopping expenses</li><li>Spa services onboard (if available)</li></ul>",
+  "highlights": [
+    "UNESCO World Heritage Site exploration",
+    "Visit the magnificent Sung Sot Cave",
+    "Kayaking through Luon Cave's pristine waters",
+    "Swimming and relaxing at Ti Top Island",
+    "Authentic Vietnamese seafood buffet",
+    "Professional English-speaking guide",
+    "Sunset party with complimentary drinks"
+  ],
+  "notes": "<p><strong>Important Information:</strong></p><ul><li>Comfortable walking shoes recommended</li><li>Bring swimwear and towel</li><li>Sun protection (hat, sunscreen, sunglasses)</li><li>Camera for stunning photos</li><li>Light jacket for air-conditioned areas</li><li>Motion sickness medication if needed</li></ul><p><strong>Weather Note:</strong> Tours operate in all weather conditions. In case of severe weather, alternative activities will be provided.</p>",
+  "difficulty": "Easy",
+  "ageRestriction": {
+    "minimum": 4,
+    "maximum": 80
+  },
+  "cancellation": {
+    "policy": "Free cancellation up to 48 hours before departure",
+    "refundable": true,
+    "cutoffHours": 48
+  },
+  "rating": {
+    "average": 4.8,
+    "count": 247
+  },
+  "reviews": [
+    {
+      "user": {
+        "name": "Sarah Johnson",
+        "email": "sarah.j@example.com",
+        "avatar": "/images/avatars/user1.jpg"
+      },
+      "guestName": "Sarah Johnson",
+      "title": "Absolutely Stunning!",
+      "rating": 5,
+      "comment": "This cruise exceeded all our expectations! The scenery was breathtaking, the food was delicious, and our guide was incredibly knowledgeable. Kayaking through the caves was a highlight. Highly recommend!",
+      "reviewContent": "This cruise exceeded all our expectations! The scenery was breathtaking, the food was delicious, and our guide was incredibly knowledgeable. Kayaking through the caves was a highlight. Highly recommend!",
+      "date": "2025-11-15T10:30:00.000Z",
+      "verified": true
+    },
+    {
+      "user": {
+        "name": "Michael Chen",
+        "email": "michael.c@example.com",
+        "avatar": "/images/avatars/user2.jpg"
+      },
+      "guestName": "Michael Chen",
+      "title": "Great Value for Money",
+      "rating": 5,
+      "comment": "Worth every penny! The luxury boat was comfortable, lunch was amazing, and we got to see so much. The sunset party was a nice touch. Our kids loved it too!",
+      "reviewContent": "Worth every penny! The luxury boat was comfortable, lunch was amazing, and we got to see so much. The sunset party was a nice touch. Our kids loved it too!",
+      "date": "2025-11-10T14:20:00.000Z",
+      "verified": true
+    },
+    {
+      "user": {
+        "name": "Emma Wilson",
+        "email": "emma.w@example.com"
+      },
+      "guestName": "Emma Wilson",
+      "title": "Beautiful but Crowded",
+      "rating": 4,
+      "comment": "Ha Long Bay is absolutely beautiful, and the cruise was well-organized. Only downside was it was quite crowded with many boats. Still a great experience overall!",
+      "reviewContent": "Ha Long Bay is absolutely beautiful, and the cruise was well-organized. Only downside was it was quite crowded with many boats. Still a great experience overall!",
+      "date": "2025-11-05T09:15:00.000Z",
+      "verified": false
+    }
+  ],
+  "guide": {
+    "name": "Nguyen Van Minh",
+    "bio": "Experienced tour guide with 8 years specializing in Ha Long Bay tours",
+    "image": "/images/guides/minh.jpg",
+    "languages": ["English", "Vietnamese", "French"],
+    "rating": 4.9,
+    "experience": "8 years"
+  },
+  "tags": ["cruise", "halong bay", "unesco", "nature", "adventure", "family-friendly"],
+  "keywords": ["Ha Long Bay", "cruise", "day trip", "Vietnam tours", "UNESCO site", "limestone caves", "kayaking"],
+  "type": "daytrip",
+  "tourType": "daytrip",
+  "isActive": true,
+  "isFeatured": true,
+  "booking": {
+    "instantBooking": true,
+    "requiresApproval": false,
+    "advanceBooking": 1
+  },
+  "tourOptions": [
+    {
+      "optionName": "Private Luxury Cruise",
+      "description": "<ul><li>Private boat (up to 12 guests)</li><li>Premium seafood menu</li><li>Dedicated guide</li><li>Complimentary wine</li><li>Flexible itinerary</li></ul>",
+      "basePrice": 3500000,
+      "pricingTiers": [
+        {
+          "minPassengers": 1,
+          "maxPassengers": 2,
+          "pricePerPerson": 4500000
+        },
+        {
+          "minPassengers": 3,
+          "maxPassengers": 6,
+          "pricePerPerson": 3500000
+        },
+        {
+          "minPassengers": 7,
+          "maxPassengers": 12,
+          "pricePerPerson": 2800000
+        }
+      ],
+      "departureTimes": "08:00 AM;10:30 AM;02:00 PM",
+      "includeItems": "<ul><li>Private boat with air-conditioning</li><li>Premium seafood buffet</li><li>Complimentary wine and soft drinks</li><li>Private English-speaking guide</li><li>All equipment included</li></ul>",
+      "isActive": true
+    },
+    {
+      "optionName": "Shared Luxury Cruise",
+      "description": "<ul><li>Shared boat (max 30 guests)</li><li>Seafood buffet lunch</li><li>English-speaking guide</li><li>Soft drinks included</li><li>Fixed schedule</li></ul>",
+      "basePrice": 1800000,
+      "pricingTiers": [
+        {
+          "minPassengers": 1,
+          "maxPassengers": 2,
+          "pricePerPerson": 2000000
+        },
+        {
+          "minPassengers": 3,
+          "maxPassengers": 10,
+          "pricePerPerson": 1800000
+        },
+        {
+          "minPassengers": 11,
+          "maxPassengers": 30,
+          "pricePerPerson": 1500000
+        }
+      ],
+      "departureTimes": "08:00 AM;01:00 PM",
+      "includeItems": "<ul><li>Shared luxury boat</li><li>Seafood buffet lunch</li><li>Soft drinks and water</li><li>English-speaking tour guide</li><li>Kayaking and swimming</li></ul>",
+      "isActive": true
+    },
+    {
+      "optionName": "Budget Cruise",
+      "description": "<ul><li>Standard boat</li><li>Set menu lunch</li><li>Basic amenities</li><li>Vietnamese guide</li><li>Great value</li></ul>",
+      "basePrice": 950000,
+      "pricingTiers": [
+        {
+          "minPassengers": 1,
+          "maxPassengers": 50,
+          "pricePerPerson": 950000
+        }
+      ],
+      "departureTimes": "07:30 AM",
+      "includeItems": "<ul><li>Standard cruise boat</li><li>Set menu lunch</li><li>Vietnamese-speaking guide</li><li>Basic kayaking equipment</li><li>Water provided</li></ul>",
+      "isActive": true
+    }
+  ],
+  "itinerary": [
+    {
+      "dayNumber": 1,
+      "header": "Ha Long Bay Discovery",
+      "activity": "Full Day Cruise",
+      "title": "Ha Long Bay Adventure",
+      "textDetail": "Start your amazing journey with hotel pickup in Hanoi's Old Quarter. Enjoy a scenic 3.5-hour drive through the Red River Delta countryside to Ha Long Bay. Board your luxury cruise boat and enjoy a welcome drink while the captain briefs you on safety and the day's itinerary.",
+      "description": "Start your amazing journey with hotel pickup in Hanoi's Old Quarter. Enjoy a scenic 3.5-hour drive through the Red River Delta countryside to Ha Long Bay. Board your luxury cruise boat and enjoy a welcome drink while the captain briefs you on safety and the day's itinerary.",
+      "activities": [
+        "Hotel pickup in Hanoi",
+        "Scenic drive to Ha Long Bay",
+        "Board luxury cruise boat",
+        "Welcome drink and safety briefing"
+      ],
+      "meals": {
+        "breakfast": false,
+        "lunch": true,
+        "dinner": false
+      },
+      "meal": "Lunch",
+      "accommodation": "N/A",
+      "overnight": "N/A",
+      "transport": "Air-conditioned bus, Luxury cruise boat",
+      "image": "/images/itinerary/halong-day1.jpg"
+    }
+  ],
+  "surcharges": [
+    {
+      "surchargeName": "Christmas & New Year Holiday",
+      "surchargeType": "holiday",
+      "startDate": "2025-12-20T00:00:00.000Z",
+      "endDate": "2026-01-05T23:59:59.000Z",
+      "amountType": "percentage",
+      "amount": 20,
+      "description": "20% surcharge applies during Christmas and New Year holiday period",
+      "isActive": true
+    },
+    {
+      "surchargeName": "Weekend Premium",
+      "surchargeType": "weekend",
+      "startDate": "2025-01-01T00:00:00.000Z",
+      "endDate": "2026-12-31T23:59:59.000Z",
+      "amountType": "fixed",
+      "amount": 200000,
+      "description": "Additional 200,000 VND for Saturday and Sunday departures",
+      "isActive": true
+    }
+  ],
+  "promotions": [
+    {
+      "promotionName": "Early Bird 15% Discount",
+      "promotionType": "early_bird",
+      "discountType": "percentage",
+      "discountAmount": 15,
+      "validFrom": "2025-11-01T00:00:00.000Z",
+      "validTo": "2026-03-31T23:59:59.000Z",
+      "daysBeforeDeparture": 30,
+      "conditions": "Book at least 30 days in advance to receive 15% discount",
+      "isActive": true
+    },
+    {
+      "promotionName": "Group Discount",
+      "promotionType": "group_discount",
+      "discountType": "percentage",
+      "discountAmount": 10,
+      "validFrom": "2025-11-01T00:00:00.000Z",
+      "validTo": "2026-12-31T23:59:59.000Z",
+      "minPassengers": 6,
+      "conditions": "10% discount for groups of 6 or more people",
+      "isActive": true
+    }
+  ],
+  "cancellationPolicies": [
+    {
+      "daysBeforeDeparture": 7,
+      "refundPercentage": 100,
+      "description": "Full refund if cancelled 7+ days before departure",
+      "displayOrder": 0
+    },
+    {
+      "daysBeforeDeparture": 3,
+      "refundPercentage": 50,
+      "description": "50% refund if cancelled 3-6 days before departure",
+      "displayOrder": 1
+    },
+    {
+      "daysBeforeDeparture": 0,
+      "refundPercentage": 0,
+      "description": "No refund if cancelled within 2 days of departure",
+      "displayOrder": 2
+    }
+  ],
+  "seo": {
+    "slug": "ha-long-bay-luxury-day-cruise",
+    "metaTitle": "Ha Long Bay Luxury Day Cruise | UNESCO World Heritage Tour",
+    "metaDescription": "Explore Ha Long Bay's stunning limestone karsts on a luxury day cruise. Includes kayaking, cave exploration, seafood lunch. Book now for best prices!",
+    "keywords": ["Ha Long Bay cruise", "Vietnam day trip", "UNESCO tour", "luxury cruise", "Hanoi tours"]
+  }
+}

@@ -6,8 +6,11 @@ const reviewSchema = new mongoose.Schema({
     email: { type: String, required: true },
     avatar: { type: String, default: '/images/profile/user-1.jpg' }
   },
+  guestName: { type: String }, // For compatibility with Detail.cshtml
+  title: { type: String, default: '' }, // Review title
   rating: { type: Number, required: true, min: 1, max: 5 },
   comment: { type: String, required: true },
+  reviewContent: { type: String }, // Alias for comment, for compatibility
   date: { type: Date, default: Date.now },
   verified: { type: Boolean, default: false }
 });
@@ -114,18 +117,25 @@ const itinerarySchema = new mongoose.Schema({
     trim: true,
     maxlength: [255, 'Header cannot exceed 255 characters']
   },
+  activity: { type: String, trim: true }, // Alias for header/title
+  title: { type: String, trim: true }, // Another alias for header
   textDetail: {
     type: String,
     trim: true,
     default: ''
   },
+  description: { type: String, trim: true, default: '' }, // Alias for textDetail
   activities: [{ type: String }],
   meals: {
     breakfast: { type: Boolean, default: false },
     lunch: { type: Boolean, default: false },
     dinner: { type: Boolean, default: false }
   },
-  accommodation: { type: String, default: '' }
+  meal: { type: String, default: '' }, // String format: "Breakfast, Lunch, Dinner"
+  accommodation: { type: String, default: '' },
+  overnight: { type: String, default: '' }, // Alias for accommodation
+  transport: { type: String, default: '' }, // Transportation details
+  image: { type: String, default: '' } // Day-specific image URL
 }, { timestamps: true });
 
 // Surcharge Schema
@@ -283,6 +293,12 @@ const tourOptionSchema = new mongoose.Schema({
       min: 0
     }
   }],
+  departureTimes: {
+    type: String,
+    default: '08:00 AM',
+    trim: true
+  }, // Semicolon-separated times: "08:00 AM;10:30 AM;02:00 PM"
+  includeItems: { type: String, default: '' }, // HTML content for what's included in this option
   isActive: {
     type: Boolean,
     default: true
@@ -305,6 +321,11 @@ const tourSchema = new mongoose.Schema({
     type: String,
     trim: true,
     maxlength: [300, 'Short description cannot exceed 300 characters']
+  },
+  overview: {
+    type: String,
+    trim: true,
+    default: ''
   },
   duration: {
     type: String,
@@ -344,7 +365,10 @@ const tourSchema = new mongoose.Schema({
   capacity: capacitySchema,
   included: [{ type: String }],
   excluded: [{ type: String }],
+  includeActivity: { type: String, default: '' }, // HTML content for included items
+  excludeActivity: { type: String, default: '' }, // HTML content for excluded items
   highlights: [{ type: String }],
+  notes: { type: String, default: '' }, // Additional tour notes
   difficulty: {
     type: String,
     enum: ['Easy', 'Moderate', 'Hard', 'Expert'],
@@ -359,6 +383,8 @@ const tourSchema = new mongoose.Schema({
   reviews: [reviewSchema],
   guide: guideSchema,
   tags: [{ type: String }],
+  keywords: [{ type: String }], // Searchable keywords (exposed from seo.keywords)
+  type: { type: String, enum: ['daytrip', 'tour'], default: 'daytrip' }, // Alias for tourType
   isActive: {
     type: Boolean,
     default: true
@@ -399,24 +425,83 @@ tourSchema.index({ createdBy: 1 });
 tourSchema.index({ 'rating.average': -1 });
 tourSchema.index({ createdAt: -1 });
 
-// Pre-save middleware to generate slug
+// Pre-save middleware to generate slug and sync fields
 tourSchema.pre('save', function(next) {
   if (this.isModified('title') && !this.seo.slug) {
     this.seo.slug = this.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
-  
+
   if (this.isModified('title') && !this.seo.metaTitle) {
     this.seo.metaTitle = this.title;
   }
-  
+
   if (this.isModified('description') && !this.seo.metaDescription) {
     this.seo.metaDescription = this.description.substring(0, 160);
   }
-  
+
   if (this.isModified('description') && !this.shortDescription) {
     this.shortDescription = this.description.substring(0, 100) + '...';
   }
-  
+
+  // Sync type with tourType
+  if (this.isModified('tourType') && !this.type) {
+    this.type = this.tourType;
+  } else if (this.isModified('type') && !this.tourType) {
+    this.tourType = this.type;
+  }
+
+  // Sync keywords with seo.keywords
+  if (this.isModified('seo.keywords') && (!this.keywords || this.keywords.length === 0)) {
+    this.keywords = this.seo.keywords;
+  } else if (this.isModified('keywords') && (!this.seo.keywords || this.seo.keywords.length === 0)) {
+    this.seo.keywords = this.keywords;
+  }
+
+  // Sync review fields
+  if (this.reviews && this.reviews.length > 0) {
+    this.reviews.forEach(review => {
+      // Sync guestName with user.name if not set
+      if (!review.guestName && review.user && review.user.name) {
+        review.guestName = review.user.name;
+      }
+      // Sync reviewContent with comment if not set
+      if (!review.reviewContent && review.comment) {
+        review.reviewContent = review.comment;
+      }
+    });
+  }
+
+  // Sync itinerary fields
+  if (this.itinerary && this.itinerary.length > 0) {
+    this.itinerary.forEach(day => {
+      // Sync activity/title with header
+      if (!day.activity && day.header) {
+        day.activity = day.header;
+      }
+      if (!day.title && day.header) {
+        day.title = day.header;
+      }
+      // Sync description with textDetail
+      if (!day.description && day.textDetail) {
+        day.description = day.textDetail;
+      }
+      // Sync overnight with accommodation
+      if (!day.overnight && day.accommodation) {
+        day.overnight = day.accommodation;
+      }
+      // Generate meal string from meals object if not set
+      if (!day.meal && day.meals) {
+        const mealTypes = [];
+        if (day.meals.breakfast) mealTypes.push('Breakfast');
+        if (day.meals.lunch) mealTypes.push('Lunch');
+        if (day.meals.dinner) mealTypes.push('Dinner');
+        if (mealTypes.length > 0) {
+          day.meal = mealTypes.join(', ');
+        }
+      }
+    });
+  }
+
   next();
 });
 
