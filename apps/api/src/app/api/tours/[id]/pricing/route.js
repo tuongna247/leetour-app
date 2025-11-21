@@ -50,21 +50,23 @@ export async function GET(request, { params }) {
       }, { status: 400 });
     }
 
-    // Find tour
-    const tour = await Tour.findById(tourId);
+    // Find tour by ID or slug
+    let tour;
+    const isObjectId = /^[0-9a-fA-F]{24}$/.test(tourId);
+
+    if (isObjectId) {
+      // Search by MongoDB _id
+      tour = await Tour.findOne({ _id: tourId, isActive: true });
+    } else {
+      // Search by slug
+      tour = await Tour.findOne({ 'seo.slug': tourId, isActive: true });
+    }
 
     if (!tour) {
       return NextResponse.json({
         status: 404,
         msg: 'Tour not found'
       }, { status: 404 });
-    }
-
-    if (!tour.isActive) {
-      return NextResponse.json({
-        status: 400,
-        msg: 'Tour is not currently available'
-      }, { status: 400 });
     }
 
     // Calculate total passenger count
