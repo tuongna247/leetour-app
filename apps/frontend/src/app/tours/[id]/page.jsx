@@ -183,7 +183,14 @@ const TourDetailPage = () => {
           }
         }, 100);
       } else {
-        setPricingError(data.msg || 'Failed to fetch pricing information');
+        // Enhanced error message for missing tour options
+        if (data.msg?.includes('No tour options available')) {
+          setPricingError(
+            'This tour has no pricing options configured. Please go to the Admin Panel to add tour pricing options before customers can book.'
+          );
+        } else {
+          setPricingError(data.msg || 'Failed to fetch pricing information');
+        }
       }
     } catch (err) {
       console.error('Error fetching pricing:', err);
@@ -501,8 +508,25 @@ const TourDetailPage = () => {
               </Button>
 
               {pricingError && (
-                <Alert severity="error" sx={{ mb: 2, fontSize: '0.875rem' }}>
+                <Alert
+                  severity={pricingError.includes('no pricing options') ? 'warning' : 'error'}
+                  sx={{ mb: 2, fontSize: '0.875rem' }}
+                >
                   {pricingError}
+                  {pricingError.includes('no pricing options') && (
+                    <Box sx={{ mt: 1 }}>
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        color="warning"
+                        href={`https://admin.goreise.com/admin/tours/${id}/edit`}
+                        target="_blank"
+                        sx={{ textTransform: 'none' }}
+                      >
+                        Go to Admin Panel to Add Pricing Options
+                      </Button>
+                    </Box>
+                  )}
                 </Alert>
               )}
 
