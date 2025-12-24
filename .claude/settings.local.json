@@ -48,7 +48,10 @@
       "Bash(ren:*)",
       "Bash(scp:*)",
       "Bash(ping:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(mongosh:*)",
+      "Bash(mongo:*)",
+      "Bash(git config:*)"
     ],
     "deny": [],
     "ask": []
