@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "My Bookings | vinaday.com";
+}
+<div class="pd-nav"></div>
+<div class="content stepbooking">
+    <div class="container">
+        <div class="col-lg-offset-1">
+            <div class="row">
+                <div id="information-confirm">                    
+                    @if (ViewBag.vpc_Result == "Transaction is Canceled")
+                    {
+                        <div class="anim fadeInLeft">
+                            <div class="check-out-header">
+                                <h2 class="title title-complete">Your booking is Canceled</h2>
+                            </div>
+                            <div style="border: none;" class="box-aside">
+                                <div style="width: 100%" class="payment-detail-content-info">
+                                    <p>Full Name:<span class="bold">@ViewBag.FullName</span></p>
+
+                                    <a href="https://goreise.com/tour"> « Continue</a>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    }
+                    else if (ViewBag.vpc_Result == "Transaction is Invadlidate")
+                    { <div class="anim fadeInLeft">
+                            <div class="check-out-header">
+                                <h2 class="title title-complete">Transaction is Invadlidate </h2>
+                            </div>
+                            <div style="border: none;" class="box-aside">
+                                <div style="width: 100%" class="payment-detail-content-info">
+                                    <p>Full Name:<span class="bold">@ViewBag.FullName</span></p>
+
+                                    <a href="https://goreise.com/tour"> « Continue</a>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="anim fadeInLeft">
+                        <div class="check-out-header">
+                            <h2 class="title title-complete">Your booking is completed</h2>
+                        </div>
+                        <div style="border: none;" class="box-aside">
+
+                            <div style="width: 100%" class="payment-detail-content-info">
+                                <p>Thank<span class="bold">@ViewBag.FullName</span></p>
+
+                                @ViewBag.Result
+                                <p> Your reservation code(PNR) is <span class="bold">#@ViewBag.Pnr</span></p>
+                                <p>Your travel consultant will get back to you within next 5 minutes from 8:00 AM to 22:30 PM everyday.Please, check the confirmation letter in your inbox/junk/spam mail or call (+8428)-3838  8382 for further information.</p>
+                                <a href="https://goreise.com/"> « Continue</a>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>

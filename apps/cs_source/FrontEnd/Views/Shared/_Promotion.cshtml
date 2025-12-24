@@ -1,0 +1,37 @@
+﻿@*@model List<Vinaday.Data.Models.Extention.PromotionModel>*@
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table table-bordered" style="margin-bottom: 0">
+        <tbody>
+            @foreach (var promotion in Model)
+            {
+                <tr>
+                    <td style="width: 20%; vertical-align: middle; font-weight: bold"><div>@promotion.Name</div></td>
+                    <td style="width: 80%; padding: 1px;">
+                        <table class="table table-bordered" style="margin-bottom: 0">
+                            <tbody>
+                                @if (promotion.Promotions != null && promotion.Promotions.Count > 0)
+                                {
+                                    foreach (var promotionModel in promotion.Promotions)
+                                    {
+                                        <tr style="text-align: center">
+                                            <td>@promotionModel.BookingDate</td>
+                                            <td>@promotionModel.Stay</td>
+                                            <td style="text-align: left;">@promotionModel.Description</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div style="padding: 50px; text-align: center;">
+        <span style=" color: rgba(103, 20, 86, 0.9); font-weight: bold; text-align: center; text-transform: full-width;">This hotel is not have promotion on this time.</span>
+    </div>
+    
+}

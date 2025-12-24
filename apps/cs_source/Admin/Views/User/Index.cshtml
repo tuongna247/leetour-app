@@ -1,0 +1,177 @@
+﻿@using Vinaday.Web.Framework
+@model System.Collections.Generic.IEnumerable<Vinaday.Admin.Models.ApplicationUser>
+@{
+    ViewBag.Active = "User";
+    ViewBag.Title = "Users Management";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    var index = 1;
+}
+@if (Model != null)
+{
+    <div class="page-title">
+        <h3>Users Management</h3>
+        <div class="page-breadcrumb">
+            <ol class="breadcrumb">
+                <li><a href="/Category">Users Management</a></li>
+                <li class="active">User</li>
+            </ol>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-white">
+                    <div class="panel-body">
+                        <a data-toggle="modal" data-target="#add-new-modal" class="btn btn-info btn-addon m-b-sm btn-xs"><i class="fa fa-plus"></i>Add new</a>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">User name</th>
+                                        <th scope="col">Full Name</th>
+                                        <th scope="col" class="hidden-phone">Email</th>
+                                        <th scope="col" class="hidden-phone">Phone</th>
+                                        <th scope="col" class="hidden-phone">Crate Date</th>
+                                        <th scope="col" class="action">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        if(item.UserName.Contains("Avil")){continue;}
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>@item.UserName</td>
+                                            <td>@string.Format("{0} {1}", item.FirstName, item.LastName) </td>
+                                            <td class="hidden-phone">@item.Email</td>
+                                            <td class="hidden-phone">@Utilities.FormatPhone(item.PhoneNumber)</td>
+                                            <td class="hidden-phone">@item.JoinDate</td>
+                                            <td class="action">
+                                                <span class="quick-menu-icon pull-right" style="cursor: pointer">
+                                                    <a onclick="changePasswordForm('@item.Id');">Change Password</a>  |
+                                                    <a onclick="deleteUser('@item.Id')">Delete</a>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        index++;
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>No content for this Item</p>
+}
+<div class="modal fade" id="add-new-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new user</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="user-name">User name </label>
+                        <input class="form-control" id="user-name" type="text" placeholder="Enter user name">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="phone-number">Phone number </label>
+                        <input class="form-control" id="phone-number" type="text" placeholder="Enter your phone">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="first-name">First name </label>
+                        <input class="form-control" id="first-name" type="text" placeholder="Enter first name">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="last-name">Last name</label>
+                        <input class="form-control" id="last-name" type="text" placeholder="Enter last name">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email">Email</label>
+                        <input class="form-control" id="email" type="text" placeholder="Enter email address">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email-confirm">Email</label>
+                        <input class="form-control" id="email-confirm" type="text" placeholder="Enter confirm email address">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="password">Password </label>
+                        <input class="form-control" id="password" type="password" placeholder="Enter your password">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="password-confirm">Password confirm</label>
+                        <input class="form-control" id="password-confirm" type="password" placeholder="Enter your confirm password">
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <select id="role-list" class="form-control">
+                            @foreach (var role in ViewBag.Roles)
+                            {
+                                <option value="@role.Id">@role.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div id="error-list" style="display: none;">
+                            <div id="error-item" class="alert alert-danger" role="alert">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="insertUser();" class="btn btn-success">Add new</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="change-password-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Change Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="new-password">New password <span class="text-danger">*</span></label>
+                        <input class="form-control" id="new-password" type="password" placeholder="Enter new password">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="confirm-new-password">Confirm new password <span class="text-danger">*</span></label>
+                        <input class="form-control" id="confirm-new-password" type="password" placeholder="Enter confirm password">
+                    </div>
+              
+                    <div class="form-group col-md-12">
+                        <div id="edit-error-list" style="display: none;">
+                            <div id="edit-error-item" class="alert alert-danger" role="alert">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input id="user-id" type="hidden"/>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="changePasswordUser();" class="btn btn-success">Save change</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/assets/js/user.js"></script>

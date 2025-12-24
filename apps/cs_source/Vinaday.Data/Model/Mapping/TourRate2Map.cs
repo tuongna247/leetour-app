@@ -1,0 +1,27 @@
+using System;
+using System.Data.Entity.ModelConfiguration;
+using System.Data.Entity.ModelConfiguration.Configuration;
+using System.Linq.Expressions;
+using Vinaday.Data.Models;
+
+namespace Vinaday.Data.Models.Mapping
+{
+	public class TourRate2Map : EntityTypeConfiguration<TourRate2>
+	{
+		public TourRate2Map()
+		{
+			HasKey(t => t.id);
+			Property(t => t.Description).IsFixedLength().HasMaxLength(255);
+			ToTable("TourRate2");
+			Property(t => t.id).HasColumnName("id");
+			Property(t => t.persons).HasColumnName("persons");
+			Property(t => t.RetailRate).HasColumnName("RetailRate");
+			Property(t => t.NetRate).HasColumnName("NetRate");
+			Property(t => t.AgeFrom).HasColumnName("AgeFrom");
+			Property(t => t.AgeTo).HasColumnName("AgeTo");
+			Property(t => t.TourId).HasColumnName("TourId");
+			Property(t => t.Description).HasColumnName("Description");
+			HasRequired(t => t.TOUR).WithMany(t => t.TourRate2s).HasForeignKey(d => d.TourId);
+		}
+	}
+}

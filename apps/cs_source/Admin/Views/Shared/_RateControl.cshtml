@@ -1,0 +1,128 @@
+﻿@using System
+@using Vinaday.Data.Models.Extention
+@model System.Collections.Generic.List<RoomControlModel>
+@if (Model.Count > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-hover" id="rates-result">
+            <thead>
+                <tr>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Day</th>
+                    <th class="text-center">TA Rate</th>
+                    <th class="text-center">Profit</th>
+                    <th class="text-center">Surcharge 1</th>
+                    <th class="text-center">Surcharge 2</th>
+                    <th class="text-center">Surcharge 3</th>
+                    <th class="text-center">Selling Rate</th>
+                    <th class="text-center">Final Price</th>
+                    <th class="text-center">Breakfast</th>
+                    <th class="text-center"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="alert alert-success">
+                    <th class="text-center"></th>
+                    <th class="text-center"></th>
+                    <th class="text-center">
+                        <input id="ta-rate" type="text" class="text-center form-control" maxlength="7" />
+                    </th>
+                    <th class="text-center">
+                        <input id="profit" type="text" class="text-center form-control" maxlength="3" />
+                    </th>
+                    <th class="text-center" colspan="5"></th>
+                    <th class="text-center">
+                        <select id="breakfast" class="form-control">
+                            <option value="-1"></option>
+                            <option value="0">Check All</option>
+                            <option value="1">Uncheck All</option>
+                        </select>
+                    </th>
+                    <th class="text-right" style="text-align: right!important" colspan="5">
+                        <a href="javascript:void(0);" onclick="fillAllRateForm();" class="btn btn-success btn-xs"><small class="glyphicon glyphicon-check"></small> Auto</a>
+                    </th>
+                </tr>
+
+
+                @foreach (var roomControl in Model)
+                {
+                    if (roomControl.IsPast)
+                    {
+                        <tr class="active @(roomControl.Date.ToString("ddd").Contains("Sun") || roomControl.Date.ToString("ddd").Contains("Sat") ? "info" : "")">
+                            <th class="text-center">@roomControl.Date.ToString("MMM-dd-yyyy")</th>
+                            <th class="text-center">@roomControl.Date.ToString("ddd")</th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control" value="@(roomControl.TaRate > 0 ? Math.Round(roomControl.TaRate, 2) : 0)" maxlength="7" disabled />
+                            </th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control" value="@(roomControl.Profit>0?Math.Round(roomControl.Profit, 0):0)" maxlength="2" disabled />
+                            </th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control" value="@(roomControl.Surcharge1>0?Math.Round(roomControl.Surcharge1, 2):0)" maxlength="7" disabled />
+                            </th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control" value="@(roomControl.Surcharge2>0?Math.Round(roomControl.Surcharge2, 2):0)" maxlength="7" disabled />
+                            </th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control" value="@(roomControl.CompulsoryMeal>0?Math.Round(roomControl.CompulsoryMeal, 2):0)" maxlength="7" disabled />
+                            </th>
+
+                            <th class="text-center">$@(roomControl.SellingRate > 0 ? Math.Round(roomControl.SellingRate, 2) : 0)</th>
+                            <th class="text-center">$@(roomControl.FinalPrice > 0 ? Math.Round(roomControl.FinalPrice, 2) : 0)</th>
+
+                            <th class="text-center">
+                                <input class="checkbox text-center" type="checkbox" @(roomControl.IsBreakfast ? "checked" : "") disabled>
+                            </th>
+                            <th class="text-center">
+                                <input type="hidden" class="text-center" value="@roomControl.Id">
+                            </th>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr class="currentRecords @(roomControl.Date.ToString("ddd").Contains("Sun") || roomControl.Date.ToString("ddd").Contains("Sat") ? "info" : "")">
+                            <th class="text-center">@roomControl.Date.ToString("MMM-dd-yyyy")</th>
+                            <th class="text-center">@roomControl.Date.ToString("ddd")</th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control ta-rate" value="@(roomControl.TaRate>0?Math.Round(roomControl.TaRate, 2):0)" maxlength="7" />
+                            </th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control profit" value="@(roomControl.Profit>0?Math.Round(roomControl.Profit, 0):0)" maxlength="2" />
+                            </th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control surcharge1" value="@(roomControl.Surcharge1>0?Math.Round(roomControl.Surcharge1, 2):0)" maxlength="7" />
+                            </th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control surcharge2" value="@(roomControl.Surcharge2>0?Math.Round(roomControl.Surcharge2, 2):0)" maxlength="7" />
+                            </th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control compulsory-meal" value="@(roomControl.CompulsoryMeal>0?Math.Round(roomControl.CompulsoryMeal, 2):0)" maxlength="7" />
+                            </th>
+                            <th class="text-center">$<span class="selling-rate">@(roomControl.SellingRate > 0 ? Math.Round(roomControl.SellingRate, 2) : 0)</span></th>
+                            <th class="text-center">$<span class="final-price">@(roomControl.FinalPrice > 0 ? Math.Round(roomControl.FinalPrice, 2) : 0)</span></th>
+                            <th class="text-center">
+                                <input class="checkbox text-center breakfast" type="checkbox" @(roomControl.IsBreakfast ? "checked" : "")>
+                            </th>
+                            <th class="text-center">
+                                <input type="hidden" class="text-center" value="@roomControl.Id">
+                            </th>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+    <div class="pull-right">
+        <a href="javascript:void(0);" onclick="updateRates();" class="btn btn-success m-b-sm">Save change</a>
+    </div>
+}
+else
+{
+    <div class="form-group">
+        <div class="alert alert-danger" style="margin-bottom: -5px;" role="alert">
+            No available room for this hotel.
+        </div>
+    </div>
+}

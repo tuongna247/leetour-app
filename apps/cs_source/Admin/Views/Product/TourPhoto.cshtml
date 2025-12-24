@@ -1,0 +1,162 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+@model List<Medium>
+@{
+    ViewBag.Title = "Photos - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+
+    //List<Medium> images = ViewBag.Images;
+    //var m = images.FirstOrDefault(i => i.MediaType == (int)Vinaday.Web.Framework.Utilities.MediaType.Banner);
+}
+
+
+@if (Model != null)
+{
+    <input type="hidden" id="tourId" value="@ViewBag.TourId" />
+    <div class="page-title">
+        <h3>Photos galery</h3>
+        <div class="page-breadcrumb">
+            <ol class="breadcrumb">
+                <li><a href="@Url.Content("/Product/Tour")">Tour</a></li>
+                <li class="active">Photos Management</li>
+            </ol>
+        </div>
+
+    </div>
+    <div id="main-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-white">
+                    <div class="panel-heading clearfix">
+                        <div role="group" class="pull-right">
+                            <a href="@Url.Content(string.Format("~/Product/TourBasic/{0}", ViewBag.TourId))" class="btn btn-success m-b-sm">Basic Info</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourDetail/{0}", ViewBag.TourId))" class="btn btn-success m-b-sm">Detail</a>
+                            <a disabled href="@Url.Content(string.Format("~/Product/TourPhoto/{0}", ViewBag.TourId))" class="btn btn-success m-b-sm">Photos galery</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourItinerary/{0}", ViewBag.TourId))" class="btn btn-success m-b-sm">Itinerary</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPrice/{0}", ViewBag.TourId))" class="btn btn-success m-b-sm">Rates Control</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourSurcharge/{0}", ViewBag.TourId))" class="btn btn-success m-b-sm">Surcharges</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPromotion/{0}", ViewBag.TourId))" class="btn btn-success m-b-sm">Promotions</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPriceOption/{0}", ViewBag.TourId))" class="btn btn-success m-b-sm">Price Option</a>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form action="@Url.Content("/Product/SaveUploadedFile")" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneForm" style="padding: 0;">
+                                            <input type="hidden" name="id" value="@ViewBag.TourId"/>
+                                            <div class="fallback">
+                                                <input name="file" type="file" multiple/>
+                                            </div>
+                                        </form>
+                                        <br />
+                                    </div>
+                                 
+                                    <div class="col-md-12">
+                                        <div class="pull-left">
+                                            <a onclick="deleteImages('-1'); " class="btn btn-danger m-b-sm">Delete Selected</a>
+                                        </div>
+                                        <div class="pull-right">
+                                            <a onclick="savedTourImages(); " class="btn btn-success m-b-sm">Save Change</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <form>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>
+                                                            <input type="checkbox" id="selected-all" name="testCheckbox">
+                                                        </th>
+                                                        <th>Detail</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="image-list">
+                                                    @foreach (var image in Model)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                <input type="checkbox" class="selected-id" name="testCheckbox" value="@image.Id" id="@image.Id">
+                                                            </td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+
+                                                                        <img style="width: 100%" src="@Url.Content(image.OriginalPath)" alt="Photo"/>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+
+                                                                        <div class="form-group">
+                                                                            <input value="@(string.IsNullOrEmpty(image.Title) ? string.Format("{0} - {1}", image.Id, image.Title) : image.Title)" class="form-control hotel-image-name" alt="@(string.IsNullOrEmpty(image.Title) ? string.Format("{0}-{1}", image.Id, image.Title) : image.Title)">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="image-option">
+                                                                                <label class="checkbox inline">
+                                                                                    <input type="radio" @(image.MediaType == (int) Utilities.MediaType.Banner ? "checked" : "") name="cbPictureType_@image.Id" id="cbImageType_@image.Id" value="1"/> Banner
+                                                                                </label>
+                                                                                <label class="checkbox inline">
+                                                                                    <input type="radio" @(image.MediaType == (int) Utilities.MediaType.Gallery ? "checked" : "") name="cbPictureType_@image.Id" id="cbImageType_@image.Id" value="2"/> Gallery
+                                                                                </label>
+                                                                                <label class="checkbox inline">
+                                                                                    <input type="radio" @(image.MediaType == (int) Utilities.MediaType.Logo ? "checked" : "") name="cbPictureType_@image.Id" id="cbImageType_@image.Id" value="3"/> Logo
+                                                                                </label>
+                                                                                <label class="checkbox inline">
+                                                                                    <input type="radio" @(image.MediaType == (int)Utilities.MediaType.Map ? "checked" : "") name="cbPictureType_@image.Id" id="cbImageType_@image.Id" value="4" /> Map
+                                                                                </label>
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group">
+                                                                            <input class="image-id" value="@image.Id" type="hidden"/>
+                                                                            <a href="javascript:void(0);" onclick="deleteImage('@image.Id');">Delete this Image</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="pull-right">
+                                            <a onclick="savedTourImages();" class="btn btn-success m-b-sm">Save Change</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+
+}
+else
+{
+    <p>Not content for this item</p>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/tourjs")
+}
+
+
+

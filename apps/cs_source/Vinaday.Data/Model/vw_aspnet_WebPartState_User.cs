@@ -1,0 +1,36 @@
+using System;
+using System.Runtime.CompilerServices;
+
+namespace Vinaday.Data.Models
+{
+	public class vw_aspnet_WebPartState_User
+	{
+		public int? DataSize
+		{
+			get;
+			set;
+		}
+
+		public DateTime LastUpdatedDate
+		{
+			get;
+			set;
+		}
+
+		public Guid? PathId
+		{
+			get;
+			set;
+		}
+
+		public Guid? UserId
+		{
+			get;
+			set;
+		}
+
+		public vw_aspnet_WebPartState_User()
+		{
+		}
+	}
+}

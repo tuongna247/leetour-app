@@ -1,0 +1,62 @@
+﻿@using Vinaday.Data.Models
+@{
+    List<Rate> rates = ViewBag.Rates;
+}
+<style>
+    #rates-result thead th {
+        text-align: center;
+    }
+</style>
+<div id="rates-control">
+    @if (rates != null && rates.Count > 0)
+    {
+        <table class="table table-hover" id="rates-result">
+            <thead>
+                <tr>
+                    <th>No. Person</th>
+                    <th>Net rate (per person)</th>
+                    <th>Retail rate (per person)</th>
+                    <th>Commission rate</th>
+                    <th>Total rate (per person)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var rate in rates)
+                {
+                    if (rate != null)
+                    {
+                        <tr>
+                            <th><input type="text" value="@rate.PersonNo" disabled/></th>
+                            <th><input type="text" value="@rate.PersonNo" /></th>
+                            <th><input type="text" value="@rate.RetailRate" /></th>
+                            <th>
+                                <input type="text" value="@rate.NetRate" />
+                            </th>
+                            <th>
+                                <a style="color: #333; font-size: 15px; cursor: pointer;" class="fontello-icon-trash-1" onclick="deleteRate('@rate.Id'); "></a>
+                            </th>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <th>No content</th>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No content for this session. Click "Add new" button to add new rate.</p>
+    }
+    
+    <div class="form-actions">
+        <a class="btn btn-yellow btn-mini" href="javascript:void(0);" onclick="updateRates();" type="button">Save</a>
+        <a class="btn btn-yellow btn-mini" href="@Url.Content("/Tour/Management")" type="button">Cancel</a>
+    </div>
+
+</div>

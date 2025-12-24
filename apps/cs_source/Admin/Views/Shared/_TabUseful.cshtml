@@ -1,0 +1,211 @@
+﻿@using Vinaday.Data.Models
+@model Hotel
+@if (Model != null)
+{
+    <h4>Useful Information</h4>
+    <div role="alert" class="alert alert-success alert-dismissible">
+        <button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button>
+        Please tick the boxes and fill in any additional information about your hotel that can be useful to our customers. If you do not tick the box, the information will not show on the website.
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox">
+                <input id="airport-transfer-checkbox" type="checkbox" @(Model.ShowAirportTransferAvailable.HasValue && Model.ShowAirportTransferAvailable == true ? "checked" : "")>Airport Transfer Available
+            </label>
+        </div>
+        <div class="col-md-6" id="airport-transfer-radio">
+            <label class="checkbox inline">
+                <input type="radio" value="True" @(Model.AirportTransferAvailable.HasValue && Model.AirportTransferAvailable == true ? "checked" : "") name="airport-transfer" @(Model.ShowAirportTransferAvailable.HasValue && Model.ShowAirportTransferAvailable == true ? "" : "disabled")> Yes
+            </label>
+            <label class="checkbox inline">
+                <input type="radio" value="False" @(Model.AirportTransferAvailable.HasValue && Model.AirportTransferAvailable == true ? "" : "checked") name="airport-transfer" @(Model.ShowAirportTransferAvailable.HasValue && Model.ShowAirportTransferAvailable == true ? "" : "disabled")> No
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox">
+                <input id="airport-fee-checkbox" type="checkbox" @(Model.ShowAirportTransferFee.HasValue && Model.ShowAirportTransferFee == true ? "checked" : "")>Airport Transfer Fee
+            </label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" value="@Model.AirportTransferFee" id="airport-fee" @(Model.ShowAirportTransferFee.HasValue && Model.ShowAirportTransferFee == true ? "" : "disabled") class="form-control" placeholder="Airport Transfer Fee">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox inline">
+                <input id="breakfast-charge-checkbox" type="checkbox" @(Model.ShowBreakfastCharge.HasValue && Model.ShowBreakfastCharge == true ? "checked" : "")>Breakfast Charge (when not included in room rate)
+
+            </label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" value="@Model.BreakfastCharge" id="breakfast-charge" @(Model.ShowBreakfastCharge.HasValue && Model.ShowBreakfastCharge == true ? "" : "disabled") class="form-control" placeholder="Breakfast Charge">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox inline">
+                <input id="check-out-checkbox" type="checkbox" @(Model.ShowCheckOut.HasValue && Model.ShowCheckOut == true ? "checked" : "")>Check-Out
+
+            </label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" value="@Model.CheckOut" id="check-out" @(Model.ShowCheckOut.HasValue && Model.ShowCheckOut == true ? "" : "disabled") class="form-control" placeholder="Check-Out">
+            </div>
+        </div>
+    </div>
+       <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox inline">
+                <input id="check-in-checkbox" type="checkbox" @(Model.ShowCheckIn.HasValue && Model.ShowCheckIn == true ? "checked" : "")>Check-In
+
+            </label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" value="@Model.CheckIn" id="check-in" @(Model.ShowCheckIn.HasValue && Model.ShowCheckIn == true ? "" : "disabled") class="form-control" placeholder="Check-In">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox inline">
+                <input id="distance-checkbox" type="checkbox" @(Model.ShowDistanceFromManCity.HasValue && Model.ShowDistanceFromManCity == true ? "checked" : "")>Distance from City Center
+
+            </label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" value="@Model.DistanceFromMainCity" id="distance" @(Model.ShowDistanceFromManCity.HasValue && Model.ShowDistanceFromManCity == true ? "" : "disabled") class="form-control" placeholder="Distance from City Center">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox inline">
+                <input id="earliest-check-in-checkbox" type="checkbox" @(Model.ShowEarliestCheckIn.HasValue && Model.ShowEarliestCheckIn == true ? "checked" : "")>Earliest Check-In
+
+            </label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" value="@Model.EarliestCheckIn" id="earliest-check-in" @(Model.ShowEarliestCheckIn.HasValue && Model.ShowEarliestCheckIn == true ? "" : "disabled") class="form-control" placeholder="Earliest Check-In">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox inline">
+                <input id="restaurant-checkbox" type="checkbox" @(Model.ShowNumberOfRestaurants.HasValue && Model.ShowNumberOfRestaurants == true ? "checked" : "")>Number of Restaurants
+
+            </label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" value="@Model.NumberOfRestaurants" id="restaurant" @(Model.ShowNumberOfRestaurants.HasValue && Model.ShowNumberOfRestaurants == true ? "" : "disabled") class="form-control" placeholder="Number of Restaurants">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox">
+                <input id="parking-checkbox" type="checkbox" @(Model.ShowParkingAvailable.HasValue && Model.ShowParkingAvailable == true ? "checked" : "")>Parking Available
+            </label>
+        </div>
+        <div class="col-md-6" id="airport-transfer-radio">
+            <label class="checkbox inline">
+                <input type="radio" value="True" @(Model.ParkingAvailable.HasValue && Model.ParkingAvailable == true ? "checked" : "") name="parking" @(Model.ShowParkingAvailable.HasValue && Model.ShowParkingAvailable == true ? "" : "disabled")> Yes
+            </label>
+            <label class="checkbox inline">
+                <input type="radio" value="False" @(Model.ParkingAvailable.HasValue && Model.ParkingAvailable == true ? "" : "checked") name="parking" @(Model.ShowParkingAvailable.HasValue && Model.ShowParkingAvailable == true ? "" : "disabled")> No
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox">
+                <input id="room-service-checkbox" type="checkbox" @(Model.ShowRoomService.HasValue && Model.ShowRoomService == true ? "checked" : "")>Room Service (Yes, No, 24 Hrs)
+            </label>
+        </div>
+        <div class="col-md-6" id="airport-transfer-radio">
+            <label class="checkbox inline">
+                <input type="radio" value="True" @(!string.IsNullOrEmpty(Model.RoomService) && Model.RoomService.Contains("True") ? "checked" : "") name="room-service" @(Model.ShowRoomService.HasValue && Model.ShowRoomService == true ? "" : "disabled")> Yes
+            </label>
+            <label class="checkbox inline">
+                <input type="radio" value="False" @(!string.IsNullOrEmpty(Model.RoomService) && Model.RoomService.Contains("False") ? "checked" : "") name="room-service" @(Model.ShowRoomService.HasValue && Model.ShowRoomService == true ? "" : "disabled")> No
+            </label>
+            <label class="checkbox inline">
+                <input type="radio" value="24Hrs" @(!string.IsNullOrEmpty(Model.RoomService) && Model.RoomService.Contains("24Hrs") ? "checked" : "") name="room-service" @(Model.ShowRoomService.HasValue && Model.ShowRoomService == true ? "" : "disabled")> 24Hrs
+            </label>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox inline">
+                <input id="room-voltage-checkbox" type="checkbox" @(Model.ShowRoomVoltage.HasValue && Model.ShowRoomVoltage == true ? "checked" : "")>Room Voltage
+
+            </label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" value="@Model.RoomVoltage" id="room-voltage" @(Model.ShowRoomVoltage.HasValue && Model.ShowRoomVoltage == true ? "" : "disabled") class="form-control" placeholder="Room Voltage">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+  
+        <div class="col-md-6">
+            <label class="checkbox inline">
+                <input id="time-to-airport-checkbox" type="checkbox" @(Model.ShowTimeToAirport.HasValue && Model.ShowTimeToAirport == true ? "checked" : "")>Time to Airport (Minutes)
+
+            </label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" value="@Model.TimeToAirport" id="time-to-airport" @(Model.ShowTimeToAirport.HasValue && Model.ShowTimeToAirport == true ? "" : "disabled") class="form-control" placeholder="Time to Airport (Minutes)">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox inline">
+                <input id="year-hotel-checkbox" type="checkbox" @(Model.ShowYearHotelBuilt.HasValue && Model.ShowYearHotelBuilt == true ? "checked" : "")>Year Hotel Built
+
+            </label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" value="@Model.YearHotelBuilt" id="year-hotel" @(Model.ShowYearHotelBuilt.HasValue && Model.ShowYearHotelBuilt == true ? "" : "disabled") class="form-control" placeholder="Year Hotel Built">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="checkbox inline">
+                <input id="year-hotel-renovated-checkbox" type="checkbox" @(Model.ShowYearHotelLastRenovated.HasValue && Model.ShowYearHotelLastRenovated == true ? "checked" : "")>Year Hotel Last Renovated
+
+            </label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" value="@Model.YearHotelLastRenovated" id="year-hotel-renovated" @(Model.ShowYearHotelLastRenovated.HasValue && Model.ShowYearHotelLastRenovated == true ? "" : "disabled") class="form-control" placeholder="Year Hotel Last Renovated">
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="pull-right">
+        <a onclick="getTabCancellation();" class="btn btn-default m-b-sm">Skip and Continue</a>
+        <a onclick="saveTabUseful();" class="btn btn-success m-b-sm">Save and Continue</a>
+    </div>
+    @*<div class="clearfix"></div>
+        <div role="alert" class="alert alert-danger">
+            Change a few things up and try submitting again.
+        </div>*@
+}

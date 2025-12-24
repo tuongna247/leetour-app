@@ -1,0 +1,272 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Services
+@model Hotel
+@{
+    ViewBag.Title = "Rooms - Hotel Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+    List<CatDetail>
+        promotionTypes = ViewBag.PromotionTypes;
+    var cancellations = ViewBag.Cancellations;
+    HotelCancellation hotelCancellation = ViewBag.HotelCancellation;
+    List<Vinaday.Data.Models.HotelPackage> packages = ViewBag.hotelPackage;
+    List<HotelImages> photos = ViewBag.Photos;
+}
+<div class="page-title">
+    <h3>Hotel Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/Product/Hotel">Hotel Management</a></li>
+            <li class="active">Rooms Management</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading clearfix">
+                    <div role="group" class="pull-right">
+                        <input type="hidden" id="hotel-id" value="@Model.Id" />
+                        <a href="@Url.Content("~/Product/HotelBasic/"+Model.Id)" class="btn btn-success m-b-sm">Basic Info</a>
+                        @*<a href="@(string.Format("http://goreise.com/rc//"+Model.Id)" class="btn btn-success m-b-sm">Room Management</a>*@
+                        <a href="@Url.Content("~/Product/RoomControl/"+Model.Id)" class="btn btn-success m-b-sm">Room Control</a>
+                        <a disabled href="#" class="btn btn-success m-b-sm">Package</a>
+                        <a href="@Url.Content("~/Product/HotelPackageSurcharge/"+Model.Id)" class="btn btn-success m-b-sm">Package SurCharge</a>
+                        <a href="@Url.Content("~/Product/RateControl/"+Model.Id)" class="btn btn-success m-b-sm">Rate Control</a>
+                        <a href="@Url.Content("~/Product/Surcharge/"+Model.Id)" class="btn btn-success m-b-sm">Surcharges</a>
+                        <a href="@Url.Content("~/Product/Promotion/"+Model.Id)" class="btn btn-success m-b-sm">Promotions</a>
+                        <a href="@Url.Content("~/Product/HotelSeo/"+Model.Id)" class="btn btn-success m-b-sm">SEO</a>
+                        <a href="@Url.Content("~/Product/Review/Model.Id)" class="btn btn-success m-b-sm">Reviews</a>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div id="loadPane"></div>
+                        <div class="col-md-12">
+                            <button onclick="addRoomShow();" class="btn btn-info btn-addon m-b-sm btn-xs" type="button"><i class="fa fa-plus"></i>Add new package</button>
+                            <div class="clearfix"></div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Package Name</th>
+                                            <th class="text-left">From Date - To Date</th>
+                                            <th class="text-center">Night</th>
+                                            <th class="text-center">Picture</th>
+                                            <th class="text-right">Price</th>
+                                            <th class="text-left">Including</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @if (packages.Count > 0)
+                                        {
+                                            foreach (Vinaday.Data.Models.HotelPackage package in packages)
+                                            {
+                                        <tr>
+                                            <td class="text-left">
+                                                <p>@package.RoomName</p>
+                                            </td>
+                                            <td class="text-left" style="padding: 5px !important; width: 300px;">
+                                                @package.FromDate.ToShortDateString() - @package.ToDate.ToShortDateString()
+                                            </td>
+                                            <td class="text-center">
+                                                @package.Night
+                                            </td>
+                                            <td class="text-center" style="padding: 5px !important; width: 300px;"><img style="width: 300px" src="@(package.ImageUrl)" alt="Image"></td>
+                                            <td class="text-right">@package.Price.ToString("C")</td>
+                                            <td class="text-left">
+                                                @package.IncludingValue
+                                            </td>
+
+                                            <th class="text-center">
+                                                <a href="#" onclick="EditPackage('@package.Id')">Edit</a>
+                                                |
+                                                <a href="#" onclick="DeletePackage('@package.Id')">Delete</a>
+
+                                            </th>
+                                        </tr>
+                                            }
+                                        }
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="clearfix"></div>
+                            <button onclick="addRoomShow();" class="btn btn-info btn-addon m-b-sm btn-xs" type="button"><i class="fa fa-plus"></i>Add new package</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- Row -->
+    <div id="room-content">
+
+    </div>
+    <div class="modal fade" id="add-room-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add new package</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="add-RoomName">Package Name:</label>
+                                <input id="add-RoomName" class="form-control m-b-sm" type="text" placeholder="Package Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-RoomNameVN">Package Name VN:</label>
+                                <input id="add-RoomNameVN" class="form-control m-b-sm" type="text" placeholder="Package Name VN">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-FromDate">From Date:</label>
+                                <input id="add-FromDate" class="form-control m-b-sm date-picker" type="text" placeholder="From Date">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-ToDate">To Date:</label>
+                                <input id="add-ToDate" class="form-control m-b-sm date-picker" type="text" placeholder="To Date">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-Night">Night:</label>
+                                <input id="add-Night" class="form-control m-b-sm" type="text" placeholder="Night">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-Price">Price:</label>
+                                <input id="add-Price" class="form-control m-b-sm" type="text" placeholder="Price">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="add-cancellation">Cancellation :</label>
+                                <label for="cancellation-policy">Cancellation policy</label>
+                                <div class="controls">
+                                    <select id="cancellation-policy" class="form-control">
+                                        <option value="1">Hotel Standard Cancellation</option>
+                                        <option value="2">Other Cancellation Policy</option>
+                                    </select>
+                                    <br />
+                                    <select id="cancellation-list" style="display: none" class="form-control">
+                                        @foreach (var cancellation in cancellations)
+                                        {
+                                            <option value="@cancellation.Id" name="@cancellation.Description">@cancellation.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-promotion">Image:</label>
+                                @if (photos.Any())
+                                {
+                                    <table id="images-table" class="table table-condensed table-hover">
+                                        <tbody>
+                                            @foreach (HotelImages photo in photos)
+                                            {
+                                                <tr onclick="selectImage(this)" style="cursor:pointer" class="inbox-item ">
+                                                    <td><img style="width: 100%;" src="@Url.Content(string.Format("{0}-{1}.jpeg", photo.ImageThumbnail, 90))"  /></td>
+                                                    <td style="text-align: center; padding-top: 20% !important;">
+                                                        <span class="glyphicon glyphicon-ok check-image" style="color: green; font-size: 30px;"></span>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <p>No content for this room, please upload image of room on hotel basic.</p>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <label for="add-promotion">Add Promotion (No change No Refun policy):</label>
+                                <input id="add-promotion" class="form-control m-b-sm" type="checkbox" value="">
+                                <input id="add-promotion-discount" class="form-control m-b-sm" type="text" placeholder="Discount %">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-IncludingValue">Including:</label>
+                                <textarea id="add-IncludingValue" class="form-control m-b-sm" type="tex" placeholder="Including"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-IncludingValueVN">Including VN:</label>
+                                <textarea id="add-IncludingValueVN" class="form-control m-b-sm" type="tex" placeholder="Including VN"></textarea>
+                            </div>
+                        </div>
+                    </div><!-- Row -->
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Close</a>
+                    <a class="btn btn-success" onclick="addPackage();">Add new</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="edit-room-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" id="hotel-package-edit">
+            
+        </div>
+    </div>
+</div><!-- Main Wrapper -->
+@section Scripts {
+    @Scripts.Render("~/bundles/hoteljs")
+
+    <script>
+        $(document).ready(function () {
+            $('#add-IncludingValue').summernote({
+                toolbar: [
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['table', ['table']],
+                    ['view', ['fullscreen', 'codeview']],
+                    ['help', ['help']]
+                ],
+                height: 200
+            });
+            $('#add-IncludingValueVN').summernote({
+                toolbar: [
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['table', ['table']],
+                    ['view', ['fullscreen', 'codeview']],
+                    ['help', ['help']]
+                ],
+                height: 200
+            });
+
+            $("#cancellation-policy").change(function () {
+                var selected = $("#cancellation-policy").val();
+                if (selected == 1) {
+                    $("#cancellation-list").css("display", "none");
+                    $("#cancelation-name").css("display", "inline");
+
+                    $("#cancellation-description-hotel").css("display", "inline");
+                    $("#cancellation-description").css("display", "none");
+
+                    $("#cancel-name-hidden").val($("#cancelation-name").html());
+                } else {
+                    $("#cancelation-name").css("display", "none");
+                    $("#cancellation-list").css("display", "inline");
+
+                    $("#cancellation-description-hotel").css("display", "none");
+                    $("#cancellation-description").css("display", "inline");
+
+                    $("#cancel-name-hidden").val($("#cancellation-list").find(":selected").text());
+                }
+            });
+        });
+
+
+    </script>
+
+}

@@ -1,0 +1,37 @@
+﻿@using Vinaday.Data.Models.Extention
+
+@{
+    ViewBag.Title = "vinaday.vn - Hoàn thành";
+    Layout = "~/Views/Shared/_LayoutVn.cshtml";
+    BookingModel booking = ViewBag.Booking;
+}
+<style>
+    p {
+        font-size: 15px !important;
+    }
+</style>
+<div class="container" style="max-width: 970px; min-height: 750px">
+    <section class="content-section form checkout style-2" style="margin-top: 20%">
+        <div class="row">
+            @if (booking != null)
+            {
+                <div class="col-md-12 anim fadeInLeft">
+                    <div class="check-out-header">
+                        <h2 class="title">Booking <span>Completed</span></h2>
+                    </div>
+
+                    <div class="box-aside" style=" border: medium none; margin-left: 15px;">
+                        <p class="bold">Your reservation code (PNR) is @booking.Order.Pnr.</p>
+                        <p>Your travel consultant will get back to you within next 5 minutes from <span class="bold">8:00 AM to 22:30 PM</span> everyday.</p>
+                        <p>Please, check the confirmation letter in your  inbox/junk/spam mail or call <span class="bold">+84 916388382</span> for further information.</p>
+                        <p>Thank you!.</p>
+                        <a class="pull-left bold" style="color: rgb(245, 130, 32)" href="https://goreise.com/tour">Back home »</a>
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    </section>
+</div>

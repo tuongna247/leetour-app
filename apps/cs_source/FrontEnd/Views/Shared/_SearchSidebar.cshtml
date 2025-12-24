@@ -1,0 +1,230 @@
+﻿@using System.Collections.Generic
+@using Vinaday.Data.Models.Extention
+<div class="filter">
+    <div class="filter-option">
+        <div class="filter-tilte">
+            Lọc kết quả
+        </div>
+        <article class="checkrate" style="margin-bottom: 5px;">
+            <span class="input-group" style="float: left; width: 70%; margin-right: 3px;">
+                <input id="key" style="padding: 3px 5px 3px 10px !important;height: 32px!important;width: 100%" type="text" placeholder="Nhập tên khách sạn">
+            </span>
+            <span class="input-group" style="width: 25%">
+                <a id="search" class="btn btn-default anim fadeIn animated" style="border-radius: 0!important;" onclick="applySearch()">Tìm kiếm</a>
+            </span>
+        </article>
+        <article class="box">
+            <h3 class="box-title"><a title="" href="#">Xếp hạng sao</a></h3>
+            <div class="box-content">
+                <ul class="list-unstyled">
+                    @*@foreach (var star in ViewBag.Stars)
+                    {
+                        <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            <i class="@(string.Format("star star_{0}", star.Star))"></i>
+                            <span class="badge">@star.Count</span>
+                        </label>
+                    </li>
+                    }*@
+                    
+                    @*<li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            <i class="star star_8"></i>
+                            <span class="badge">5</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            <i class="star star_6"></i>
+                            <span class="badge">10</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            <i class="star star_4"></i>
+                            <span class="badge" s>4</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label style="width: 100%">
+                            <input type="checkbox">
+                            <i class="star star_2"></i>
+                            <span class="badge">11</span>
+                        </label>
+                    </li>*@
+                </ul>
+            </div>
+        </article>
+        @*<article class="box">
+            <h3 class="box-title"><a title="" href="#">Giá (mỗi đêm)</a></h3>
+            <div class="box-content">
+                <ul class="list-unstyled">
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Less than $75 <span class="badge">13</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            $75 - $124<span class="badge">51</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            $125 - $199<span class="badge">11</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            $200 - $299<span class="badge">113</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            $300<span class="badge">131</span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </article>*@
+        <article class="box">
+            <h3 class="box-title"><a title="" href="#">Loại khách sạn</a></h3>
+            <div class="box-content">
+                <ul class="list-unstyled">
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Apartment<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Hotel<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Resort<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Villa<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Guest house<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Private Villa<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Homestay<span class="badge">1</span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </article>
+        <article class="box">
+            <h3 class="box-title"><a title="" href="#">Tiện nghi</a></h3>
+            <div class="box-content">
+                <ul class="list-unstyled">
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Swiming Pool<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Wifi Free<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Private Beach<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            Breakfast Free<span class="badge">1</span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </article>
+        <article class="box">
+            <h3 class="box-title"><a title="" href="#">Khu vực</a></h3>
+            <div class="box-content">
+                <ul class="list-unstyled">
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            District 1 - Pham Ngu Lao / Tay Balo<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            District 1 - Ben Thanh Market<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            District 1 - Dong Khoi / Nguyen Hue<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            District 1 - Riverside<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            District 1 - Japanese Area<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            District 1 - Consulate / Notre-Dame Cathedral<span class="badge">1</span>
+                        </label>
+                    </li>
+                    <li class="checkbox">
+                        <label>
+                            <input type="checkbox">
+                            District 5 - China Town / Cho Lon<span class="badge">1</span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </article>
+
+    </div>
+</div>

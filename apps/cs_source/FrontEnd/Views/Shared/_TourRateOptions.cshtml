@@ -1,0 +1,208 @@
+﻿@model Vinaday.Data.Models.Extention.TourModel
+<div class="tour-grade-wrapper single-add-button mb-3">
+
+    <div class="tour-select text-dark font-weight-medium pt-3 pb-2 my-1 px-3"><b>Select an option for</b> @Model.BookDate.ToLongDateString()</div>
+    <div>
+        <input id="hdnBookingDate" value="@Model.BookDate.ToShortDateString()" type="hidden" />
+    </div>
+    @if (Model.RetailRate1 > 0)
+    {
+        var option1s = @Model.Tour.DepartureOption1 != null ? @Model.Tour.DepartureOption1.Split(';') : ("NA").Split(';');
+        <div id="tour-option-TG1~08:00" data-idx="0" class="tour-option tour-option-available chosen">
+            <div class="d-flex px-3">
+                <div class="tour-radio-select float-left flex-column justify-content-center d-flex">
+                    <input id="rb0" checked="checked" type="radio" name="tourGrade">
+                </div>
+                <div class="w-100 mb-3 ml-3 tour-option ">
+                    <div class="px-0"><div class="special-banner">MOST POPULAR</div></div>
+                    <div class="px-0">
+                        <label for="rb0" class="mb-0 w-100 enabled">
+                            <div class="tour-grade-title h5 mb-0 font-weight-medium tg-title">Option 1: @Model.Tour.TourGroup1</div>
+                            <div class="mb-0 price-total">
+                                <span class="h2 font-weight-medium price-display">
+                                    @(Model.RetailRate1.Value.ToString("##,###")) VND × @Model.Adult Adult
+                                    @if (Model.Children > 0)
+                                    {
+                                        <text>
+                                            + @((Model.RetailRate1.Value * (decimal)0.75).ToString("##,###"))  VND x  @(Model.Children) Children(s)
+                                        </text>
+
+                                    }
+
+
+                                </span> <span class="h4 price-break-down"> = @(Model.FindalRate1.Value.ToString("##,###")) VND </span>
+                            </div>
+                        </label>
+                        <div class="tg-description "><div class="section-block"><div class="section-entry"><div>Included: @Html.Raw(Model.Tour.TourGroup1Include)</div></div></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tour-option-details px-3">
+                <div class="single-start-time-section mb-3 pl-lg-5 pr-lg-3">
+                    <div class="tour-select select-a-time text-dark font-weight-medium py-2 mt-3">Select a departure time:</div>
+                    <div class="tg-start-times">
+                        <div class="start-times d-flex flex-wrap">
+                            @foreach (var option in option1s)
+                            {
+                                <div data-start="@option" class="start-time px-3 py-2 mr-2 my-1 rounded font-weight-medium text-center text-nowrap available">@option</div>
+                            }
+
+
+                        </div>
+                        <div class="alert-danger show-select-option" style="display:none">
+                            Please select a time to proceed.
+                        </div>
+                    </div>
+                </div>
+                <div class="add-to-cart-section px-lg-3 clearfix border-top">
+                    <div id="add-to-cart-0" class="add-to-cart-container d-flex flex-row-reverse py-lg-0 py-2">
+                        <div class="add-to-cart-wrapper float-right col-7 col-sm-4 d-flex flex-column justify-content-center px-0 pl-sm-3"><input type="button" data-start="1" style="background-color:#ef4904" data-check-in="@Model.BookDate.ToString("MM-dd-yyyy")" data-tourid="@Model.Tour.Id" data-retailRate="@Model.RetailRate1" data-price="@Model.FindalRate1" data-adult="@Model.Adult" data-children="@Model.Children" class="btn btn-primary text-white add-to-cart" onclick="BookTourOptions(this)" value="Book Now"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.RetailRate2 > 0 && Model.RetailRate2 != Model.RetailRate1)
+    {
+
+        var option2s = @Model.Tour.DepartureOption2 != null ? @Model.Tour.DepartureOption2.Split(';') : ("NA").Split(';');
+        <div id="tour-option-TG1~08:00" data-idx="0" class="tour-option tour-option-available ">
+            <div class="d-flex px-3">
+                <div class="tour-radio-select float-left flex-column justify-content-center d-flex">
+                    <input id="rb0" type="radio" name="tourGrade">
+                </div>
+                <div class="w-100 mb-3 ml-3 tour-option ">
+                    <div class="px-0">
+                        <label for="rb0" class="mb-0 w-100 enabled">
+                            <div class="tour-grade-title h5 mb-0 font-weight-medium tg-title">Option 2: @Model.Tour.TourGroup2</div>
+                            <div class="mb-0 price-total">
+                                <span class="h2 font-weight-medium price-display">
+                                    @(Model.RetailRate2.Value.ToString("##,###") )  VND × @Model.Adult Adult
+                                    @if (Model.Children > 0)
+                                    {
+                                        <text>
+                                            + @((Model.RetailRate2.Value * (decimal)0.75).ToString("##,###")) VND x  @(Model.Children) Children(s)
+                                        </text>
+                                    }
+                                </span> <span class="h4 price-break-down">
+    = @(Model.FindalRate2.Value.ToString("##,###")) VND
+</span>
+                            </div>
+                        </label>
+                        <div class="tg-description "><div class="section-block"><div class="section-entry"><div>Included:  @Html.Raw(Model.Tour.TourGroup2Include)</div></div></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tour-option-details px-3">
+                <div class="single-start-time-section mb-3 pl-lg-5 pr-lg-3">
+                    <div class="tour-select select-a-time text-dark font-weight-medium py-2 mt-3">Select a departure time:</div>
+                    <div class="tg-start-times">
+                        <div class="start-times d-flex flex-wrap">
+                            @foreach (var option in option2s)
+                            {
+                                <div data-start="@option" class="start-time px-3 py-2 mr-2 my-1 rounded font-weight-medium text-center text-nowrap available">@option</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="add-to-cart-section px-lg-3 clearfix border-top">
+                    <div id="add-to-cart-0" class="add-to-cart-container d-flex flex-row-reverse py-lg-0 py-2">
+                        <div class="add-to-cart-wrapper float-right col-7 col-sm-4 d-flex flex-column justify-content-center px-0 pl-sm-3">
+                            <input type="button" data-start="2" style="background-color:#ef4904" data-retailRate="@Model.RetailRate2" data-check-in="@Model.BookDate.ToString("MM-dd-yyyy")" data-tourid="@Model.Tour.Id" data-price="@Model.FindalRate2" data-adult="@Model.Adult" data-children="@Model.Children" class="btn btn-primary text-white add-to-cart" onclick="BookTourOptions(this)" data-action-capture="click" value="Book Now">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.RetailRate3 > 0 && Model.RetailRate3 != Model.RetailRate1)
+    {
+
+        var option3s = @Model.Tour.DepartureOption3 != null ? @Model.Tour.DepartureOption3.Split(';') : ("NA").Split(';');
+        <div id="tour-option-TG1~08:00" data-idx="0" class="tour-option tour-option-available ">
+            <div class="d-flex px-3">
+                <div class="tour-radio-select float-left flex-column justify-content-center d-flex">
+                    <input id="rb0" type="radio" name="tourGrade">
+                </div>
+                <div class="w-100 mb-3 ml-3 tour-option ">
+                    <div class="px-0">
+                        <label for="rb0" class="mb-0 w-100 enabled">
+                            <div class="tour-grade-title h5 mb-0 font-weight-medium tg-title">Option 3: @Model.Tour.TourGroup3</div>
+                            <div class="mb-0 price-total">
+                                <span class="h2 font-weight-medium price-display">
+                                    @(Model.RetailRate3.Value.ToString("##,###")) VND × @Model.Adult Adult
+                                    @if (Model.Children > 0)
+                                    {
+                                        <text>
+                                            + @((Model.RetailRate3.Value * (decimal)0.75).ToString("##,###")) VND x  @(Model.Children) Children(s)
+                                        </text>
+                                    }
+                                </span> <span class="h4 price-break-down">
+    @(Model.FindalRate3.Value.ToString("##,###")) VND
+</span>
+                            </div>
+                        </label>
+                        <div class="tg-description "><div class="section-block"><div class="section-entry"><div>Included: @Html.Raw(Model.Tour.TourGroup3Include)</div></div></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tour-option-details px-3">
+                <div class="single-start-time-section mb-3 pl-lg-5 pr-lg-3">
+                    <div class="tour-select select-a-time text-dark font-weight-medium py-2 mt-3">Select a departure time:</div>
+                    <div class="tg-start-times">
+                        <div class="start-times d-flex flex-wrap">
+                            @foreach (var option in option3s)
+                            {
+                                <div data-start="@option" class="start-time px-3 py-2 mr-2 my-1 rounded font-weight-medium text-center text-nowrap available">@option</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="add-to-cart-section px-lg-3 clearfix border-top">
+                    <div id="add-to-cart-0" class="add-to-cart-container d-flex flex-row-reverse py-lg-0 py-2">
+                        <div class="add-to-cart-wrapper float-right col-7 col-sm-4 d-flex flex-column justify-content-center px-0 pl-sm-3">
+                            <input type="button" data-start="3" data-check-in="@Model.BookDate.ToString("MM-dd-yyyy")" data-retailRate="@Model.RetailRate3" data-tourid="@Model.Tour.Id" data-price="@Model.FindalRate3" style="background-color:#ef4904" data-adult="@Model.Adult" data-children="@Model.Children" class="btn btn-primary text-white add-to-cart" onclick="BookTourOptions(this)" data-action-capture="click" value="Book Now">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+</div>
+<script>
+    $(".tour-option-available ").click(function (e) {
+        e.stopPropagation();
+        $(".tour-option-available").removeClass("chosen");
+
+        $(this).toggleClass("chosen");
+    });
+    $(".start-time").click(function (e) {
+        e.stopPropagation();
+        $(this).parents().find(".start-time").removeClass("selected");
+        $(this).parents().find(".show-select-option").hide();
+
+        var data = $(this).data("start");
+        var currentDateBooking = $("#hdnBookingDate").val();
+        var currentTime = new Date($.now());;
+        var currentHour = currentTime.getHours();
+        var time = data ? parseInt(data.split(':')[0]) : 0;
+        var currentDate = (currentTime.getMonth() + 1) + '/' + currentTime.getDate() + '/' + currentTime.getFullYear();
+        if (data.includes("AM")) {
+
+        } else if (data.includes("PM")) {
+            time = time + 12;
+        }
+        if (currentDateBooking == currentDate) {
+            if (time < currentHour) {
+                $(this).parents().find(".add-to-cart").attr('disabled', 'disabled');
+            }
+        }
+        $(this).parents().find(".add-to-cart").data('start-time', data);
+        $(this).toggleClass("selected");
+    });
+</script>

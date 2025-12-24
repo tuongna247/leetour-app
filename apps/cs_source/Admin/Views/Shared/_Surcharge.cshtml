@@ -1,0 +1,96 @@
+﻿@using System
+@model System.Collections.Generic.List<Vinaday.Data.Models.Surcharge>
+@{var i = 1;}
+@if (Model.Count > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-striped" id="surcharge-result">
+            <thead>
+                <tr>
+                    <th class="text-left">#</th>
+                    <th class="text-center">Surcharge name</th>
+                    <th class="text-center">Stay date from</th>
+                    <th class="text-center">Stay date to</th>
+                    <th class="text-center"> Date of week </th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var surcharge in Model)
+                {
+                    if (surcharge == null)
+                    {
+                        continue;
+                    }
+                    <tr>
+                        <th class="text-left">@i</th>
+                        <th class="text-center">@(surcharge.SurchargeName ?? string.Empty)</th>
+                        <th class="text-center">@surcharge.StayDateFrom.ToString("MM-dd-yyyy")</th>
+                        <th class="text-center">@surcharge.StayDateTo.ToString("MM-dd-yyyy")</th>
+                        <th class="text-center">
+                            @if (!string.IsNullOrEmpty(surcharge.DateOfWeek))
+                            {
+                                foreach (var sur in surcharge.DateOfWeek.Split(','))
+                                {
+                                    if (sur == "Sun")
+                                    {
+                                        <div style="background-color: #de7070; padding: 5px; display: inline; color: #fff" id="sun">Sun</div>
+                                    }
+                                    if (sur == "Mon")
+                                    {
+                                        <div style="background-color: #f3da60; padding: 5px; display: inline; color: #fff" id="mon">Mon</div>
+                                    }
+
+                                    if (sur == "Tue")
+                                    {
+                                        <div style="background-color: #94d492; padding: 5px; display: inline; color: #fff" id="tue">Tue</div>
+                                    }
+                                    if (sur == "Wed")
+                                    {
+                                        <div style="background-color: #74b9eb; padding: 5px; display: inline; color: #fff" id="wed">Wed</div>
+                                    }
+                                    if (sur == "Thu")
+                                    {
+                                        <div style="background-color: #9ca0a3; padding: 5px; display: inline; color: #fff" id="thu">Thu</div>
+                                    }
+                                    if (sur == "Fri")
+                                    {
+                                        <div style="background-color: #FFC285; padding: 5px; display: inline; color: #fff" id="fri">Fri</div>
+                                    }
+                                    if (sur == "Sat")
+                                    {
+                                        <div style="background-color: #8279da; padding: 5px; display: inline; color: #fff" id="sat">Sat</div>
+                                    }
+                                }
+                            }
+                        </th>
+                        <th class="text-center">
+                            $@if (surcharge.Price != null)
+                             {
+                                 @(surcharge.Price > 0 ? Math.Round((double)surcharge.Price, 2) : 0)
+                             }
+                        </th>
+                        <th class="text-center">
+                            <a onclick="deleteSurcharge(@surcharge.Id);" class="btn btn-danger btn-xs" href="javascript:void(0);"><small class="glyphicon glyphicon-trash"></small></a>
+                        </th>
+                    </tr>
+                    i++;
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+    <div class="pull-right">
+        <a href="javascript:void(0);" onclick="updateRooms();" class="btn btn-success m-b-sm">Save change</a>
+    </div>
+}
+else
+{
+    <div class="form-group">
+        <div class="alert alert-danger" style="margin-bottom: -5px;" role="alert">
+            No available surcharge for this hotel.
+        </div>
+    </div>
+}

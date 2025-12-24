@@ -1,0 +1,136 @@
+﻿@{
+    var cookieName = "goreise.com_authentic";
+    var authCookie = Request.Cookies[cookieName];
+
+    // This could throw an exception if it fails the decryption process. Check MachineKeys for consistency.
+    if (authCookie != null && string.IsNullOrEmpty(authCookie.Value))
+    {
+        var authenticationTicket = FormsAuthentication.Decrypt(authCookie.Value);
+
+        // Retrieve information from the ticket
+        if (authenticationTicket != null)
+        {
+            var username = authenticationTicket.Name;
+            var userData = authenticationTicket.UserData;
+        }
+    }
+}
+<!DOCTYPE html>
+<html ng-app="vinadayApp">
+<head>
+    <title>@ViewBag.Title</title>
+    <meta name="description" content="@ViewBag.Description" />
+    <meta name="keywords" content="@ViewBag.Keywords" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="p:domain_verify" content="a4ecc80122954f5d87d32c589df1bc70" />
+
+    <meta name="msvalidate.01" content="4EE2B38A81436FC84FFF359AB3071B0E" />
+    <meta charset="utf-8">
+    <link rel="alternate" href="https://goreise.com/@ViewBag.hrefLang" hreflang="en-us" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    @RenderSection("MetaSeoSection", false)
+    @RenderSection("SharingSection", false)
+
+    @Styles.Render("~/Content/vinaday")
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-68154187-9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-68154187-9');
+    </script>
+
+    <!-- TrustBox script -->
+    <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+    <!-- End TrustBox script -->
+    <!-- Facebook Conversion Code for convert 1 -->
+    <script>
+        (function () {
+            var _fbq = window._fbq || (window._fbq = []);
+            if (!_fbq.loaded) {
+                var fbds = document.createElement('script');
+                fbds.async = true;
+                fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(fbds, s);
+                _fbq.loaded = true;
+            }
+        })();
+        window._fbq = window._fbq || [];
+        window._fbq.push(['track', '6031342808565', { 'value': '0.00', 'currency': 'VND' }]);
+    </script>
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1678764492335447');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1"
+             src="https://www.facebook.com/tr?id=1678764492335447&ev=PageView
+&noscript=1" />
+    </noscript>
+    <!-- End Facebook Pixel Code -->
+    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6031342808565&amp;cd[value]=0.00&amp;cd[currency]=VND&amp;noscript=1" /></noscript>
+</head>
+<body style="background-color:#F9FBFC">
+    <div id="outer-wrap">
+        <div id="inner-wrap">
+            @Html.Partial("_Header")
+            @RenderBody()
+            @Html.Partial("_FooterContent")
+            @Scripts.Render("~/bundles/vinaday")
+
+            @RenderSection("scripts", false)
+        </div>
+    </div>
+
+    <a href="#" id="backToTop"></a>
+    <script type="text/javascript">
+        var google_conversion_id = 982836284;
+        var google_custom_params = window.google_tag_params;
+        var google_remarketing_only = true;
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+
+    </script>
+    <noscript>
+        <div style="display: inline;">
+            <img height="1" width="1" style="border-style: none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/982836284/?value=0&amp;guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+
+    <!-- Google Code for Remarketing Tag -->
+    <!--------------------------------------------------
+    Remarketing tags may not be associated with personally identifiable information or placed on pages related to sensitive categories. See more information and instructions on how to setup the tag on: http://google.com/ads/remarketingsetup
+    --------------------------------------------------->
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 982836284;
+        var google_custom_params = window.google_tag_params;
+        var google_remarketing_only = true;
+        /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+
+    </script>
+    <noscript>
+        <div style="display: inline;">
+            <img height="1" width="1" style="border-style: none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/982836284/?guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+
+</body>
+</html>

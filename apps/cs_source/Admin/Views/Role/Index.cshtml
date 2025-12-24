@@ -1,0 +1,138 @@
+﻿@using Vinaday.Web.Framework
+
+@{
+    ViewBag.Active = "Roles";
+    ViewBag.Title = "Roles Management";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    var index = 1;
+}
+@if (Model != null)
+{
+    <div class="page-title">
+        <h3>Roles Management</h3>
+        <div class="page-breadcrumb">
+            <ol class="breadcrumb">
+                <li><a href="/Roles">Roles Management</a></li>
+                <li class="active">Role</li>
+            </ol>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-white">
+                    <div class="panel-body">
+                        <a data-toggle="modal" data-target="#add-new-modal" class="btn btn-info btn-addon m-b-sm btn-xs"><i class="fa fa-plus"></i>Add new</a>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Role name</th>
+                                        <th scope="col" class="action">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>@item.Id</td>
+                                            <td>@item.Name</td>
+
+                                            <td class="action">
+                                                <span class="quick-menu-icon pull-right" style="cursor: pointer">
+                                                    <a onclick="editForm();">Edit</a>  |
+                                                    <a onclick="deleteCategoryDetail('')">Delete</a>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        index++;
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>No content for this Item</p>
+}
+<div class="modal fade" id="add-new-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new role</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="role-name">User name </label>
+                        <input class="form-control" id="role-name" type="text" placeholder="Enter role name">
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div id="error-list" style="display: none;">
+                            <div id="error-item" class="alert alert-danger" role="alert">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="insertRole();" class="btn btn-success">Add new</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-new-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Update new category</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="edit-name">Name <span class="text-danger">*</span></label>
+                        <input class="form-control" id="edit-name" type="text" placeholder="Enter name">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="edit-description-en">Description <span class="text-danger">*</span></label>
+                        <input class="form-control" id="edit-description-en" type="text" placeholder="Enter description">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="edit-description-vn">Description vietnam <span class="text-danger">*</span></label>
+                        <input class="form-control" id="edit-description-vn" type="text" placeholder="Enter description">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div id="edit-error-list" style="display: none;">
+                            <div id="edit-error-item" class="alert alert-danger" role="alert">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="edit-category-id" value="" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="updateCategoryDetail();" class="btn btn-success">Save change</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/assets/js/user.js"></script>

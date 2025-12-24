@@ -1,0 +1,292 @@
+﻿@*@using System*@
+@{
+    Vinaday.Data.Models.RateExchange exchange = ViewBag.Exchange;
+    var isRequest = 0;
+}
+
+@if (Model.Count > 0)
+{
+    <input type="hidden" id="check-in-hidden" value="@(String.Format("{0:MM-dd-yyyy}", ViewBag.CheckIn))" />
+    <input type="hidden" id="check-out-hidden" value="@(String.Format("{0:MM-dd-yyyy}", ViewBag.CheckOut))" />
+    foreach (Vinaday.Data.Models.Extention.RoomModel room in Model)
+    {
+        if (room == null || room.Id <= 0)
+        {
+            continue;
+        }
+        if (room.SellingRate > 0 && room.CloseOutRegular == false)
+        {
+            if (room.Rates.Count > 1)
+            {
+                <tr>
+                    <td class="avai-td-text">
+                        <figure>
+                            <img src="@(!string.IsNullOrEmpty(room.ImageUrl) ? string.Format("https://admin.goreise.com/{0}", Url.Content(room.ImageUrl)) : "/Content/images/demo/general/no-image.jpg")" alt="@room.Name" />
+                        </figure>
+                        <h3>@room.Name </h3>
+
+                    </td>
+                    <td class="avai-td-price">
+                        @if (room.AdultNumber > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.AdultNumber adults
+                            </p>
+                        }
+                        @if (room.ChildrenNumber > 0 && room.ChildrenNumber > 0 && room.ChildrenAge > 0 && room.ChildrenAge > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.ChildrenNumber child - up to @room.ChildrenAge years of age
+                            </p>
+                        }
+                        @if (room.RoomSize > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Room size @room.RoomSize m<sup>2</sup>
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.View))
+                        {
+                            <p><i class="fa fa-check"></i> @room.View</p>
+                        }
+                        @if (room.ExtraBed > 0 && room.ExtraBed > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> @room.ExtraBed extra bed - @room.ExtraBedPrice<sup>USD</sup> per extra bed
+                            </p>
+                        }
+                        @if (room.IsBreakfast)
+                        {
+                            <p style="color: #0a9c4b">
+                                <i class="fa fa-check"></i> Breakfast Included
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.RoomFacilities))
+                        {
+                            <p class="tooltip-style">
+                                <i class="fa fa-check"></i>
+                                <a style="color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(room.RoomFacilities)">Room Facilities</a>
+                            </p>
+                        }
+                    </td>
+                    <td class="avai-td-room">
+                        @if (room.AdultNumber > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.AdultNumber adults
+                            </p>
+                        }
+                        @if (room.ChildrenNumber > 0 && room.ChildrenNumber > 0 && room.ChildrenAge > 0 && room.ChildrenAge > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.ChildrenNumber child - up to @room.ChildrenAge years of age
+                            </p>
+                        }
+                        @if (room.RoomSize > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Room size @room.RoomSize m<sup>2</sup>
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.View))
+                        {
+                            <p><i class="fa fa-check"></i> @room.View</p>
+                        }
+                        @if (room.ExtraBed > 0 && room.ExtraBed > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> @room.ExtraBed extra bed - @room.ExtraBedPrice<sup>USD</sup> per extra bed
+                            </p>
+                        }
+                        @if (room.IsBreakfast)
+                        {
+                            <p style="color: #0a9c4b">
+                                <i class="fa fa-check"></i> Breakfast Included
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.RoomFacilities))
+                        {
+                            <p class="tooltip-style">
+                                <i class="fa fa-check"></i>
+                                <a style="color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(room.RoomFacilities)">Room Facilities</a>
+                            </p>
+                        }
+                    </td>
+                    <td class="avai-td-book">
+                        <p style="margin: 0; font-weight: bold">This rate is applied for offline market only. Please call +84 916388382  or send Inquire Now to get the SECRET DEAL.</p>
+                    </td>
+                </tr>
+
+            }
+            else
+            {
+                <tr>
+                    <td class="avai-td-text">
+                        <figure>
+                            <img src="@(!string.IsNullOrEmpty(room.ImageUrl) ? string.Format("https://admin.goreise.com/{0}", Url.Content(room.ImageUrl)) : "/Content/images/demo/general/no-image.jpg")" alt="@room.Name" />
+                        </figure>
+                        <h3>@room.Name </h3>
+
+                    </td>
+                    <td class="avai-td-price">
+                        @if (room.AdultNumber > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.AdultNumber adults
+                            </p>
+                        }
+                        @if (room.ChildrenNumber > 0 && room.ChildrenNumber > 0 && room.ChildrenAge > 0 && room.ChildrenAge > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.ChildrenNumber child - up to @room.ChildrenAge years of age
+                            </p>
+                        }
+                        @if (room.RoomSize > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Room size @room.RoomSize m<sup>2</sup>
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.View))
+                        {
+                            <p><i class="fa fa-check"></i> @room.View</p>
+                        }
+                        @if (room.ExtraBed > 0 && room.ExtraBed > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> @room.ExtraBed extra bed - @room.ExtraBedPrice<sup>USD</sup> per extra bed
+                            </p>
+                        }
+                        @if (room.IsBreakfast)
+                        {
+                            <p style="color: #0a9c4b">
+                                <i class="fa fa-check"></i> Breakfast Included
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.RoomFacilities))
+                        {
+                            <p class="tooltip-style">
+                                <i class="fa fa-check"></i>
+                                <a style="color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(room.RoomFacilities)">Room Facilities</a>
+                            </p>
+                        }
+                    </td>
+                    <td class="avai-td-room">
+                        @if (room.AdultNumber > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.AdultNumber adults
+                            </p>
+                        }
+                        @if (room.ChildrenNumber > 0 && room.ChildrenNumber > 0 && room.ChildrenAge > 0 && room.ChildrenAge > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.ChildrenNumber child - up to @room.ChildrenAge years of age
+                            </p>
+                        }
+                        @if (room.RoomSize > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Room size @room.RoomSize m<sup>2</sup>
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.View))
+                        {
+                            <p><i class="fa fa-check"></i> @room.View</p>
+                        }
+                        @if (room.ExtraBed > 0 && room.ExtraBed > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> @room.ExtraBed extra bed - @room.ExtraBedPrice<sup>USD</sup> per extra bed
+                            </p>
+                        }
+                        @if (room.IsBreakfast)
+                        {
+                            <p style="color: #0a9c4b">
+                                <i class="fa fa-check"></i> Breakfast Included
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.RoomFacilities))
+                        {
+                            <p class="tooltip-style">
+                                <i class="fa fa-check"></i>
+                                <a style="color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(room.RoomFacilities)">Room Facilities</a>
+                            </p>
+                        }
+                    </td>
+                    <td class="avai-td-book">
+                        <p style="margin: 0; font-weight: bold">This rate is applied for offline market only. Please call +84 916388382  or send Inquire Now to get the SECRET DEAL.</p>
+                    </td>
+                </tr>
+               
+            }
+        }
+        else
+        {
+            <tr>
+                <td class="avai-td-text">
+                    <figure>
+                        <img src="@(!string.IsNullOrEmpty(room.ImageUrl) ? string.Format("https://admin.goreise.com/{0}", Url.Content(room.ImageUrl)) : "/Content/images/demo/general/no-image.jpg")" alt="@room.Name" />
+                    </figure>
+                    <h3>@room.Name </h3>
+                  
+                </td>
+                <td class="avai-td-price">
+                    <span class="price">$345<small>/night</small></span>
+                </td>
+                <td class="avai-td-room">
+                    @if (room.AdultNumber > 0)
+                        {
+                        <p>
+                            <i class="fa fa-check"></i> Max @room.AdultNumber adults
+                        </p>
+                    }
+                    @if (room.ChildrenNumber > 0 && room.ChildrenNumber > 0 && room.ChildrenAge > 0 && room.ChildrenAge > 0)
+                        {
+                        <p>
+                            <i class="fa fa-check"></i> Max @room.ChildrenNumber child - up to @room.ChildrenAge years of age
+                        </p>
+                    }
+                    @if (room.RoomSize > 0)
+                        {
+                        <p>
+                            <i class="fa fa-check"></i> Room size @room.RoomSize m<sup>2</sup>
+                        </p>
+                    }
+                    @if (!string.IsNullOrEmpty(room.View))
+                        {
+                        <p><i class="fa fa-check"></i> @room.View</p>
+                    }
+                    @if (room.ExtraBed > 0 && room.ExtraBed > 0)
+                        {
+                        <p>
+                            <i class="fa fa-check"></i> @room.ExtraBed extra bed - @room.ExtraBedPrice<sup>USD</sup> per extra bed
+                        </p>
+                    }
+                    @if (room.IsBreakfast)
+                        {
+                        <p style="color: #0a9c4b">
+                            <i class="fa fa-check"></i> Breakfast Included
+                        </p>
+                    }
+                    @if (!string.IsNullOrEmpty(room.RoomFacilities))
+                        {
+                        <p class="tooltip-style">
+                            <i class="fa fa-check"></i>
+                            <a style="color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(room.RoomFacilities)">Room Facilities</a>
+                        </p>
+                    }
+                </td>
+                <td class="avai-td-book">
+                    <p style="margin: 0; font-weight: bold">This rate is applied for offline market only. Please call +84 916388382  or send Inquire Now to get the SECRET DEAL.</p>
+                </td>
+            </tr>
+            isRequest++;
+        }
+    }
+    <input type="hidden" id="book-request-hidden" value="@isRequest" />
+}
+else
+{
+    <p>This is sold out or Selling for Offline Market Only. Send Inquire Now to save up to 30% for this hotel.</p>
+}

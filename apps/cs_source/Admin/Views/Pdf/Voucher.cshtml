@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+@using System.Globalization
+@model Vinaday.Data.Models.Voucher
+<div class="panel panel-transparent">
+    <div class="panel-body" style="border: 2px dashed rgb(176, 176, 176);">
+        <div class="row">
+            <div class="col-md-4" style="padding-left: 0!important">
+                <img src="~/assets/images/logo.png" alt="" /><br />
+            </div>
+            <div class="col-md-8 text-right">
+                <h1 style="margin-top: 0;">Hotel Voucher</h1>
+                <address>
+                    <i>Please present either an electronic or paper copy of your hotel voucher upon check-in</i>
+                </address>
+                <br />
+            </div>
+            <div class="col-md-12">
+                <div class="pull-left">
+                    <address>
+                        <b>Booking No.: </b><span id="voucher-booking-id">@Model.BookingId</span><br />
+                        <b>Guest: </b><span id="voucher-guest">@Model.Guest</span><br />
+                        <b>Nationality: </b><span id="voucher-nationality">@Model.Nationality</span><br />
+                        <b>Hotel: </b><span id="voucher-name">@Model.Name</span><br />
+                        <b>Address: </b><span id="voucher-localtion">@Model.Localtion</span><br />
+                    </address>
+
+                </div>
+
+            </div>
+            <div class="col-md-12">
+                <h3 class="text-center" style="margin-top: 0;">
+                    <b>BOOKING DETAIL</b><br /><br />
+                </h3>
+            </div>
+        
+            <div class="col-md-12">
+                <div class="text-left">
+                    <b>VINADAY goREISE</b><br />
+                    98A Le Lai street District 1, Ho Chi Minh City Vietnam<br />
+                    Tell: (84-28) -38 388 382<br />
+                    Email: cs@vinaday.com
+                </div>
+            </div>
+
+        </div><!--row-->
+    </div>
+</div>
+
+
+

@@ -1,0 +1,1245 @@
+﻿@using System
+@using System.Activities.Statements
+@using System.Text.RegularExpressions
+@*@using Microsoft.Owin.Security.Facebook*@
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@model Vinaday.Data.Models.Extention.TourModel
+
+@{
+    Layout = "~/Views/Shared/_TourLayout.cshtml";
+    List<TourModel> similarTours = ViewBag.SimilarTours;
+    List<TourModel> similarKeyTours = ViewBag.SimilarKeyTours;
+    List<Rate> tourRateByCurrentDates = ViewBag.TourRates;
+    List<TourRateOptions> tourRateOptions = ViewBag.TourRateOptions;
+    List<TourReview> tourReviews = (List<TourReview>)ViewBag.TourReviews;
+    bool IsMobile = (bool)ViewBag.IsMobile;
+    int averageStart = tourReviews.Count > 0 ? tourReviews.Sum(a => a.Start) / tourReviews.Count : 0;
+    double star1 = 0;
+    double star2 = 0;
+    double star3 = 0;
+    double star4 = 0;
+    double star5 = 0;
+    if(tourReviews.Count > 0)
+    {
+        star1 = (((double)tourReviews.Count(a => a.Start==1)/tourReviews.Count))*100;
+        star2 = (((double)tourReviews.Count(a => a.Start==2)/tourReviews.Count))*100;
+        star3 = (((double)tourReviews.Count(a => a.Start==3)/tourReviews.Count))*100;
+        star4 = (((double)tourReviews.Count(a => a.Start==4)/tourReviews.Count))*100;
+        star5 = (((double)tourReviews.Count(a => a.Start==5)/tourReviews.Count))*100;
+    }
+
+}
+
+<style>
+
+    #owl-demo2 .item span {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .content-section h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #404040;
+    }
+
+    .content-section h1 {
+        font-size: 26px !important;
+    }
+
+    .content-section {
+        padding-top: 0px !important;
+    }
+
+    .subpage {
+        margin-top: 0px !important;
+    }
+
+    .bar-sticky {
+        display: block;
+        border-bottom: 3px solid #ffc20e;
+        background-color: #65135B;
+    }
+
+        .bar-sticky .navbar-brand {
+            font-size: 1.4rem;
+        }
+
+        .bar-sticky .btn-prime, .bar-sticky .hero__cta {
+            font-size: 1.2rem;
+        }
+
+
+    .bar-action {
+        border-bottom: 3px solid #ffc20e;
+        padding: 2.1rem 0;
+        position: absolute;
+        z-index: 1001;
+        font-size: 0.9rem;
+    }
+
+        .bar-action em {
+            position: relative;
+            top: 2px;
+            font-style: normal;
+            font-size: 1.1rem;
+        }
+
+        .bar-action img {
+            margin: 0 12px 0 2px;
+        }
+
+    .bar-action--message .btn {
+        margin-left: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+
+    .overflow-auto {
+        overflow: auto !important;
+    }
+
+    .overflow-hidden {
+        overflow: hidden !important;
+    }
+
+    .check-availability-wrapper {
+        border: 1px solid #d9d9d9;
+        background-color: #f5f5f5;
+        padding: 24px 24px 60px 24px;
+    }
+
+    .position-static {
+        position: static !important;
+    }
+
+    .position-relative {
+        position: relative !important;
+    }
+
+    .position-absolute {
+        position: absolute !important;
+    }
+
+    .position-fixed {
+        position: fixed !important;
+    }
+
+    .position-sticky {
+        position: -webkit-sticky !important;
+        position: sticky !important;
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+    }
+
+    .pl-0, .px-0 {
+        padding-left: 0 !important;
+    }
+
+    .pl-3, .px-3 {
+        padding-left: 1rem !important;
+    }
+
+    .tour-radio-select {
+        width: 18px;
+    }
+
+    .justify-content-center {
+        justify-content: center !important;
+    }
+
+    .flex-column {
+        flex-direction: column !important;
+    }
+
+    .d-flex {
+        display: flex !important;
+    }
+
+    .float-left {
+        float: left !important;
+    }
+
+    .ml-3, .mx-3 {
+        margin-left: 1rem !important;
+    }
+
+    .mb-3, .my-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .w-100 {
+        width: 100% !important;
+    }
+
+    .tour-option .special-banner {
+        background-color: #eb7200;
+        color: #fff;
+        font-size: .7rem;
+        padding: 4px 7px;
+        display: table;
+        margin-bottom: 2px;
+    }
+
+    .mb-0, .my-0 {
+        margin-bottom: 0 !important;
+    }
+
+    .w-100 {
+        width: 100% !important;
+    }
+
+    .tour-option .tg-description.tg-mask {
+        max-height: 1.68rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .tour-option.chosen .tour-option-details {
+        display: block;
+    }
+
+    .pl-3, .px-3 {
+        padding-left: 1rem !important;
+    }
+
+    .pr-3, .px-3 {
+        padding-right: 1rem !important;
+    }
+
+    .start-times {
+        max-height: 6rem;
+        overflow: hidden;
+    }
+
+        .start-times .single-start-time.available.selected, .start-times .start-time.available.selected {
+            background: #007d9e;
+            color: #fff;
+        }
+
+        .start-times .single-start-time.available, .start-times .start-time.available {
+            border: 1px solid #007d9e;
+        }
+
+        .start-times .single-start-time, .start-times .start-time {
+            width: 105px;
+        }
+
+    container, .selected-title-container {
+        min-height: 5rem;
+    }
+
+    .add-to-cart-container, .selected-title-container {
+        min-height: 4rem;
+    }
+
+    @@media (min-width: 992px) .pb-lg-0, .py-lg-0 {
+        padding-bottom: 0 !important;
+    }
+
+    @@media (min-width: 576px) .selected-price-container .selected-price-breakdown {
+        font-size: .8rem;
+    }
+
+    .selected-price-container .selected-price-breakdown {
+        font-size: .7rem;
+    }
+
+    .line-height-sm {
+        line-height: 1.1;
+    }
+
+    @@media (min-width: 768px) .text-md-right {
+        text-align: right !important;
+    }
+
+    price {
+        font-size: 1.5rem;
+    }
+
+    .selected-price-container .selected-price {
+        font-size: 1.25rem;
+    }
+
+    .font-weight-medium {
+        font-weight: 500;
+    }
+
+    .text-dark {
+        color: #262626 !important;
+    }
+
+    .tour-option.chosen {
+        font-weight: 400;
+        border: 1px solid #8c8c8c;
+        background-color: #fff;
+    }
+
+    .tour-grade-title {
+        font-size: 18px;
+        font-weight: bold !important;
+    }
+
+    .tour-grade-wrapper {
+        border: 1px solid #d9d9d9;
+    }
+
+    .tour-select {
+        font-size: 1.1em;
+    }
+
+    .font-weight-medium {
+        font-weight: 500;
+    }
+
+    .tour-select b {
+        color: #eb7200;
+    }
+
+    .mb-3, .my-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .pl-3, .px-3 {
+        padding-left: 1rem !important;
+    }
+
+    .pr-3, .px-3 {
+        padding-right: 1rem !important;
+    }
+
+    .pt-3, .py-3 {
+        padding-top: 1rem !important;
+    }
+
+    .pb-2, .py-2 {
+        padding-bottom: .5rem !important;
+    }
+
+    .mb-1, .my-1 {
+        margin-bottom: .25rem !important;
+    }
+
+    .mt-1, .my-1 {
+        margin-top: .25rem !important;
+    }
+
+    .nad-enabled .tour-option-unavailable .price-break-down-line-items, .nad-enabled .tour-option-unavailable .price-total, .nad-enabled .tour-option-unavailable .tg-description.summary .section-block, .tour-option:not(.chosen) .tour-option-details {
+        display: none;
+    }
+
+    @@media (min-width: 1281px) {
+        .min_height {
+            min-height: 416px;
+        }
+    }
+
+    @@media (min-width: 1025px) and (max-width: 1280px) {
+        .min_height {
+            min-height: 416px;
+            margin-bottom: 0px;
+            padding-bottom: 5px !important;
+        }
+    }
+
+    @@media (min-width: 768px) and (max-width: 1024px) {
+        .min_height {
+            min-height: inherit;
+            margin-bottom: 0px;
+            padding-bottom: 5px !important;
+        }
+    }
+
+    /*
+        ##Device = Tablets, Ipads (landscape)
+        ##Screen = B/w 768px to 1024px
+    */
+
+    @@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+        .min_height {
+            min-height: inherit;
+            margin-bottom: 0px;
+            padding-bottom: 5px;
+        }
+    }
+
+    @@media (min-width: 320px) and (max-width: 480px) {
+        .min_height {
+            min-height: inherit;
+            margin-bottom: 0px;
+            padding-bottom: 5px;
+        }
+    }
+</style>
+
+@if (Model.Tour != null)
+{
+    <section class="content-section content-section-vinaday" style="background-color:white">
+        <div class="container">
+            <div class="subpage ">
+                <ul class="breadcrumb">
+                    <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                        <a href="https://goreise.com" itemprop="url">
+                            <span itemprop="title">Home</span>
+                        </a>
+                    </li>
+                    <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemprop="child">
+                        <a href="https://goreise.com/tour/" itemprop="url">
+                            <span itemprop="title">Tours &amp; Day Trips</span>
+                        </a>
+                    </li>
+                    <li>
+                        <span itemprop="title" style="font-weight: normal;">@Html.Raw(Model.Tour.Name)</span>
+                        <input type="hidden" id="hdnTourId" value="@Model.Tour.Id" />
+                        <input type="hidden" id="tourId" value="@Model.Tour.Id">
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 property="name" itemprop="name" class="fadeInLeft animated" style="visibility: visible;text-align:left;font-size:30px;">@Html.Raw(Model.Tour.Name)</h2>
+                    <div style="color: #ffcc66; display: block" class="hidden-print" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+                        <span style="float:left" id="rateBox"></span>
+                        <span itemprop="reviewCount" style="color: grey; font-size: 14px;">
+                            -   @tourReviews.Count Reviews -
+                        </span>
+
+                    </div>
+                    <div class="read">
+                        <div class="clearfix"></div>
+                        <div id="key-details">
+
+                            <div class="item" style="border-bottom:none">
+                                <i class="fa fa-map-marker"></i>
+                                <div class="highlight">
+                                    Location :
+                                </div>
+                                <div class="nfo">
+                                    @Model.Tour.Location
+                                </div>
+                            </div>
+                            <div class="item hidden-print" style="border-bottom:none">
+                                <div class="nfo">
+                                    <i class="fa fa-print" style="cursor: pointer;" onclick="printDiv()"> </i>
+                                </div>
+                                <div class="highlight" style="cursor: pointer;" onclick="printDiv()">
+                                    Print e-brochure here
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 col-sm-8">
+                    <div class="fullscreen">
+                        <div class="row">
+                            <div id="slider1_container" style="display: none; position: relative; margin: 0 auto; width: 848px; height: 470px; overflow: hidden;">
+                                <!-- Loading Screen -->
+                                <div u="loading" style="position: absolute; top: 0px; left: 0px;">
+                                    <div style="filter: alpha(opacity=70); opacity: 0.7; position: absolute; display: block; background-color: #000; top: 0px; left: 0px; width: 100%; height: 100%;">
+                                    </div>
+                                    <div style="position: absolute; display: block; background: url(/Content/images/design/loading.gif) no-repeat center center; top: 0px; left: 0px; width: 100%; height: 100%;">
+                                    </div>
+                                </div>
+
+                                <!-- Slides Container -->
+                                <div u="slides" style="cursor: move; position: absolute; left: 0px; top: 0px; width: 848px; height: 470px; overflow: hidden;">
+
+                                    @if (Model.Medium.Count > 0)
+                                    {
+                                        foreach (var media in Model.Medium)
+                                        {
+                                            <div class="custom-bg">
+                                                <img u="image" alt="@media.Title" src='@(media != null ? string.Format("http://goreise.com/{0}", Url.Content(media.OriginalPath)) : "/content/images/vinaday-background.jpg")' />
+                                            </div>
+
+                                        }
+                                    }
+                                </div>
+                                <div u="navigator" class="jssorb03" style="bottom: 16px; right: 6px;">
+                                    <!-- bullet navigator item prototype -->
+                                    <div u="prototype">
+                                        <div u="numbertemplate"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--library-images-->
+                    </div>
+
+                </div>
+
+
+                @if (Model.Tour.Rates.Count > 0)
+                {
+                    <div id="book-tours" class="col-md-4 col-sm-4 sidebar  hidden-print check-availability-wrapper">
+                        <div style="padding: 8px;border-radius: 4px;">
+                            <p style="font-size: 17px; font-weight: bold; text-align: center">Select Date and Travelers</p>
+                            <div class="input-group date" style="background-color:white;">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="departDate" name="departDate" onchange="ShowPersonPrice()" class="form-control" value="">
+                            </div>
+                            <select id="person" style="border: solid 1px #ccc; width: 100%; height: 40px; color: #333;margin-top:10px;background-color:white"></select>
+                            <p style="font-size: 14px; padding: 6px;">Childrens: (from 4 to 8 years old)</p>
+                            <input id="childrent-number" type="text" value="0" style="border: solid 1px #ccc; width: 100%;background-color:white" />
+
+                        </div>
+                        <div style="padding-top: 10px; margin-bottom: 10px; text-align:center">
+                            <a class="btn btn-primary pull-left" id="btnUpdateSearch" onclick="UpdateSearchUpdate()" style="font-size: 16px; width: 100%;;background-color:red" href="#">Check Availability</a> or
+                            <a class="btn btn-primary pull-left" style="font-size: 16px; width: 100%" href="https://goreise.com/inquiry">Customise your Itinerary</a>
+                        </div>
+                        @*<div style="padding-top: 10px; margin-bottom: 10px; text-align:center">
+                                <a class="yellow_roundbtn2 pull-left" style="font-size: 16px; width: 100%;" href="#"></a> or
+                                <a class="yellow_roundbtn2 pull-left" style="font-size: 16px; width: 100%;" href="https://goreise.com/inquiry">Customise your Itinerary</a>
+                            </div>*@
+                    </div>
+
+                }
+                else
+                {
+                    <div id="book-tours" class="col-md-4 col-sm-4 sidebar  hidden-print check-availability-wrapper min_height">
+                        <div style="padding: 8px;border-radius: 4px;">
+                            <a type="button" class="btn btn-sm btn-primary" style="width: 100%; font-weight: bold; font-size: 20px; padding: 5px !important;" href="/inquiry">Send inquiry</a>
+                            <br />
+                            <br />
+
+                            WhatsApp <a href="tel:+84 916388382">+84 916388382</a><br /><br />
+                            Email <a href="mailto:cs@vinaday.com">cs@vinaday.com</a>
+                        </div>
+
+                    </div>
+                }
+            </div>
+
+            <div style="margin-top:5px;background-color:white;" id="tourOptions">
+
+            </div>
+            <div>
+                <hr style="margin:0px;" />
+                <div class="row" style="padding:14px 20px; font-size:16px;">
+                    <div class="col-md-4">
+                        <i class="fa fa-clock-o"> </i>
+                        <span>
+                            @Model.Tour.Duration -
+                            @if (Model.Tour.Type == 2)
+                            {
+                                <span>Day Trips</span>
+                            }
+                            else
+                            {
+                                <span>Tour</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="col-md-8">
+                        <i class="fa fa-phone"></i>
+                        Book online or call: +84 916 388 382
+                    </div>
+                </div>
+                <hr style="margin:0px;" />
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div itemscope itemtype='http://schema.org/Product' id="print_tour_detail" class="primary clearfix hidden-print " style="padding-top: 0;border:none">
+                        <div class="fadeInLeft animated" style="visibility: visible;">
+
+                            <div class="read">
+                                <div class="clearfix"></div>
+
+
+
+                                <h2 style="margin-top: 0">Why you'll love this trip</h2>
+                                <div style="text-align: justify;">
+                                    <span itemprop="description">
+                                        @Html.Raw(Model.Tour.Overview)
+                                    </span>
+                                </div>
+
+                                @if (Model.Tour.Details.Count > 1)
+                                {
+                                    <h2>Brief Itinerary</h2>
+                                    <div style="text-align: justify;">
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <td>Day </td>
+                                                <td>Highlights</td>
+                                                <td>Overnight</td>
+                                            </tr>
+                                            @foreach (Detail detail in Model.Tour.Details.OrderBy(a => a.SortOrder))
+                                            {
+                                                <tr>
+                                                    <td>@detail.SortOrder </td>
+                                                    <td>@detail.Itininary</td>
+                                                    <td>@detail.OverNight</td>
+                                                </tr>
+                                            }
+                                        </table>
+
+                                    </div>
+                                }
+                                <h2>Detailed Itinerary Of @Model.Tour.Name</h2>
+                                <div>
+                                    @foreach (Detail detail in Model.Tour.Details.OrderBy(a => a.SortOrder))
+                                    {
+
+                                        if (detail == null)
+                                        {
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            detail.Content = string.IsNullOrEmpty(detail.Content) ? " " : detail.Content;
+                                            detail.Content = Regex.Replace(detail.Content, "span", "div");
+                                        }
+                                        <div>
+                                            @if (Model.Tour.Details.Count > 1)
+                                            {
+                                                detail.Itininary = Regex.Replace(detail.Itininary, "font-family:\\s*\".*\";?", String.Empty);
+                                                <div class="highlight">
+                                                    <span style="color: #000000">
+                                                        <span style="text-decoration: underline">Day @detail.SortOrder</span>
+                                                        - @Html.Raw(detail.Itininary)
+                                                    </span>
+
+                                                </div>
+                                            }
+
+                                            <div class="nfo">
+                                                @if (!string.IsNullOrEmpty(detail.ImageDetail))
+                                                {
+                                                    <img src="@Url.Content(detail.ImageDetail.Replace("~/", "https://goreise.com/"))" style="width: 100%; padding: 4px;" />
+                                                }
+
+                                                @Html.Raw(detail.Content.Replace("<br/><br/><br/>", "<br/>").Replace("<br><br>", "<br/>").Replace("<br>", "").Replace("<br/>", "").Replace("<br/><br/>", "<br/>"))
+
+                                                @Html.Raw(!string.IsNullOrEmpty(detail.Meal) ? string.Format("<b >Meal:</b> {0}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", detail.Meal.Substring(0, detail.Meal.Length - 2)) : "")
+                                                @Html.Raw(!string.IsNullOrEmpty(detail.Transport) ? string.Format("<b >Transport:</b> {0}", detail.Transport.Substring(0, detail.Transport.Length - 2)) : "")
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <br />
+                                    }
+                                </div>
+                                <h2 style="margin-top: 0"></h2>
+                                <div class="item">
+                                    <div class="highlight">
+                                        Prices: <a href="#book-tours" style="color: white; font-size: 15px; background-color: #ff4500; border-radius: 3px !important; padding:3px 6px ; margin-left: 100px; margin-top: -5px;" class="btn btn-primary"> Check Price Now</a>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="item">
+                                    <div class="highlight">
+                                        Included:
+                                    </div>
+                                    <div class="nfo">
+                                        @Html.Raw(Model.Tour.IncludeActivity)
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="highlight">
+                                        Excluded:
+                                    </div>
+                                    <div class="nfo">
+                                        @Html.Raw(Model.Tour.ExcludeActivity)
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="highlight">
+                                        Notes:
+                                    </div>
+                                    <div class="nfo">
+                                        @Html.Raw(Model.Tour.Notes)
+                                    </div>
+                                </div>
+                                <div class="item  hidden-xs hidden-print">
+                                    <div class="highlight">
+                                        Keywords:
+                                    </div>
+                                    <div class="nfo">
+                                        @if (!string.IsNullOrEmpty(Model.Tour.SearchKey))
+                                        {
+                                            var keys = Model.Tour.SearchKey.Split(',');
+                                            foreach (string key in keys)
+                                            {
+                                                <a target="blank" href="https://goreise.com/search/all/key-@key/filter-all/price-all/page-1">@key</a>
+                                                <text>,</text>
+                                            }
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div>
+                <style>
+                    .total-review-point {
+                        margin: 20px 0 0;
+                        text-align: center;
+                        font-size: 47px;
+                        color: #fe302e;
+                        font-weight: 500;
+                    }
+
+                    .rating {
+                    }
+
+                    .product-customer-col-2 .item:after, .product-customer-col-2 .item:before {
+                        display: table;
+                        content: "";
+                        clear: both;
+                    }
+
+                    /*.product-customer-col-2 .item .rating-num:after {
+                        content: "\e924";
+                        font-family: icomoon;
+                        position: absolute;
+                        left: 13px;
+                        top: -2px;
+                        color: #484848;
+                    }*/
+                    .product-customer-col-1 {
+                        min-height: 120px;
+                        padding: 0;
+                        margin: 0;
+                        width: 363px;
+                        border-right: 1px solid #f7f7f7;
+                    }
+
+                    .product-customer-col-2 {
+                        min-height: 120px;
+                        float: left;
+                        width: 380px;
+                        border-right: 1px solid #f7f7f7;
+                    }
+
+                    .product-customer-col-3 {
+                        margin-top: 5px;
+                        width: 342px;
+                        float: left;
+                        min-height: 120px;
+                        text-align: center;
+                    }
+
+                    .product-customer-col-2 .item {
+                        margin-bottom: 11px;
+                        text-align: left;
+                        font-size: 0;
+                    }
+
+                        .product-customer-col-2 .item .rating-num {
+                            display: inline-block;
+                            font-size: 15px;
+                            font-weight: 400;
+                            width: 41px;
+                            line-height: 15px;
+                            vertical-align: middle;
+                            position: relative;
+                            float: left;
+                        }
+
+                        .product-customer-col-2 .item .progress {
+                            width: 240px;
+                            -webkit-box-shadow: none;
+                            box-shadow: none;
+                            background: #efefef;
+                            float: left;
+                            height: 10px !important;
+                            margin-bottom: 0px;
+                        }
+
+                        .product-customer-col-2 .item .rating-num-total {
+                            display: inline-block;
+                            font-size: 14px;
+                            font-weight: 300;
+                            text-align: left;
+                            margin-left: 12px;
+                            color: #787878;
+                            line-height: 15px;
+                            vertical-align: middle;
+                            float: left;
+                        }
+
+                        .product-customer-col-2 .item:before {
+                            display: table;
+                            content: "";
+                            clear: both;
+                        }
+
+                    .product-customer-content .product-customer-col-1 h4 {
+                        font-weight: 400;
+                        font-size: 16px;
+                        color: #444;
+                        margin: 26px 0 0;
+                        text-align: center;
+                    }
+
+                    .product-review-box {
+                        position: relative;
+                        padding: 8px 0;
+                        background: #fff;
+                        border-top: 1px solid #f4f4f4;
+                    }
+                        .product-review-box .product-review-content .item .avatar-img {
+                            width: 65px;
+                            height: 65px;
+                            overflow: hidden;
+                            position: relative;
+                            margin-right: auto;
+                            margin-left: auto;
+                            border-radius: 50%;
+                        }
+                        .product-review-box .product-review-content .item span.avatar-letter {
+                            border-radius: 50%;
+                            background: #d3d2d3;
+                            color: #919090;
+                            font-weight: 500;
+                            width: 65px;
+                            height: 65px;
+                            display: inline-block;
+                            text-align: center;
+                            line-height: 65px;
+                            font-size: 18px;
+                            font-family: Roboto;
+                        }
+                        .product-review-box .product-review-content .item .name {
+                            font-size: 14px;
+                            margin: 15px 0 5px;
+                            font-weight: 500;
+                            text-transform: capitalize;
+                            width: 178px;
+                            text-align: center;
+                        }
+                        .product-review-box .product-review-content .item .infomation .review {
+                            padding-right: 20px;
+                            font-size: 16px;
+                            font-weight: 400;
+                            text-transform: capitalize;
+                            display: inline-block;
+                            vertical-align: top;
+                            margin: 0;
+                            color: #242424;
+                        }
+                        .product-review-box .product-review-content .item .infomation .description {
+                            padding-right: 20px;
+                            text-align: justify;
+                            font-size: 14px;
+                            line-height: 20px;
+                            width: 100%;
+                            margin: 10px 0 8px;
+                            color: #4f4f4f;
+                        }
+                        .product-review-box .product-review-content .item {
+                            padding: 17px 21px;
+                            color: gray;
+                            font-size: 12px;
+                            border-bottom: 1px solid #eff0f5;
+                        }
+                        .product-review-box .product-review-content .item .product-col-1 {
+                            display: table-cell;
+                            width: 130px;
+                            vertical-align: top;
+                            padding: 0 10px;
+                        }
+                        .product-review-box .product-review-content .item .product-col-2 {
+                            display: table-cell;
+                            width: 100%;
+                            vertical-align: top;
+                            padding-left: 24px;
+                        }
+                    .star-ratings-css {
+                        unicode-bidi: bidi-override;
+                        color: #c5c5c5;
+                        font-size: 1.6em;
+                        height: 1.6em;
+                        width: 100px;
+                        margin: 0 auto;
+                        position: relative;
+                        padding: 0;
+                        text-shadow: 0px 1px 0 #a2a2a2;
+                        float: left;
+                    }
+                    .star-ratings-css-top {
+                        color: #e7711b;
+                        padding: 0;
+
+                        position: absolute;
+                        z-index: 1;
+                        display: block;
+                        top: 0;
+                        left: 0;
+                        overflow: hidden;
+                    }
+
+                    .star-ratings-css-bottom {
+                        padding: 0;
+                        display: block;
+                        z-index: 0;
+                    }
+                    @@media (min-width: 1025px) and (max-width: 1280px) {
+                     
+                    }
+
+                    @@media (min-width: 768px) and (max-width: 1024px) {
+                     
+                    }
+
+                    /*
+        ##Device = Tablets, Ipads (landscape)
+        ##Screen = B/w 768px to 1024px
+    */
+
+                    @@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+                        .product-review-box .product-review-content .item .product-col-1 {
+                            width: 100%;
+                            float: left;
+                            vertical-align: top;
+                            padding: 0 10px;
+                        }
+
+                        .product-review-box .product-review-content .item .product-col-2 {
+                            width: 100%;
+                            float: left;
+                            vertical-align: top;
+                            padding-left: 24px;
+                        }
+                    }
+
+                    @@media (min-width: 320px) and (max-width: 480px) {
+                        .product-review-box .product-review-content .item .avatar-img {
+                            width: 65px;
+                            height: 65px;
+                            overflow: hidden;
+                            position: relative;
+                            margin-right: auto;
+                            margin-left: auto;
+                            border-radius: 50%;
+                            float:left;
+                        }
+                        .product-review-box .product-review-content .item {
+                            padding: 17px 21px;
+                            color: gray;
+                            font-size: 12px;
+                            border-bottom: none;
+                        }
+                        .product-review-box .product-review-content .item span.avatar-letter {
+                            border-radius: 50%;
+                            background: #d3d2d3;
+                            color: #919090;
+                            font-weight: 500;
+                            width: 65px;
+                            height: 65px;
+                            display: inline-block;
+                            text-align: center;
+                            line-height: 65px;
+                            font-size: 18px;
+                            font-family: Roboto;
+                        }
+
+                        .product-review-box .product-review-content .item .name {
+                            font-size: 14px;
+                            margin: 15px 0 5px;
+                            font-weight: 500;
+                            text-transform: capitalize;
+                            width: 178px;
+                            text-align: center;
+                        }
+
+                        .product-review-box .product-review-content .item .product-col-1 {
+                            width: 100%;
+                            float:left;
+                            vertical-align: top;
+                            padding: 0 10px;
+                        }
+
+                        .product-review-box .product-review-content .item .product-col-2 {
+                            width: 100%;
+                            float:left;
+                            vertical-align: top;
+                            padding-left: 24px;
+                        }
+                    }
+                </style>
+                <div class="col-md-12 col-sm-12">
+                    <div style="width:100%" class="product-customer-box">
+                        <div>
+                            <h2 style="text-decoration: none; font-size: 24px;">Reviews</h2>
+                            
+                        </div>
+                        
+                        <div class="product-customer-content">
+                            <div class="product-customer-col-1 col-sm-4">
+                                <span style="float:left;display: flex;text-align: center;align-items: center;width: 100%;justify-content: center;" id="rateBox_review"></span>
+                                <div class="total-review-point">@averageStart/5</div>
+                                <div class="item-rating" style="text-align:center">
+                                    <p class="rating">
+                                        <span class="rating-box">
+
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="product-customer-col-2 col-sm-4">
+                                <div class="item rate-5">
+                                    <span class="rating-num">5 <i class="fa fa-star"> </i></span>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success star5" style="width:@star5%;">
+                                            <span class="sr-only"></span>
+                                        </div>
+                                    </div>
+                                    <span class="rating-num-total">@star5%</span>
+                                </div>
+                                <div class="item rate-4">
+                                    <span class="rating-num">4 <i class="fa fa-star"> </i></span>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success  star4" style="width: @star4;">
+                                            <span class="sr-only"></span>
+                                        </div>
+                                    </div>
+                                    <span class="rating-num-total">@star4%</span>
+                                </div>
+                                <div class="item rate-3">
+                                    <span class="rating-num">3 <i class="fa fa-star"> </i></span>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success  star3" style="width: @star3%;">
+                                            <span class="sr-only"></span>
+                                        </div>
+                                    </div>
+                                    <span class="rating-num-total">@star3%</span>
+                                </div>
+                                <div class="item rate-2">
+                                    <span class="rating-num">2 <i class="fa fa-star"> </i></span>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success  star2" style="width:@star2%;">
+                                            <span class="sr-only"></span>
+                                        </div>
+                                    </div>
+                                    <span class="rating-num-total">@star2%</span>
+                                </div>
+                                <div class="item rate-1">
+                                    <span class="rating-num">1 <i class="fa fa-star"> </i></span>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success  star1" style="width: @star1%;">
+                                            <span class="sr-only"></span>
+                                        </div>
+                                    </div>
+                                    <span class="rating-num-total">@star1%</span>
+                                </div>
+                            </div>
+                            <div class="product-customer-col-3  col-sm-4">
+                                <a href="@Request.Url.PathAndQuery.Replace("/tour/","/UserReviewEdit/")" class="btn btn-primary">Write a review</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="product-review-box">
+                        @foreach (var review in tourReviews)
+                        {
+                            <div class="review-list product-review-content">
+                                <div class="item">
+                                    <div class="product-col-1">
+                                        <div class="avatar-img">
+                                            <span class="avatar-letter">@Helper.ShortNamme( review.GuestName)</span>
+                                        </div>
+                                        <p class="name">@review.GuestName</p>
+                                    </div>
+                                    <div class="product-col-2">
+                                        <div class="infomation">
+                                            <div class="rating">
+                                                <div itemprop="reviewRating" itemtype="http://schema.org/Rating"><meta itemprop="ratingValue" content="5"></div>
+                                                <div class="star-ratings-css">
+                                                    <div class="star-ratings-css-top" style="width:@((review.Start/5)*100)%"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                                                    <div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                                                </div>
+                                            </div>
+                                            <p class="review" style="" itemprop="name"> @review.Title</p>
+                                            <div class="description js-description"> @review.ReviewContent</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div>
+                        <div class="clearfix"></div>
+                        <h2 style="text-decoration: none; font-size: 24px;">You might also like...</h2>
+                        <div id="detail-similar" class="row">
+                            @if (similarTours.Count > 0)
+                            {
+                                foreach (var similarTour in similarTours)
+                                {
+                                    var rate = similarTour.Rates.FirstOrDefault();
+                                    var price = rate != null ? string.Format("<span class='price-from'>From USD</span> <span class='price-amount'><strong class='price-new'><sup>$</sup>{0}</strong></span>", Math.Round((decimal)(rate.RetailRate + (rate.RetailRate * (similarTour.Tour != null ? similarTour.Tour.CommissionRate : 0) / 100)), 2)) : string.Format("<span class='price-amount' style='font-size: 16px;'>On request </span>");
+                                    var priceMobile = rate != null ? string.Format("<span class='price-new'>${0}</span>", Math.Round((decimal)(rate.RetailRate + (rate.RetailRate * (similarTour.Tour != null ? similarTour.Tour.CommissionRate : 0) / 100)), 2)) : string.Format("<span class='price-amount'>Request </span>");
+                                    var link = Url.Action("Detail", "Tour", new { id = similarTour.Id, title = similarTour.Seo.Slug });
+                                    <div class="col-md-3">
+                                        <a href="@link" class="img" style="color:black;">
+                                            <div class="image-wrap" style="height:150px; overflow:hidden;">
+                                                <img style="width:100%; max-width:100%;" src="@(Url.Content(similarTour.ImageUrl.Replace("thumb","original").Replace("admin.goreise.com/", "goreise.com/rc/")))" alt="@similarTour.Name">
+                                            </div>
+                                            <div class="caption clearfix">
+                                                <div style="font-size:14px;color:black;">@similarTour.Name</div>
+                                                <div class="box_price">@Html.Raw(price)</div>
+                                                @if (rate != null)
+                                                {
+                                                    <a href="@link" title="Book now" class="book-link">Book now »</a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="@link" title="Book now" class="book-link">Detail »</a>
+                                                }
+                                            </div>
+
+                                        </a>
+
+                                    </div>
+
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4"></div>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <p>No content for this page. Please contact goreise.com admin. </p>
+}
+
+@section Styles{
+    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/Content/vinaday")
+    <link href="/Content/plugins/fxss-rate/rate.css" rel="stylesheet">
+}
+@section Scripts {
+
+    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="@Url.Content("~/Content/plugins/QuotesRotator/js/jquery.cbpQTRotator.min.js")"></script>
+    <script src="https://goreise.com/Scripts/jssor.slider.mini.js"></script>
+    <script src="https://goreise.com/Scripts/tours/js/detail.js"></script>
+    <script src="@Url.Content("~/Scripts/tours/tour.js")"></script>
+    <script src="/Content/plugins/fxss-rate/rate.js"></script>
+
+    <script src="/Scripts/offcanvas-navigation.js"></script>
+    <script src="/Scripts/tours/js/common.js"></script>
+    @Scripts.Render("~/plugins/dataPicker")
+    <script>
+        $("#rateBox").rate({
+            length: 5,
+            value: @averageStart,
+            readonly: true,
+            size: '20px',
+            text : '',
+            selectClass: 'fxss_rate_select',
+            incompleteClass: 'fxss_rate_no_all_select',
+            customClass: 'custom_class',
+            callback: function (object) {
+                console.log(object)
+            }
+        });
+        $(".star5").css('width', @star5 + '%');
+        $(".star4").css('width', @star4 + '%');
+        $(".star3").css('width', @star3 + '%');
+        $(".star2").css('width', @star2 + '%');
+        $(".star1").css('width', @star1 + '%');
+         $("#rateBox_review").rate({
+            length: 5,
+            value: @averageStart,
+             readonly: true,
+             text: '',
+            size: '20px',
+            selectClass: 'fxss_rate_select',
+            incompleteClass: 'fxss_rate_no_all_select',
+            customClass: 'custom_class',
+            callback: function (object) {
+                console.log(object)
+            }
+        });
+        var total = 0;
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        $('.input-group.date').datepicker({
+            todayBtn: "linked",
+            startDate: '1d',
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+
+        if (date.getHours() > 12) {
+            today.setDate(today.getDate() + 1);
+        }
+        $('.input-group.date').datepicker('setDate', today);
+
+
+        //$(".tour-option-available").click(){
+        //    console.log("tuong");
+        //}
+        function printDiv() {
+            var id = $("#hdnTourId").val();
+            var url = window.location.pathname;
+            window.location.href = "/Tour/PrintPdf/" + id + '?url=' + url;
+        }
+
+        function detectmob() {
+            if (navigator.userAgent.match(/Android/i)
+                || navigator.userAgent.match(/webOS/i)
+                || navigator.userAgent.match(/iPhone/i)
+                || navigator.userAgent.match(/iPad/i)
+                || navigator.userAgent.match(/iPod/i)
+                || navigator.userAgent.match(/BlackBerry/i)
+                || navigator.userAgent.match(/Windows Phone/i)
+            ) {
+                $("#notification").show();
+                //   $("#inner-wrap").css("margin-top", "76px");
+            } else {
+
+            }
+        }
+        detectmob();
+
+        // When the user scrolls the page, execute myFunction
+        window.onscroll = function () { myFunction() };
+
+        // Get the navbar
+        var navbar = document.getElementById("sticky-bar-cta");
+        // Get the offset position of the navbar
+        var sticky = 300;
+
+        // Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {
+                $("#sticky-bar-cta").show();
+            } else {
+                $("#sticky-bar-cta").hide();
+            }
+        }
+
+    </script>
+}

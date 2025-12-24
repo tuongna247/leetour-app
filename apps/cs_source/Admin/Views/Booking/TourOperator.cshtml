@@ -1,0 +1,139 @@
+﻿@using Vinaday.Admin.Models
+@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+
+
+@{
+    ViewBag.Title = "Order - Management";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    List<TourOperators> orders = ViewBag.Orders;
+    List<ApplicationUser> users = ViewBag.Users;
+}
+<div class="page-title">
+    <h3>Order Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Product</a></li>
+            <li class="active">Order</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        
+       
+        <div class="row">
+            <form action="~/Booking/Order" method="post">
+                <div class="col-md-10  pull-left" style="padding-left:27px">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="checkbox inline">
+                                <input type="radio" value="by-created-date" checked="@ViewBag.ByCreatedDate" name="SearchBy">Created Date
+                            </label>
+                            <label class="checkbox inline">
+                                <input type="radio" value="by-check-in" checked="@ViewBag.ByCheckInDate" name="SearchBy" />Check-in Date
+                            </label>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fromdate">from order</label>
+                            <input id="fromdate" name="fromdate" value="@ViewBag.FromDate" type="text" class="form-control m-b-sm" placeholder="from date">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="todate">to date</label>
+                            <input id="todate" name="todate" value="@ViewBag.ToDate" type="text" class="form-control m-b-sm" placeholder="to date">
+                        </div>
+                        <div class="col-md-1">
+                            <div style="height:24px; width:100%"> </div>
+                            <input type="submit" class="btn btn-info btn-addon " value="Search" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+
+
+                    <div class="table-responsive">
+                        <table id="order-list" class="display table" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>PNR</th>
+                                    <th>Guest Leads</th>
+                                    <th>Email</th>
+                                    <th>WhatsApp</th>
+                                    <th style="width: 100px">Adult</th>
+                                    <th>Children</th>
+                                    <th>Nationality</th>
+                                    <th>Booked Date</th>
+                                    <th>Name of Tour</th>
+                                    <th>Special Request</th>
+                                    <th>Pick-up Point</th>
+                                    <th>Pick-up Time</th>
+                                    <th>Guide</th>
+                                    <th>Confirmed by</th>
+                                </tr>
+                            </thead>
+                                @if (orders.Count > 0)
+                                {
+                                    foreach (var order in orders)
+                                    {
+                                        <tr >
+                                            <td>
+                                                @order.PNR.ToUpper()
+                                            </td>
+                                            <td>@order.Guest_Leads</td>
+                                            <td>@order.Email</td>
+                                            <td>@order.WhatsApp</td>
+                                            <td>@order.Adult</td>
+                                            <td>@order.Children</td>
+                                            <td>@order.Nationality</td>
+                                            <td>@order.BookedDate</td>
+                                            <td>@order.NameOfTour</td>
+                                            <td>@order.SpecialRequest</td>
+                                            <td>@order.PickUpoint</td>
+                                            <td>@order.PickUpTime</td>
+                                            <td>@order.Guide</td>
+                                            <td>@order.ConfirmedBy</td>
+                                        </tr>
+                                    }
+                                }
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->
+<div id="change-status-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <input id="order-id" type="hidden" />
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel"><span id="title"></span> booking</h4>
+            </div>
+            <div class="modal-body">
+                <div id="value-group" class="form-group clearfix">
+                    <label id="label-change-value" for="change-value">Value <span class="text-danger">*</span></label>
+                    <input type="text" id="change-value" class="form-control" name="change-value">
+                </div>
+
+                <div id="note-group" class="form-group clearfix">
+                    <label for="note">Note <span class="text-danger">*</span></label>
+                    <textarea style="width: 100%" id="note" rows="5"></textarea>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/orderjs")
+}

@@ -1,0 +1,28 @@
+﻿
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Vietnam Visa, Company Registration, Tours & Day Trips by VINADAY GOREISE</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="@Url.Content("~/Content/sidebar/style.css")">    
+    <script src="@Url.Content("~/Content/sidebar/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Content/sidebar/popper.js")"></script>
+    <script src="@Url.Content("~/Content/sidebar/bootstrap.min.js")"></script>
+    
+</head>
+<body>
+
+    <div class="wrapper d-flex align-items-stretch">
+        @Html.Partial("_Slidebar")
+        <div id="content">
+            @RenderBody()
+        </div>
+    </div>
+    <script src="@Url.Content("~/Content/sidebar/main.js")"></script>
+</body>
+</html>

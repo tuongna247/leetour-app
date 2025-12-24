@@ -1,0 +1,56 @@
+﻿@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+
+@{
+    ViewBag.Active = "Tour";
+    ViewBag.Page = "Management";
+    ViewBag.Title = "Management";
+    Layout = "~/Views/Shared/_TourLayout.cshtml";
+
+    List<Tour> tours = ViewBag.Tours;
+}
+<div id="main-content" class="main-content container-fluid">
+    <div class="row-fluid page-head">
+        <h2 class="page-title"><i class="aweso-icon-list-alt"></i> Vinaday <small>travel</small></h2>
+        <p class="pagedesc">98A Le Lai street, Dist 1, Ho Chi Minh City, VietNam </p>
+    </div>
+    <!-- // page head -->
+
+    <div id="page-content" class="page-content tab-content overflow-y">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget widget-simple widget-table">
+                    <table class="table table-striped table-content table-condensed boo-table table-hover bg-blue-light dataTable" id="tour-list">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id<span class="column-sorter"></span></th>
+                                <th scope="col">Name<span class="column-sorter"></span></th>
+                                <th scope="col">Type<span class="column-sorter"></span></th>
+                                <th scope="col">Create date<span class="column-sorter"></span></th>
+                                <th scope="col" class="action">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (tours.Count > 0)
+                            {
+                                foreach (var tour in tours)
+                                {
+                                    <tr class="rowlink">
+                                        <td>@tour.Id</td>
+                                        <td>@tour.Name</td>
+                                        <td>@(Enum.GetName(typeof(Utilities.TourType), tour.Type))</td>
+                                        <td>@(tour.ModifiedDate.ToShortDateString())</td>
+                                        <td style="text-align: center">
+                                            <a style="color: #333; font-size: 14px; cursor: pointer;" class="edit fontello-icon-edit" href="@(string.Format("~/Tour/BasicInformation/{0}",tour.Id))"></a>
+                                            <a style="color: #333; font-size: 15px; cursor: pointer;" class="fontello-icon-trash-1" onclick="deleteTour('@tour.Id');"></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

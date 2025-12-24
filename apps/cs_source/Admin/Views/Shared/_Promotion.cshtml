@@ -1,0 +1,300 @@
+﻿@{
+    var promotionTypes = ViewBag.PromotionTypes;
+    var cancellations = ViewBag.Cancellations;
+    var hotelCancellation = ViewBag.HotelCancellation;
+    var discountType = ViewBag.DiscountType;
+    var roomTypes = ViewBag.RoomTypes;
+
+}
+<div class="modal fade" id="promotion-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fontello-icon-cancel-1"></i></button>
+                <h3><i class="fontello-icon-article-alt opaci35"></i> Add <small>Promotion Information</small></h3>
+            </div>
+            <div id="stepsWizard" class="well well-nice well-small bwizard-bordered">
+                <ol>
+                    <li>Select Promotion Type</li>
+                    <li>Condition</li>
+                    <li>Benefit</li>
+                    <li>Restriction</li>
+                    <li>Summary</li>
+                </ol>
+                <div class="section-content">
+                    <ul class="form-list label-left list-bordered dotted">
+                        <li class="control-group">
+                            <label class="control-label" for="promotion-type">Select promotion type:</label>
+                            <div class="controls">
+                                <select id="promotion-type">
+                                    @*@foreach (var promotionType in promotionTypes)
+                                    {
+                                        <option name="@promotionType.NAME" value="@promotionType.ID">@promotionType.NAME</option>
+                                    }*@
+
+                                </select>
+                            </div>
+                        </li>
+                    </ul>
+
+
+                </div>
+
+                <div class="section-content">
+                    <ul class="form-list label-left list-bordered dotted">
+                        <li class="control-group">
+                            <label class="control-label" for="minimum-stay">Minimum stay:</label>
+                            <div class="controls">
+                                <select id="minimum-stay" style="width: 65px;">
+                                    @for (var i = 1; i < 11; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                                <span>night(s)</span>
+                            </div>
+                        </li>
+                        <li class="control-group" id="minimum-advance-li">
+                            <label class="control-label" for="minimum-advance">Minimum no. of days to book in advance:</label>
+                            <div class="controls">
+                                <select id="minimum-advance" style="width: 65px;">
+                                    @for (var i = 1; i < 101; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                                <span>day(s)</span>
+                            </div>
+                        </li>
+                        <li class="control-group" id="book-date-li" style="display: none;">
+                            <ul class="form-list" style="display: inline-flex">
+                                <li style="width: 200px;">
+                                    <label class="control-label" for="book-from">Book date from:</label>
+                                    <div class="controls">
+                                        <div data-date-format="mm-dd-yyyy" class="input-append date margin-00" id="book-from">
+                                            <input type="text" readonly="" value="@DateTime.Now.Date.ToString("MM-dd-yyyy")" size="16" class="input-medium">
+                                            <span class="add-on"><i class="fontello-icon-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="width: 200px;">
+                                    <label class="control-label" for="book-to">to:</label>
+                                    <div class="controls">
+                                        <div data-date-format="mm-dd-yyyy" class="input-append date margin-00" id="book-to">
+                                            <input type="text" readonly="" value="@DateTime.Now.Date.AddMonths(1).ToString("MM-dd-yyyy")" size="16" class="input-medium">
+                                            <span class="add-on"><i class="fontello-icon-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="control-group">
+                            <ul class="form-list" style="display: inline-flex">
+                                <li style="width: 200px;">
+                                    <label class="control-label" for="stay-from">Stay date from:</label>
+                                    <div class="controls">
+                                        <div data-date-format="mm-dd-yyyy" class="input-append date margin-00" id="stay-from">
+                                            <input type="text" readonly="" value="@DateTime.Now.Date.ToString("MM-dd-yyyy")" size="16" class="input-medium">
+                                            <span class="add-on"><i class="fontello-icon-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="width: 200px;">
+                                    <label class="control-label" for="stay-to">to:</label>
+                                    <div class="controls">
+                                        <div data-date-format="mm-dd-yyyy" class="input-append date margin-00" id="stay-to">
+                                            <input type="text" readonly="" value="@DateTime.Now.Date.AddMonths(1).ToString("MM-dd-yyyy")" size="16" class="input-medium">
+                                            <span class="add-on"><i class="fontello-icon-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="control-group">
+                            <label class="control-label">Check-in on:</label>
+                            <div class="controls">
+                                <table style="border-color: rgb(204, 204, 204);">
+                                    <thead>
+                                        <tr id="date-week-table">
+                                            <td style="width: 50px;">
+                                                <input type="checkbox" checked="checked" name="SunCheckBox" value="Sun" id="SunCheckBoxCheckInOn" style="margin-top: 0">
+                                                <label for="SunCheckBox" style="display: inline; margin-bottom: 0px;">Sun</label>
+                                            </td>
+                                            <td style="width: 50px;">
+                                                <input type="checkbox" checked="checked" name="MonCheckBox" value="Mon" id="MonCheckBoxCheckInOn" style="margin-top: 0">
+                                                <label for="MonCheckBox" style="display: inline; margin-bottom: 0px;">Mon</label>
+                                            </td>
+
+                                            <td style="width: 50px;">
+                                                <input type="checkbox" checked="checked" name="TueCheckBox" value="Tue" id="TueCheckBoxCheckInOn" style="margin-top: 0">
+                                                <label for="TueCheckBox" style="display: inline; margin-bottom: 0px;">Tue</label>
+                                            </td>
+                                            <td style="width: 50px;">
+                                                <input type="checkbox" checked="checked" name="WedCheckBox" value="Wed" id="WedCheckBoxCheckInOn" style="margin-top: 0">
+                                                <label for="WedCheckBox" style="display: inline; margin-bottom: 0px;">Wed</label>
+                                            </td>
+
+                                            <td style="width: 50px;">
+                                                <input type="checkbox" checked="checked" name="ThuCheckBox" value="Thu" id="ThuCheckBoxCheckInOn" style="margin-top: 0">
+                                                <label for="ThuCheckBox" style="display: inline; margin-bottom: 0px;">Thu</label>
+                                            </td>
+                                            <td style="width: 50px;">
+                                                <input type="checkbox" checked="checked" name="FriCheckBox" value="Fri" id="FriCheckBoxCheckInOn" style="margin-top: 0">
+                                                <label for="FriCheckBox" style="display: inline; margin-bottom: 0px;">Fri</label>
+                                            </td>
+                                            <td style="width: 50px;">
+                                                <input type="checkbox" checked="checked" name="SatCheckBox" value="Sat" id="SatCheckBoxCheckInOn" style="margin-top: 0">
+                                                <label for="SatCheckBox" style="display: inline; margin-bottom: 0px;">Sat</label>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="section-content">
+                    <ul class="form-list label-left list-bordered dotted">
+                        <li class="control-group" id="discount-type-li">
+                            <label class="control-label" for="discount-type">Discount type:</label>
+                            <div class="controls">
+                                <select id="discount-type" style="width: 235px; ">
+                                    <option value="1" name="% Discount">% Discount</option>
+                                    <option value="2" name="USD Amount Discount (Per Booking)">Amount Discount Per Booking</option>
+                                    <option value="3" name="USD Amount Discount (Per Night)">Amount Discount Per Night</option>
+                                    <option value="4" name="Free Night(s)">Free Night(s)</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li class="control-group">
+                            <label class="control-label" for="percentage-get">Get:</label>
+                            <div class="controls">
+                                <input type="text" value="0" name="percentage-get" class="span11" id="percentage-get" style="width: 223px;">
+                                <span id="percentage-get-description">% Discount</span>
+                            </div>
+                        </li>
+                        <li class="control-group" id="apply-on-group">
+                            <label class="control-label" for="apply-on">Apply on:</label>
+                            <div class="controls">
+                                <select id="apply-on" style="width: 235px">
+                                    <option value="0">Not specific</option>
+                                    <option value="1">Every Night</option>
+                                    <option value="2">First Night</option>
+                                    <option value="3">Last Night</option>
+                                </select>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="section-content">
+                    <ul class="form-list label-left list-bordered dotted">
+                        <li class="control-group">
+                            <label class="control-label" for="room-type">Room type:</label>
+                            <div class="controls">
+                                <select id="room-type" style="width: 235px">
+                                    <option value="-1">All room type</option>
+                                    @foreach (var roomType in roomTypes)
+                                    {
+                                        <option value="@roomType.HOTELDETAILID">@roomType.NAME</option>
+                                    }
+                                </select>
+                            </div>
+                        </li>
+                        <li class="control-group">
+                            <label class="control-label" for="languages">Languages:</label>
+                            <div class="controls">
+                                <select id="languages" style="width: 235px">
+                                    <option value="-1">All languages</option>
+                                    <option value="1">Vietnam</option>
+                                    <option value="2">English</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li class="control-group">
+                            <fieldset>
+                                <label class="control-label" for="cancellation-policy">Cancellation policy</label>
+                                <div class="controls">
+                                    <select id="cancellation-policy" style="width: 235px">
+                                        @*@if (hotelCancellation != null && hotelCancellation.CancellationPolicy != null)
+                                        {
+                                            <option value="1" selected>Hotel Standard Cancellation</option>
+                                            <option value="2">Other Cancellation Policy</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="1">Hotel Standard Cancellation</option>
+                                            <option value="2">Other Cancellation Policy</option>
+                                        }*@
+                                    </select>
+
+                                    @*@if (hotelCancellation != null && hotelCancellation.CancellationPolicy != null)
+                                    {
+                                        <span id="cancelation-name">@hotelCancellation.CancellationPolicy.Name</span>
+                                        <select id="cancellation-list" style="width: 435px; display: none">
+                                            @foreach (var cancellation in cancellations)
+                                            {
+                                                <option value="@cancellation.Id" name="@cancellation.Description">@cancellation.Name</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <span style="display: none" id="cancelation-name">hotelCancellation.CancellationPolicy.Name</span>
+                                        <select id="cancellation-list" style="width: 435px;">
+                                            @foreach (var cancellation in cancellations)
+                                            {
+                                                <option value="@cancellation.Id" name="@cancellation.Description">@cancellation.Name</option>
+                                            }
+                                        </select>
+                                    }*@
+
+                                </div>
+                                <div class="controls" style="margin-top: 10px;">
+                                    @*@if (hotelCancellation != null && hotelCancellation.CancellationPolicy != null)
+                                    {
+                                        <div id="cancellation-description-hotel">@hotelCancellation.CancellationPolicy.Description</div>
+                                        <div id="cancellation-description" style="display: none;"></div>
+                                        <input type="hidden" id="cancel-name-hidden" value="@hotelCancellation.CancellationPolicy.Name" />
+                                        <input type="hidden" id="cancel-id-hidden" value="@hotelCancellation.CancellationPolicy.Id" />
+                                    }
+                                    else
+                                    {
+                                        <div id="cancellation-description"></div>
+                                        <input type="hidden" id="cancel-name-hidden" />
+                                        <input type="hidden" id="cancel-id-hidden" />
+                                    }*@
+                                </div>
+                            </fieldset>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="section-content">
+                    <ul class="summary-list list-bordered dotted">
+                        <li class="control-group row-fluid">
+                            <div class="well well-small well-nice">
+                                <p><span class="label-field">Promotion name</span> <span id="span-promotion-name" class="field bold">Early Bird</span></p>
+                                <p><span class="label-field">Check-in on</span> <span class="field">Check in on Specific Days (<span id="span-date-of-week"></span>)</span></p>
+                                <p><span class="label-field">Minimum stay</span> <span class="field" id="span-minimum-stay">1 night(s)</span></p>
+                                <p id="p-booking-date" style="display: none;"><span class="label-field">Booking date</span> <span class="field" id="span-booking-date-from">08/08/1978</span> - <span class="field" id="span-booking-date-to">08/08/1978</span></p>
+                                <p id="p-minimum-advance"><span class="label-field">Booking before</span> <span class="field" id="span-minimum-advance">08/08/1978</span></p>
+                                <p><span class="label-field">Stay date</span> <span class="field" id="span-stay-date-from">08/08/1978</span> - <span class="field" id="span-stay-date-to">08/08/1978</span></p>
+                                <p><span class="label-field">Discount type</span> <span class="field" id="span-discount-type">% Discount</span></p>
+                                <p><span class="label-field">Apply on</span> <span class="field" id="span-apply-on">Every Night</span></p>
+                                <p><span class="label-field">Get</span> <span class="field" id="span-get">21.00% Discount</span></p>
+
+                            </div>
+                        </li>
+                        <li class="control-group row-fluid">
+                            <div class="well well-small well-nice">
+                                <p><span class="label-field">Room type</span> <span class="field bold" id="span-room-type">All Room Types</span></p>
+                                <p><span class="label-field">Languages</span> <span class="field" id="span-languages">All Languages</span></p>
+                                <p><span class="label-field">Cancellation policy</span> <span class="field" id="span-cancellation-policy">Cancel 7D prior arrival 1N charge, 3D charge 100%, No Show 100% charge</span></p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

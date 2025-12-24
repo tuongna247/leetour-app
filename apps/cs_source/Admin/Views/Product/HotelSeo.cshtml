@@ -1,0 +1,138 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@model Hotel
+@{
+    ViewBag.Title = "SEO OnPage - Hotel Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+}
+<div class="page-title">
+    <h3>Hotel Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/Product/Hotel">Hotel Management</a></li>
+            <li class="active">SEO OnPage</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <div role="group" class="pull-right clearfix">
+                        @if (Model.Id > 0)
+                        {
+                            <input type="hidden" id="hotel-id" value="@Model.Id" />
+                            <a href="@Url.Content("~/Product/HotelBasic/"+Model.Id)" class="btn btn-success m-b-sm">Basic Info</a>
+                            @*<a href="@(string.Format("http://goreise.com/rc//"+Model.Id)" class="btn btn-success m-b-sm">Room Management</a>*@
+                            <a href="@Url.Content("~/Product/RoomControl/"+Model.Id)" class="btn btn-success m-b-sm">Room Control</a>
+                            <a href="@Url.Content("~/Product/HotelPackage/"+Model.Id)" class="btn btn-success m-b-sm">Package</a>
+                            <a href="@Url.Content("~/Product/RateControl/"+Model.Id)" class="btn btn-success m-b-sm">Rate Control</a>
+                            <a href="@Url.Content("~/Product/Surcharge/"+Model.Id)" class="btn btn-success m-b-sm">Surcharges</a>
+                            <a href="@Url.Content("~/Product/Promotion/"+Model.Id)" class="btn btn-success m-b-sm">Promotions</a>
+                            <a disabled href="#" class="btn btn-success m-b-sm">SEO</a>
+                            <a href="@Url.Content("~/Product/Review/"+Model.Id)" class="btn btn-success m-b-sm">Reviews</a>
+                        }
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel-body">
+                                <div id="en-form">
+                                    <h5>English Language</h5>
+                                    <div class="form-group">
+                                        <label class="control-label">Title</label>
+                                        <textarea class="form-control title" placeholder="Title" rows="2">@Html.Raw(Model.SeoTitle)</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Keywords</label>
+                                        <textarea class="form-control keywords" placeholder="Keywords" rows="4">@Html.Raw(Model.HotelKeyword)</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">HashTag Goreise.com</label>
+                                        <textarea class="form-control HashTagEn" placeholder="Keywords" rows="4">@Html.Raw(Model.HashTagEn)</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Description</label>
+                                        <textarea class="form-control description" placeholder="Description" rows="4">@Html.Raw(Model.SeoDesc)</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Hotel Content</label>
+                                        <div class="hotel-description">@Html.Raw(Model.Description)</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Hotel Important Note (Hiển thị trong chi tiết khách sạn)</label>
+                                        <div class="ImportantNoteEn">@Html.Raw(Model.ImportantNoteEn)</div>
+                                    </div>
+                                </div>
+                                <div id="vn-form" >
+                                    <h5>Local Language</h5>
+                                    <div class="form-group">
+                                        <label class="control-label">Title</label>
+                                        <textarea class="form-control title" placeholder="Title" rows="2">@Html.Raw(Model.SeoTitleVn)</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Keywords</label>
+                                        <textarea class="form-control keywords" placeholder="Keywords" rows="4">@Html.Raw(Model.KeywordVn)</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Description</label>
+                                        <textarea class="form-control description" placeholder="Description" rows="4">@Html.Raw(Model.SeoDescVn)</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Hotel Content</label>
+                                        <div class="hotel-description">@Html.Raw(Model.HotelNameLocalDesc)</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Hotel Important Note VN(Hiển thị trong chi tiết khách sạn)</label>
+                                        <div class="ImportantNoteVn">@Html.Raw(Model.ImportantNoteVn)</div>
+                                    </div>
+                                </div>
+                                <div id="vn-form2" >
+                                    <h5>Local Language Vinaday Goreise</h5>
+                                    <div class="form-group">
+                                        <label class="control-label">Title</label>
+                                        <textarea class="form-control title2" placeholder="Title" rows="2">@Html.Raw(Model.SeoTitleVn2)</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">HashTag Goreise.Vn</label>
+                                        <textarea class="form-control HashTagVn" placeholder="Keywords" rows="4">@Html.Raw(Model.HashTagVn)</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Keywords</label>
+                                        <textarea class="form-control keywords2" placeholder="Keywords" rows="4">@Html.Raw(Model.KeywordVn2)</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Description</label>
+                                        <textarea class="form-control description2" placeholder="Description" rows="4">@Html.Raw(Model.SeoDescVn2)</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Hotel Content</label>
+                                        <div class="hotel-description">@Html.Raw(Model.HotelNameLocalDesc2)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="loadPane"></div>
+                    </div>
+                    <div role="group" class="pull-right">
+                        <button type="button" class="btn btn-success m-b-sm" onclick="saveHotelChange();">Save Change</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/roomjs")
+}

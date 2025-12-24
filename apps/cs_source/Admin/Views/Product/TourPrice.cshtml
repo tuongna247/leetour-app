@@ -1,0 +1,461 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@model Tour
+@{
+    ViewBag.Title = "Tour - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+    List<Rate> rates = ViewBag.Rates;
+    List<Rate2> rates2 = ViewBag.Rates2;
+    List<Rate3> rates3 = ViewBag.Rates3;
+    List<ExpandRatesModel> expandRatesModels= ViewBag.RateExpands;
+}
+
+@if (Model != null)
+{
+    <input type="hidden" id="tourId" value="@Model.Id" />
+        <input type="hidden" id="commission-rate" value="@Model.CommissionRate" />
+        <div class="page-title">
+            <h3>Basic information</h3>
+            <div class="page-breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="active">@Model.Name</li>
+                </ol>
+            </div>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <div role="group" class="pull-right">
+                                <a href="@Url.Content(string.Format("~/Product/TourBasic/{0}", Model.Id))" class="btn btn-success m-b-sm">Basic Info</a>
+                                <a href="@Url.Content(string.Format("~/Product/TourDetail/{0}", Model.Id))" class="btn btn-success m-b-sm">Detail</a>
+                                <a href="@Url.Content(string.Format("~/Product/TourPhoto/{0}", Model.Id))" class="btn btn-success m-b-sm">Photos galery</a>
+                                <a href="@Url.Content(string.Format("~/Product/TourItinerary/{0}", Model.Id))" class="btn btn-success m-b-sm">Itinerary</a>
+                                <a disabled href="@Url.Content(string.Format("~/Product/TourPrice/{0}", Model.Id))" class="btn btn-success m-b-sm">Rates Control</a>
+                                <a href="@Url.Content(string.Format("~/Product/TourSurcharge/{0}", Model.Id))" class="btn btn-success m-b-sm">Surcharges</a>
+                                <a href="@Url.Content(string.Format("~/Product/TourPromotion/{0}", Model.Id))" class="btn btn-success m-b-sm">Promotions</a>
+                                <a href="@Url.Content(string.Format("~/Product/TourPriceOption/{0}", Model.Id))" class="btn btn-success m-b-sm">Price Option</a>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div class="panel panel-transparent">
+                                    <div class="panel-body">
+                                        <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" role="tab" id="headingOne1" style="height: 30px;padding:7px">
+                                                    <h4 class="panel-title">
+                                                        <a data-toggle="collapse" data-parent="#accordion2" href="#1" aria-expanded="true" aria-controls="collapseOne">
+                                                            Basic Price 1
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne1">
+                                                    <div class="panel-body">
+                                                        <div id="price-list">
+                                                            <div id="rates-control">
+                                                                @if (rates != null && rates.Count > 0)
+                                                                {
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-hover" id="rates-result" style="margin-bottom: 0!important">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="text-center">No. Person</th>
+                                                                                    <th class="text-center">Retail rate</th>
+                                                                                    <th class="text-center">Net rate</th>
+                                                                                    <th class="text-center">Commission rate </th>
+                                                                                    <th class="text-center">Total rate</th>
+                                                                                    <th class="text-center">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach (var rate in rates.Where(rate => rate != null))
+                                                                                {
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <input type="text" class="person-no text-center form-control" value="@rate.PersonNo" />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="retail text-center form-control" value="@rate.RetailRate" />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="net text-center form-control" value="@(rate.RetailRate + (rate.RetailRate*Model.CommissionRate/100))" disabled />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="commission text-center form-control" value="@Model.CommissionRate" disabled />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="total text-center form-control" value="@((rate.RetailRate + (rate.RetailRate*Model.CommissionRate/100))*rate.PersonNo)" disabled />
+                                                                                        </th>
+                                                                                        <th class="text-center" style="vertical-align: middle">
+                                                                                            <input type="hidden" class="rate-id" value="@rate.Id" />
+                                                                                            <a href="javascript:void(0);" onclick="deleteRate('@rate.Id')" class="btn btn-danger btn-xs"><small class="glyphicon glyphicon-trash"></small></a>
+                                                                                        </th>
+                                                                                    </tr>
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-hover" id="rates-result">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>No. Person</th>
+                                                                                    <th>Retail rate</th>
+                                                                                    <th>Net rate</th>
+                                                                                    <th>Commission rate</th>
+                                                                                    <th>Total rate</th>
+                                                                                    <th>Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr></tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                }
+                                                                <a class="btn btn-success m-b-sm" onclick="addMore();">Add more</a>
+                                                                <div class="clearfix"></div>
+                                                                <div class="pull-right">
+                                                                    <a class="btn btn-success m-b-sm" href="javascript:void(0);" onclick="insertRates();">Save All Basic Price</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" role="tab" id="headingOne1" style="height: 30px;padding:7px">
+                                                    <h4 class="panel-title">
+                                                        <a data-toggle="collapse" data-parent="#accordion2" href="#1" aria-expanded="true" aria-controls="collapseOne">
+                                                            Basic Price 2
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne1">
+                                                    <div class="panel-body">
+                                                        <div id="price-list">
+                                                            <div id="rates-control">
+                                                                @if (rates2 != null && rates2.Count > 0)
+                                                                {
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-hover" id="rates2-result" style="margin-bottom: 0!important">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="text-center">No. Person</th>
+                                                                                    <th class="text-center">Retail rate</th>
+                                                                                    <th class="text-center">Net rate</th>
+                                                                                    <th class="text-center">Commission rate </th>
+                                                                                    <th class="text-center">Total rate</th>
+                                                                                    <th class="text-center">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach (var rate in rates2.Where(rate => rate != null))
+                                                                                {
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <input type="text" class="person-no text-center form-control" value="@rate.PersonNo" />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="retail text-center form-control" value="@rate.RetailRate" />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="net text-center form-control" value="@(rate.RetailRate + (rate.RetailRate*Model.CommissionRate/100))" disabled />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="commission text-center form-control" value="@Model.CommissionRate" disabled />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="total text-center form-control" value="@((rate.RetailRate + (rate.RetailRate*Model.CommissionRate/100))*rate.PersonNo)" disabled />
+                                                                                        </th>
+                                                                                        <th class="text-center" style="vertical-align: middle">
+                                                                                            <input type="hidden" class="rate-id" value="@rate.Id" />
+                                                                                            <a href="javascript:void(0);" onclick="deleteRate2('@rate.Id')" class="btn btn-danger btn-xs"><small class="glyphicon glyphicon-trash"></small></a>
+                                                                                        </th>
+                                                                                    </tr>
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-hover" id="rates2-result">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>No. Person</th>
+                                                                                    <th>Retail rate</th>
+                                                                                    <th>Net rate</th>
+                                                                                    <th>Commission rate</th>
+                                                                                    <th>Total rate</th>
+                                                                                    <th>Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr></tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                }
+                                                                <a class="btn btn-success m-b-sm" onclick="addMore2();">Add more</a>
+                                                                <div class="clearfix"></div>
+                                                                <div class="pull-right">
+                                                                    <a class="btn btn-success m-b-sm" href="javascript:void(0);" onclick="insertRates2();">Save All Basic Price</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" role="tab" id="headingOne1" style="height: 30px;padding:7px">
+                                                    <h4 class="panel-title">
+                                                        <a data-toggle="collapse" data-parent="#accordion2" href="#1" aria-expanded="true" aria-controls="collapseOne">
+                                                            Basic Price 3
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne1">
+                                                    <div class="panel-body">
+                                                        <div id="price-list">
+                                                            <div id="rates-control">
+                                                                @if (rates3 != null && rates3.Count > 0)
+                                                                {
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-hover" id="rates3-result" style="margin-bottom: 0!important">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="text-center">No. Person</th>
+                                                                                    <th class="text-center">Retail rate</th>
+                                                                                    <th class="text-center">Net rate</th>
+                                                                                    <th class="text-center">Commission rate </th>
+                                                                                    <th class="text-center">Total rate</th>
+                                                                                    <th class="text-center">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach (var rate in rates3.Where(rate => rate != null))
+                                                                                {
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <input type="text" class="person-no text-center form-control" value="@rate.PersonNo" />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="retail text-center form-control" value="@rate.RetailRate" />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="net text-center form-control" value="@(rate.RetailRate + (rate.RetailRate*Model.CommissionRate/100))" disabled />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="commission text-center form-control" value="@Model.CommissionRate" disabled />
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <input type="text" class="total text-center form-control" value="@((rate.RetailRate + (rate.RetailRate*Model.CommissionRate/100))*rate.PersonNo)" disabled />
+                                                                                        </th>
+                                                                                        <th class="text-center" style="vertical-align: middle">
+                                                                                            <input type="hidden" class="rate-id" value="@rate.Id" />
+                                                                                            <a href="javascript:void(0);" onclick="deleteRate3('@rate.Id')" class="btn btn-danger btn-xs"><small class="glyphicon glyphicon-trash"></small></a>
+                                                                                        </th>
+                                                                                    </tr>
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-hover" id="rates3-result">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>No. Person</th>
+                                                                                    <th>Retail rate</th>
+                                                                                    <th>Net rate</th>
+                                                                                    <th>Commission rate</th>
+                                                                                    <th>Total rate</th>
+                                                                                    <th>Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr></tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                }
+                                                                <a class="btn btn-success m-b-sm" onclick="addMore3();">Add more</a>
+                                                                <div class="clearfix"></div>
+                                                                <div class="pull-right">
+                                                                    <a class="btn btn-success m-b-sm" href="javascript:void(0);" onclick="insertRates3();">Save All Basic Price</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading" role="tab" id="headingTwo2" style="height: 30px;padding:7px">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion2" href="#2" aria-expanded="false" aria-controls="collapseTwo">
+                                                            Expand Price
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo2">
+                                                    <div class="panel-body">
+                                                        <div class="pull-right">
+                                                            <a href="javascript:void(0);" data-target="#add-expand-price" data-toggle="modal">Add Expand Price</a>
+                                                            <div id="add-expand-price" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                            <h4 class="modal-title" id="mySmallModalLabel">Add Range</h4>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <input type="text" class="form-control m-b-sm" placeholder="Enter Expand Price" id="rate-name">
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <input type="text" class="form-control m-b-sm date-picker" placeholder="Enter Start Date" id="check-in">
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <input type="text" class="form-control m-b-sm date-picker" placeholder="Enter End Date" id="check-out">
+                                                                                </div>
+                                                                            </div><!-- Row -->
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <a href="javascript:void(0);" onclick="insertExpandPrice();" class="btn btn-success" style="width: 100%">Add</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="clearfix"></div>
+                                                        <div id="price-expand-list">
+                                                            @if (expandRatesModels.Count > 0)
+                                                            {
+                                                                foreach (ExpandRatesModel expandRatesModel in expandRatesModels)
+                                                                {
+                                                                    if (expandRatesModel == null) { continue; }
+                                                                    <h5>@expandRatesModel.ExpandRates.Name (@expandRatesModel.ExpandRates.StartDate.ToString("dd-MM-yyyy") - @expandRatesModel.ExpandRates.EndDate.ToString("dd-MM-yyy"))</h5>
+                                                                    <hr style="margin: 0">
+                                                                    <div class="rates-control">
+                                                                        @if (expandRatesModel.ExpandRatePrices != null && expandRatesModel.ExpandRatePrices.Count > 0)
+                                                                        {
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover tabResult" id="rates-result-@expandRatesModel.ExpandRates.Id">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center">No. Person</th>
+                                                                <th class="text-center">Retail rate</th>
+                                                                <th class="text-center">Net rate</th>
+                                                                <th class="text-center">Commission rate </th>
+                                                                <th class="text-center">Total rate</th>
+                                                                <th class="text-center">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var rate in expandRatesModel.ExpandRatePrices.Where(rate => rate != null))
+                                                            {
+                                                                <tr>
+                                                                    <th>
+                                                                        <input type="text" class="person-no text-center form-control" value="@rate.PersonNo" />
+                                                                    </th>
+                                                                    <th>
+                                                                        <input type="text" class="retail text-center form-control" value="@rate.RetailRate" />
+                                                                    </th>
+                                                                    <th>
+                                                                        <input type="text" class="net text-center form-control" value="@(rate.RetailRate + (rate.RetailRate*Model.CommissionRate/100))" disabled />
+                                                                    </th>
+                                                                    <th>
+                                                                        <input type="text" class="commission text-center form-control" value="@Model.CommissionRate" disabled />
+                                                                    </th>
+                                                                    <th>
+                                                                        <input type="text" class="total text-center form-control" value="@((rate.RetailRate + (rate.RetailRate*Model.CommissionRate/100))*rate.PersonNo)" disabled />
+                                                                    </th>
+                                                                    <th class="text-center" style="vertical-align: middle">
+                                                                        <input type="hidden" class="rate-id" value="@rate.Id" />
+                                                                        <a href="javascript:void(0);" onclick="deleteRate('@rate.Id')" class="btn btn-danger btn-xs"><small class="glyphicon glyphicon-trash"></small></a>
+                                                                    </th>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover tabResult" id="rates-result-@expandRatesModel.ExpandRates.Id">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No. Person</th>
+                                                                <th>Retail rate</th>
+                                                                <th>Net rate</th>
+                                                                <th>Commission rate</th>
+                                                                <th>Total rate</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            }
+                                                                        <a class="btn btn-success m-b-sm" onclick="addMoreExpandPrice('@expandRatesModel.ExpandRates.Id');">Add more</a>
+                                                                    </div>
+                                                                    <hr style="margin: 0">
+
+                                                                    <div class="pull-right">
+                                                                        <a class="btn btn-success m-b-sm" href="javascript:void(0);" onclick="insertRatesExpandPrice('@expandRatesModel.ExpandRates.Id');">Save  Expand Price</a>
+                                                                    </div>
+                                                                    <div class="clearfix"></div>
+                                                                }
+                                                            }
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div><!-- Row -->
+        </div>
+
+}
+else
+{
+    <p>Not content for this item</p>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/tourjs")
+}
+

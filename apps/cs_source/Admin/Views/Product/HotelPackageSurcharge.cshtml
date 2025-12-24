@@ -1,0 +1,126 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@model Hotel
+
+@{
+    ViewBag.Title = "Rate Control - Hotel Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+
+    List<HotelPackage> roomTypes = ViewBag.RoomTypes;
+    List<CatDetail> surcharges = ViewBag.Surcharges;
+}
+<div class="page-title">
+    <h3>Hotel Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/Product/Hotel">Hotel Management</a></li>
+            <li class="active">Surcharges Control</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading clearfix">
+                    <div role="group" class="pull-right">
+                        <input type="hidden" id="hotel-id" value="@Model.Id" />
+                        <a href="@Url.Content("~/Product/HotelBasic/"+Model.Id)" class="btn btn-success m-b-sm">Basic Info</a>
+                        @*<a href="@(string.Format("http://goreise.com/rc//"+Model.Id)"class="btn btn-success m-b-sm">Room Management</a>*@
+                        <a href="@Url.Content("~/Product/RoomControl/"+Model.Id)" class="btn btn-success m-b-sm">Room Control</a>
+                        <a href="@Url.Content("~/Product/HotelPackage/"+Model.Id)"  class="btn btn-success m-b-sm">Package</a>
+                        <a disabled href="#" class="btn btn-success m-b-sm">Package SurCharge</a>
+                        <a href="@Url.Content("~/Product/RateControl/"+Model.Id)" class="btn btn-success m-b-sm">Rate Control</a>
+                        <a href="@Url.Content("~/Product/Surcharge/"+Model.Id)" class="btn btn-success m-b-sm">Surcharges</a>
+                        <a href="@Url.Content("~/Product/Promotion/"+Model.Id)" class="btn btn-success m-b-sm">Promotions</a>
+                        <a href="@Url.Content("~/Product/HotelSeo/"+Model.Id)" class="btn btn-success m-b-sm">SEO</a>
+                        <a href="@Url.Content("~/Product/Review/"+Model.Id)" class="btn btn-success m-b-sm">Reviews</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    <div class="form-inline" style="margin-top: 30px">
+                        <div class="form-group">
+                            <select id="room-type" class="form-control m-b-sm" onchange="getPackageSurcharge();">
+                                <option value="0">Select package </option>
+                                @*<option value="-1">All room type</option>*@
+                                @if (roomTypes.Count > 0)
+                                {
+                                    foreach (var roomType in roomTypes)
+                                    {
+                                        <option value="@roomType.Id">@roomType.RoomName - @roomType.FromDate.ToString("M/d/yyyy") - @roomType.ToDate.ToString("M/d/yyyy")</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <hr />
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label class="checkbox inline">
+                                    <input value="-1" id="check-all" type="checkbox">Add for all package type.
+                                </label>
+                            </div>
+                            <br />
+                            <div class="form-group">
+
+                                <input id="check-in" placeholder="Enter stay date from" type="text" class="form-control m-b-sm date-picker">
+                            </div>
+                            <div class="form-group">
+                                <input id="check-out" placeholder="Enter stay date to" type="text" class="form-control m-b-sm date-picker">
+                            </div>
+
+                            <div class="form-group">
+
+                                <select id="stay-type" class="form-control m-b-sm">
+                                    <option value="-1">Select a surcharge</option>
+                                    @if (surcharges.Count > 0)
+                                    {
+                                        foreach (var surcharge in surcharges)
+                                        {
+                                            <option value="@surcharge.Name">@surcharge.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input id="price" placeholder="Enter price" type="text" class="form-control m-b-sm">
+                            </div>
+                            <div class="form-group">
+                                <a onclick="addHotelSurcharge();" href="javascript:void(0);" class="btn btn-info m-b-sm">Add</a>
+                            </div>
+                            <div class="form-group" id="date-week-table">
+                                <div class="alert alert-success" role="alert" style="margin-top: 5px;">
+                                    <label class="checkbox inline">
+                                        <input value="Sun" id="cbSun" type="checkbox" checked>Sun
+                                        <input value="Mon" id="cbMon" type="checkbox" checked>Mon
+                                        <input value="Tue" id="cbTue" type="checkbox" checked>Tue
+                                        <input value="Wed" id="cbWed" type="checkbox" checked>Wed
+                                        <input value="Thu" id="cbThu" type="checkbox" checked>Thu
+                                        <input value="Fri" id="cbFri" type="checkbox" checked>Fri
+                                        <input value="Sat" id="cbSat" type="checkbox" checked>Sat
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div id="load-pane-before"></div>
+                    <div id="surcharge-list" style="min-height:250px;"></div>
+                    <div id="loadPane"></div>
+                </div>
+            </div>
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/roomjs")
+}

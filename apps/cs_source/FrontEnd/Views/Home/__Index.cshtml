@@ -1,0 +1,367 @@
+﻿@using Vinaday.Data.Models
+@{
+    Layout = null;
+    List<Country> countries = ViewBag.GetCountries;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta charset="utf-8">
+    <meta name="description" content="VINADAY goREISE (Vinaday Travel) specializing in arranging and managing quality tourism destinations  for people travelling within Vietnam, Laos, Cambodia, Thailand, Myanmar. Our popular trips are Mekong Delta Trip, Cu Chi Tunnels …">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="fragment" content="!" />
+    <meta name="p:domain_verify" content="a30485a5d480491e9920773fae91d328" />
+    <meta name="msvalidate.01" content="9FA5185F018B486BE7BD03AF994F2EF6" />
+    @Styles.Render("~/Content/bootstrapCSS")
+    @Styles.Render("~/Content/vinadayCSS")
+    @Styles.Render("~/Content/pluginsCSS")
+    <style>
+        iframe[name='google_conversion_frame'] {
+            font-size: 0 !important;
+            height: 0 !important;
+            line-height: 0 !important;
+            margin-top: -13px;
+            width: 0 !important;
+        }
+    </style>
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1678764492335447'); // Insert your pixel ID here.
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=1678764492335447&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- DO NOT MODIFY -->
+    <!-- End Facebook Pixel Code -->
+
+
+</head>
+<body>
+    <div id="outer-wrap">
+        <div id="inner-wrap" itemtype="https://schema.org/Hotel" itemscope="">
+            @Html.Partial("_Header")
+            <link href="~/Content/search.css" rel="stylesheet" />
+
+            <div class="ibanner">
+                <div class="custom-bg"></div>
+                <div class="container">
+                    <div class="cbanner">
+                        <h1 style="text-shadow: 1px 1px 1px #333">
+                            Tận hưởng <span style="color: rgb(245, 130, 32)">Kì nghỉ như mơ với ưu đãi tuyệt vời</span> <br />
+                        </h1>
+                        <h2 class="hidden-xs" style="text-shadow: 1px 1px 1px #333;font-size:19px;">Hơn 300 khách sạn từ 3-5 sao và tour du lịch</h2>
+                       
+                        <div class="isearch">
+
+                            <div class="itabs clearfix">
+                                <div class="tab-head clearfix">
+                                    <ul class="nav nav-tabs">
+                                        <li role="presentation" class="lhotels active">
+                                            <a onclick="showHotelSearchForm();" style="cursor: pointer"><i class="fa fa-tasks"></i>Khách sạn</a>
+                                        </li>
+                                        <li role="presentation" class="ltours">
+                                            <a onclick="showTourSearchForm();" style="cursor: pointer"><i class="fa fa-crosshairs"></i>Tours</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="tab-content">
+
+                                    <div id="hotel-search-form">
+
+                                        <div class="form-group has-feedback">
+                                            <label class="control-label" for="search-key">Tìm kiếm theo thành phố, khách sạn</label>
+                                            <input type="text" class="form-control typeahead" ng-model="filters.key" id="search-key" aria-describedby="inputSuccess2Status" placeholder="Tên khách sạn hoặc thành phố" />
+                                            <span class="glyphicon glyphicon-map-marker form-control-feedback" aria-hidden="true"></span>
+                                        </div>
+                                        <div class="row input-daterange">
+                                            <div class="col-xs-6 col-sm-6">
+                                                <div class="form-group has-feedback">
+                                                    <label class="control-label" for="check-in">Ngày nhận:</label>
+                                                    <input type="text" class="form-control date-time" ng-model="filters.checkIn" id="check-in" placeholder="mm/dd/yyyy" readonly />
+                                                    <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6 col-sm-6">
+                                                <div class="form-group has-feedback">
+                                                    <label class="control-label" for="check-out">Ngày trả:</label>
+                                                    <input type="text" class="form-control date-time" ng-model="filters.checkOut" id="check-out" placeholder="mm/dd/yyyy" readonly />
+                                                    <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-btn">
+                                            <a onclick="searchHotels();" class="btn btn-primary">Tìm kiếm</a>
+                                        </div>
+
+                                    </div>
+                                    <div id="tour-search-form" style="display: none;">
+                                        <div id="tour-form" style="display: none;">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group has-feedback">
+                                                        <label class="control-label">Quốc gia</label>
+                                                        <section class="select-style" style="border-radius: 1px;">
+                                                            <select class="form-control" id="country" style="border: none;">
+                                                                <option value="-1">Nhập tên Quốc gia </option>
+                                                                @if (countries.Any())
+                                                                {
+                                                                    foreach (var country in countries)
+                                                                    {
+                                                                        <option value="@country.CountryId">@country.NameVn</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        </section>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div id="city-list-item">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-btn">
+                                                <a class="btn btn-primary" onclick="searchCity();">Tìm kiếm</a>
+                                                <a style="cursor: pointer" onclick="showNameSearch();" class="change-search-type">TÌM KIẾM THEO TÊN</a>
+                                            </div>
+                                        </div>
+                                        <div id="tour-name-form">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group has-feedback">
+                                                        <label class="control-label" for="search-key">Tìm kiếm với Tên</label>
+                                                        <input type="text" style="padding-left: 10px;" class="form-control" id="search-name" placeholder="Nhập tên tour, thành phố cần tìm!" />
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group form-btn">
+                                                <a class="btn btn-primary" onclick="searchName();">Tìm kiếm</a>
+                                                <a style="cursor: pointer" onclick="showCitySearch();" class="change-search-type">TÌM KIẾM THEO THÀNH PHỐ</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sale-main hidden-xs">
+                        <div id="cbp-qtrotator" class="cbp-qtrotator">
+                            <div class="cbp-qtcontent">
+                                <div class="title-sale-main">
+                                    Excellent!
+                                </div>
+                                <p style="text-shadow: 1px 1px 1px #333">"Excellent ground tour arrangement in Saigon where handled by a very friendly lady called Ms Le. I went this country on December 2014..."</p>
+                                <div class="signature-sale-main">
+                                    Jomyn - Kuala Lumpur, Malaysia
+                                </div>
+                            </div>
+                            <div class="cbp-qtcontent">
+                                <div class="title-sale-main">
+                                    Very Good!!!!
+                                </div>
+                                <p style="text-shadow: 1px 1px 1px #333">"We have recently been in Vietnam and before we travelled I found this company on the internet that had good reviews..."</p>
+                                <div class="signature-sale-main">
+                                    VacationerLondon - London
+                                </div>
+                            </div>
+                            <div class="cbp-qtcontent">
+                                <div class="title-sale-main">
+                                    Good!
+                                </div>
+                                <p style="text-shadow: 1px 1px 1px #333">"I booked three tours through them; 1 day Mekong, Tunnels and temple and Saigon day tour...all excellent...."</p>
+                                <div class="signature-sale-main">
+                                    AKcharger - Anchorage, Alaska
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="services services-home hidden-xs">
+                <div class="container">
+                    <div>
+                        <ul>
+                            <li class="hidden-xs hidden-sm">
+                                <div class="title-services">Đi với VINADAY goREISE:</div>
+                            </li>
+                            <li>
+                                <span class="fa fa-shopping-cart"></span>
+                                <p class="caption-services"> <span>Lựa chọn tốt nhất</span> Hơn 5.000 khách sạn và tour du lịch.</p>
+                            </li>
+                            <li>
+                                <span class="fa fa-car"></span>
+                                <p class="caption-services"> <span>Giá thấp nhất</span> Được đảm bảo tại goreise.com! </p>
+                            </li>
+                            <li>
+                                <span class="fa fa-plane"></span>
+                                <p class="caption-services"> <span>Nhanh chóng &amp; tiện lợi</span> Đặt phòng và vé máy bay trực tuyến.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="home-content hidden-xs">
+                <div class="container">
+                    @*<a class="hidden-xs" href="/spa-hotel-collection" target="_new">
+                        <img style="margin-top: 10px;" src="~/Content/images/spa.jpg" alt="spa conllection"/>
+                    </a>*@
+                    <div class="tab-component">
+                        <div class="tab-content tours-destinations">
+                            <div role="tabpanel" class="tab-pane active" id="topcity">
+                                <div class="row">
+                                   
+                                    <div id="topcountry">
+                                        <h6 style="padding-left: 15px">Thành phố phổ biến</h6>
+                                        <div class="col-md-3 hidden-sm hidden-md hidden-lg" style="margin-bottom: 10px;">
+                                            <a href="/spa-hotel-collection" target="_new">
+                                                <img style="width: 100%;" src="~/Content/images/Spa.png" alt="spa conllection" />
+                                            </a>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/50-ho-chi-minh">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/ho-chi-minh.jpg"/>
+                                                </a>
+                                                <h3>Hồ Chí Minh</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/182-hoi-an">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/hoi-an.jpg"/>
+                                                </a>
+                                                <h3>Hội An</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/32-da-nang">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/da-nang.jpg"/>
+                                                </a>
+                                                <h3>Đà Nẵng</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/1-ha-noi">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/ha-noi.jpg"/>
+                                                </a>
+                                                <h3>Hà Nội</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/183-da-lat">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/da-lat.jpg"/>
+                                                </a>
+                                                <h3>Đà Lạt</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/49-vung-tau">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/vung-tau.jpg"/>
+                                                </a>
+                                                <h3>Vũng Tàu</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/187-ha-long-bay">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/ha-long-bay.jpg"/>
+                                                </a>
+                                                <h3>Hạ Long Bay</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/185-phu-quoc">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/phu-quoc.jpg"/>
+                                                </a>
+                                                <h3>Phú Quốc</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/188-con-dao">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/con-dao.jpg"/>
+                                                </a>
+                                                <h3>Côn Đảo</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/31-hue">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/hue.jpg"/>
+                                                </a>
+                                                <h3>Huế</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/184-phan-thiet">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/phan-thiet.jpg"/>
+                                                </a>
+                                                <h3>Phan Thiết</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" style="margin-bottom: 10px;">
+                                            <div class="thumbnail">
+                                                <a class="img" title="" href="http://goreise.vn/viet-nam/36-phu-yen">
+                                                    <div class="texture-overlay"></div>
+                                                    <img alt="" src="/Content/images/phu-yen.jpg"/>
+                                                </a>
+                                                <h3>Phú Yên</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        <div class="hidden-sm hidden-md hidden-lg" style="padding: 1px">
+            <a href="/spa-hotel-collection" target="_new"><img style="width: 100%;margin-bottom: 1px" src="~/Content/images/spa.jpg" alt="spa conllection" /></a>
+            <a target="_blank" title="" href="https://goreise.com/rewards"><img src="https://goreise.com/Content/images/cashback.png" style="width: 100%" alt="cashback"/></a>
+        </div>
+
+            @Html.Partial("_Footer")
+            @Scripts.Render("~/bundles/jquery")
+            @Scripts.Render("~/bundles/pluginsJS")
+            @Scripts.Render("~/bundles/home")
+            @Scripts.Render("~/bundles/modernizr")
+            @Scripts.Render("~/bundles/google-analytics")
+        </div>
+    </div>
+    <a href="#" id="backToTop"></a>
+</body>
+</html>
+

@@ -1,0 +1,298 @@
+﻿@using System.Diagnostics
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@model PaymentOrderModel2
+@{
+    var i = 1;
+    OrderModel order = ViewBag.Order;
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    var user = string.Format("{0} {1}", ((ClaimsIdentity)User.Identity).FindFirst("FirstName").Value, ((ClaimsIdentity)User.Identity).FindFirst("LastName").Value);
+    //RateExchange rateExchange = ViewBag.Exchange;
+    decimal discount = 0;
+    decimal.TryParse(order.Discount, out discount);
+    var totalIn = String.Format("{0:N0}", (order.Amount + order.ExtraBed + order.ThirdPersonFee) * order.RateExchange);
+    if(order.CancelFee > 0)   {
+        totalIn = String.Format("{0:N0}", ( order.CancelFee) * order.RateExchange);
+    }
+    if (order.TotalRefund > 0)
+    {
+        totalIn = String.Format("{0:N0}", (order.TotalRefund) * order.RateExchange);
+    }
+}
+<style>
+    #payment-rates-result th {
+        padding: 1px !important;
+    }
+</style>
+<input type="hidden" id="total-amount" value="@totalIn.Replace(",", "")" />
+<input type="hidden" id="order-id" value="@order.Id" />
+<input type="hidden" id="paymentOrder-id" value="@Model.PaymentOrder.OrderId" />
+<input type="hidden" id="order-amount" value="@(order.Price*order.Quantity)" />
+
+    
+    <div id="payment-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            @if (Model.PaymentOrderDetails != null && Model.PaymentOrderDetails.Count > 0)
+            {
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="panel panel-transparent">
+                            <div class="panel-body" style="border: 2px dashed rgb(176, 176, 176);">
+                                <div class="row">
+                                    <div class="col-md-4" style="padding-left: 0 !important">
+                                        <img src="~/assets/images/logo.png" alt="" style="width: 200px; margin-left: 5px;" /><br />
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="pull-left">
+                                            <address>
+                                                Booking No.: <b><span id="voucher-booking-id">@(string.Format("00{0}", order.Id))</span></b><br />
+                                                Issued Date: <b>
+                                                    <span id="voucher-guest">
+                                                        <input type="text" name="CreatedDate" id="CreatedDate" value="@Model.PaymentOrder.CreatedDate.ToShortDateString()"/>
+                                                    </span>
+                                                </b><br>
+
+                                            </address>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h3 class="text-center" style="margin-top: 0;">
+                                            <b>PAYMENT ORDER</b><br><br>
+                                        </h3>
+                                    </div>
+
+                                    <div class="col-sm-12 table-responsive">
+
+                                        <div id="payment-price-list">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-bordered po" id="payment-rates-result">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">No.</th>
+                                                            <th class="text-center">Description</th>
+                                                            <th class="text-center">Price(VND)</th>
+                                                            <th class="text-center">Quantity</th>
+                                                            <th class="text-center">Amount(VND)</th>
+                                                            <th class="text-center">Action aaa</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var orderDetail in Model.PaymentOrderDetails.Where(orderDetail => orderDetail != null))
+                                                        {
+                                                            <tr>
+                                                                <th>
+                                                                    <input style="width: 40px" type="text" class="payment-no text-center form-control" value="@i" disabled />
+                                                                </th>
+                                                                <th>
+                                                                    <input style="width: 350px" placeholder="Enter Description" type="text" class="payment-description text-center form-control" value="@orderDetail.Description" />
+                                                                </th>
+                                                                <th>
+                                                                    <input type="text" class="payment-price text-center form-control" value="@String.Format("{0:N0}",orderDetail.Price)" />
+                                                                </th>
+                                                                <th>
+                                                                    <input type="text" class="payment-quantity text-center form-control" value="@orderDetail.Quantity" />
+                                                                </th>
+                                                                <th>
+                                                                    <input id="payment-amount" type="text" class="payment-amount text-center form-control" value="@String.Format("{0:N0}",orderDetail.Amount)" disabled />
+                                                                </th>
+                                                                <th class="text-center" style="vertical-align: middle">
+                                                                    <input type="hidden" class="payment-id" value="@order.Id" />
+                                                                    <a href="javascript:void(0);" class="btn btn-danger btn-xs removeRow" @(i == 1 ? "disabled" : "")><small class="glyphicon glyphicon-remove"></small></a>
+                                                                </th>
+                                                            </tr>
+                                                            i++;
+                                                        }
+
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                            <a class="btn btn-success m-b-sm" onclick="addMore();">Add more</a>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="text-right">
+                                    <div>
+                                        <h4 class="no-m m-t-md text-success">Total Out(VND)</h4>
+                                        <h1 id="total-out" class="no-m text-success">@String.Format("{0:N0}", Model.PaymentOrder.Outcome)</h1>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6" style="margin-left: -15px">
+                                    <div class="text-left">
+                                        <div>
+                                            <h4 class="no-m m-t-sm">Approval by</h4>
+                                            <br>
+                                            <br>
+                                            <br>
+                                            <h2 class="no-m">----------------</h2>
+                                            <span class="text-left pull-left" style="width: 200px">@(Model.PaymentOrder != null ? Model.PaymentOrder.CreatedBy : "")</span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pull-right" style="margin-right: -15px">
+                                    <div class="text-right">
+                                        <div>
+                                            <h4 class="no-m m-t-sm">Issued by</h4>
+                                            <br>
+                                            <br>
+                                            <br>
+                                            <h2 class="no-m">----------------</h2>
+
+                                            <span class="text-right pull-right" style="width: 200px">@(Model.PaymentOrder != null ? Model.PaymentOrder.IssueBy : "")</span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div><!--row-->
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        
+                        <a onclick="insertPo2();" class="btn btn-success"><i class="fa fa-print"></i> Update and Print</a>
+                        <a onclick="printPo2('@order.Id');" class="btn btn-success"><i class="fa fa-print"></i> Print</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="panel panel-transparent">
+                            <div class="panel-body" style="border: 2px dashed rgb(176, 176, 176);">
+                                <div class="row">
+                                    <div class="col-md-4" style="padding-left: 0!important">
+                                        <img src="~/assets/images/logo.png" alt="" style="width: 200px; margin-left: 5px;" /><br />
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="pull-left">
+                                            <address>
+                                                Booking No.: <b><span id="voucher-booking-id">@(string.Format("00{0}", order.Id))</span></b><br />
+                                                Issued Date: <b>
+                                                    <span id="voucher-guest"><input type="text" name="CreatedDate" id="CreatedDate" value="@Model.PaymentOrder.CreatedDate.ToShortDateString()" /></span>
+                                                </b><br>
+
+                                            </address>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h3 class="text-center" style="margin-top: 0;">
+                                            <b>PAYMENT ORDER</b><br><br>
+                                        </h3>
+                                    </div>
+
+                                    <div class="col-sm-12 table-responsive">
+                                        <div id="payment-price-list">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-bordered po" id="payment-rates-result">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">No.</th>
+                                                            <th class="text-center">Description</th>
+                                                            <th class="text-center">Price(VND)</th>
+                                                            <th class="text-center">Quantity</th>
+                                                            <th class="text-center">Amount(VND)</th>
+                                                            <th class="text-center">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>
+                                                                <input style="width: 40px" type="text" class="payment-no text-center form-control" value="1" disabled />
+                                                            </th>
+                                                            <th>
+                                                                <input style="width: 350px" placeholder="Enter Description" type="text" class="payment-description text-center form-control" value="@order.ProductName" />
+                                                            </th>
+                                                            <th>
+                                                                <input type="text" class="payment-price text-center form-control" />
+                                                            </th>
+                                                            <th>
+                                                                <input type="text" class="payment-quantity text-center form-control" />
+                                                            </th>
+                                                            <th>
+                                                                <input id="payment-amount" type="text" class="payment-amount text-center form-control" disabled />
+                                                            </th>
+                                                            <th class="text-center" style="vertical-align: middle">
+                                                                <input type="hidden" class="payment-id" value="@order.Id" />
+                                                                <a href="javascript:void(0);" class="btn btn-danger btn-xs" disabled><small class="glyphicon glyphicon-remove"></small></a>
+                                                            </th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <a class="btn btn-success m-b-sm" onclick="addMore();">Add more</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-right">
+                                    <div>
+                                        <h4 class="no-m m-t-md text-success">Total In(VND)</h4>
+                                        <h1 id="total-in" class="no-m text-success">@String.Format("{0:N0}", totalIn)</h1>
+                                    </div>
+                                    <div>
+                                        <h4 class="no-m m-t-md text-success">Total Out(VND)</h4>
+                                        <h1 id="total-out" class="no-m text-success">@String.Format("{0:N0}", Model.PaymentOrder != null && Model.PaymentOrder.Outcome > 0 ? Model.PaymentOrder.Outcome : 0)</h1>
+                                    </div>
+                                    <div>
+                                        <h4 class="no-m m-t-md text-success">Profit(VND)</h4>
+                                        <h1 class="no-m text-success"><span id="profit">@String.Format("{0:N0}", Model.PaymentOrder != null? Model.PaymentOrder.Profit:0)</span></h1>
+                                    </div>
+                                    <div>
+                                        <h4 class="no-m m-t-md text-success">Ratio(%)</h4>
+                                        <h1 class="no-m text-success"><span id="ratio">@String.Format("{0:N0}", Model.PaymentOrder != null? Model.PaymentOrder.Ratio:0)</span></h1>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6" style="margin-left: -15px">
+                                    <div class="text-left">
+                                        <div>
+                                            <h4 class="no-m m-t-sm">Approval by</h4>
+                                            <br>
+                                            <br>
+                                            <input type="text" id="approval-by" class="text-center form-control pull-left" placeholder="Approval by" style="width: 200px" />
+                                            <div class="clearfix"></div>
+                                            <br>
+                                            <h2 class="no-m">----------------</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pull-right" style="margin-right: -15px">
+                                    <div class="text-right">
+                                        <div>
+                                            <h4 class="no-m m-t-sm">Issued by</h4>
+                                            <br>
+                                            <br>
+                                            <input type="text" id="issued-by" class="text-center form-control pull-right" placeholder="Issued by" value="@user" style="width: 200px" />
+                                            <div class="clearfix"></div>
+                                            <br>
+                                            <h2 class="no-m">----------------</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div><!--row-->
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <a onclick="insertPo2();" class="btn btn-success"><i class="fa fa-print"></i> Save & Print</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+

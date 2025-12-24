@@ -1,0 +1,136 @@
+﻿@using System.Collections.Generic
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+
+@{
+    List<ItemModel> mealItems = ViewBag.Meals;
+    List<ItemModel> transportItems = ViewBag.Transports;
+    Detail detail = ViewBag.Detail;
+}
+
+<div class="modal fade" id="update-itinerary-modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Update itinerary</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div>
+                        <div class="form-group col-md-12" id="div-sort-order-edit">
+                            <label class="control-label" for="sort-order-edit">Day itinerary</label>
+                            <select id="sort-order-edit" class="form-control">
+                                @for (var i = 1; i < 30; i++)
+                                {
+                                    <option @(detail.SortOrder == i ? "selected" : "") value="@i">@i</option>
+                                }
+                            </select>
+
+                        </div>
+                        <div class="form-group col-md-12" id="div-title-edit">
+                            <label class="control-label" for="title-edit">Title</label>
+                            <input id="title-edit" type="text" value="@detail.Itininary" class="form-control" placeholder="Title">
+
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="control-label" for="content-edit">Content</label>
+                            <div id="content-edit">
+                                @Html.Raw(detail.Content)
+                            </div>
+
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="control-label" for="content-edit">OverNight</label>
+                            <div id="content-edit">
+                                <input id="title-OverNight" type="text" value="@detail.OverNight" class="form-control" placeholder="OverNight">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="control-label" for="content-edit">Itinery Image Description</label>
+                            <div id="content-edit">
+                                <input id="title-ImageDetailDescription" type="text" value="@detail.ImageDetailDescription" class="form-control" placeholder="OverNight">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label" for="content-edit">Itinery Image</label>
+                            <div id="content-ImageDetail">
+                                <form action="@Url.Content("~/Product/SaveTourItieraryUploadedFile")" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneForm" style="padding: 0;">
+                                    <input type="hidden" name="id" value="@detail.Id"/>
+                                    <div class="fallback">
+                                        <input name="file" type="file"/>
+                                    </div>
+                                    <input type="submit" value="Save" />
+                                </form>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="meal-edit" class="col-sm-2 control-label">Meal</label>
+                            <div class="form-horizontal">
+                                <div class="col-sm-10">
+                                    <div id="meal-edit">
+                                        @if (mealItems != null)
+                                        {
+                                            foreach (var mealItem in mealItems)
+                                            {
+                                                <div class="checkbox col-md-4">
+                                                    <label>
+                                                        <input type="checkbox" @(mealItem.Checked ? "checked" : "") name="@mealItem.Id" id="@mealItem.Id" value="@mealItem.Id">@mealItem.Name
+                                                    </label>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <br/>
+                        <div class="form-group">
+                            <label for="transport-edit" class="col-sm-2 control-label">Transport</label>
+                            <div class="form-horizontal">
+                                <div class="col-sm-10">
+                                    <div id="transport-edit">
+                                        @if (transportItems != null)
+                                        {
+                                            foreach (var transportItem in transportItems)
+                                            {
+                                                <div class="checkbox col-md-4">
+                                                    <label>
+                                                        <input type="checkbox" @(transportItem.Checked ? "checked" : "") name="@transportItem.Id" id="@transportItem.Id" value="@transportItem.Id">@transportItem.Name
+                                                    </label>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" onclick="updateItinerary('@detail.Id');">Save change</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    Dropzone.options.dropzoneForm = {
+        acceptedFiles: 'image/*',
+        maxFiles: 10,
+        init: function () {
+            this.on("queuecomplete", function () {
+                setTimeout(function () {
+                    window.location.reload(1);
+                }, 3000);
+            });
+
+        }
+    }
+</script>

@@ -1,0 +1,34 @@
+﻿@model List<Vinaday.Data.Models.HotelImages>
+<style>
+    .hotel-gallery {
+        margin-bottom: 2px;
+        padding-left: 1px;
+        padding-right: 1px;
+        opacity: .8;
+        display: none;
+    }
+
+        .hotel-gallery:hover {
+            opacity: initial;
+        }
+</style>
+<ul style="list-style: outside none none; margin-top: 4px; padding-left: 29px; padding-right: 29px;" class="row">
+    @foreach (var image in Model)
+    {
+        <li class="col-md-1 col-xs-2 hotel-gallery">
+            <a href="@(!string.IsNullOrEmpty(image.ImageThumbnail) ? "https://admin.goreise.com" + @Url.Content(string.Format("{0}-original.jpg", image.ImageThumbnail)) : "/Content/images/demo/general/no-image.jpg")" id="desc" data-icon="fa-eye" data-lightbox="image-1">
+                <img style="width: 100%;" src="@(!string.IsNullOrEmpty(image.ImageThumbnail) ? "https://admin.goreise.com" + @Url.Content(string.Format("{0}-original.jpg", image.ImageThumbnail)) : "/Content/images/demo/general/no-image.jpg")" alt="@image.ImageName" />
+                @*<img style="width: 100%;" src="@(!string.IsNullOrEmpty(image.ImageThumbnail) ? "https://admin.goreise.com" + @Url.Content(string.Format("{0}-{1}.jpeg", image.ImageThumbnail, image.ImageQuanlity)) : "/Content/images/demo/general/no-image.jpg")" alt="@image.ImageName" />*@
+            </a>
+        </li>
+    }
+
+</ul>
+<div class="load-image" style=" margin-top: 4px; margin-left: 15px; margin-right: 15px;">
+    <div class="loader" style="z-index: 99999; margin-top: 315px;"></div>
+</div>
+<div style="margin-top: 10px;text-align: center" class="clearfix">
+    <a style="color: #58738a"  id="loadMore" href="javascript:void(0);">Show more photos <span class="fa fa-angle-double-down"></span></a>
+    <a style="color: #58738a"  id="showLess" href="javascript:void(0);">Show less photos <span class="fa fa-angle-double-up"></span></a>
+</div>
+

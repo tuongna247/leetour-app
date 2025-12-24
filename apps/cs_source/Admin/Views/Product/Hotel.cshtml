@@ -1,0 +1,80 @@
+﻿@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Web.Framework
+@*@model System.Collections.Generic.IEnumerable<Vinaday.Data.Models.Hotel>*@
+@{
+    ViewBag.Title = "Hotel Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+}
+<div class="page-title">
+    <h3>Hotel Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Hotel Management</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <a href="/Product/HotelBasic" class="btn btn-success m-b-sm">Add New Hotel</a>
+                    @if (Model.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table id="hotel-list" class="display table" style="width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Hotel Name</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Phone</th>
+                                    <th style="width: 50px;">Action</th>
+                                </tr>
+                                </thead>
+                   
+                                <tbody>
+                                    @foreach (Vinaday.Data.Models.Hotel hotel in Model)
+                                    {
+                                        <tr>
+                                            <td>@hotel.Id</td>
+                                            <td>@hotel.Name</td>
+                                            <td>@hotel.StreetAddressEnglish</td>
+                                            <td>@hotel.CITY</td>
+                                            <td>@Utilities.FormatPhone(hotel.Phone)</td>
+                                            <td>
+
+                                                <a class="btn btn-success btn-xs" href="@(string.Format("http://goreise.com/rc/Product/HotelBasic/{0}", hotel.Id))"><small class="glyphicon glyphicon-edit"></small></a>
+                                                <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteHotel('@hotel.Id');"><small class="glyphicon glyphicon-trash"></small></a>
+
+                                            </td>
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <span>No content for this time</span>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/hoteljs")
+}
+

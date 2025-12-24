@@ -1,0 +1,344 @@
+﻿@*@using System*@
+@{
+    Vinaday.Data.Models.RateExchange exchange = ViewBag.Exchange;
+    var isRequest = 0;
+}
+
+@if (Model.Count > 0)
+{
+    <input type="hidden" id="check-in-hidden" value="@(String.Format("{0:MM-dd-yyyy}", ViewBag.CheckIn))" />
+    <input type="hidden" id="check-out-hidden" value="@(String.Format("{0:MM-dd-yyyy}", ViewBag.CheckOut))" />
+    foreach (Vinaday.Data.Models.Extention.RoomModel room in Model)
+    {
+        if (room == null || room.Id <= 0)
+        {
+            continue;
+        }
+        if (room.SellingRate > 0 && room.CloseOutRegular == false)
+        {
+            if (room.Rates.Count > 1)
+            {
+
+                <article class="room-row clearfix">
+                    <div class="room-type-content">
+                        <div class="title"> @room.Name </div>
+                        <div class="img">
+                            <img src="@(!string.IsNullOrEmpty(room.ImageUrl) ? string.Format("https://admin.goreise.com/{0}", Url.Content(room.ImageUrl)) : "/Content/images/demo/general/no-image.jpg")" alt="@room.Name" />
+                        </div>
+                    </div>
+                    <!--room-info-content-->
+                    <div class="room-info-content">
+                        @if (room.AdultNumber > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.AdultNumber adults
+                            </p>
+                        }
+                        @if (room.ChildrenNumber > 0 && room.ChildrenNumber > 0 && room.ChildrenAge > 0 && room.ChildrenAge > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.ChildrenNumber child - up to @room.ChildrenAge years of age
+                            </p>
+                        }
+                        @if (room.RoomSize > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Room size @room.RoomSize m<sup>2</sup>
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.View))
+                        {
+                            <p><i class="fa fa-check"></i> @room.View</p>
+                        }
+                        @if (room.ExtraBed > 0 && room.ExtraBed > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> @room.ExtraBed extra bed - @room.ExtraBedPrice<sup>USD</sup> per extra bed
+                            </p>
+                        }
+                        @if (room.IsBreakfast)
+                        {
+                            <p style="color: #0a9c4b">
+                                <i class="fa fa-check"></i> Breakfast Included
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.RoomFacilities))
+                        {
+                            <p class="tooltip-style">
+                                <i class="fa fa-check"></i>
+                                <a style="color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(room.RoomFacilities)">Room Facilities</a>
+                            </p>
+                        }
+
+                    </div>
+
+                    <!--room-info-content-->
+                    <div class="room-max-content-n tooltip-style">
+                        <a style="color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(string.Format("Max Occupacy {0} for this rate.", room.MaxOccupancy))">
+                            @if (room.MaxOccupancy > 0)
+                            {
+                                for (var i = 0; i < room.MaxOccupancy; i++)
+                                {
+                                    <i style="margin: -4px;" class="fontello-icon-user-4"></i>
+                                }
+                            }
+                        </a>
+                    </div>
+
+                    <!--room-type-content-->
+                    <div class="vertical-separator vertical-separator-first"></div>
+                    <div class="vertical-separator vertical-separator-second"></div>
+                    <div class="vertical-separator vertical-separator-third"></div>
+                    <div class="vertical-separator vertical-separator-fourth"></div>
+                    <div class="vertical-separator vertical-separator-fifth"></div>
+                    <!--separator-->
+                    <div class="clearfix rate-plan-n">
+                        <div class="rate-plan-vertical-separator rate-plan-vertical-separator-first"></div>
+                        <div class="rate-plan-vertical-separator rate-plan-vertical-separator-second"></div>
+                        <div class="rate-plan-vertical-separator rate-plan-vertical-separator-third"></div>
+                        <div class="rate-plan-vertical-separator rate-plan-vertical-separator-fourth"></div>
+                        <!--separator-->
+                        @foreach (var rate in room.Rates.OrderBy(r => r.SellingRate))
+                        {
+                            var index = Vinaday.Web.Framework.Utilities.GetRandomString(10);
+                            if (rate == null || rate.Id <= 0)
+                            {
+                                continue;
+                            }
+
+                            <div class="room-promotion">
+                                <div class="room-rate-content-n tooltip-style" style="text-align: left">
+                                    <p style="margin: 0;">
+                                        <strong style="color: #D9534F">@Math.Round((rate.SellingRate * exchange.CurrentPrice ?? 1), 2).ToString("#,###").Replace(",", ".")<sup>@exchange.Name.ToLower()</sup> </strong>
+                                    </p>
+                                    
+                                    @if (rate.PromotionId > 0)
+                                    {
+                                        <a style="font-size: 11px; font-weight: bold; color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(rate.Cancelation)"><i class="fa fa-check"></i> Cancellation Policy</a>
+                                    }
+                                    else
+                                    {
+                                        <a style="font-size: 11px; font-weight: bold; color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="No fees for cancellation. Please, read more at the Hotel Policy"><i class="fa fa-check"></i> FREE Cancellation</a>
+                                    }
+                                    @if (rate.PromotionId > 0)
+                                    {
+                                        <span style="font-size: 11px; font-weight: bold; color: red" class="special-rate"><i class="fa fa-check"></i> @Html.Raw(rate.PromotionText)</span>
+                                    }
+                                </div>
+                                <!--room-rate-content-->
+                                <div class="room-number-content-n">
+                                    <div class="select-style">
+                                        <select id="roomTotal_@(room.Id)_@index">
+                                            @for (var i = 1; i <= rate.TotalAvailable; i++)
+                                            {
+                                                <option value="@i">@i</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <!--room-number-content-->
+                                <div class="room-book-content-n">
+                                    <a onclick="bookingIt('@room.Id', '@rate.PromotionId','roomTotal_@(room.Id)_@index');" title="" class="btn btn-sm btn-primary icon fadeIn animated animated book-it">Book it</a>
+                                    <p class="hidden-xs" style="font-size: 11px;">Instant confirmation</p>
+
+                                </div>
+                            </div>
+                            if (room.Rates.IndexOf(rate) == room.Rates.Count - 1)
+                            {
+                                continue;
+                            }
+                            <div class="clearfix" style="border-bottom: 1px solid #CCC; background: #e0f5d7 none repeat scroll 0 0"></div>
+                        }
+                        <!--room-max-content-->
+
+
+
+                    </div>
+                    <!--rate-plan-->
+                </article>
+            }
+            else
+            {
+                <article class="room-row clearfix">
+                    <div class="room-type-content">
+                        <div class="title"> @room.Name </div>
+                        <div class="img">
+                            <img src="@(!string.IsNullOrEmpty(room.ImageUrl) ? string.Format("https://admin.goreise.com/{0}", Url.Content(room.ImageUrl)) : "/Content/images/demo/general/no-image.jpg")" alt="@room.Name" />
+                        </div>
+                    </div>
+                    <!--room-info-content-->
+                    <div class="room-info-content">
+                        @if (room.AdultNumber > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.AdultNumber adults
+                            </p>
+                        }
+                        @if (room.ChildrenNumber > 0 && room.ChildrenNumber > 0 && room.ChildrenAge > 0 && room.ChildrenAge > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Max @room.ChildrenNumber child - up to @room.ChildrenAge years of age
+                            </p>
+                        }
+                        @if (room.RoomSize > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> Room size @room.RoomSize m<sup>2</sup>
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.View))
+                        {
+                            <p><i class="fa fa-check"></i> @room.View</p>
+                        }
+                        @if (room.ExtraBed > 0 && room.ExtraBed > 0)
+                        {
+                            <p>
+                                <i class="fa fa-check"></i> @room.ExtraBed extra bed - @room.ExtraBedPrice<sup>USD</sup> per extra bed
+                            </p>
+                        }
+                        @if (room.IsBreakfast)
+                        {
+                            <p style="color: #0a9c4b">
+                                <i class="fa fa-check"></i> Breakfast Included
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(room.RoomFacilities))
+                        {
+                            <p class="tooltip-style">
+                                <i class="fa fa-check"></i>
+                                <a style="color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(room.RoomFacilities)">Room Facilities</a>
+                            </p>
+                        }
+
+                    </div>
+
+                    <!--room-info-content-->
+                    <div class="room-max-content-n tooltip-style">
+                        <a style="color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(string.Format("Max Occupacy {0} for this rate.", room.MaxOccupancy))">
+                            @if (room.MaxOccupancy > 0)
+                            {
+                                for (var i = 0; i < room.MaxOccupancy; i++)
+                                {
+                                    <i style="margin: -4px;" class="fontello-icon-user-4"></i>
+                                }
+                            }
+                        </a>
+                    </div>
+
+                    <!--room-type-content-->
+                    <div class="vertical-separator vertical-separator-first"></div>
+                    <div class="vertical-separator vertical-separator-second"></div>
+                    <div class="vertical-separator vertical-separator-third"></div>
+                    <div class="vertical-separator vertical-separator-fourth"></div>
+                    <div class="vertical-separator vertical-separator-fifth"></div>
+                    <!--separator-->
+                    <div class="clearfix rate-plan-n">
+                        <div class="rate-plan-vertical-separator rate-plan-vertical-separator-first"></div>
+                        <div class="rate-plan-vertical-separator rate-plan-vertical-separator-second"></div>
+                        <div class="rate-plan-vertical-separator rate-plan-vertical-separator-third"></div>
+                        <div class="rate-plan-vertical-separator rate-plan-vertical-separator-fourth"></div>
+                        <div class="room-promotion">
+                            <div class="room-rate-content-n tooltip-style" style="text-align: left">
+                                <p style="margin: 0;">
+                                    <strong style="color: #D9534F">@Math.Round((room.SellingRate * exchange.CurrentPrice ?? 1), 2).ToString("#,###").Replace(",", ".")<sup>@exchange.Name.ToLower()</sup> </strong>
+                                </p>
+                                @*<a style="font-size: 11px; font-weight: bold; color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(room.Cancelation)"><i class="fa fa-check"></i> Cancellation Policy</a>*@
+                                <a style="font-size: 11px; font-weight: bold; color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="No fees for cancellation. Please, read more at the Hotel Policy"><i class="fa fa-check"></i> FREE Cancellation</a>
+                            </div>
+                            <!--room-rate-content-->
+                            <div class="room-number-content-n">
+                                <div class="select-style">
+                                    <select id="roomTotal_@(room.Id)_@index">
+                                        @for (var i = 1; i <= room.TotalAvailable; i++)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+
+                                </div>
+                            </div>
+                            <!--room-number-content-->
+                            <div class="room-book-content-n">
+                                <a onclick="bookingIt('@room.Id', '@room.PromotionId','roomTotal_@(room.Id)_@index');" title="" class="btn btn-sm btn-primary icon fadeIn animated animated book-it">Book it</a>
+                                <p class="hidden-xs" style="font-size: 11px;">Instant confirmation</p>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--rate-plan-->
+                </article>
+            }
+        }
+        else
+        {
+            <article class="room-row clearfix @(room.PromotionId > 0 ? "room-promotion" : "")">
+                <div class="room-type-content">
+                    <div class="title"> @room.Name </div>
+                    <div class="img">
+                        <img src="@(!string.IsNullOrEmpty(room.ImageUrl) ? string.Format("https://admin.goreise.com/{0}", Url.Content(room.ImageUrl)) : "/Content/images/demo/general/no-image.jpg")" alt="@room.Name" />
+                    </div>
+                </div>
+                <!--room-info-content-->
+                <div class="room-info-content">
+                    @if (room.AdultNumber > 0)
+                        {
+                        <p>
+                            <i class="fa fa-check"></i> Max @room.AdultNumber adults
+                        </p>
+                    }
+                    @if (room.ChildrenNumber > 0 && room.ChildrenNumber > 0 && room.ChildrenAge > 0 && room.ChildrenAge > 0)
+                        {
+                        <p>
+                            <i class="fa fa-check"></i> Max @room.ChildrenNumber child - up to @room.ChildrenAge years of age
+                        </p>
+                    }
+                    @if (room.RoomSize > 0)
+                        {
+                        <p>
+                            <i class="fa fa-check"></i> Room size @room.RoomSize m<sup>2</sup>
+                        </p>
+                    }
+                    @if (!string.IsNullOrEmpty(room.View))
+                        {
+                        <p><i class="fa fa-check"></i> @room.View</p>
+                    }
+                    @if (room.ExtraBed > 0 && room.ExtraBed > 0)
+                        {
+                        <p>
+                            <i class="fa fa-check"></i> @room.ExtraBed extra bed - @room.ExtraBedPrice<sup>USD</sup> per extra bed
+                        </p>
+                    }
+                    @if (room.IsBreakfast)
+                        {
+                        <p style="color: #0a9c4b">
+                            <i class="fa fa-check"></i> Breakfast Included
+                        </p>
+                    }
+                    @if (!string.IsNullOrEmpty(room.RoomFacilities))
+                        {
+                        <p class="tooltip-style">
+                            <i class="fa fa-check"></i>
+                            <a style="color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="@Html.Raw(room.RoomFacilities)">Room Facilities</a>
+                        </p>
+                    }
+
+                </div>
+
+
+                <div class="clearfix rate-plan-n offline-content">
+                    <p style="margin: 0; font-weight: bold">This rate is applied for offline market only. Please call +84 916388382  or send Inquire Now to get the SECRET DEAL.</p>
+                </div>
+                <div class="vertical-separator vertical-separator-first"></div>
+                <div class="vertical-separator vertical-separator-second"></div>
+            </article>
+            isRequest++;
+        }
+    }
+    <input type="hidden" id="book-request-hidden" value="@isRequest" />
+}
+else
+{
+    <p>This is sold out or Selling for Offline Market Only. Send Inquire Now to save up to 30% for this hotel.</p>
+}

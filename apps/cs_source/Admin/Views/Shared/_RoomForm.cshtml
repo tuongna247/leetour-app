@@ -1,0 +1,196 @@
+﻿@using System.Globalization
+@using Vinaday.Data.Models
+@model Room
+@{
+    List<CatDetail> views = ViewBag.RoomViews;
+    List<HotelImages> photos = ViewBag.Photos;
+}
+@if (Model != null)
+{
+    <style>
+        .inbox-widget {
+            height: 960px !important;
+        }
+
+        .image-inbox-widget {
+            height: 430px !important;
+        }
+    </style>
+    <div class="modal fade" id="room-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@(string.IsNullOrEmpty(Model.Name) ? "Add new room" : Model.Name)</h4>
+                    <input type="hidden" id="room-id" value="@Model.Id" />
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>In Room</h5>
+                            <form>
+                                <div class="form-group">
+                                    <label for="room-name">Room Name:</label>
+                                    <input id="room-name" value="@Model.Name" class="form-control m-b-sm" type="text" placeholder="Room Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="room-sort">Sort:</label>
+                                    <input id="room-sort" value="@Model.Sort" class="form-control m-b-sm" type="text" placeholder="sort number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="number-adult">Number of Adults:</label>
+                                    <div style="line-height: 30px;">
+                                        <span class="col-md-1">Max</span>
+                                        <div class="col-md-11">
+                                            <select id="number-adult" class="form-control m-b-sm">
+                                                @for (var i = 1; i < 11; i++)
+                                                {
+                                                    <option value="@i" @(Model.AdultNumber == i ? "selected" : "")>@(i == 1 ? string.Format("{0} {1}", i, "adult") : string.Format("{0} {1}", i, "adults"))</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Number of Children:</label>
+                                    <div style="line-height: 30px;">
+                                        <span class="col-md-1">Max</span>
+                                        <div class="col-md-4">
+                                            <select class="form-control m-b-sm" id="number-children">
+                                                @for (var i = 0; i < 7; i++)
+                                                {
+                                                    <option value="@i" @(Model.ChildrenNumber == i ? "selected" : "")>@(i == 0 || i == 1 ? string.Format("{0} {1}", i, "child") : string.Format("{0} {1}", i, "children"))</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <span class="col-md-2 text-center">under</span>
+                                        <div class="col-md-5">
+                                            <select class="form-control m-b-sm" id="age-children">
+                                                @for (var i = 1; i < 17; i++)
+                                                {
+                                                    <option value="@i" @(Model.ChildrenAge == i ? "selected" : "")>@(i == 1 ? string.Format("{0} {1}", i, "year old") : string.Format("{0} {1}", i, "years old"))</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Extra Beds:<span class="help-inline"> (in USD)</span></label>
+                                    <div style="line-height: 30px;">
+                                        <span class="col-md-1">Max</span>
+                                        <div class="col-md-5">
+                                            <select class="form-control m-b-sm" id="extra-bed">
+                                                @for (var i = 0; i < 4; i++)
+                                                {
+                                                    <option value="@i" @(Model.ExtraBed == i ? "selected" : "")>@(i == 0 || i == 1 ? string.Format("{0} {1}", i, "extra bed") : string.Format("{0} {1}", i, "extra beds"))</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <span class="col-md-2 text-center">price</span>
+                                        <div class="col-md-3">
+                                            <input id="extra-bed-price" value="@Model.ExtraBedPrice" class="form-control m-b-sm" type="text" placeholder="Price">
+                                        </div>
+                                        <span class="col-md-1" style="margin-left: -25px;">/bed</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="breakfast-surcharge">Breakfast Surcharge:<span class="help-inline"> (when not included in room rate.)</span></label>
+                                    <input id="breakfast-surcharge" value="@Model.BreakfastSurcharge" class="form-control m-b-sm" type="text" placeholder="Breakfast Surcharge">
+                                </div>
+                                <div class="form-group">
+                                    <label for="max-occupancy">Max Occupancy:<span class="help-inline"> (Max Occupacy person for this rate.)</span></label>
+                                    <input id="max-occupancy" value="@Model.MaxOccupancy" class="form-control m-b-sm" type="text" placeholder="Max Occupancy">
+                                </div>
+                                <div class="form-group">
+                                    <label for="view">Room View:</label>
+                                    <select id="view" class="form-control m-b-sm">
+                                        @if (views.Count > 0)
+                                        {
+                                            foreach (var view in views)
+
+                                            {
+                                                <option value="@view.Id" @(view.Id.ToString(CultureInfo.InvariantCulture) == Model.View ? "selected" : "")>@view.Name</option>
+                                            }
+                                        }
+                                    </select>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="room-size">Room Size:<span class="help-inline"> (m<sup>2</sup>)</span></label>
+                                    <input id="room-size" value="@Model.RoomSize" class="form-control m-b-sm" type="text" placeholder="Room Size">
+                                </div>
+                                <div class="form-group">
+                                    <label>Room Photo:</label>
+                                    <div id="change-photo">
+                                        <div class="thumbnail" style="padding: 23px">
+                                            <div class="nailthumb-container" style="overflow: hidden; padding: 0;">
+                                                <img id="room-image" src="@(!String.IsNullOrEmpty(Model.ImageUrl) ? Url.Content(Model.ImageUrl) : "/Content/img/no-image.jpg")" style="text-align: center; width: 100%;" class="nailthumb-image" alt="@Model.Name">
+                                            </div>
+
+                                        </div>
+                                        <a class="no-m text-success" href="javascript:void(0);" onclick="showChangePhoto();"><h5>Change photo</h5></a>
+                                        @if (photos.Any())
+                                        {
+                                            <h3>photos</h3>
+                                        }
+                                        else
+                                        {
+                                            <h3> no photos</h3>
+                                        }
+                                    </div>
+
+                                    <div class="image-inbox-widget slimscroll" id="images-div" style="display: none;">
+                                        @if (photos.Any())
+                                        {
+                                            <table id="images-table" class="table table-condensed table-hover">
+                                                <tbody>
+                                                    @foreach (HotelImages photo in photos)
+                                                    {
+                                                        var isImage = Model.ImageUrl == null ? false : Model.ImageUrl.Contains(photo.ImageThumbnail.Substring(2));
+                                                        <tr onclick="selectImage(this)" style="cursor:pointer" class="inbox-item @(isImage?"active":"")">
+                                                            <td><img style="width: 100%;" src="@Url.Content(string.Format("{0}-{1}.jpeg", photo.ImageThumbnail, 90))" alt="@photo.ImageName" /></td>
+                                                            <td style="text-align: center; padding-top: 20% !important;">
+                                                                <span class="glyphicon glyphicon-ok check-image" style="color: green; font-size: 30px;@(isImage?"display: inline":"display: none")"></span>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        }
+                                        else
+                                        {
+                                            <p>No content for this room, please upload image of room on hotel basic.</p>
+                                        }
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>
+                                Room Facilities
+                            </h5>
+                            <div id="room-facilities" class="inbox-widget slimscroll">
+                                @Html.Partial("_RoomFacilities")
+                            </div>
+                        </div>
+                    </div><!-- Row -->
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Close</a>
+                    <a class="btn btn-success" onclick="updateRoom(@Model.Id);">Save change</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="form-group">
+        <label>Room list</label>
+        <div class="alert alert-danger" style="margin-bottom: -5px;" role="alert">
+            No available room for this hotel.
+        </div>
+    </div>
+}

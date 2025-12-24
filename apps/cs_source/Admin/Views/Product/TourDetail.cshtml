@@ -1,0 +1,241 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@model Tour
+@{
+    ViewBag.Title = "Tour - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+
+    List<ItemModel> groupSizes = ViewBag.GroupSizes;
+    List<CancellationPolicy> cancellations = ViewBag.Cancellations;
+    List<ItemModel> durations = ViewBag.Durations;
+}
+
+@if (Model != null)
+{
+    <input type="hidden" id="tourId" value="@Model.Id" />
+    <div class="page-title">
+        <h3>Detal information</h3>
+        <div class="page-breadcrumb">
+            <ol class="breadcrumb">
+                <li><a href="@Url.Content("/Product/Tour")">Tour</a></li>
+                <li class="active">Detal Management</li>
+            </ol>
+        </div>
+
+    </div>
+    <div id="main-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-white">
+                    <div class="panel-heading clearfix">
+                        <div role="group" class="pull-left">
+                            <div class="form-group">
+                                <select id="language-detail" class="form-control">
+                                    <option value="2">English</option>
+                                    <option value="1">Vietnam</option>
+                                    <option value="3">German</option>
+                                    <option value="4">French</option>
+                                    <option value="5">Danish</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div role="group" class="pull-right">
+                            <a href="@Url.Content(string.Format("~/Product/TourBasic/{0}", Model.Id))" class="btn btn-success m-b-sm">Basic Info</a>
+                            <a disabled href="@Url.Content(string.Format("~/Product/TourDetail/{0}", Model.Id))" class="btn btn-success m-b-sm">Detail</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPhoto/{0}", Model.Id))" class="btn btn-success m-b-sm">Photos galery</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourItinerary/{0}", Model.Id))" class="btn btn-success m-b-sm">Itinerary</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPrice/{0}", Model.Id))" class="btn btn-success m-b-sm">Rates Control</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourSurcharge/{0}", Model.Id))" class="btn btn-success m-b-sm">Surcharges</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPromotion/{0}", Model.Id))" class="btn btn-success m-b-sm">Promotions</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPriceOption/{0}", Model.Id))" class="btn btn-success m-b-sm">Price Option</a>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div id="tour-detail">
+                        <input type="hidden" id="child-tour-id" value="@Model.Id" />
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="panel panel-white">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="panel-body">
+                                                    <form class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="start">Start</label>
+                                                            <div class="col-sm-10">
+                                                                <input id="start" value="@Model.Start" type="text" class="form-control" placeholder="Start">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="finish">Finish</label>
+                                                            <div class="col-sm-10">
+                                                                <input id="finish" value="@Model.Finish" type="text" class="form-control" placeholder="Finish">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="group-size">Group size</label>
+                                                            <div class="col-sm-10">
+
+                                                                <select id="group-size" class="form-control" name="group-size">
+                                                                    @if (groupSizes != null && groupSizes.Count > 0)
+                                                                    {
+                                                                        foreach (var groupSize in groupSizes.Where(groupSize => groupSize != null))
+                                                                        {
+                                                                            <option value="@groupSize.Name" @(Model.GroupSize == groupSize.Name ? "selected" : "")>@groupSize.Name</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="include">Include</label>
+                                                            <div class="col-sm-10">
+                                                                <div id="include">@Html.Raw(Model.IncludeActivity)</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="exclude">Exclude</label>
+                                                            <div class="col-sm-10">
+                                                                <div id="exclude">@Html.Raw(Model.ExcludeActivity)</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="duration">Duration</label>
+                                                            <div class="col-sm-10">
+
+                                                                <select id="duration" class="form-control" name="duration">
+                                                                    @if (durations != null && durations.Count > 0)
+                                                                    {
+                                                                        foreach (var duration in durations.Where(groupSize => groupSize != null))
+                                                                        {
+                                                                            <option value="@duration.Name" @(Model.Duration == duration.Name ? "selected" : "")>@duration.Name</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="departureOption">Departure Options 1:</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" style="width: 100%" id="depart_option1" name="depart_option1" value="@Model.DepartureOption1" />
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="departureOption">Departure Options 2:</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" style="width: 100%" id="depart_option2" name="depart_option2" value="@Model.DepartureOption2" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="departureOption">Departure Options 3:</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" style="width: 100%" id="depart_option3" name="depart_option3" value="@Model.DepartureOption3" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="departureOption">Tour Group 1 :</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" style="width: 100%" id="TourGroup1" name="TourGroup1" value="@Model.TourGroup1" />
+                                                               
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="departureOption">Tour Group 2 :</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" style="width: 100%" id="TourGroup2" name="TourGroup2" value="@Model.TourGroup2" />
+                                                             
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="departureOption">Tour Group 3 :</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" style="width: 100%" id="TourGroup3" name="TourGroup3" value="@Model.TourGroup3" />
+                                                               
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="departureOption">Tour Group Include 1 :</label>
+                                                            <div class="col-sm-10">
+                                                                <div class="col-md-12" id="TourGroup1Include">@Html.Raw(Model.TourGroup1Include)</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="departureOption">Tour Group Include 2 :</label>
+                                                            <div class="col-sm-10">
+                                                                <div class="col-md-12" id="TourGroup2Include">@Html.Raw(Model.TourGroup2Include)</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="departureOption">Tour Group Include 3 :</label>
+                                                            <div class="col-sm-10">
+                                                                <div class="col-md-12" id="TourGroup3Include">@Html.Raw(Model.TourGroup3Include)</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="notes">Notes</label>
+                                                            <div class="col-sm-10">
+                                                                <div id="notes">@Html.Raw(Model.Notes)</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label" for="cancellation">Cancellation</label>
+                                                            <div class="col-sm-10">
+
+                                                                <select id="cancellation" class="form-control" name="cancellation">
+                                                                    @if (cancellations.Count > 0)
+                                                                    {
+                                                                        foreach (var cancellation in cancellations.Where(cancellation => cancellation != null))
+                                                                        {
+                                                                            <option value="@cancellation.Id" @(Model.CancelationPolicy == cancellation.Id ? "selected" : "")>@cancellation.Name</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="pull-right">
+                                <a class="btn btn-success m-b-sm" onclick="updateTourStep2(); ">Save and continue</a>
+                                <a class="btn btn-default m-b-sm" href="@Url.Content("/Product/Tour")">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div><!-- Row -->
+    </div>
+
+}
+else
+{
+    <p>Not content for this item</p>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/tourjs")
+}
+

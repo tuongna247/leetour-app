@@ -1,0 +1,64 @@
+﻿@if (Model.Count > 0)
+{
+
+    <div id="hotel">
+        <h6 class="panel-title"><span class="badge badge-success" style="vertical-align: top">2</span> Fill all value for <b>Hotel Order</b></h6>
+        <hr />
+
+        <div class="form-group col-md-6">
+            <label for="check-in">Check-in</label>
+            <input id="check-in" type="text" class="form-control m-b-sm" placeholder="Check-in">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="check-out">Check-out</label>
+            <input id="check-out" type="text" class="form-control m-b-sm" placeholder="Check-out">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="hotle-list">Hotel list</label>
+            <select id="hotle-list" class="form-control">
+                <option value="-1">Select a hotel</option>
+                @foreach (var hotel in Model)
+                {
+                    <option value="@hotel.Id">@hotel.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <div id="room-list">
+                <label>Room list</label>
+                <div class="alert alert-success" style="margin-bottom: 10px;" role="alert">
+                    No available hotel selected.
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="total">Total room</label>
+            <select id="total" class="form-control">
+                @for (var i = 1; i < 100; i++)
+                {
+                    <option value="@i">@i</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="voucher">Discount</label>
+            <input id="voucher" type="text" class="form-control m-b-sm" placeholder="Discount">
+        </div>
+        <div id="customer-view">
+            <h6 class="panel-title"><span class="badge badge-primary" style="vertical-align: top">3</span> Fill all value for <b>Customer</b></h6>
+            <hr />
+            <div class="form-group col-md-6">
+                <label for="email">Email address</label>
+                <input type="email" placeholder="Enter email" id="email" name="email" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="phone">Phone</label>
+                <input type="phone" placeholder="Enter phone" id="phone" name="phone" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="text-right col-md-12">
+        <a class="btn btn-success" onclick="createHotelBooking();">Create your booking</a>
+    </div>
+
+}

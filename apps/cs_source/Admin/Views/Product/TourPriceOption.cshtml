@@ -1,0 +1,157 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Services
+@using Utilities = Vinaday.Web.Framework.Utilities
+@{
+    ViewBag.Title = "Tour - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+    List<TourRateOptions> promotions = ViewBag.TourRateOptions;
+
+}
+@if (Model != null)
+{
+    <input type="hidden" id="tourId" value="@Model.Id" />
+    <div class="page-title">
+        <h3>Tour Promotion</h3>
+        <div class="page-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="active">@Model.Name</li>
+            </ol>
+        </div>
+    </div>
+    <div id="main-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-white">
+                    <div class="panel-heading clearfix">
+                        <input type="hidden" id="hdnTourId" value="@Model.Id"/>
+                        <div role="group" class="pull-right">
+                            <a href="@Url.Content(string.Format("~/Product/TourBasic/{0}", Model.Id))" class="btn btn-success m-b-sm">Basic Info</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourDetail/{0}", Model.Id))" class="btn btn-success m-b-sm">Detail</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPhoto/{0}", Model.Id))" class="btn btn-success m-b-sm">Photos galery</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourItinerary/{0}", Model.Id))" class="btn btn-success m-b-sm">Itinerary</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPrice/{0}", Model.Id))" class="btn btn-success m-b-sm">Rates Control</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourSurcharge/{0}", Model.Id))" class="btn btn-success m-b-sm">Surcharges</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPromotion/{0}", Model.Id))" class="btn btn-success m-b-sm">Promotions</a>
+                            <a disabled href="@Url.Content(string.Format("~/Product/TourPriceOption/{0}", Model.Id))" class="btn btn-success m-b-sm">Price Option</a>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="panel-body">
+                        <div style="margin-top: 30px" class="form-inline">
+                            <div class="form-group">
+                                <a class="btn btn-info btn-addon m-b-sm btn-xs" onclick="addTourPriceOptionShow();"><i class="fa fa-plus"></i>Add new</a>
+                            </div>
+                        </div>
+                        <div id="load-pane-before" style="position: static;"></div>
+                        <div style="min-height: 250px;" id="promotion-list">
+                            @if (promotions.Count > 0)
+                            {
+                                <div class="table-responsive">
+
+                                    <table id="promotion-result" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Id</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Price</th>
+                                                <th class="text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var promotion in promotions)
+                                            {
+                                                <tr>
+                                                    <td>@promotion.Id</td>
+                                                    <td>
+                                                        @promotion.Name
+                                                    </td>
+                                                    <td>
+                                                        @promotion.Rate
+                                                    </td>
+                                                    <th class="text-center">
+                                                        <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteTourPriceOption(@promotion.Id);"><small class="glyphicon glyphicon-trash"></small></a>
+                                                    </th>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-center">No content for this time.</p>
+                            }
+                            <div class="clearfix"></div>
+
+                        </div>
+                        <div id="loadPane"></div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div><!-- Row -->
+    </div>
+    <div class="modal fade" id="tourPriceOption-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add new </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="rootwizard">
+                                <form id="wizardForm">
+                                    <div class="row">
+
+                                        <div class="form-group col-md-12">
+                                            <label for="TourOptionName">Name</label>
+                                            <input type="text" class="form-control" id="TourOptionName" placeholder="Name">
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label for="TourOptionPrice">to:</label>
+                                            <input type="text" class="form-control" id="TourOptionPrice" placeholder="price">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            
+                                            <input type="button" onclick="addTourPriceOption()" class="btn btn-primary" id="price"  value="Save">
+                                        </div>
+
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div><!-- Row -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>No content for this time!</p>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/tourjs")
+    <script>
+        function Save() {
+            alert("tuong");
+        }
+
+    </script>
+    
+}
+

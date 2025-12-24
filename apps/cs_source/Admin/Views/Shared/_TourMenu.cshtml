@@ -1,0 +1,9 @@
+﻿@model Vinaday.Data.Models.Tour
+<div role="group" class="pull-right">
+    <a disabled href="@(string.Format("~/Product/TourBasic/{0}", Model.Id))" class="btn btn-success m-b-sm">Basic Info</a>
+    <a href="@(string.Format("~/Product/TourDetail/{0}", Model.Id))" class="btn btn-success m-b-sm">Detail</a>
+    <a href="@(string.Format("~/Product/TourPhoto/{0}", Model.Id))" class="btn btn-success m-b-sm">Photos galery</a>
+    <a href="@(string.Format("~/Product/TourItinerary/{0}", Model.Id))" class="btn btn-success m-b-sm">Itinerary</a>
+    <a href="@(string.Format("~/Product/TourPrice/{0}", Model.Id))" class="btn btn-success m-b-sm">Rates Control</a>
+    <a href="@(string.Format("~/Product/TourPromotion/{0}", Model.Id))" class="btn btn-success m-b-sm">Promotions</a>
+</div>

@@ -1,0 +1,238 @@
+﻿@model Vinaday.Data.Models.Extention.ProductModel
+@{
+    ViewBag.Title = "vinaday.vn - Giỏ hàng";
+    Layout = "~/Views/Shared/_LayoutVn.cshtml";
+}
+<div class="pd-nav"></div>
+@if (Model.Details == null)
+{
+    <div class="content stepbooking">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12" style="text-align: center;">
+                    <h2>Phòng này không tồn tại !</h2>
+                    <p><a class="btn btn-default" href="http://www.vinaday.vn/">Trở lại vinaday.vn</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="content stepbooking">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <section class="step-payment">
+                        <div class="icon-step">
+                            <div class="box-step box-step1">
+                                <span class="fa fa-shopping-cart"></span>
+                                <p style="padding-left: 16px;">Giỏ hàng</p>
+                            </div>
+                            <div class="box-step box-step2">
+                                <span style="border-color: #ccc" class="fa fa-users"></span>
+                                <p>Thông tin</p>
+                            </div>
+                            <div class="box-step box-step3">
+                                <span style="padding-top: 17px; text-indent: 19px;" class="fa fa-shield"></span>
+                                <p>Thanh toán</p>
+                            </div>
+                        </div>
+                    </section>
+                    <!--step-payment-->
+                    <section class="content-section form checkout style-2">
+                        <div class="row">
+                            <div class="col-md-12 fadeInLeft " style="visibility: visible;">
+                                <div class="check-out-header">
+                                    <i style="padding-top: 7px; text-indent: 6px;" class="fa fa-shopping-cart"></i>
+                                    <h2 class="title">Giỏ hàng của bạn</h2>
+                                </div>
+                                <p style="font-size: 12px; margin-left: 31px; margin-top: -25px; text-align: left;">95% khách hàng của chúng tôi sẽ trở lại lần nữa.</p>
+                                <div class="row">
+                                    <div class="col-md-5 col-md-push-7 anim fadeInLeft">
+                                        <div id="accordion" class="panel-group">
+                                            <div class="panel panel-default" style="margin-top: 0;">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" style="text-decoration: none;" class="clearfix">
+                                                            <span class="pull-left">@Model.DetailName</span><strong class="pull-right">@((Model.TotalPrice*22000).ToString("##,###").Replace(",", "."))<sup>đ</sup></strong>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseOne" class="panel-collapse collapse in" style="height: auto;">
+                                                    <div class="panel-body">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Đêm</th>
+                                                                    <th>Ngày</th>
+                                                                    <th>Số lượng</th>
+                                                                    <th>Giá</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if (Model.Details.Count > 0)
+                                                                {
+                                                                    foreach (var detail in Model.Details)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@detail.Night</td>
+                                                                            <td>@detail.Date.ToString("dd/MM/yyyy")</td>
+                                                                            <td>@detail.Quantity</td>
+                                                                            <td>@(detail.PriceRoom > 0 ? (detail.PriceRoom*22000).ToString("##,###").Replace(",", ".") : "0")<sup>đ</sup></td>
+                                                                            @*<td>@detail.PriceRoom.ToString("##,###").Replace(",", ".")<sup>đ</sup></td>*@
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="clearfix collapsed">
+                                                            <span class="pull-left">Thuế và phí dịch vụ</span><strong class="pull-right">@((Model.TotalTaxeFee * 22000).ToString("##,###").Replace(",", "."))<sup>đ</sup></strong>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseTwo" class="panel-collapse collapse">
+                                                    <div class="panel-body">
+                                                        <p style="font-size: 15px; text-align: left; line-height: 23px; color: #555;">
+                                                            Thuế và phí dịch vụ của khách sạn cung cấp. <br>
+                                                            -Phí dịch vụ 5% <br>
+                                                            -Thuế của khách sạn 10%
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a class="clearfix collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                                            <span class="pull-left">Phụ thu</span>
+                                                            <strong class="pull-right">@(Model.TotalSurcharge>0 ? (Model.TotalSurcharge*22000).ToString("#,###").Replace(",",".") : "0")<sup>đ</sup> </strong>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseThree" class="panel-collapse collapse" style="height: 0px;">
+                                                    <div class="panel-body">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Đêm</th>
+                                                                    <th>Ngày</th>
+                                                                    <th>Số lượng</th>
+                                                                    <th>Giá</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if (Model.Details.Count > 0)
+                                                                {
+                                                                    foreach (var surcharge in Model.Details)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@surcharge.Night</td>
+                                                                            <td>@surcharge.Date.ToString("dd/MM/yyyy")</td>
+                                                                            <td>@surcharge.Quantity</td>
+                                                                            <td>@(surcharge.PriceSurcharge > 0 ? (surcharge.PriceSurcharge*22000).ToString("##,###").Replace(",", ".") : "0")<sup>đ</sup></td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a href="#collapseFour" data-parent="#accordion" data-toggle="collapse" class="clearfix collapsed">
+                                                            <span class="pull-left">Tiết kiệm</span>
+                                                            @if (Model.TotalSave>0)
+                                                            {
+                                                                <strong class="pull-right">@((Model.TotalSave*22000).ToString("#,###").Replace(",", "."))<sup>đ</sup> </strong>
+                                                            }
+                                                            else
+                                                            {
+                                                                <strong class="pull-right">0<sup>đ</sup> </strong>
+                                                            }
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div class="panel-collapse collapse" id="collapseFour">
+                                                    <div class="panel-body">
+                                                        <div>
+                                                            <p style="font-size: 15px; text-align: left; line-height: 23px; color: #555;">
+                                                                @if (Model.TotalSave >0)
+                                                                {
+                                                                    <span class="glyphicon glyphicon-gift" style="float: left;height: 45px;margin-right: 10px;"></span>
+                                                                    if (Model.Promotion != null)
+                                                                    {
+                                                                        @Html.Raw(Model.Promotion.Name)
+                                                                        <br />
+                                                                        @Html.Raw(Model.Promotion.Description)
+                                                                    }
+
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="border-top: 1px solid #6ebff3; margin-top: 10px;" class="payment-info-item">
+                                            <a href="http://www.hotel.vinaday.com" style="color: #6ebff3" class="pull-left bold hidden-xs">Tìm thêm khách sạn »</a>
+                                            <p style="line-height: inherit" class="pull-right bold">
+                                                <span style="font-size: 13px; font-weight: bold">Tổng cộng: </span>@((Model.FinalPrice * 22000).ToString("##,###").Replace(",", "."))<sup>đ</sup> <br>
+                                                <span style="color: #468847; font-weight: bold; font-size: 15px; margin-top: 0;"><i class="fa fa-check"></i> Đảm bảo giá tốt nhất</span>
+                                            </p>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7 col-md-pull-5 anim fadeInRight">
+                                        <div class="box-aside payment-detail">
+                                            <div class="payment-detail-content">
+                                                <div class="payment-detail-title">@Model.Name<span class="star star_@(Model.Rating)"></span></div>
+                                                <div class="image"> <img src="@(!string.IsNullOrEmpty(Model.ImageUrl) ? string.Format("http://vinaday.com{0}", Url.Content(Model.ImageUrl)) : "/Content/images/demo/general/no-image.jpg")" alt="@Model.Name"> </div>
+                                                <div class="payment-detail-content-info">
+                                                    <ul>
+                                                        <li><i class="fa fa-angle-double-right"></i><span class="bold">@Model.DetailName</span></li>
+                                                        <li><i class="fa fa-angle-double-right"></i><span class="bold">Địa điểm: </span>@Model.Location</li>
+                                                        <li><i class="fa fa-angle-double-right"></i><span class="bold">Ngày nhận phòng: </span>@Model.CheckIn.Date.ToString("dd/MM/yyyy")</li>
+                                                        <li><i class="fa fa-angle-double-right"></i><span class="bold">Ngày trả phòng: </span>@Model.CheckOut.Date.ToString("dd/MM/yyyy")</li>
+                                                        <li><i class="fa fa-angle-double-right"></i><span class="bold">Ở từ: </span>@Model.Stay</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="clear"></div>
+                                            </div>
+                                        </div>
+                                        <article class="box-signin fadeInLeft clearfix " style="visibility: visible;">
+                                            <div class="title"><strong>Thanh toán như là khách thường hoặc thành viên</strong></div>
+                                            <p><strong>Đăng ký và tiết kiệm thời gian!</strong></p>
+                                            <ul>
+                                                <li>Nhanh chóng và dễ dàng torng việc nhận phòng.</li>
+                                                <li>Dễ dàng truy cập vào tài khoản và quản lý của bạn.</li>
+                                                <li>Tích lũy điểm và tham gia các buổi tiệc miễn phí.</li>
+                                            </ul>
+                                            <div class="button">
+
+                                                <input type="button" onclick="location.href= '/vn/payment'; return false; " class="btn btn-primary btn-pr-active" value="Đặt ngay">
+                                                <input type="button" class="btn btn-primary btn-pr-active" value="Đăng nhập">
+                                            </div>
+                                        </article>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <span id="message_sent"><i class="fa-check fa"></i></span>
+                    </section>
+                    <!--checkout-->
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

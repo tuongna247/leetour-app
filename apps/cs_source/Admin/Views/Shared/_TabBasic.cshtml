@@ -1,0 +1,95 @@
+﻿@using System.Collections.Generic
+@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+@{
+    List<Country> countries = ViewBag.Countries;
+    List<City> cities = ViewBag.Cities;
+    Contact contactMain = ViewBag.ContactMain;
+    Hotel hotel = ViewBag.Hotel;
+}
+
+<div class="row">
+    @if (contactMain != null)
+    {
+        <div class="col-md-6">
+            <h4>Basic Info</h4>
+            <form>
+                <div class="form-group">
+                    <label for="basic-form-contact-country-id">Country</label>
+                    <select id="basic-form-contact-country-id" class="form-control m-b-sm">
+                        @foreach (var country in countries)
+                        {
+                            <option value="@country.CountryId" @(country.CountryId == hotel.CountryId ? "selected" : "")>@country.Name</option>
+                        }
+
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <label for="basic-form-contact-city-id">City</label>
+                    <select id="basic-form-contact-city-id" class="form-control m-b-sm">
+                        @foreach (var city in cities)
+                        {
+                            <option value="@city.CityId" @(city.CityId == hotel.CityId ? "selected" : "")>@city.Description</option>
+                        }
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <label for="basic-form-contact-hotel-name">Hotel Name</label>
+                    <input id="basic-form-contact-hotel-name" class="form-control" value="@hotel.Name" placeholder="Hotel Name">
+                </div>
+                <div class="form-group">
+                    <label for="basic-form-contact-phone">Phone</label>
+                    <input id="basic-form-contact-phone" class="form-control" value="@Utilities.FormatPhone(contactMain.PHONE)" placeholder="Phone">
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h4>Main Contact Info</h4>
+            <form>
+                <input type="hidden" id="basic-form-contact-id" value="@contactMain.CONTACTID" />
+                <div class="form-group">
+                    <label for="basic-form-contact-salutation">Salutation</label>
+                    <select id="basic-form-contact-salutation" class="form-control m-b-sm">
+                        <option @(contactMain.SALUTATION == "Mr." ? "selected" : "")>Mr.</option>
+                        <option @(contactMain.SALUTATION == "Mrs." ? "selected" : "")>Mrs.</option>
+                        <option @(contactMain.SALUTATION == "Ms." ? "selected" : "")>Ms.</option>
+                        <option @(contactMain.SALUTATION == "Dr." ? "selected" : "")>Dr.</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="basic-form-contact-first-name">First Name</label>
+                    <input id="basic-form-contact-first-name" value="@contactMain.FIRSTNAME" class="form-control" placeholder="First Name">
+                </div>
+                <div class="form-group">
+                    <label for="basic-form-contact-last-name">Last Name</label>
+                    <input id="basic-form-contact-last-name" value="@contactMain.LASTNAME" class="form-control" placeholder="Last Name">
+                </div>
+                <div class="form-group">
+                    <label for="basic-form-contact-email">Email Address</label>
+                    <input id="basic-form-contact-email" value="@contactMain.EMAILADDRESS" class="form-control" placeholder="Email Address">
+                </div>
+            </form>
+        </div>
+    }
+</div><!-- Row -->
+
+<div role="group" class="pull-right">
+    @if (hotel.Id > 0)
+    {
+        <button type="button" class="btn btn-success m-b-sm" onclick="saveTabBasic();">Save and Continue</button>
+    }
+    else
+    {
+        <button type="button" class="btn btn-success m-b-sm" onclick="addHotelBasic();">Add and Continue</button>
+    }
+    
+</div>
+<div class="clearfix"></div>
+<div id="error-list" style="display: none;">
+    <div id="error-item" class="alert alert-danger" role="alert">
+    </div>
+</div>
+
+

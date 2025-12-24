@@ -1,0 +1,141 @@
+﻿@using System.Collections.Generic
+@using Vinaday.Data.Models
+@model System.Collections.Generic.List<HotelImages>
+@{
+    List<CatDetail> imageTypes = ViewBag.ImageTypes;
+    Hotel hotel = ViewBag.Hotel;
+}
+@if (Model.Count > 0)
+{
+    <h4>Hotel Pictures</h4>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form action="@Url.Content("/Product/SaveUploadedPictures")" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneHotelForm" style="padding: 0;">
+                <input type="hidden" name="id" value="@hotel.Id" />
+                <div class="fallback">
+                    <input name="file" type="file" multiple />
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    @*<div role="alert" class="alert alert-success alert-dismissible">
+        <button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button>
+        Instruction: Browse your files and select the pictures to upload.
+    </div>*@
+
+    <div class="pull-left">
+
+        <a onclick="deleteImages('-1'); " class="btn btn-danger m-b-sm">Delete Selected</a>
+    </div>
+    <div class="pull-right">
+        <a onclick=" getTabUseful(); " class="btn btn-default m-b-sm">Skip and Continue</a>
+        <a onclick=" saveTabPicture(); " class="btn btn-success m-b-sm">Save and Continue</a>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="selected-all" name="testCheckbox">
+                                </th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody id="image-list">
+                            @foreach (var hotelImage in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="selected-id" name="testCheckbox" value="@hotelImage.Id" id="@hotelImage.Id">
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <img alt="Image" style="width: 100%" src="@Url.Content(string.Format("{0}-{1}.jpeg", hotelImage.ImageThumbnail,90))">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <input value="@(string.IsNullOrEmpty(hotelImage.ImageName) ? string.Format("{0} - {1}", hotelImage.Id, hotel.Name) : hotelImage.ImageName)" class="form-control hotel-image-name" alt="@(string.IsNullOrEmpty(hotelImage.ImageName) ? string.Format("{0}-{1}", hotelImage.Id, hotel.Name) : hotelImage.ImageName)">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <select class="form-control m-b-sm picture-type">
+                                                        @foreach (var image in imageTypes)
+                                                        {
+                                                            <option @(hotelImage.ImageType == image.Id ? "selected" : "") value="@image.Id">@image.Name</option>
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="image-option">
+                                                        <label class="checkbox inline">
+                                                            <input type="radio" @(hotelImage.PictureType == "Restaurant" ? "checked" : "") name="cbPictureType_@hotelImage.Id" id="cbImageType_@hotelImage.Id" value="Restaurant" />  Gallery
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="radio" @(hotelImage.PictureType == "MainPhoto" ? "checked" : "") name="cbPictureType_@hotelImage.Id" id="cbImageType_@hotelImage.Id" value="MainPhoto" />  Main Photo
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="radio" @(hotelImage.PictureType == "RoomType" ? "checked" : "") name="cbPictureType_@hotelImage.Id" id="cbImageType_@hotelImage.Id" value="RoomType"/> Room Type
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="radio" @(hotelImage.PictureType == "Map" ? "checked" : "") name="cbPictureType_@hotelImage.Id" id="cbImageType_@hotelImage.Id" value="Map" /> Map
+                                                        </label>
+                                                        <label class="checkbox inline">
+                                                            <input type="radio" @(hotelImage.PictureType == "Bar" ? "checked" : "") name="cbPictureType_@hotelImage.Id" id="cbImageType_@hotelImage.Id" value="Bar" /> Restaurant  & Bar
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <textarea rows="4" name="Description" class="form-control Description" placeholder="Restaurant & Bar seperate ,">@hotelImage.Description
+                                                    </textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input class="image-id" value="@hotelImage.Id" type="hidden" />
+                                                    <a href="javascript:void(0);" onclick="deleteImages('@hotelImage.Id'); ">Delete this Image</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <!-- Row -->
+    <div class="clearfix"></div>
+    <div class="pull-right">
+        <a onclick="getTabUseful();" class="btn btn-default m-b-sm">Skip and Continue</a>
+        <a onclick="saveTabPicture();" class="btn btn-success m-b-sm">Save and Continue</a>
+    </div>
+}
+else
+{
+        <h4>Hotel Pictures</h4>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form action="@Url.Content("/Product/SaveUploadedPictures")" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneHotelForm" style="padding: 0;">
+                <input type="hidden" name="id" value="@hotel.Id" />
+                <div class="fallback">
+                    <input name="file" type="file" multiple />
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="pull-right">
+        <a onclick="getTabUseful();" class="btn btn-default m-b-sm">Skip and Continue</a>
+        <a onclick="saveTabPicture();" class="btn btn-success m-b-sm">Save and Continue</a>
+    </div>
+  
+}

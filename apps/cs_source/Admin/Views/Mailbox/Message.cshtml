@@ -1,0 +1,108 @@
+﻿@using System
+@using Vinaday.Admin.Controllers
+@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+@{
+    ViewBag.Title = "Vinaday | Mailbox - Message";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+<div class="page-title">
+    <h3>Order Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/Dashboard/Index">Dashboard</a></li>
+            <li class="active">Mailbox - Message</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row m-t-md">
+        <div class="col-md-12">
+            <div class="row mailbox-header">
+                <div class="col-md-2">
+                    <a href="#" class="btn btn-success btn-block">Compose</a>
+                </div>
+                <div class="col-md-6">
+                    <h2>View Message</h2>
+                </div>
+                <div class="col-md-4">
+                    <form action="#" method="GET">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control input-search" placeholder="Search...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div><!-- Input Group -->
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <ul class="list-unstyled mailbox-nav">
+                <li><a href="/Mailbox/Inbox"><i class="fa fa-inbox"></i>Inbox </a></li>
+                <li><a href="#"><i class="fa fa-sign-out"></i>Sent</a></li>
+                <li><a href="#"><i class="fa fa-file-text-o"></i>Draft</a></li>
+                <li><a href="#"><i class="fa fa-exclamation-circle"></i>Spam</a></li>
+                <li><a href="#"><i class="fa fa-trash"></i>Trash</a></li>
+            </ul>
+        </div>
+        <div class="col-md-10">
+            @if (Model != null)
+            {
+                RoomReguest reguest = Model;
+                <div class="mailbox-content">
+                    <div class="message-header">
+                        <h3><span>Booking request: @reguest.HotelName</span> </h3>
+                        <p class="message-date">@DateTime.Now.ToShortDateString()</p>
+                    </div>
+                    <div class="message-sender">
+                        <img src="/Content/img/NoProfile.jpg" alt="">
+                        <p>@string.Format("{0} {1}", reguest.FirstName, reguest.LastName) <span>&lt;@reguest.Email &gt;</span></p>
+                    </div>
+
+                    <div class="message-content">
+                        <blockquote>
+
+                            <p>
+                                Hi Vinaday !<br>
+                            </p>
+                            <p>I want to book @Html.Raw(string.Format("<b>{0}</b> {1}", reguest.RoomTotal, reguest.RoomTotal > 1 ? "rooms" : "room")) - <b>@reguest.RoomName</b> of hotel <b>@reguest.HotelName</b></p>
+                            <p>
+                                Stay: <b>
+                                    @if (reguest.CheckIn != null)
+                                    {
+                                        @reguest.CheckIn.Value.ToShortDateString()
+                                    }
+                                </b> - <b>
+                                    @if (reguest.CheckOut != null)
+                                    {
+                                        @reguest.CheckOut.Value.ToShortDateString()
+                                    }
+                                </b>
+
+                            </p>
+                            <p>
+                                <b>@reguest.Note</b>.
+                            </p>
+                        </blockquote>
+                    </div>
+
+                    <p>
+                        <i class="icon-pin m-r-xs"></i>Please contact me:<br />
+                        Email: <a href="#">@reguest.Email</a> <br />
+                        Phone: <a href="#">@Utilities.FormatPhone(reguest.Phone)</a>
+                    </p>
+
+                    @*<div class="message-options pull-right">
+                            <a href="/Home/Compose" class="btn btn-default"><i class="fa fa-reply m-r-xs"></i>Reply</a>
+                            <a href="#" class="btn btn-default"><i class="fa fa-arrow-right m-r-xs"></i>Forward</a>
+                            <a href="#" class="btn btn-default"><i class="fa fa-print m-r-xs"></i>Print</a>
+                            <a href="#" class="btn btn-default"><i class="fa fa-exclamation-circle m-r-xs"></i>Spam</a>
+                            <a href="#" class="btn btn-default"><i class="fa fa-trash m-r-xs"></i>Delete</a>
+                        </div>*@
+                </div>
+            }
+
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->

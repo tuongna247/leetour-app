@@ -1,0 +1,232 @@
+﻿@using System
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Web.Framework
+@using Vinaday.Data.Models
+@{
+    ViewBag.Title = "Coupon Code - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+           .Where(c => c.Type == ClaimTypes.Role)
+           .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+    var hotelList= ViewBag.HotelList as List<Hotel>;
+    var tourList = ViewBag.TourList as List<Tour>; ;
+    var cityList = ViewBag.City as List<City>; ;
+}
+
+<div class="page-title">
+    <h3>Coupon Code List</h3>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+
+                    <a class="btn btn-info btn-addon m-b-sm btn-xs" onclick="showAddCoupon();"><i class="fa fa-plus"></i>Add new</a>
+                    @if (Model != null)
+                    {
+                        <div class="table-responsive">
+                            <table id="tour-list-2" class="display table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Code<span class="column-sorter"></span></th>
+                                        <th>Name<span class="column-sorter"></span></th>
+                                        <th>Description<span class="column-sorter"></span></th>
+                                        <th>Percentage<span class="column-sorter"></span></th>
+                                        <th>Type<span class="column-sorter"></span></th>
+                                        <th>Quantity<span class="column-sorter"></span></th>
+                                        <th style="width: 50px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (Vinaday.Data.Models.CouponCode coupon in Model)
+                                    {
+                                        <tr>
+                                            <td>@coupon.Code</td>
+                                            <td>@coupon.Name</td>
+                                            <td>@coupon.Description
+                                                @if (coupon.Type == 0)
+                                                { @coupon.HotelName <text>Room: </text> @coupon.RoomName   }
+                                                else if (coupon.Type == 1)
+                                                { @coupon.TourName <text>Numper person: </text>  @coupon.Person }
+                                                else if (coupon.Type == 2)
+                                                { @coupon.Email }
+                                                else if (coupon.Type == 3)
+                                                { @coupon.Phone }
+                                                else if (coupon.Type == 4)
+                                                { @coupon.CityName}
+                                            </td>
+                                            <td>
+                                            @if (coupon.DiscountType == 0)
+                                            {
+                                                @coupon.DiscountPercent <text>%</text>
+                                            }
+                                            else
+                                            {
+                                                @coupon.DiscountValue <text>$</text>
+}
+                                            </td>
+                                            <td>@if (coupon.Type ==0) {<text>Hotel</text>}
+                                            else if (coupon.Type == 1) {<text>Tour</text>}
+                                            else if (coupon.Type == 2)
+                                            {<text>Customer Email</text>}
+                                            else if (coupon.Type == 3)
+                                            {<text>Customer Phone</text>}
+                                            else if (coupon.Type == 4)
+                                            {<text>City</text>}
+                                            </td>
+                                            <td>@coupon.Quantity</td>
+                                            <td>
+                                                <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="DeleteCoupon('@coupon.Id');"><small class="glyphicon glyphicon-trash"></small></a>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+</div>
+<div class="modal fade" id="couponCode-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add new coupon </h4>
+
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="wizardForm">
+                            <div class="row">
+                                <div id="load-pane-wizard"></div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <label for="Name">Name:</label>
+                                        <input type="text" class="form-control " id="Name" placeholder="Enter name">
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="Description">Description:</label>
+                                        <input type="text" class="form-control " id="Description" placeholder="Description">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <label for="Name">From date:</label>
+                                        <input type="text" class="form-control m-b-sm date-picker" id="FromDate">
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="Description">Todate:</label>
+                                        <input type="text" class="form-control m-b-sm date-picker" id="ToDate" >
+                                    </div>
+                                </div>
+                               
+                                <div class="form-group col-md-12">
+                                    <div class="form-group col-md-12">
+                                        <label for="type">Promotion Type</label><br/>
+                                        <select id="type" onchange="ChangeType(this)">
+                                            <option value="0">Hotel</option>
+                                            <option value="1">Tour</option>
+                                            <option value="2">Customer Email</option>
+                                            <option value="3">Customer Phone</option>
+                                            <option value="4">City</option>
+                                        </select>
+                                        <div id="hotelList">
+                                            <select id="hotelId" onchange="SetRoomType()">
+                                                <option value="0">All Hotel</option>
+                                                @foreach (var hotel in hotelList)
+                                                {
+                                                    <option value="@hotel.Id">@hotel.Name</option>
+                                                }
+                                            </select>
+                                            <select id="roomId">
+                                                <option value="0">All Room Type</option>
+                                            </select>
+                                        </div>
+                                        <div id="tourList" style="display:none">
+                                            <select id="tourId" onchange="SetPerson()">
+                                                <option value="0">All Tour</option>
+                                                @foreach (var tour in tourList)
+                                                {
+                                                    <option value="@tour.Id">@tour.Name</option>
+                                                }
+                                            </select>
+                                            <select id="personId">
+                                                <option value="0">All Person</option>
+                                            </select>
+                                        </div>
+
+                                        <input type="text" id="customer_email" style="display:none" />
+                                        <input type="text" id="customer_phone" style="display:none" />
+                                        <div id="cityList" style="display:none">
+                                            <select id="cityId">
+                                                <option value="0">All City</option>
+                                                @foreach (var city in cityList)
+                                                {
+                                                    <option value="@city.CityId">@city.Name</option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <label for="discountType">Qty Coupon:</label><br />
+                                        <input type="text" id="quantity" />
+                                    </div>
+                                </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="form-group col-md-3">
+                                            <label for="discountType">Discount Type:</label><br />
+                                            <select id="discountType" onchange="SelectedType()">
+                                                <option value="0">Percentage </option>
+                                                <option value="1">Value </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <div id="percentType">
+                                                <label for="discount">Percentage discount:</label><br />
+                                                <input type="text" class="" id="discount" placeholder="% discount">
+                                            </div>
+                                            <div id="valueType" style="display:none">
+                                                <label for="discount">Value discount:</label><br />
+                                                <input type="text" class="" id="valueDiscount" placeholder="Value Discount">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="form-group col-md-6">
+                                            <a onclick="return AddCoupon();" href="javascript:void(0);" class="btn btn-default">Finish</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </form>
+
+                    </div>
+                </div><!-- Row -->
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/couponjs")
+}
+

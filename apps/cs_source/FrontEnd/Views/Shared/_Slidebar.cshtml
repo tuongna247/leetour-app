@@ -1,0 +1,55 @@
+﻿<nav id="sidebar">
+    <div class="custom-menu">
+        <button type="button" id="sidebarCollapse" class="btn btn-primary">
+            <i class="fa fa-bars"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+    <div class="p-4">
+        <h1>
+            <a href="@Url.Content("http://goreise.com")" class="logo">
+                <img src="@Url.Content("~/images/background/logo-transparency.png")" style="width:224px" />
+            </a>
+        </h1>
+        <ul class="list-unstyled components mb-5">
+            <li class="active">
+                <a href="@Url.Content("http://goreise.com")"><span class="fa fa-home mr-3"></span>Home</a>
+            </li>
+            <li class="active">
+                <a target="_blank" href="@Url.Content("~/tour")"><span class="fa fa-shopping-cart  mr-3"></span>Book Tour Online</a>
+            </li>
+            <li class="active">
+                <a target="_blank" href="@Url.Content("~/tour")"><span class="fa fa-globe mr-3"></span>Travel Services</a>
+                <ul>
+                    <li><a href="@Url.Content("~/tour")#daytrip">Day Trips</a></li>
+                    <li><a href="@Url.Content("~/tour")#package">Package Tours</a></li>
+                    <li><a href="@Url.Content("~/tour")#hotel">Hotels & Resorts</a></li>
+                    <li><a href="@Url.Content("~/tour")#mice">MICE</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="@Url.Content("~/visa-services")"><span class="fa fa-suitcase mr-3"></span> Visa Services</a>
+                <ul>
+                    <li><a href="@Url.Content("~/visa-services")#make-visa">How to make a new Visas</a></li>
+                    <li><a href="@Url.Content("~/visa-services")#extend-visa">Extend your Visas</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="@Url.Content("~/invest-in-vietnam")"><span class="fa fa-money mr-3"></span>Invest in Vietnam</a>
+                <ul>
+                    <li><a href="@Url.Content("~/invest-in-vietnam")#register-company">Register a new Company</a></li>
+                    <li><a href="@Url.Content("~/invest-in-vietnam")#manage-company">Manage your company</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="@Url.Content("~/working-in-vietnam")"><span class="fa fa-paper-plane-o mr-3"></span>Working in Vietnam</a>
+                <ul>
+                    <li><a href="@Url.Content("~/working-in-vietnam")#job-culture">Job & Culture</a></li>
+                    <li><a href="@Url.Content("~/working-in-vietnam")#how-to-make-work">How to make a work permit</a></li>
+                    <li><a href="@Url.Content("~/working-in-vietnam")#trc">TRC</a></li>
+                </ul>
+            </li>
+            <li><a href="@Url.Content("~/about-us")"><span class="fa fa-certificate mr-3"></span>About Us</a></li>
+        </ul>
+    </div>
+</nav>

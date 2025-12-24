@@ -1,0 +1,294 @@
+﻿@using System
+@using System.Collections.Generic
+@using Vinaday.Admin.Models
+@using Vinaday.Admin.Models.VinadayDBF
+@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+
+
+@{
+    ViewBag.Title = "Order - Management";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    List<OrderModel> orders = ViewBag.Orders;
+    List<ApplicationUser> users = ViewBag.Users;
+    List<Vinaday.Admin.Models.VinadayDBF.SP_GetAllNewBooking_Result> upComming = ViewBag.UpCommingOrder;
+    //Get list for comming order
+    var orderCommings = orders.OrderBy(o => DateTime.Parse(o.StartDate)).Where(o => DateTime.Parse(o.StartDate) >= DateTime.Now.Date  && DateTime.Parse(o.StartDate) <= DateTime.Now.AddDays(7).Date).ToList();
+    var newBookings = upComming!=null? upComming.OrderBy(a => a.StartDate).ToList():new List<SP_GetAllNewBooking_Result>();
+}
+<div class="page-title">
+    <h3>Order Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="~/">Product</a></li>
+            <li class="active">Order</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12 pull-right">
+            <div class="panel-group" style="margin-bottom: 5px">
+                <div class="panel panel-danger">
+                    <div class="panel-heading" role="tab" id="headingThree3" style="height: 30px;padding: 7px;">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion2" href="#3" aria-expanded="false" aria-controls="collapseThree">
+                                #@orderCommings.Count Booking Coming (Khách đi ngày mai)
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree3" aria-expanded="false">
+                        <div class="panel-body">
+                            <table class="table table-bordered" style="margin-bottom: 0">
+                                <tbody>
+                                    @foreach (var orderComming in orderCommings)
+                                    {
+                                        <tr>
+                                            <td style="padding: 5px !important;font-weight: bold">
+                                                <a href="@(Url.Content(string.Format("~/Booking/OrderDetail/{0}", orderComming.Id)))">
+                                                    @Vinaday.Admin.App_Code.Utilities.ConvertDT2String(orderComming.StartDate) - @(orderComming.ProductName)
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 pull-right">
+            <div class="panel-group" style="margin-bottom: 5px">
+                <div class="panel panel-danger">
+                    <div class="panel-heading" role="tab" id="headingThree4" style="height: 30px;padding: 7px;">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion3" href="#4" aria-expanded="false" aria-controls="collapseThree">
+                                #@newBookings.Count New Booking (Các booking vừa đặt kiểm tra cẩn thận)
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree4" aria-expanded="false">
+                        <div class="panel-body">
+                            <table class="table table-bordered" style="margin-bottom: 0">
+                                <tbody>
+                                    @foreach (var newBooking in newBookings)
+                                    {
+                                        <tr>
+                                            <td style="padding: 5px !important;font-weight: bold">
+                                                <a target="_blank" href="@(Url.Content(string.Format("~/Booking/OrderDetail/{0}", newBooking.Id)))">
+                                                    @if (newBooking.StartDate != null)
+                                                    {
+                                                        @Vinaday.Admin.App_Code.Utilities.ConvertDT2String(newBooking.StartDate.Value.ToLongDateString())
+                                                    } - @(newBooking.ProductName)
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <form action="~/Booking/Order" method="post">
+                <div class="col-md-10  pull-left" style="padding-left:27px">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="checkbox inline">
+                                <input type="radio" value="by-created-date" checked="@ViewBag.ByCreatedDate" name="SearchBy">Created Date
+                            </label>
+                            <label class="checkbox inline">
+                                <input type="radio" value="by-check-in" checked="@ViewBag.ByCheckInDate" name="SearchBy" />Check-in Date
+                            </label>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fromdate">from order</label>
+                            <input id="fromdate" name="fromdate" value="@ViewBag.FromDate" type="text" class="form-control m-b-sm" placeholder="from date">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="todate">to date</label>
+                            <input id="todate" name="todate" value="@ViewBag.ToDate" type="text" class="form-control m-b-sm" placeholder="to date">
+                        </div>
+                        <div class="col-md-1">
+                            <div style="height:24px; width:100%"> </div>
+                            <input type="submit" class="btn btn-info btn-addon " value="Search" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <a class="btn btn-info btn-addon m-b-sm btn-xs" href="~/Booking/OrderCreate"><i class="fa fa-plus"></i>Create new</a>
+
+
+                    <div class="table-responsive">
+                        <table id="order-list" class="display table" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>PNR</th>
+                                    <th>Name</th>
+                                    <th>Customer</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Coupon Code</th>
+                                    <th style="width: 100px">Note</th>
+                                    <th>Check in</th>
+                                    <th>Quantity</th>
+                                    <th>Final Price</th>
+                                    <th>Status</th>
+                                    <th>Create</th>
+                                    <th>Action</th>
+                                    <th>Management</th>
+                                </tr>
+                            </thead>
+                           
+                            <tbody>
+                                @if (orders.Count > 0)
+                                {
+                                    foreach (var order in orders)
+                                    {
+                                        <tr >
+
+                                            <td>
+                                                @switch (order.Type)
+                                                {
+                                                    case (int)Utilities.Product.Tour:
+                                                        <span class="label label-success">
+                                                            @order.Pnr.ToUpper()
+                                                        </span>
+                                                        break;
+                                                    case (int)Utilities.Product.Hotel:
+                                                        <span class="label label-primary">
+                                                            @order.Pnr.ToUpper()
+                                                        </span>
+                                                        break;
+                                                    default:
+                                                        <span class="label label-info">
+                                                            @order.Pnr.ToUpper()
+                                                        </span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (order.IsRead == null || order.IsRead == false)
+                                                {<span class="label label-danger">
+                                                    new booking</span>}
+                                                <a href="@(Url.Content(string.Format("~/Booking/OrderDetail/{0}", order.Id)))">
+                                                    @(order.ProductName)
+                                                </a>
+
+</td>
+                                            <td>@(order.Customer != null ? String.Format("{0} {1}", order.Customer.Firstname, order.Customer.Lastname) : string.Empty)</td>
+                                            <td>
+                                                @(order.Customer != null ?  order.Customer.Email : string.Empty)
+                                            </td>
+                                            <td>@(order.Customer != null ? order.Customer.PhoneNumber + " " + order.Customer.PhoneNumber2 : string.Empty)</td>
+                                            <td>@order.CouponCode</td>
+                                            <td>@(order.SpecialRequest ?? "No Special Request")</td>
+                                            <td>@order.StartDate</td>
+                                            <td>@order.Quantity</td>
+                                            <td>
+                                                @if (order.Total != null)
+                                                {
+                                                    @order.Total.Value.ToString("C")
+                                                }</td>
+                                            <td>
+                                                @switch (order.Status)
+                                                {
+                                                    case (int)Utilities.BookingStatus.Holding:
+                                                        <span class="label label-primary">
+                                                            @Enum.GetName(typeof(Utilities.BookingStatus), order.Status)
+                                                        </span>
+                                                        break;
+                                                    case (int)Utilities.BookingStatus.Paid:
+                                                        <span class="label label-success">
+                                                            @Enum.GetName(typeof(Utilities.BookingStatus), order.Status)
+                                                        </span>
+                                                        break;
+                                                    case (int)Utilities.BookingStatus.Refunded:
+                                                        <span class="label label-primary">
+                                                            @Enum.GetName(typeof(Utilities.BookingStatus), order.Status)
+                                                        </span>
+                                                        break;
+                                                    case (int)Utilities.BookingStatus.Failure:
+                                                        <span class="label label-warning">
+                                                            @(Enum.GetName(typeof(Utilities.BookingStatus), order.Status))
+                                                        </span>
+                                                        break;
+                                                    default:
+                                                        <span class="label label-danger">
+                                                            @Enum.GetName(typeof(Utilities.BookingStatus), order.Status)
+                                                        </span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>@order.CreatedDate</td>
+                                            <td class="text-center" style="width: 60px;">
+                                                <input value="@order.Id" class="order-management-id" type="hidden" />
+                                                <a href="@(Url.Content(string.Format("~/Booking/OrderDetail/{0}", order.Id)))" class="btn btn-success btn-xs"><small class="glyphicon glyphicon-edit"></small></a>
+                                                <a @(order.Status == (int)Utilities.BookingStatus.Holding ? "" : "disabled") class="btn btn-danger btn-xs" onclick="cancelOrder('@order.Id');" href="javascript:void(0);"><small class="glyphicon glyphicon-log-out"></small></a>
+                                            </td>
+                                           
+                                            <td class="text-center">
+                                                @*@(order.Status != (int)Utilities.BookingStatus.Holding ? "disabled" : "")*@
+                                                <select class="user-list-management form-control">
+
+                                                    <option value="None" @(order.Management == "None" ? "selected" : "")>None</option>
+                                                    @if (users.Count > 0)
+                                                    {
+                                                        foreach (var user in users)
+                                                        {
+                                                            <option value="@user.UserName" @(order.Management == user.UserName ? "selected" : "")>@user.UserName</option>
+                                                        }
+
+                                                    }
+                                                </select>
+                                            </td>
+                                        </tr>
+
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->
+<div id="change-status-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <input id="order-id" type="hidden" />
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel"><span id="title"></span> booking</h4>
+            </div>
+            <div class="modal-body">
+                <div id="value-group" class="form-group clearfix">
+                    <label id="label-change-value" for="change-value">Value <span class="text-danger">*</span></label>
+                    <input type="text" id="change-value" class="form-control" name="change-value">
+                </div>
+
+                <div id="note-group" class="form-group clearfix">
+                    <label for="note">Note <span class="text-danger">*</span></label>
+                    <textarea style="width: 100%" id="note" rows="5"></textarea>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/orderjs")
+}

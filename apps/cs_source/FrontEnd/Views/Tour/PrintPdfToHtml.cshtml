@@ -1,0 +1,156 @@
+﻿@using Vinaday.Data.Models
+@model Vinaday.Data.Models.Extention.TourModel
+
+<link href="~/Content/tours/custom.css" rel="stylesheet" />
+<link href="~/Content/tours/style.css" rel="stylesheet" />
+
+<section class="content-section content-section-vinaday">
+    <div class="container">
+        <header id="top" role="banner">
+            <div class="block">
+                <a href="/" class="logo">
+                    <img src="/images/background/logo.png" alt="logo vinaday" style="width: 263px; vertical-align: top; margin-top: 0 !important;"/>
+                </a>
+                <div style="float: right; font-size: 10px;">
+                    Operated by VINADAY GOREISE VN CO., LTD <br />
+                    Tax Code: 0310071681 issued by DPI Ho Chi Minh City, VN <br />
+                    Add: 230 De Tham Street, Dist. 1, HCM city, VN 711228<br />
+                    Tel: +84 916388382 - WhatsApp: (+84)919185990
+                </div>
+            </div>
+        </header>
+        @if (Model.Tour != null)
+        {
+            <div itemscope itemtype='http://schema.org/Product' id="print_tour_detail" class="primary clearfix hidden-print " style="padding-top: 0">
+                <div class="fadeInLeft animated" style="visibility: visible;">
+                    <div class="read">
+                        <h1 itemprop="name" class="fadeInLeft animated" style="visibility: visible;">@Html.Raw(Model.Tour.Name)</h1>
+                        <div class="clearfix"></div>
+                        <section id="key-details">
+                            <div class="item">
+                                <i class="fa fa-clock-o"> </i>
+                                <div class="highlight">
+                                    Start:
+                                </div>
+                                <div class="nfo">
+                                    @Model.Tour.Start
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="fa fa-clock-o"> </i>
+                                <div class="highlight">
+                                    Finish:
+                                </div>
+                                <div class="nfo">
+                                    @Model.Tour.Finish
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="fa fa-users"></i>
+                                <div class="highlight">
+                                    Group size:
+                                </div>
+                                <div class="nfo">
+                                    @Model.Tour.GroupSize
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="fa fa-map-o"></i>
+                                <div class="highlight">
+                                    Location :
+                                </div>
+                                <div class="nfo">
+                                    @Model.Tour.Location
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="fa fa-hourglass-half"></i>
+                                <div class="highlight">
+                                    Duration &amp; Type:
+                                </div>
+                                <div class="nfo">
+                                    @Model.Tour.Duration -
+                                    @if (Model.Tour.Type == 2)
+                                    {
+                                        <span>Day Trips</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Tour</span>
+                                    }
+                                </div>
+                            </div>
+                        </section>
+                        <h2 style="margin-top: 0">Overview</h2>
+                        <div style="text-align: justify;">
+                            <span itemprop="description">
+                                @Html.Raw(Model.Tour.Overview)
+                            </span>
+                        </div>
+                        @if (Model.Tour.Details.Count > 0)
+                        {
+                            <h2>Program Details</h2>
+                            <section>
+                                @foreach (Detail detail in Model.Tour.Details.OrderBy(a => a.SortOrder))
+                                {
+                                    if (detail == null)
+                                    {
+                                        continue;
+                                    }
+                                    <div>
+                                        @if (Model.Tour.Details.Count > 1)
+                                        {
+                                            <div class="highlight">
+                                                <span style="color: #000000">
+                                        <span style="text-decoration: underline">Day @detail.SortOrder</span>
+                                        - @Html.Raw(detail.Itininary)
+                                    </span>
+
+                                            </div>
+                                        }
+
+                                        <div class="nfo">
+                                            @Html.Raw(detail.Content.Replace("<br/><br/><br/>", "<br/>").Replace("<br><br>", "<br/>").Replace("<br>", "").Replace("<br/>", "").Replace("<br/><br/>", "<br/>"))
+                                            <br/>
+                                            @Html.Raw(!string.IsNullOrEmpty(detail.Meal) ? string.Format("<b >Meal:</b> {0}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", detail.Meal.Substring(0, detail.Meal.Length - 2)) : "")
+                                            @Html.Raw(!string.IsNullOrEmpty(detail.Transport) ? string.Format("<b >Transport:</b> {0}", detail.Transport.Substring(0, detail.Transport.Length - 2)) : "")
+                                        </div>
+                                    </div>
+                                }
+                            </section>
+                        }
+
+                        <div class="item">
+                            <div class="highlight">
+                                Included:
+                            </div>
+                            <div class="nfo">
+                                @Html.Raw(Model.Tour.IncludeActivity)
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="highlight">
+                                Excluded:
+                            </div>
+                            <div class="nfo">
+                                @Html.Raw(Model.Tour.ExcludeActivity)
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="highlight">
+                                Notes:
+                            </div>
+                            <div class="nfo">
+                                @Html.Raw(Model.Tour.Notes)
+                            </div>
+                        </div>
+                        <div class="item">
+                            <a href="@Url.Content("https://goreise.com"+ViewBag.Url)">@Html.Raw(Model.Tour.Name)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</section>

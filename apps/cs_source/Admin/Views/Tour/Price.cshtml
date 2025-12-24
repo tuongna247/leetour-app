@@ -1,0 +1,169 @@
+﻿@using Vinaday.Data.Models
+
+@{
+    ViewBag.Active = "Tour";
+    ViewBag.Page = "Management";
+    ViewBag.Title = "Price";
+    Layout = "~/Views/Shared/_TourLayout.cshtml";
+    Tour tour = ViewBag.Tour;
+    List<Rate> rates = ViewBag.Rates;
+}
+<style>
+    tbody tr th {
+        text-align: center !important;
+    }
+
+        tbody tr th input, table input {
+            text-align: center !important;
+            height: 15px !important;
+            width: 50% !important;
+        }
+
+        tbody tr th select, table select {
+            width: 50% !important;
+        }
+
+    #rates-result thead th {
+        text-align: center;
+    }
+</style>
+@if (tour != null)
+{
+    <div id="main-content" class="main-content container-fluid">
+        <div id="page-content" class="page-content">
+            <div class="row-fluid page-head">
+                <h2 class="page-title"><i class="fontello-icon-calendar-inv"></i>Rates <small>Control</small></h2>
+                <p class="pagedesc">
+                    @tour.Name
+                </p>
+            </div>
+            <div id="page-content" class="page-content tab-content overflow-y">
+                <nav>
+                    <input type="hidden" id="tourId" value="@tour.Id" />
+                    <input type="hidden" id="commission-rate" value="@tour.CommissionRate" />
+                    <ul class="btn-toolbar page-nav margin-btn">
+                        <li><a class="btn btn-well btn-glyph " href="@(string.Format("~/Tour/BasicInformation/{0}",tour.Id))" style="width:60px"><i class="fontello-icon-check f20"></i><span class="block">BASIC</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Detail/{0}", tour.Id))" style="width:60px"><i class="fontello-icon-th-4 f20"></i><span class="block">DETAIL</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Photo/{0}", tour.Id))" style="width:60px" data-toggle="modal"><i class=" fontello-icon-camera-3 f20"></i><span class="block">PHOTO</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Itinerary/{0}", tour.Id))" style=" width:60px"><i class=" fontello-icon-flight-1 f20"></i><span class="block">ITINERARY</span></a></li>
+                        <li><a class="btn btn-well btn-glyph active" href="@(string.Format("~/Tour/Price/{0}", tour.Id))" style="width:60px" data-toggle="modal"><i class="fontello-icon-dollar f20"></i><span class="block">PRICE</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Promotion/{0}", tour.Id))" style="width:60px" data-toggle="modal"><i class="fontello-icon-gift f20"></i><span class="block">DEAL</span></a></li>
+                    </ul>
+                    <hr class="margin-0x">
+                </nav>
+                <div class="well well-nice well-small">
+                    <div id="price-list">
+                        <div id="rates-control">
+                            @if (rates != null && rates.Count > 0)
+                            {
+                                <table class="table table-hover" id="rates-result" style="margin-bottom: 5px;">
+                                    <thead>
+                                        <tr>
+                                            <th>No. Person</th>
+                                            <th>Retail rate (per person)</th>
+                                            <th>Net rate (per person)</th>
+                                            <th>Commission rate</th>
+                                            <th>Total rate</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var rate in rates.Where(rate => rate != null))
+                                        {
+                                            <tr>
+                                                <th><input type="text" class="person-no" value="@rate.PersonNo" /></th>
+                                                <th><input type="text" class="retail" value="@rate.RetailRate" /></th>
+                                                <th><input type="text" class="net" value="@(rate.RetailRate + (rate.RetailRate * tour.CommissionRate/100))" disabled /></th>
+                                                <th><input type="text" class="commission" value="@tour.CommissionRate" disabled /></th>
+                                                <th><input type="text" class="total" value="@((rate.RetailRate + (rate.RetailRate * tour.CommissionRate / 100)) * rate.PersonNo)" disabled /></th>
+                                                <th>
+                                                    <input type="hidden" class="rate-id" value="@rate.Id" />
+                                                    <a style="color: #333; font-size: 15px; cursor: pointer;" class="fontello-icon-trash-1" onclick="deleteRate('@rate.Id'); "></a>
+                                                </th>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <table class="table table-hover" id="rates-result" style="margin-bottom: 5px;">
+                                    <thead>
+                                        <tr>
+                                            <th>No. Person</th>
+                                            <th>Retail rate (per person)</th>
+                                            <th>Net rate (per person)</th>
+                                            <th>Commission rate</th>
+                                            <th>Total rate</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            }
+                            <a class="btn btn-green btn-mini" onclick="addMore();">Add more</a>
+                            <div class="form-actions">
+                                <a class="btn btn-yellow btn-mini" href="javascript:void(0);" onclick="insertRates();" type="button">Save</a>
+                                <a class="btn btn-yellow btn-mini" href="@Url.Content("/Tour/Management")" type="button">Cancel</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Not content for this item</p>
+}
+<div id="add-price-modal" class="modal hide fade" tabindex="-1" data-width="40%">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fontello-icon-cancel-1"></i></button>
+        <h3><i class="fontello-icon-article-alt opaci35"></i> Add <small id="contact-type-title">new price</small></h3>
+    </div>
+    <div class="modal-body">
+        <div class="well well-nice">
+            <section>
+                <div class="row-fluid">
+                    <fieldset>
+                        <ul class="form-list label-left list-bordered dotted">
+                            <li class="control-group">
+                                <label for="number" class="span4">Number Of Person<span class="required">*</span></label>
+                                @*<input id="number" class="span8" placeholder="Enter Number Of Person" type="text" name="number" value="">*@
+                                <select id="number" class="span8" name="number">
+                                    @for (var i = 1; i < 50; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+
+                                </select>
+
+                            </li>
+                            <li class="control-group">
+                                <label for="retail" class="span4">Retail rate per person <span class="required">*</span></label>
+                                <input id="retail" class="span8" placeholder="Enter Retail rate per person" type="text" name="retail" value="">
+                            </li>
+                            <li class="control-group">
+                                <label for="net" class="span4">Net rate per person <span class="required">*</span></label>
+                                <input id="net" class="span8" placeholder="Enter Net rate per person" type="text" name="net" value="">
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn btn-yellow btn-mini">Close</button>
+        <button type="button" id="save-contact" class="btn btn-yellow btn-mini" onclick="insertRates();">Save</button>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/tourjs")
+}

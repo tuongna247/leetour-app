@@ -1,0 +1,38 @@
+﻿@model List<Vinaday.Data.Models.RateExchange>
+@if (Model.Count > 0)
+{
+    <table id="table-currencies" class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col" class="hidden-phone">Name</th>
+                <th scope="col" class="hidden-phone">Description</th>
+                <th scope="col" class="hidden-phone">Price (for $1)</th>
+                <th scope="col" class="action" style="text-align: center;width: 200px">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var currency in Model)
+            {
+                <tr>
+                    <td id="@currency.Id">@currency.Id</td>
+                    <td class="hidden-phone">@currency.Name</td>
+                    <td class="hidden-phone">@currency.Description</td>
+                    <td class="hidden-phone">@String.Format("{0:C}", currency.CurrentPrice)</td>
+                    <td class="action" style="text-align: center; width: 200px">
+                        <span class="quick-menu-icon" style="cursor: pointer">
+                            <a class="btn btn-success btn-xs" onclick="editForm('@currency.Id','@currency.Name', '@currency.CurrentPrice');"><small class="glyphicon glyphicon-edit"></small></a>
+                            <a disabled class="btn btn-danger btn-xs" onclick="deleteCurrency('@currency.Id')"><small class="glyphicon glyphicon-trash"></small></a>
+                        </span>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No content for this Item</p>
+}

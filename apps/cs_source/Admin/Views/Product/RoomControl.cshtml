@@ -1,0 +1,106 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@model Hotel
+
+@{
+    ViewBag.Title = "Room Control - Hotel Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+
+    List<Room> roomTypes = ViewBag.RoomTypes;
+}
+<style>
+    tbody tr th {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+        tbody tr th input {
+            text-align: center !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            height: 34px !important;
+            width: 50px !important;
+            margin: 0 auto !important;
+        }
+
+        tbody tr th select {
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            vertical-align: middle !important;
+        }
+    .table td, .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px !important;
+    }
+</style>
+<div class="page-title">
+    <h3>Hotel Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/Product/Hotel">Hotel Management</a></li>
+            <li class="active">Room Control</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <div role="group" class="pull-right clearfix">
+                        @if (Model.Id > 0)
+                        {
+                            <input type="hidden" id="hotel-id" value="@Model.Id" />
+                            <a href="@Url.Content("~/Product/HotelBasic/"+Model.Id)" class="btn btn-success m-b-sm">Basic Info</a>
+                            @*<a href="@(string.Format("http://goreise.com/rc/"+Model.Id)" class="btn btn-success m-b-sm">Room Management</a>*@
+                            <a disabled href="#" class="btn btn-success m-b-sm">Room Control</a>
+                            <a href="@Url.Content("~/Product/HotelPackage/"+Model.Id)" class="btn btn-success m-b-sm">Package</a>
+                            <a href="@Url.Content("~/Product/RateControl/"+Model.Id)" class="btn btn-success m-b-sm">Rate Control</a>
+                            <a href="@Url.Content("~/Product/Surcharge/"+Model.Id)" class="btn btn-success m-b-sm">Surcharges</a>
+                            <a href="@Url.Content("~/Product/Promotion/"+Model.Id)" class="btn btn-success m-b-sm">Promotions</a>
+                            <a href="@Url.Content("~/Product/HotelSeo/"+Model.Id)" class="btn btn-success m-b-sm">SEO</a>
+                            <a href="@Url.Content("~/Product/Review/"+Model.Id)" class="btn btn-success m-b-sm">Reviews</a>
+                        }
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    <div class="form-inline" style="margin-top: 30px">
+                        <div class="form-group">
+                            <select id="room-type" class="form-control m-b-sm">
+                                @if (roomTypes.Count > 0)
+                                {
+                                    foreach (var roomType in roomTypes)
+                                    {
+                                        <option value="@roomType.Id">@roomType.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input id="check-in" placeholder="From" type="text" class="form-control m-b-sm date-picker">
+                        </div>
+                        <div class="form-group">
+                            <input id="check-out" placeholder="To" type="text" class="form-control m-b-sm date-picker">
+                        </div>
+                        <div class="form-group">
+                            <a class="btn btn-info m-b-sm" href="javascript:void(0);" onclick="getRoomControl();">Search</a>
+                        </div>
+                    </div>
+                    <div id="load-pane-before"></div>
+                    <div id="room-control-list" style="min-height:250px;"></div>
+                    <div id="loadPane"></div>
+                </div>
+            </div>
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/roomjs")
+}

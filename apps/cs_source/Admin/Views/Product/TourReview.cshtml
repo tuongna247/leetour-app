@@ -1,0 +1,64 @@
+﻿@using System
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Web.Framework
+@using Vinaday.Data.Models
+@{
+    ViewBag.Title = "Tour Review - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+           .Where(c => c.Type == ClaimTypes.Role)
+           .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+}
+
+<div class="page-title">
+    <h3>Tour Review List</h3>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    @if (Model != null)
+                    {
+                        <div class="table-responsive">
+                            <table id="tour-list-2" class="display table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Guest<span class="column-sorter"></span></th>
+                                        <th>Star<span class="column-sorter"></span></th>
+                                        <th>Title<span class="column-sorter"></span></th>
+                                        <th>Conten<span class="column-sorter"></span></th>
+                                        <th style="width: 50px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (Vinaday.Data.Models.TourReview coupon in Model)
+                                    {
+                                        <tr>
+                                            <td>@coupon.GuestName</td>
+                                            <td>@coupon.Start</td>
+                                            <td>@coupon.Title</td>
+                                            <td>@coupon.ReviewContent</td>
+                                            <td>
+                                                <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="DeleteTourReview('@coupon.Id');"><small class="glyphicon glyphicon-trash"></small></a>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/couponjs")
+}
+

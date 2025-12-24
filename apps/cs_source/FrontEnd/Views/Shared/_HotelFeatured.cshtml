@@ -1,0 +1,35 @@
+﻿@using Vinaday.Data.Models.Extention
+@model List<HotelModel>
+@if (Model.Count > 0)
+{
+    <div id="owl-deals" class="owl-carousel promotion-spa">
+        @foreach (var hotel in Model)
+        {
+            <div class="item box-hover hotel-item anim fadeInDown" data-wow-delay="0.2s" style="visibility: visible; -webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+                <a target="_blank" class="image" title="@hotel.Name" href="@hotel.HotelUrl">
+                    <img src="@Url.Content(hotel.ImageUrl)" alt="@hotel.Name">
+                    <div class="featured-label">
+                        FROM <span style="color: red">$@hotel.PricePromotion</span> USD/NIGHT
+                    </div>
+                    <div class="caption clearfix">
+                        <h2 class="featured-title">
+                            <b>@hotel.Name</b>
+                        </h2>
+                        <p>
+                            Get best price <b> from $@hotel.PricePromotion</b> USD/night
+                        </p>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+    
+    <div class="customNavigation anim fadeInDown animated" data-wow-delay="0.2s" style="visibility: visible; -webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+        <a class="btn prev">«</a>
+        <a class="btn next">»</a>
+    </div>
+}
+else
+{
+    <p>No content for this page.</p>
+}

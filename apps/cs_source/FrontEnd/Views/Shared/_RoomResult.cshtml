@@ -1,0 +1,113 @@
+﻿
+@using System.Linq
+@using System.Web.Http.Results
+@using PagedList
+@using PagedList.Mvc;
+@using Vinaday.Data.Models.Extention
+@model IPagedList<HotelSearchModel>
+
+@if (Model.Count > 0)
+{
+    <div class="content-filter">
+        <div class="tier-head clearfix">
+            <h1 class="tier-head-title">Tìm thấy @Model.TotalItemCount khách sạn ở  @ViewBag.CityName</h1>
+            <div class="btn-filter hidden-lg hidden-md">
+                <button data-toggle="offcanvas" class="btn btn-primary">
+                    Lọc
+                </button>
+            </div>
+            <div class="sort-by form-inline" style="top: 8px;line-height: 20px;">
+                <span>Sắp xếp theo:</span>
+                <div class="select-style" style="display: inline-block; vertical-align: middle; width: auto;">
+                    <select style="padding-right: 20px !important">
+                        <option value="2">Tên khách sạn</option>
+                        <option value="3">Sao(5...1)</option>
+                        <option value="4">Sao(1...5)</option>
+                        <option value="5">Điểm đánh giá</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+        @foreach (HotelSearchModel hotel in Model)
+        {
+            <div class="tier clearfix">
+                <div class="item1">
+                    <div class="item11">
+                        <a href="@Url.Content(hotel.HotelUrl)" title="" class="img">
+                            <img src="@Url.Content(hotel.ImageUrl)" alt="@hotel.Name">
+                        </a>
+                    </div>
+                    <div class="item12">
+                        <h2 class="title">
+                            <a href="@Url.Content(hotel.HotelUrl)">@hotel.Name</a>
+                        </h2>
+                        <span class="@(string.Format("star star_{0}", hotel.Star))"></span>
+                        <address> @hotel.Address</address>
+                        <div class="amenities">
+                            @if (hotel.IsBreakfast)
+                            {
+                                <span class="freebreakfast"><i class="glyphicon glyphicon-ok"></i>Ăn sáng miễn phí</span>
+                            }
+                            @if (hotel.ParkingAvailable)
+                            {
+                                <span class="freebreakfast"><i class="glyphicon glyphicon-ok"></i>Có chỗ xe</span>
+                            }
+                            @if (hotel.IsWifi)
+                            {
+                                <span class="freebreakfast"><i class="glyphicon glyphicon-ok"></i>Wifi miễn phí</span>
+                            }
+
+                        </div>
+                        <a href="tel:+84 916388382" class="phoneEsr">Điện thoại: +84 916388382</a>
+                        <div class="discount"><span class="glyphicon glyphicon-gift"></span>Giá tốt</div>
+                    </div>
+                </div>
+                <div class="item2">
+
+                    @if (hotel.ReviewModel != null)
+                    {
+                        var review = hotel.ReviewModel;
+                        <div class="superlative">
+                            @Html.Raw(review.Title)
+                        </div>
+                        <a href="@hotel.HotelUrl" title="" class="review-link">@Html.Raw(review.Content)</a>
+
+                    }
+
+
+                    @if (hotel.PricePromotion != "0")
+                    {
+                        <div class="price-avg">
+                            <div class="price-was">@hotel.Price<sup>đ</sup></div>
+                            <div class="price-new">@hotel.PricePromotion<sup>đ</sup></div>
+                        </div>
+                        <div class="price-avg-text">trung bình/đêm</div>
+                        <a class="btn btn-sm btn-primary icon fadeIn animated" href="@Url.Content(hotel.HotelUrl)">Đặt phòng</a>
+                    }
+                    else
+                    {
+                        <div class="price-avg">
+                            <a href="@Url.Content(hotel.HotelUrl)" style="color: #74b21f; font-size: 15px; font-weight: bold; ">Gửi yêu cầu</a>
+                        </div>
+                        <a class="btn btn-sm btn-primary icon fadeIn animated" href="@Url.Content(hotel.HotelUrl)">Gửi yêu cầu</a>
+                    }
+
+                </div>
+            </div>
+        }
+
+        <div class="tier-foot">
+            <div style="border-bottom: 1px solid #6ebff3; font-size: 30px; margin-bottom: 20px; position: relative; text-align: left;">
+                <h2 style="font-size: 12px; color: #6ebff3;">Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) của @Model.PageCount</h2>
+            </div>
+            @Html.PagedListPager(Model, page => Url.Action("City", new { page }))
+        </div>
+    </div>
+}
+else
+{
+    <p>No content for search key</p>
+}
+
+

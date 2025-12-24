@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = string.Format("Cảm ơn {0} | vinaday.com", ViewBag.FullName);
+}
+<div class="pd-nav"></div>
+<div class="content stepbooking">
+    <div class="container">
+        <div class="col-lg-offset-1">
+            <section class=" form checkout style-2">
+                <div id="information-confirm">
+                    <div class="anim fadeInLeft">
+                        <div class="check-out-header">
+
+                            <h2 class="title title-complete">Hoàn tất đặt phòng</h2>
+                        </div>
+                        <div style="border: none;" class="box-aside">
+                            <div style="width: 100%" class="payment-detail-content-info">
+                                <p>Cảm ơn <span class="bold" id="completed-name">@ViewBag.FullName</span></p>
+                                <p>Mã đặt dịch vụ của Quý khách là <span class="bold">#@ViewBag.Pnr</span></p>
+                                <p>Nhân viên tư vấn sẽ liên lạc lại với Quý khách trong vòng 30 phút tới. Giờ làm việc của Chúng tôi từ 8:00 Sáng đến 20:00 Tối các ngày trong tuần. Vui lòng gọi +84 916388382 hoặc 0937388382 trong trường hợp cần thiết.</p>
+
+                            </div>
+
+                            <div class="clear"></div>
+
+                        </div>
+                        <div class="col-md-12 anim fadeInLeft">
+                            <p style="text-align: left; padding-left: 30px;">Back to</p>
+                            <p style="text-align: left; padding-left: 30px;">
+                                <span style="font-weight: bold">[English]</span>  <a href="https://goreise.com">goreise.com </a>
+                            </p>
+                            <p style="text-align: left; padding-left: 30px;">
+                                <span style="font-weight: bold">[Tiếng Việt] </span><a href="http://goreise.vn">goreise.vn </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+

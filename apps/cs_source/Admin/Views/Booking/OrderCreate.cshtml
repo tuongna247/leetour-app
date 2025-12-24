@@ -1,0 +1,87 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using System.Web
+@using System.Web.Security
+@using Microsoft.AspNet.Identity
+@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+
+@{
+    ViewBag.Title = "Create Order - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+.Where(c => c.Type == ClaimTypes.Role)
+.Select(c => c.Value).FirstOrDefault();
+    
+    if (role.Contains("Master Admin"))
+    {
+        Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    }
+    else if (role.Contains("Accountant"))
+    {
+        Layout = "~/Views/Shared/_AccountantLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_SaleLayout.cshtml";
+    }
+    RateExchange rateExchange = ViewBag.Exchange;
+}
+
+<div class="page-title">
+    <h3>Order Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="~/">Product</a></li>
+            <li class="active">Create Order</li>
+        </ol>
+    </div>
+    <small style="float: right; font-weight: bold">* Rate Exchange: 1 US Dollar = @String.Format("{0:N}", rateExchange.CurrentPrice)VND</small>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <div>
+                        <div class="row m-b-lg">
+                            <div class="col-md-4">
+                                <h6 class="panel-title"><span class="badge badge-danger" style="vertical-align: top">1</span> Select a product</h6>
+                                <hr />
+                                <select id="product-list" class="form-control">
+                                    <option value="-1">Select your product</option>
+                                    <option value="1">Hotel</option>
+                                    <option value="2">Tour</option>
+                                    <option value="3">Other Service</option>
+                                    @*<option value="3">Flight Ticket</option>*@
+                                </select>
+                                <div id="error-list" style="display: none;">
+                                    <hr />
+                                    <div id="error-item" class="alert alert-danger" role="alert">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div id="loadPane"></div>
+                                <div id="product-detail">
+                                </div>
+                            </div>
+                            <div id="booking-modal">
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+                @*<div class="panel-footer">
+                    <small>* Rate Exchange: 1 US Dollar = @String.Format("{0:N}", rateExchange.CurrentPrice)VND</small>
+                </div>*@
+            </div>
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->
+@section Scripts {
+    @Scripts.Render("~/bundles/orderjs")
+}

@@ -1,0 +1,1494 @@
+﻿@using System
+@using System.Activities.Expressions
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+@{
+    ViewBag.Title = "Order Detail - Management";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    OrderModel order = ViewBag.Order;
+
+}
+<div class="page-title">
+    <h3>Order Detail Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Product</a></li>
+            <li class="active">Order Detail</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div id="loadPane"></div>
+    <div class="row">
+        <div class="col-md-12">
+            @if (order != null)
+            {
+                <input type="hidden" id="order-id" value="@order.Id" />
+                <div class="row">
+                    <div class="col-lg-9 col-md-12">
+                        @if (order.Type == (int)Utilities.Product.Hotel)
+                        {
+                            Hotel hotel = ViewBag.Hotel;
+                            <input type="hidden" value="@hotel.StreetAddressEnglish" id="localtion" />
+                            <input type="hidden" value="@order.CancellationPolicy" id="cancellation" />
+
+                            <div class="panel panel-white">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="visitors-chart">
+
+                                            <div class="panel-body">
+                                                <ul class="list-unstyled">
+
+                                                    <li><img style="width: 100%" src="@Url.Content(order.Avatar)" alt="hotel"></li>
+                                                    <li class="clearfix">
+                                                        <a href="#" class="text-success text-center"><b id="name">@hotel.Name</b></a>
+                                                    </li>
+                                                    <li><hr /></li>
+                                                    <li>
+                                                        PNR:
+                                                        <div class="text-success pull-right">
+                                                            <b>@string.Format("#{0}", order.Pnr)</b>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        Type:
+                                                        <div class="text-success pull-right">
+                                                            <b>@string.Format("Hotel")</b>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        Name:
+                                                        <div class="text-success pull-right">
+                                                            <b id="description">@order.ProductName</b>
+                                                        </div>
+                                                    </li>
+
+                                                </ul>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="stats-info">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">Booking Detail</h4>
+                                                <div class="panel-control">
+                                                    @switch (order.Status)
+                                            {
+                                                case (int) Utilities.BookingStatus.Paid:
+                                            <span class="label label-success">
+                                                @(Enum.GetName(typeof (Utilities.BookingStatus), order.Status))
+                                            </span>
+                                                    break;
+                                                case (int) Utilities.BookingStatus.Holding:
+                                            <span class="label label-danger">
+                                                @(Enum.GetName(typeof (Utilities.BookingStatus), order.Status))
+                                            </span>
+                                                    break;
+                                                default:
+                                            <span class="label label-primary">
+                                                @(Enum.GetName(typeof (Utilities.BookingStatus), order.Status))
+                                            </span>
+                                                    break;
+                                            }
+
+                                                </div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+
+                                                        <ul class="list-unstyled col-sm-6">
+                                                            <li>
+                                                                Check-in:
+                                                                <div class="pull-right">
+                                                                    <b id="check-in">@order.StartDate</b>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                Check-out:
+                                                                <div class="pull-right">
+                                                                    <b id="check-out">@order.EndDate</b>
+                                                                </div>
+                                                            </li>
+                                                            <li>@Html.Raw(string.Format("Night: <div class='pull-right'><b>{0} {1}</b></div>", order.Night, order.Night > 1 ? "nights" : "night"))</li>
+
+                                                            @switch (order.PaymentMethod)
+                                                    {
+                                                        case (int) Utilities.PaymentMethod.Cash:
+                                                    <li>
+                                                        Method:
+                                                        <div class="pull-right">
+                                                            <b><i class="glyphicon glyphicon-usd"></i> Cash</b>
+                                                        </div>
+                                                    </li>
+                                                            break;
+                                                        case (int) Utilities.PaymentMethod.Credit:
+                                                    <li>
+                                                        Method:
+                                                        <div class="pull-right">
+                                                            <b><i class="glyphicon glyphicon-credit-card"></i> Credit</b>
+                                                        </div>
+                                                    </li>
+                                                            break;
+                                                        case (int) Utilities.PaymentMethod.Transfer:
+                                                    <li>
+                                                        Method:
+                                                        <div class="pull-right">
+                                                            <b><i class="glyphicon glyphicon-transfer"></i> Transfer</b>
+                                                        </div>
+                                                    </li>
+                                                            break;
+                                                        default:
+                                                    <li></li>
+                                                            break;
+                                                    }
+
+                                                        </ul>
+                                                        <ul class="list-unstyled col-sm-6">
+                                                            <li>@Html.Raw(string.Format("Quantity: <div class='pull-right'><b>{0} {1}</b></div>", order.Quantity, order.Quantity > 1 ? "rooms" : "room"))</li>
+                                                            <li>@Html.Raw(string.Format("Price:<div class='pull-right'><b>{0}</b></div>", @String.Format("{0:C}", order.Price)))</li>
+                                                            <li>@Html.Raw(string.Format("Amount:<div class='pull-right'><b>{0}</b></div>", @String.Format("{0:C}", order.Amount)))</li>
+                                                            @if (order.PaymentMethod > 1)
+                                                    {
+                                                    <li>
+                                                        Card ID:
+                                                        <div class="pull-right">
+                                                            <b>@order.CardNumber</b>
+                                                        </div>
+                                                    </li>
+                                                    }
+                                                    else if (order.PaymentMethod == 1)
+                                                    {
+                                                    <li>
+                                                        Paid:
+                                                        <div class="pull-right">
+                                                            <b>@String.Format("{0:C}", order.Amount)</b>
+                                                        </div>
+                                                    </li>
+                                                    }
+                                                    else
+                                                    {
+                                                    <li></li>
+                                                    }
+                                                        </ul>
+
+
+
+                                                        <div class="clearfix"></div>
+                                                        <div class="text-right">
+                                                            <div>
+                                                                <hr>
+                                                                <h4 class="no-m m-t-sm">Taxes and service charges</h4>
+                                                                <h2 class="no-m">@Html.Raw(order.TaxFee)</h2>
+                                                            </div>
+                                                            @if (!string.IsNullOrEmpty(order.SurchargeName) && order.SurchargeFee != "N/A")
+                                                    {
+                                                    <div>
+                                                        <hr>
+                                                        <h4 class="no-m m-t-sm">Surcharge</h4>
+                                                        <h2 class="no-m">+@String.Format("{0:C}", order.SurchargeFee)</h2>
+                                                    </div>
+                                                    }
+                                                            @if (order.ThirdPersonFee.HasValue)
+                                                    {
+                                                    <div>
+                                                        <hr>
+                                                        <h4 class="no-m m-t-sm">Third Person Fee</h4>
+                                                        <h2 class="no-m">+@String.Format("{0:C}", order.ThirdPersonFee)</h2>
+                                                    </div>
+                                                    }
+                                                            @if (!string.IsNullOrEmpty(order.DiscountName) || !string.IsNullOrEmpty(order.Discount) && order.Discount != "N/A")
+                                                    {
+                                                    <div>
+                                                        <hr>
+                                                        <h4 class="no-m m-t-sm">Discount</h4>
+                                                        <h2 class="no-m">-@String.Format("{0:C}", order.Discount)</h2>
+                                                    </div>
+                                                    }
+                                                            @if (order.ExtraBed > 0)
+                                                    {
+                                                    <div>
+                                                        <hr>
+                                                        <h4 class="no-m m-t-sm">ExtraBed</h4>
+                                                        <h2 class="no-m">+@String.Format("{0:C}", order.ExtraBed)</h2>
+                                                    </div>
+                                                    }
+                                                            <div>
+                                                                <hr>
+                                                                <h4 class="no-m m-t-md text-success">Total</h4>
+                                                                <h1 class="no-m text-success">@String.Format("{0:C}", order.Amount + order.ExtraBed + order.ThirdPersonFee)</h1>
+                                                            </div>
+                                                            <div>
+                                                                <hr>
+                                                                @switch (order.Status)
+                                                        {
+                                                            case (int) Utilities.BookingStatus.Paid:
+                                                        <a onclick="amend('@order.StartDate');" class="btn btn-success">Amend</a>
+                                                        <a onclick="refund();" class="btn btn-primary">Refund</a>
+                                                        <a onclick="cancel();" class="btn btn-warning">Cancel</a>
+                                                        <a class="btn btn-danger">Delete</a>
+                                                                break;
+                                                            case (int) Utilities.BookingStatus.Holding:
+                                                        <a class="btn btn-success" onclick="editbooking()">Edit</a>
+                                                        <a class="btn btn-primary" onclick="approved()">Submit your booking</a>
+                                                                break;
+                                                            default:
+                                                        <a class="btn btn-danger">Delete</a>
+                                                                break;
+                                                        }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="clearfix">
+                                    <div class="stats-info panel panel-transparent">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">More Detail</h4>
+                                            <div class="panel-control">
+                                                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-collapse" data-original-title="Expand/Collapse"><i class="icon-arrow-down"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-12 table-responsive">
+                                                    <table class="table table-hover table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Night</th>
+                                                                <th>Date</th>
+                                                                <th>Q.ty</th>
+                                                                <th style="text-align: right">Price</th>
+                                                                <th style="text-align: right">Surcharge</th>
+                                                                <th style="text-align: right">Amount</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @if (order.OrderInformations.Count > 0)
+                                                    {
+                                                        var index = 1;
+                                                        foreach (var detail in order.OrderInformations)
+                                                        {
+
+                                                        <tr>
+                                                            <td>@index</td>
+                                                            <td>@detail.Date</td>
+                                                            <td>@detail.Quantity</td>
+                                                            <td style="text-align: right">@String.Format("{0:C}", @detail.Price)</td>
+                                                            <td style="text-align: right">@Html.Raw(detail.Surcharge > 0 ? string.Format("${0}", detail.Surcharge) : "N/A")</td>
+                                                            <td style="text-align: right">@String.Format("{0:C}", (detail.Price + detail.Surcharge)*detail.Quantity)</td>
+                                                        </tr>
+                                                            index += 1;
+                                                        }
+                                                    }
+                                                            <tr>
+                                                                <td colspan="5">Taxes and service charges are collected by hotel suppliers.</td>
+                                                                <td style="text-align: right">@String.Format("{0:C}", order.TaxFee)</td>
+                                                            </tr>
+                                                            @if (!string.IsNullOrEmpty(order.DiscountName))
+                                                    {
+                                                        <tr>
+                                                            <td colspan="5">@Html.Raw(order.DiscountName)</td>
+                                                            <td>@String.Format("{0:C}", order.Discount)</td>
+                                                        </tr>
+                                                    }
+                                                            <tr>
+                                                                <td colspan="5" style="text-align: right;"><strong>Total</strong></td>
+                                                                <td style="text-align: right"><strong>@String.Format("{0:C}", order.Amount)</strong></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    @if (!string.IsNullOrEmpty(order.CancellationPolicy))
+                                                {
+                                                <div class="alert alert-danger">
+                                                    <h4>CANCELLATION POLICY</h4>
+                                                    <p>
+                                                        @Html.Raw(order.CancellationPolicy)
+                                                    </p>
+                                                </div>
+                                                }
+                                                    @if (!string.IsNullOrEmpty(order.SpecialRequest))
+                                                {
+                                                <div class="alert alert-info">
+                                                    <h4>SPECIAL REQUEST</h4>
+                                                    <p>@Html.Raw(order.SpecialRequest)</p>
+                                                </div>
+                                                }
+                                                    @if (!string.IsNullOrEmpty(order.DiscountName))
+                                                {
+                                                <div class="alert alert-success">
+                                                    <h4>SPECIAL DISCOUNT</h4>
+                                                    <p>@Html.Raw(order.DiscountName)</p>
+                                                </div>
+                                                }
+
+                                                    <div class="text-right">
+                                                        <a class="btn btn-primary" href="javascript:void(0);" onclick="getVoucher(@order.Id);">Create voucher</a>
+                                                        <a class="btn btn-success" data-toggle="modal" data-target="#receipt-modal">Create receipt</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (order.Type == (int)Utilities.Product.Tour)
+                        {
+                            <div class="panel panel-white">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="visitors-chart">
+
+                                            <div class="panel-body">
+                                                <ul class="list-unstyled">
+
+                                                    <li><img style="width: 100%" src="@Url.Content(order.Avatar)" alt="hotel"></li>
+                                                    <li>
+                                                        PNR:
+                                                        <div class="text-success pull-right">
+                                                            <b>@string.Format("#{0}", order.Pnr)</b>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        Type:
+                                                        <div class="text-success pull-right">
+                                                            <b>@string.Format("Tour")</b>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        Name:
+                                                        <div class="text-success pull-right text-right" style="width: 80%">
+                                                            <b>@order.ProductName</b>
+                                                        </div>
+                                                    </li>
+
+
+                                                </ul>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="stats-info">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">Booking Detail</h4>
+                                                <div class="panel-control">
+                                                    @switch (order.Status)
+                                                    {
+                                                        case (int)Utilities.BookingStatus.Paid:
+                                                    <span class="label label-success">
+                                                        @(Enum.GetName(typeof(Utilities.BookingStatus), order.Status))
+                                                    </span>
+                                                            break;
+                                                        case (int)Utilities.BookingStatus.Holding:
+                                                    <span class="label label-danger">
+                                                        @(Enum.GetName(typeof(Utilities.BookingStatus), order.Status))
+                                                    </span>
+                                                            break;
+                                                        default:
+                                                    <span class="label label-primary">
+                                                        @(Enum.GetName(typeof(Utilities.BookingStatus), order.Status))
+                                                    </span>
+                                                            break;
+                                                    }
+
+                                                </div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+
+                                                        <ul class="list-unstyled col-sm-6">
+                                                            <li>
+                                                                Check-in:
+                                                                <div class="pull-right">
+                                                                    <b>@order.StartDate</b>
+                                                                </div>
+                                                            </li>
+                                                            <li>@Html.Raw(string.Format("Quantity: <div class='pull-right'><b>{0} {1}</b></div>", order.Quantity, order.Quantity > 1 ? "persons" : "person"))</li>
+                                                            @switch (order.PaymentMethod)
+                                                            {
+                                                                case (int)Utilities.PaymentMethod.Cash:
+                                                            <li>
+                                                                Method:
+                                                                <div class="pull-right">
+                                                                    <b><i class="glyphicon glyphicon-usd"></i> Cash</b>
+                                                                </div>
+                                                            </li>
+                                                                    break;
+                                                                case (int)Utilities.PaymentMethod.Credit:
+                                                            <li>
+                                                                Method:
+                                                                <div class="pull-right">
+                                                                    <b><i class="glyphicon glyphicon-credit-card"></i> Credit</b>
+                                                                </div>
+                                                            </li>
+                                                                    break;
+                                                                case (int)Utilities.PaymentMethod.Transfer:
+                                                            <li>
+                                                                Method:
+                                                                <div class="pull-right">
+                                                                    <b><i class="glyphicon glyphicon-transfer"></i> Transfer</b>
+                                                                </div>
+                                                            </li>
+                                                                    break;
+                                                                default:
+                                                            <li></li>
+                                                                    break;
+                                                            }
+
+                                                        </ul>
+                                                        <ul class="list-unstyled col-sm-6">
+                                                            <li>@Html.Raw(string.Format("Price:<div class='pull-right'><b>{0}</b></div>", @String.Format("{0:C}", (order.Price) * order.Quantity)))</li>
+                                                            <li>@Html.Raw(string.Format("Amount:<div class='pull-right'><b>{0}</b></div>", @String.Format("{0:C}", order.Amount)))</li>
+                                                            @if (order.PaymentMethod > 1)
+                                                            {
+                                                            <li>
+                                                                Card ID:
+                                                                <div class="pull-right">
+                                                                    <b>@order.CardNumber</b>
+                                                                </div>
+                                                            </li>
+                                                            }
+                                                            else if (order.PaymentMethod == 1)
+                                                            {
+                                                            <li>
+                                                                Paid:
+                                                                <div class="pull-right">
+                                                                    <b>@String.Format("{0:C}", order.Amount)</b>
+                                                                </div>
+                                                            </li>
+                                                            }
+                                                            else
+                                                            {
+                                                            <li></li>
+                                                            }
+                                                        </ul>
+
+
+
+                                                        <div class="clearfix"></div>
+                                                        <div class="text-right">
+                                                            <div>
+                                                                <hr>
+                                                                <h4 class="no-m m-t-sm">Taxes and service charges</h4>
+                                                                <h2 class="no-m">@Html.Raw(order.TaxFee)</h2>
+                                                            </div>
+                                                            @if (!string.IsNullOrEmpty(order.SurchargeName))
+                                                            {
+                                                            <div>
+                                                                <hr>
+                                                                <h4 class="no-m m-t-sm">Surcharge</h4>
+                                                                <h2 class="no-m">-$@order.SurchargeFee</h2>
+                                                            </div>
+                                                            }
+                                                            @if (!string.IsNullOrEmpty(order.DiscountName))
+                                                            {
+                                                            <div>
+                                                                <hr>
+                                                                <h4 class="no-m m-t-sm">Discount</h4>
+                                                                <h2 class="no-m">-@order.Discount</h2>
+                                                            </div>
+                                                            }
+                                                            <div>
+                                                                <hr>
+                                                                <h4 class="no-m m-t-md text-success">Total</h4>
+                                                                <h1 class="no-m text-success">@String.Format("{0:C}", order.Amount)</h1>
+                                                            </div>
+                                                            <div>
+                                                                <hr>
+                                                                @switch (order.Status)
+                                                                {
+                                                                    case (int)Utilities.BookingStatus.Paid:
+                                                                <a onclick="amend('@order.StartDate');" class="btn btn-success">Amend</a>
+                                                                <a onclick="refund();" class="btn btn-primary">Refund</a>
+                                                                <a onclick="cancel();" class="btn btn-warning">Cancel</a>
+                                                                <a class="btn btn-danger">Delete</a>
+                                                                        break;
+                                                                    case (int)Utilities.BookingStatus.Holding:
+                                                                <a class="btn btn-primary" data-toggle="modal" onclick="approved();">Submit your booking</a>
+                                                                        break;
+                                                                    default:
+                                                                <a class="btn btn-danger">Delete</a>
+                                                                        break;
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="clearfix">
+                                    <div class="stats-info panel panel-transparent">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">More Detail</h4>
+                                            <div class="panel-control">
+                                                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-collapse" data-original-title="Expand/Collapse"><i class="icon-arrow-down"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-12 table-responsive">
+                                                    <table class="table table-hover table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Id</th>
+                                                                <th>Date</th>
+                                                                <th>Q.ty</th>
+                                                                <th>Price</th>
+                                                                <th>Surcharge</th>
+                                                                <th>Amount</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>@order.StartDate</td>
+                                                                <td>@order.Quantity</td>
+                                                                <td>@String.Format("{0:C}", @order.Price)</td>
+                                                                <td>@Html.Raw("N/A")</td>
+                                                                <td>@String.Format("{0:C}", (order.Price) * order.Quantity)</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td colspan="5">Taxes and service charges are collected by operator suppliers.</td>
+                                                                <td>@String.Format("{0:C}", order.TaxFee)</td>
+                                                            </tr>
+                                                            @if (!string.IsNullOrEmpty(order.DiscountName))
+                                                            {
+                                                            <tr>
+                                                                <td colspan="5">@Html.Raw(order.DiscountName)</td>
+                                                                <td>@String.Format("{0:C}", order.Discount)</td>
+                                                            </tr>
+                                                            }
+                                                            <tr>
+                                                                <td colspan="5" style="text-align: right;"><strong>Total</strong></td>
+                                                                <td><strong>@String.Format("{0:C}", order.Amount)</strong></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    @if (!string.IsNullOrEmpty(order.CancellationPolicy))
+                                                    {
+                                                    <div class="alert alert-danger">
+                                                        <h4>CANCELLATION POLICY</h4>
+                                                        <p>
+                                                            @Html.Raw(order.CancellationPolicy)
+                                                        </p>
+                                                    </div>
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(order.SpecialRequest))
+                                                    {
+                                                    <div class="alert alert-info">
+                                                        <h4>SPECIAL REQUEST</h4>
+                                                        <p>@Html.Raw(order.SpecialRequest)</p>
+                                                    </div>
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(order.DiscountName))
+                                                    {
+                                                    <div class="alert alert-success">
+                                                        <h4>SPECIAL DISCOUNT</h4>
+                                                        <p>@Html.Raw(order.DiscountName)</p>
+                                                    </div>
+                                                    }
+
+                                                    <div class="text-right">
+                                                        <a class="btn btn-success" data-toggle="modal" href="@Url.Content("~/Booking/PrintPdf/")" data-target="#receipt-modal">Create receipt</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (order.Type == (int)Utilities.Product.OtherServices)
+                        {
+                            <div class="panel panel-white">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="visitors-chart">
+
+                                            <div class="panel-body">
+                                                <ul class="list-unstyled">
+                                                    <li><img style="width: 100%" src="@Url.Content("~/Content/img/no-image.jpg")" alt="hotel"></li>
+                                                    <li>
+                                                        PNR:
+                                                        <div class="text-success pull-right">
+                                                            <b>@string.Format("#{0}", order.Pnr)</b>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        Type:
+                                                        <div class="text-success pull-right">
+                                                            <b>Other Services</b>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        Name:
+                                                        <div class="text-success pull-right text-right" style="width: 80%">
+                                                            <b>@order.ProductName</b>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="stats-info">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">Booking Detail</h4>
+                                                <div class="panel-control">
+                                                    @switch (order.Status)
+                                                    {
+                                                        case (int)Utilities.BookingStatus.Paid:
+                                                    <span class="label label-success">
+                                                        @(Enum.GetName(typeof(Utilities.BookingStatus), order.Status))
+                                                    </span>
+                                                            break;
+                                                        case (int)Utilities.BookingStatus.Holding:
+                                                    <span class="label label-danger">
+                                                        @(Enum.GetName(typeof(Utilities.BookingStatus), order.Status))
+                                                    </span>
+                                                            break;
+                                                        case (int)Utilities.BookingStatus.Refunded:
+                                                    <span class="label label-primary">
+                                                        @(Enum.GetName(typeof(Utilities.BookingStatus), order.Status))
+                                                    </span>
+                                                            break;
+                                                        default:
+                                                    <span class="label label-primary">
+                                                        @(Enum.GetName(typeof(Utilities.BookingStatus), order.Status))
+                                                    </span>
+                                                            break;
+                                                    }
+
+                                                </div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row">
+
+
+                                                    <div class="col-sm-12">
+
+                                                        <ul class="list-unstyled col-sm-6">
+                                                            <li>
+                                                                Check-in:
+                                                                <div class="pull-right">
+                                                                    <b>@order.StartDate</b>
+                                                                </div>
+                                                            </li>
+
+                                                            @switch (order.PaymentMethod)
+                                                            {
+                                                                case (int)Utilities.PaymentMethod.Cash:
+                                                            <li>
+                                                                Method:
+                                                                <div class="pull-right">
+                                                                    <b><i class="glyphicon glyphicon-usd"></i> Cash</b>
+                                                                </div>
+                                                            </li>
+                                                                    break;
+                                                                case (int)Utilities.PaymentMethod.Credit:
+                                                            <li>
+                                                                Method:
+                                                                <div class="pull-right">
+                                                                    <b><i class="glyphicon glyphicon-credit-card"></i> Credit</b>
+                                                                </div>
+                                                            </li>
+                                                                    break;
+                                                                case (int)Utilities.PaymentMethod.Transfer:
+                                                            <li>
+                                                                Method:
+                                                                <div class="pull-right">
+                                                                    <b><i class="glyphicon glyphicon-transfer"></i> Transfer</b>
+                                                                </div>
+                                                            </li>
+                                                                    break;
+                                                                default:
+                                                            <li></li>
+                                                                    break;
+                                                            }
+
+                                                        </ul>
+                                                        <ul class="list-unstyled col-sm-6">
+                                                            <li>
+                                                                Check-out:
+                                                                <div class="pull-right">
+                                                                    <b>@order.EndDate</b>
+                                                                </div>
+                                                            </li>
+                                                            <li>@Html.Raw(string.Format("Price:<div class='pull-right'><b>{0}</b></div>", @String.Format("{0:C}", (order.Price) * order.Quantity)))</li>
+                                                            <li>@Html.Raw(string.Format("Quantity: <div class='pull-right'><b>{0} {1}</b></div>", order.Quantity, order.Quantity > 1 ? "persons" : "person"))</li>
+                                                            <li>@Html.Raw(string.Format("Amount:<div class='pull-right'><b>{0}</b></div>", @String.Format("{0:C}", order.Amount)))</li>
+                                                            @if (order.PaymentMethod > 1)
+                                                            {
+                                                            <li>
+                                                                Card ID:
+                                                                <div class="pull-right">
+                                                                    <b>@order.CardNumber</b>
+                                                                </div>
+                                                            </li>
+                                                            }
+                                                            else if (order.PaymentMethod == 1)
+                                                            {
+                                                            <li>
+                                                                Paid:
+                                                                <div class="pull-right">
+                                                                    <b>@String.Format("{0:C}", order.Amount)</b>
+                                                                </div>
+                                                            </li>
+                                                            }
+                                                            else
+                                                            {
+                                                            <li></li>
+                                                            }
+                                                        </ul>
+
+
+
+                                                        <div class="clearfix"></div>
+                                                        <div class="text-right">
+                                                            <div>
+                                                                <hr>
+                                                                <h4 class="no-m m-t-sm">Taxes and service charges</h4>
+                                                                <h2 class="no-m">@Html.Raw(order.TaxFee)</h2>
+                                                            </div>
+                                                            @if (!string.IsNullOrEmpty(order.SurchargeName))
+                                                            {
+                                                            <div>
+                                                                <hr>
+                                                                <h4 class="no-m m-t-sm">Surcharge</h4>
+                                                                <h2 class="no-m">-$@order.SurchargeFee</h2>
+                                                            </div>
+                                                            }
+                                                            @if (!string.IsNullOrEmpty(order.DiscountName))
+                                                            {
+                                                            <div>
+                                                                <hr>
+                                                                <h4 class="no-m m-t-sm">Discount</h4>
+                                                                <h2 class="no-m">-@order.Discount</h2>
+                                                            </div>
+                                                            }
+                                                            <div>
+                                                                <hr>
+                                                                <h4 class="no-m m-t-md text-success">Total</h4>
+                                                                <h1 class="no-m text-success"> @String.Format("{0:C}", order.Amount) </h1>
+                                                            </div>
+                                                            <div>
+                                                                <hr>
+                                                                @switch (order.Status)
+                                                                {
+                                                                    case (int)Utilities.BookingStatus.Paid:
+                                                                        {
+                                                                <a onclick="amend('@order.StartDate');" class="btn btn-success">Amend</a>
+                                                                <a onclick="refund();" class="btn btn-primary">Refund</a>
+                                                                <a onclick="cancel();" class="btn btn-warning">Cancel</a>
+                                                                <a class="btn btn-danger">Delete</a>
+                                                                        }
+                                                                        break;
+                                                                    case (int)Utilities.BookingStatus.Holding:
+                                                                        {
+                                                                <a class="btn btn-primary" data-toggle="modal" onclick="approved();">Submit your booking</a>
+                                                                        }
+                                                                        break;
+                                                                    default:
+                                                                <a class="btn btn-danger">Delete</a>
+                                                                        break;
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="clearfix">
+                                    <div class="stats-info panel panel-transparent">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">More Detail</h4>
+                                            <div class="panel-control">
+                                                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-collapse" data-original-title="Expand/Collapse"><i class="icon-arrow-down"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-12 table-responsive">
+                                                    <table class="table table-hover table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Id</th>
+                                                                <th>Date</th>
+                                                                <th>Q.ty</th>
+                                                                <th>Price</th>
+                                                                <th>Surcharge</th>
+                                                                <th>Amount</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>@order.StartDate</td>
+                                                                <td>@order.Quantity</td>
+                                                                <td>@String.Format("{0:C}", @order.Price)</td>
+                                                                <td>@Html.Raw("N/A")</td>
+                                                                <td>@String.Format("{0:C}", (order.Price) * order.Quantity)</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td colspan="5"> Taxes and service charges are collected by operator suppliers.</td>
+                                                                <td>@String.Format("{0:C}", order.TaxFee)</td>
+                                                            </tr>
+                                                            @if (!string.IsNullOrEmpty(order.DiscountName))
+                                                            {
+                                                            <tr>
+                                                                <td colspan="5"> @Html.Raw(order.DiscountName) </td>
+                                                                <td> @String.Format("{0:C}", order.Discount) </td>
+                                                            </tr>
+                                                            }
+                                                            <tr>
+                                                                <td colspan="5" style="text-align: right;"><strong>Total</strong></td>
+                                                                <td><strong>@String.Format("{0:C}", order.Amount)</strong></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    @if (!string.IsNullOrEmpty(order.CancellationPolicy))
+                                                    {
+                                                    <div class="alert alert-danger">
+                                                        <h4>CANCELLATION POLICY</h4>
+                                                        <p>
+                                                            @Html.Raw(order.CancellationPolicy)
+                                                        </p>
+                                                    </div>
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(order.SpecialRequest))
+                                                    {
+                                                    <div class="alert alert-info">
+                                                        <h4>SPECIAL REQUEST</h4>
+                                                        <p>@Html.Raw(order.SpecialRequest)</p>
+                                                    </div>
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(order.DiscountName))
+                                                    {
+                                                    <div class="alert alert-success">
+                                                        <h4>SPECIAL DISCOUNT</h4>
+                                                        <p>@Html.Raw(order.DiscountName)</p>
+                                                    </div>
+                                                    }
+
+                                                    <div class="text-right">
+                                                        <a class="btn btn-success" data-toggle="modal" data-target="#receipt-modal">Create receipt</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        @if (order.Customer != null)
+                        {
+                            <div class="panel panel-white">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">Customer</h4>
+                                    <div class="panel-control">
+                                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-collapse" data-original-title="Expand/Collapse"><i class="icon-arrow-down"></i></a>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    @*<div class="sidebar-profile">*@
+                                    <div>
+                                        <a href="javascript:void(0);" id="profile-menu-link">
+                                            <div class="sidebar-profile-image">
+                                                <img src="/Content/img/NoProfile.jpg" class="img-circle img-responsive" alt="">
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <h3 class="text-center" id="guest">@(string.Format("{0} {1}", order.Customer.Firstname, order.Customer.Lastname))</h3>
+                                    <hr>
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <p><i class="glyphicon glyphicon-earphone m-r-xs"></i>@Utilities.FormatPhone(order.Customer.PhoneNumber)</p>
+                                        </li>
+                                        <li>
+                                            <p>
+                                                <i class="glyphicon glyphicon-envelope m-r-xs"></i><a href="#">@order.Customer.Email</a>
+                                            </p>
+                                        </li>
+                                        <li>
+                                            <p>
+                                                <i class="glyphicon glyphicon-globe m-r-xs"></i><a href="#" id="nationality">@(order.Customer.Nationality != null ? order.Customer.Nationality.Name : "N/A")</a>
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div id="receipt-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            @if (order.Type == (int)Utilities.Product.Hotel)
+                                            {
+                                                <div class="panel panel-transparent">
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-md-4" style="padding-left: 0 !important">
+                                                                <img src="~/assets/images/logo.png" alt="" /><br />
+                                                                <address>
+                                                                    Charge Date: @DateTime.Now.ToString("dd MMM .yyyy")<br />
+                                                                    <b>Booking No.: @order.Id</b><br />
+                                                                    <b>PNR: @order.Pnr</b>
+
+                                                                </address>
+                                                            </div>
+                                                            <div class="col-md-8 text-right">
+                                                                <h1>VINADAY goREISE</h1>
+                                                                <address>
+                                                                    228 De Tham, Pham Ngu Lao Ward District 1, Ho Chi Minh City Vietnam<br>
+                                                                    Tell: (84-8) -38 388 382<br>
+                                                                    Email: info@vinaday.com
+                                                                </address>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <hr>
+                                                                <div class="pull-right">
+                                                                    <p class="text-right">
+                                                                        <strong>Receipt to</strong><br>
+                                                                        @order.Customer.Firstname @order.Customer.Lastname<br>
+                                                                        @Utilities.FormatPhone(order.Customer.PhoneNumber)<br>
+                                                                        @order.Customer.Email
+                                                                    </p>
+                                                                </div>
+                                                                <div class="pull-left">
+                                                                    <p class="text-left">
+                                                                        <strong>@order.ProductLink</strong><br>
+                                                                        @order.ProductName<br>
+                                                                        Check-in: @order.StartDate<br>
+                                                                        Check-out: @order.EndDate
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12 table-responsive">
+                                                                <table class="table table-hover table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Id</th>
+                                                                            <th>Date</th>
+                                                                            <th>Q.ty</th>
+                                                                            <th>Price</th>
+                                                                            <th>Surcharge</th>
+                                                                            <th>Amount</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        @if (order.OrderInformations.Count > 0)
+                                                                        {
+                                                                            var index = 1;
+                                                                            foreach (var detail in order.OrderInformations)
+                                                                            {
+
+                                                                                <tr>
+                                                                                    <td>@index</td>
+                                                                                    <td>@detail.Date</td>
+                                                                                    <td>@detail.Quantity</td>
+                                                                                    <td>@String.Format("{0:C}", @detail.Price)</td>
+                                                                                    <td>@Html.Raw(detail.Surcharge > 0 ? string.Format("{0}", @String.Format("{0:C}", detail.Surcharge)) : "N/A")</td>
+                                                                                    <td>@String.Format("{0:C}", (detail.Price + detail.Surcharge) * detail.Quantity)</td>
+                                                                                </tr>
+                                                                                index += 1;
+                                                                            }
+                                                                        }
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="col-md-8">
+
+                                                                @if (!string.IsNullOrEmpty(order.CancellationPolicy))
+                                                                {
+                                                                    <h4>CANCELLATION POLICY</h4>
+                                                                    <p>
+                                                                        @Html.Raw(order.CancellationPolicy)
+                                                                    </p>
+                                                                }
+
+                                                                <div class="text-left">
+                                                                    <div>
+                                                                        <h4 class="no-m m-t-sm">Guest's Signature</h4>
+                                                                        <br />
+                                                                        <br />
+                                                                        <br />
+                                                                        <h2 class="no-m">----------------</h2>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="text-right">
+                                                                    <div>
+                                                                        <h4 class="no-m m-t-sm">Taxes and service charges</h4>
+                                                                        <h2 class="no-m">@Html.Raw(order.TaxFee)</h2>
+                                                                    </div>
+                                                                    @if (!string.IsNullOrEmpty(order.SurchargeName))
+                                                                    {
+                                                                        <div>
+                                                                            <hr>
+                                                                            <h4 class="no-m m-t-sm">Surcharge</h4>
+                                                                            <h2 class="no-m">-@String.Format("{0:C}", @order.SurchargeFee)</h2>
+                                                                        </div>
+                                                                    }
+                                                                    @if (!string.IsNullOrEmpty(order.DiscountName))
+                                                                    {
+                                                                        <div>
+                                                                            <hr>
+                                                                            <h4 class="no-m m-t-sm">Discount</h4>
+                                                                            <h2 class="no-m">-@String.Format("{0:C}", @order.Discount)</h2>
+                                                                        </div>
+                                                                    }
+                                                                    <div>
+                                                                        <hr>
+                                                                        <h4 class="no-m m-t-md text-success">Total</h4>
+                                                                        <h1 class="no-m text-success">@String.Format("{0:C}", order.Amount)</h1>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div><!--row-->
+                                                    </div>
+                                                </div>
+                                            }
+                                            else if (order.Type == (int)Utilities.Product.Tour)
+                                            {
+                                                <div class="panel panel-transparent">
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-md-4" style="padding-left: 0 !important">
+                                                                <img src="~/assets/images/logo.png" alt="" /><br />
+                                                                <address>
+                                                                    Charge Date: @DateTime.Now.ToString("dd MMM .yyyy")<br />
+                                                                    <b>Booking No.: @order.Id</b><br />
+                                                                    <b>PNR: @order.Pnr</b>
+
+                                                                </address>
+                                                            </div>
+                                                            <div class="col-md-8 text-right">
+                                                                <h1>VINADAY Co., Ltd</h1>
+                                                                <address>
+                                                                    228 De Tham, Pham Ngu Lao Ward District 1, Ho Chi Minh City Vietnam<br>
+                                                                    Tell: (84-8) -38 388 382<br>
+                                                                    Email: info@vinaday.com
+                                                                </address>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <hr>
+                                                                <div class="pull-right">
+                                                                    <p class="text-right">
+                                                                        <strong>Receipt to</strong><br>
+                                                                        @order.Customer.Firstname @order.Customer.Lastname<br>
+                                                                        @Utilities.FormatPhone(order.Customer.PhoneNumber)<br>
+                                                                        @order.Customer.Email
+                                                                    </p>
+                                                                </div>
+                                                                <div class="pull-left">
+                                                                    <p class="text-left">
+                                                                        <strong>@order.ProductName</strong><br>
+                                                                        Check-in: @order.StartDate<br>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12 table-responsive">
+                                                                <table class="table table-hover table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Id</th>
+                                                                            <th>Date</th>
+                                                                            <th>Q.ty</th>
+                                                                            <th>Price</th>
+                                                                            <th>Surcharge</th>
+                                                                            <th>Amount</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        <tr>
+                                                                            <td>1</td>
+                                                                            <td>@order.StartDate</td>
+                                                                            <td>@order.Quantity</td>
+                                                                            <td>@String.Format("{0:C}", @order.Price)</td>
+                                                                            <td>@Html.Raw("N/A")</td>
+                                                                            <td>@String.Format("{0:C}", (order.Price) * order.Quantity)</td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                @if (!string.IsNullOrEmpty(order.CancellationPolicy))
+                                                                {
+                                                                    <h4>CANCELLATION POLICY</h4>
+                                                                    <p>
+                                                                        @Html.Raw(order.CancellationPolicy)
+                                                                    </p>
+                                                                }
+                                                                <div class="text-left">
+                                                                    <div>
+                                                                        <h4 class="no-m m-t-sm">Guest's Signature</h4>
+                                                                        <br />
+                                                                        <br />
+                                                                        <br />
+                                                                        <h2 class="no-m">----------------</h2>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="text-right">
+                                                                    <div>
+                                                                        <h4 class="no-m m-t-sm">Taxes and service charges</h4>
+                                                                        <h2 class="no-m">@Html.Raw(order.TaxFee)</h2>
+                                                                    </div>
+                                                                    @if (!string.IsNullOrEmpty(order.SurchargeName))
+                                                                    {
+                                                                        <div>
+                                                                            <hr>
+                                                                            <h4 class="no-m m-t-sm">Surcharge</h4>
+                                                                            <h2 class="no-m">-$@order.SurchargeFee</h2>
+                                                                        </div>
+                                                                    }
+                                                                    @if (!string.IsNullOrEmpty(order.DiscountName))
+                                                                    {
+                                                                        <div>
+                                                                            <hr>
+                                                                            <h4 class="no-m m-t-sm">Discount</h4>
+                                                                            <h2 class="no-m">-@order.Discount</h2>
+                                                                        </div>
+                                                                    }
+                                                                    <div>
+                                                                        <hr>
+                                                                        <h4 class="no-m m-t-md text-success">Total</h4>
+                                                                        <h1 class="no-m text-success">@String.Format("{0:C}", order.Amount)</h1>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div><!--row-->
+                                                    </div>
+                                                </div>
+                                            }
+                                            else if (order.Type == (int)Utilities.Product.OtherServices)
+                                            {
+                                                <div class="panel panel-transparent">
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-md-4" style="padding-left: 0 !important">
+                                                                <img src="~/assets/images/logo.png" alt="" /><br />
+                                                                <address>
+                                                                    Charge Date: @DateTime.Now.ToString("dd MMM .yyyy")<br />
+                                                                    <b>Booking No.: @order.Id</b><br />
+                                                                    <b>PNR: @order.Pnr</b>
+
+                                                                </address>
+                                                            </div>
+                                                            <div class="col-md-8 text-right">
+                                                                <h1>VINADAY Co., Ltd</h1>
+                                                                <address>
+                                                                    228 De Tham, Pham Ngu Lao Ward District 1, Ho Chi Minh City Vietnam<br>
+                                                                    Tell: (84-8) -38 388 382<br>
+                                                                    Email: info@vinaday.com
+                                                                </address>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <hr>
+                                                                <div class="pull-right">
+                                                                    <p class="text-right">
+                                                                        <strong>Receipt to</strong><br>
+                                                                        @order.Customer.Firstname @order.Customer.Lastname<br>
+                                                                        @Utilities.FormatPhone(order.Customer.PhoneNumber)<br>
+                                                                        @order.Customer.Email
+                                                                    </p>
+                                                                </div>
+                                                                <div class="pull-left">
+                                                                    <p class="text-left">
+                                                                        <strong>@order.ProductName</strong><br>
+                                                                        Check-in: @order.StartDate<br>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12 table-responsive">
+                                                                <table class="table table-hover table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Id</th>
+                                                                            <th>Date</th>
+                                                                            <th>Q.ty</th>
+                                                                            <th>Price</th>
+                                                                            <th>Surcharge</th>
+                                                                            <th>Amount</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        <tr>
+                                                                            <td>1</td>
+                                                                            <td>@order.StartDate</td>
+                                                                            <td>@order.Quantity</td>
+                                                                            <td>@String.Format("{0:C}", @order.Price)</td>
+                                                                            <td>@Html.Raw("N/A")</td>
+                                                                            <td>@String.Format("{0:C}", (order.Price) * order.Quantity)</td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div><!--row-->
+                                                    </div>
+                                                </div>
+                                            }
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" onclick="printReceipt();" class="btn btn-success" ><i class="fa fa-print"></i> Print</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="voucher"></div>
+                        }
+                    </div>
+                    @if (order.OrderDetails != null && order.OrderDetails.Count > 0)
+                    {
+                        <div class="col-lg-12 col-md-12">
+                            <div class="clearfix">
+                                <div class="panel panel-transparent panel-white">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">History</h4>
+                                        <div class="panel-control">
+                                            <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-collapse" data-original-title="Expand/Collapse"><i class="icon-arrow-down"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="table-responsive project-stats">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Note</th>
+                                                        <th>Changed</th>
+                                                        <th>Value</th>
+                                                        <th>Roles</th>
+                                                        <th>Updated</th>
+                                                        <th>Send Email</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @foreach (var detail in order.OrderDetails)
+                                                    {
+                                                    <tr>
+                                                        <td>
+                                                            @detail.Id
+                                                        </td>
+                                                        <td>@Html.Raw(detail.Note)</td>
+                                                        <td>@Html.Raw(detail.ChangedName)</td>
+                                                        <td>@Html.Raw(detail.ChangedValue)</td>
+                                                        <td>Administrator</td>
+                                                        <td>
+                                                            <strong>@detail.CreatedDate</strong>
+
+                                                        </td>
+                                                        <td>
+                                                            @if (!detail.IsSend)
+                                                                {
+                                                                <a class="glyphicon glyphicon-log-out" style="cursor: pointer" onclick="sendemail('@detail.Id'); "></a>
+                                                                }
+                                                                else
+                                                                {
+                                                                <i class="glyphicon glyphicon-log-out"></i>
+                                                                }
+
+                                                        </td>
+                                                    </tr>
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->
+@*<iframe id="downloadIframe"></iframe>*@
+<div class="modal fade" id="approved-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Payment method</h4>
+            </div>
+            <div class="modal-body">
+                <div id="payment-method">
+                    <div class="tabs-left" role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <input type="hidden" value="1" />
+                                <a href="#cash" role="tab" data-toggle="tab" aria-expanded="true">
+                                    <i class="glyphicon glyphicon-usd"></i> Cash
+                                </a>
+                            </li>
+                            <li role="presentation" class="">
+                                <input type="hidden" value="2" />
+                                <a href="#credit" role="tab" data-toggle="tab" aria-expanded="false">
+                                    <i class="glyphicon glyphicon-credit-card"></i><span> Credit</span>
+                                </a>
+                            </li>
+                            <li role="presentation" class="">
+                                <input type="hidden" value="3" />
+                                <a href="#transfer" role="tab" data-toggle="tab" aria-expanded="false">
+                                    <i class="glyphicon glyphicon-transfer"></i><span> Transfer</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content" style="padding-top: 0;">
+
+                            <div role="tabpanel" class="tab-pane fade active in" id="cash">
+                                <div class="control-group">
+                                    <h3>
+                                        <i class="glyphicon glyphicon-usd"></i><span> Cash</span>
+                                        <small>method selected!.</small>
+                                    </h3>
+                                    <label class="control-label">Please select "Apply" bottom to approve this booking. </label>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="credit">
+                                <h3>
+                                    <i class="glyphicon glyphicon-credit-card"></i><span> Credit</span>
+                                    <small>method selected!.</small>
+                                </h3>
+
+                                <div class="form-group">
+                                    <label for="credit-method">Please input credit number and select "Apply" bottom.</label>
+                                    <input type="text" style="width: 60%;font-weight: bold;text-align: center" class="form-control" id="credit-method" placeholder="****-****-****-****">
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="transfer">
+                                <h3>
+                                    <i class="glyphicon glyphicon-transfer"></i><span> Transfer</span>
+                                    <small>method selected!.</small>
+                                </h3>
+                                <div class="form-group">
+                                    <label for="credit-method">Please input transfer number and select "Apply" bottom.</label>
+                                    <input type="text" style="width: 60%;font-weight: bold;text-align: center" class="form-control" id="transfer-method" placeholder="****-****-****-****">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal">Close</a>
+                <a class="btn btn-success" onclick="changeStatus(4);">Apply</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="change-status-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel"><span id="title"></span> booking</h4>
+            </div>
+            <div class="modal-body">
+                <div id="value-group" class="form-group clearfix">
+                    <label id="label-change-value" for="change-value">Value <span class="text-danger">*</span></label>
+                    <input type="text" id="change-value" class="form-control" name="change-value">
+                </div>
+
+                <div id="note-group" class="form-group clearfix">
+                    <label for="note">Note <span class="text-danger">*</span></label>
+                    <textarea style="width: 100%" id="note" rows="5"></textarea>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="edit-hotel-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    <span id="edit-hotel-modal-title"></span> Edit Hotel
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="edit-hotel-modal-third-person" class="form-group clearfix">
+                    <label id="edit-hotel-modal-label-change-value" for="thirdperson">Third Person</label>
+                    <input type="text" id="thirdperson" class="form-control" name="thirdperson">
+                </div>
+                <div id="edit-hotel-extra-bed" class="form-group clearfix">
+                    <label id="label-extra-value" for="extra-value">Extra Bed</label>
+                    <input type="text" id="extra-value" class="form-control" name="extra-value">
+                </div>
+
+                <div id="edit-hotel-modal-note-group" class="form-group clearfix">
+                    <label for="note">Note <span class="text-danger">*</span></label>
+                    <textarea style="width: 100%" id="edit-hotel-modal-note" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="modal-footer-hotel">
+                    <a data-dismiss="modal" class="btn btn-default">Close</a>
+                    <a id="change-status" class="btn btn-success" onclick="EditSurchargeExtraBed()">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    if (typeof jQuery == 'undefined') {
+        var e = document.createElement('script');
+        e.src = '@Url.Content("~/assets/plugins/jquery/jquery-2.1.3.min.js")';
+        e.type = 'text/javascript';
+
+        document.getElementsByTagName("head")[0].appendChild(e);
+        var e1 = document.createElement('script');
+        e1.src = '@Url.Content("~/assets/js/pages/order.js")';
+        e1.type = 'text/javascript';
+        document.getElementsByTagName("head")[0].appendChild(e1);
+    }
+</script>

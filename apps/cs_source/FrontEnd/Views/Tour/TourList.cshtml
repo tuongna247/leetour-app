@@ -1,0 +1,102 @@
+﻿@using PagedList
+@using Vinaday.Data.Models.Extention
+@model PagedList.IPagedList<TourModel>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "goreise.com - Tours and Day trips";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="clear"></div>
+<section class="services services-detail hidden-xs">
+    <div class="container">
+        <div class="pull-right">
+            <ul>
+                <li class="hidden-xs hidden-sm">
+                    <div class="title-services">goreise.com gives you:</div>
+                </li>
+                <li>
+                    <span class="fa fa-check-circle"></span>
+                    <p class="caption-services">
+                        <span>The best selection</span>
+                    </p>
+                </li>
+                <li>
+                    <span class="fa fa-gift"></span>
+                    <p class="caption-services">
+                        <span>The lowest prices</span>
+                    </p>
+                </li>
+                <li>
+                    <span class="fa fa-shopping-cart"></span>
+                    <p class="caption-services">
+                        <span>Fast &amp; easy booking</span>
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<section class="content-section feature-list" style="padding-top: 0">
+    <div class="container subpage subpage2">
+        <div class="breadcrumb" xmlns:v="http://rdf.data-vocabulary.org/#">
+            <span typeof="v:Breadcrumb">
+                <a property="v:title" rel="v:url" href="/">
+                    Home
+                </a>&nbsp;››&nbsp;
+            </span>
+            <span typeof="v:Breadcrumb">
+                All tours and day trips
+            </span>
+        </div>
+        <section class="list-grid" id="detail-similar" >
+            <div id="list-tab1" class="tab-box">
+
+                <div class="row">
+                    @if (Model.Count > 0)
+                    {
+                        foreach (var tour in Model)
+                        {
+                            string price;
+                            var rate = tour.Rates.FirstOrDefault();
+
+                            price = rate != null ? string.Format("<span class='price-from'>From USD</span> <span class='price-amount'><strong class='price-new'><sup>$</sup>{0}</strong></span>", Math.Round((decimal)(rate.RetailRate + (rate.RetailRate * (tour.Tour != null ? tour.Tour.CommissionRate : 0) / 100)), 2)) : string.Format("<span class='price-amount' style='font-size: 16px;'>On request </span>");
+                            var link = Url.Action("Detail", "Home", new { id = tour.Id, title = tour.Seo.Slug, country = tour.Seo.ShortCountryName.ToLower() });
+                            <div class="col-sm-6 col-md-3">
+                                <div class="thumbnail">
+                                    <a href="@link" class="img">
+                                        <img src="@(Url.Content(tour.ImageUrl))" alt="@tour.Name">
+              
+                                    </a>
+                                    <div class="caption clearfix">
+                                        <h4><a href="@link" title="@tour.Name">@tour.Name</a></h4>
+                                        <div class="box_price">@Html.Raw(price)</div>
+                                        @if (rate != null)
+                                        {
+                                            <a href="@link" title="Book now" class="book-link">Book now »</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@link" title="Book now" class="book-link">Detail »</a>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                            //index++;
+                        }
+                    }
+
+
+                </div>
+
+            </div>
+            <div style="border-bottom: 1px solid #6ebff3; font-size: 30px; margin-bottom: 20px; position: relative; text-align: left;">
+                <h2 style="font-size: 12px; color: #6ebff3;">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</h2>
+            </div>
+            @Html.PagedListPager((IPagedList)Model, page => Url.Action("TourList", new { page }))
+        </section>
+    </div>
+</section>
+
+

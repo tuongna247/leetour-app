@@ -1,0 +1,493 @@
+﻿@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@model BookingModel
+@{
+    ViewBag.Title = "Booking Payment | VINADAY GOREISE VN Co., Ltd";
+    List<Nationality> nationalities = ViewBag.Nationalities;
+    CancellationPolicy cancellation = ViewBag.Cancellation;
+    decimal price = 0;
+    decimal surcharge = 0;
+    decimal promotion = 0;
+    var imageUrl = (Model != null && Model.Image != null ? string.Format(Url.Content(string.Format("https://admin.goreise.com{0}", Url.Content(Model.Image.OriginalPath ?? "/Content/Images/no-image.jpg")))) : "/Content/Images/no-image.jpg");
+}
+@Styles.Render("~/Content/Marriot.css")
+<aside class="e-PDP-booking o--checkout">
+    <div class="o-Orders">
+        <div class="o-Orders-inner">
+            <div class="o-Orders-info">
+                <div class="o-Orders-title"><h1>Review &amp; Book</h1><button class="o-Orders-back"><svg><use xlink:href="#BACK_ARROW"></use></svg>Go Back</button></div>
+                <div class="o-Info">
+                    <div class="o-Info-inner">
+                        <form class="o-Guests o-Guests--active" aria-expanded="true">
+                            <h2>
+                                <button class="o-InfoSectionCount o-InfoSectionCount--active" disabled="" role="tab" aria-current="true">
+                                    <svg viewBox="0 0 26 26"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g class="bg" transform="translate(-211.000000, -20.000000)"><circle cx="224" cy="33" r="12"></circle></g></g><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="Helvetica-Bold, Helvetica" font-size="14" font-weight="bold"><g class="value"><text><tspan x="9" y="18">1</tspan></text></g></g></svg>
+                                </button>Guest Information
+                            </h2>
+                            <section aria-hidden="false">
+                                <div class="o-Guests-guest">
+                                    <h3>Lead Guest</h3><div>
+                                       Content
+                                    </div>
+                                </div>
+                               
+                                <button type="submit" class="o-Guests-submit">Continue to booking information</button>
+                                <div class="row">
+
+                                    @if (Model != null)
+                                    {
+                                        string tourGroup = string.Empty;
+                                        string tourInclude = string.Empty;
+                                        switch (Model.RateType)
+                                        {
+
+                                            case 1:
+                                                tourGroup = Model.Product.TourGroup1;
+                                                tourInclude = Model.Product.TourGroup1Include;
+                                                break;
+                                            case 2:
+                                                tourGroup = Model.Product.TourGroup2;
+                                                tourInclude = Model.Product.TourGroup2Include;
+                                                break;
+                                            case 3:
+                                                tourGroup = Model.Product.TourGroup3;
+                                                tourInclude = Model.Product.TourGroup3Include;
+                                                break;
+                                        }
+
+
+                                        if (Model.Product != null)
+                                        {
+                                            var @decimal = Model.Rate.RetailRate;
+                                            price = @decimal != null ? Math.Round((decimal)@decimal, 2) : 0;
+                                            if (Model.TourPriceOption > 0)
+                                                price = price + Model.TourPriceOption;
+
+                                    <div id="information">
+                                        <div >
+                                            <div class="box-aside payment-detail">
+                                                <div class="set-border">
+                                                    <div class="check-out-header">
+                                                        <h2 class="title">Your Booking Details</h2>
+                                                    </div>
+                                                    <div class="payment-detail-content">
+                                                        <div class="payment-detail-title">
+                                                            @Model.Product.Name<br />
+                                                            <input type="hidden" style="width: 100%" id="productname" value="@Model.Product.Name.Replace("✭","")" />
+                                                        </div>
+                                                        <div class="payment-detail-content-info" style="width: 100%; padding-left: 0px;">
+                                                            <ul>
+                                                                <li><i class="fa fa-angle-double-right"></i><span class="bold">Group Type: </span> @tourGroup;</li>
+                                                                <li><i class="fa fa-angle-double-right"></i><span class="bold">Include: </span> @Html.Raw(tourInclude);</li>
+                                                                <li>
+                                                                    <i class="fa fa-angle-double-right"></i><span class="bold">Departure Date:  </span>
+                                                                    @if (Model.DepartureOption != "none")
+                                                                    {
+                                                                        @Model.DepartureOption
+                                                                    }
+                                                                    @Model.Order.StartDate.ToString("MMM-dd-yyyy")
+                                                                </li>
+                                                                <li><i class="fa fa-angle-double-right"></i><span class="bold">Duration: </span>@Model.Product.Duration</li>
+
+                                                            </ul>
+
+                                                        </div>
+                                                        <div class="clear"></div>
+                                                        @if (Model.Promotion != null)
+                                                        {
+                                                            <div style="background-color: #fff4f4 !important; border-color: #ff006c; color: #ff006c; padding: 10px; font-weight: bold" class="helper">
+                                                                <span class="glyphicon glyphicon-gift" style="float: left; height: 45px; margin-right: 10px; color: #ff006c; font-size: 20px"></span>
+                                                                <span>Congratulations! You got a Great Deal: Get US$@Math.Round(promotion, 2) discount per Person! </span>
+                                                            </div>
+                                                        }
+                                                        <div id="information-price" class="row">
+                                                            <div class="col-md-12 ">
+                                                                <div id="accordion" class="panel-group ">
+                                                                    @{
+                                                                        decimal totalPrice = Model.FinalRate;
+                                                                    }
+                                                                    <div id="PromotionSection" class="panel-body">
+
+                                                                        <table class="table table-hover" style="margin-bottom: 0;">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Quantity</th>
+                                                                                    <th>Price</th>
+                                                                                    <th style="text-align:right">Total</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td><span style="float: left">@Model.Rate.PersonNo Adult(s) </span> <span style="float: right">x</span></td>
+                                                                                    <td>@price <sup>$</sup></td>
+                                                                                    <td style="text-align:right">@(price * Model.Rate.PersonNo)<sup>$</sup></td>
+                                                                                </tr>
+                                                                                @if (Model.Children > 0)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td><span style="float: left">@Model.Children Children</span> <span style="float: right">x</span></td>
+                                                                                        <td>@((price * 3 / 4).ToString("##,###")) <sup>$</sup></td>
+                                                                                        <td style="text-align:right">@(Model.Children * price * 3 / 4)<sup>$</sup></td>
+                                                                                    </tr>
+                                                                                }
+                                                                                <tr id="promotionRow" style="display:none">
+                                                                                    <td colspan="2"><span style="float: left">Discount </span></td>
+                                                                                    <td style="text-align:right"><span id="discountValue"></span><sup>$</sup> </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                    <div style="padding:8px;">
+                                                                        <input type="hidden" id="price" value="@Model.Rate.RetailRate" />
+                                                                        <input type="hidden" id="numberChild" value="@Model.Children" />
+                                                                        <input type="hidden" id="numberAdult" value="@Model.Rate.PersonNo" />
+                                                                        <input type="hidden" id="discountCouponValue" value="" />
+                                                                        <span id="lblPromotionCode" style="font-weight:bold">Got a Promotion Code?</span>
+
+                                                                        <div id="inputPromotion" style="display:none">
+                                                                            <input id="promotionCode" value="" />
+                                                                        </div>
+                                                                        <a href="#promotionCode" id="btnAddPromotion" onclick="return addPromotion()">Add</a>
+
+
+                                                                        <a href="#promotionCode" id="btnApplyPromotion" style="display:none" onclick="return applyPromotion()">Apply</a>
+
+                                                                        <a href="#promotionCode" id="btnCancelPromotion" style="display:none" onclick="return cancelPromotion()">Cancel</a>
+                                                                        <a href="#PromotionSection" id="btnRemovePromotion" style="display:none" onclick="return removePromotion()">Remove</a>
+
+                                                                    </div>
+                                                                    <div class="panel panel-default" style="padding: 10px; font-size: 16px; background-color: lightgray;">
+                                                                        <div style="font-size: 13px;" class="payment-info-item">
+                                                                            <div class="panel-body">
+                                                                                <span class="pull-left" style="font-size: 15px; font-weight: bold">
+                                                                                    Total Price
+                                                                                </span>
+                                                                                <strong class="pull-right" id="totalPrice" style="font-size: 15px; font-weight: bold">@totalPrice<sup>USD</sup></strong>
+                                                                                <input type="hidden" id="totalAmount" value="@totalPrice" />
+                                                                            </div>
+
+                                                                            <div class="clear"></div>
+                                                                            <br />
+                                                                            <p style="font-size: 15px">
+                                                                                <span>Price includes </span> @Html.Raw(tourInclude)
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="collapseOne" class="panel-collapse collapse in" style="height: auto;">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+                                            <div id="pay-later ">
+                                                <div class="set-border">
+                                                    <div class="check-out-header">
+                                                        <h2 class="title pull-left" style="font-size: 17px">Your Information</h2>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <div>
+                                                        <div class="input-group tight">
+                                                            <span>
+                                                                <input type="radio" name="gender" style="height: 15px; box-shadow: none; padding: 10px;" placeholder="Gender" id="gender_male" value="Mr">
+                                                                <label for="gender_male" style="font-weight: normal">
+                                                                    Mr
+                                                                </label>
+
+                                                                <input type="radio" name="gender" style="height: 15px; box-shadow: none; margin-left: 60px;" placeholder="Gender" id="gender_female" value="Ms">
+                                                                <label for="gender_female" style="font-weight: normal">
+                                                                    Ms
+                                                                </label>
+                                                            </span>
+                                                        </div><!-- .input-group -->
+                                                        <div class="input-group tight">
+                                                        </div><!-- .input-group -->
+                                                        <div class="input-group tight">
+                                                            <input type="text" placeholder="First Name" class="lg" id="firt-name">
+                                                        </div><!-- .input-group -->
+
+                                                        <div class="input-group tight">
+
+                                                            <input type="text" placeholder="Last Name" class="lg" id="last-name">
+                                                        </div><!-- .input-group -->
+
+                                                        <div class="input-group tight">
+
+                                                            <input type="text" placeholder="Email " class="lg" id="email">
+                                                        </div><!-- .input-group -->
+
+                                                        <div class="input-group tight">
+
+                                                            <input type="text" placeholder="Email (re-confirm)" class="lg" id="confirm-email">
+                                                        </div><!-- .input-group -->
+
+                                                        <div class="input-group tight">
+                                                            <input type="number" placeholder="Phone Number / WhatsApp" class="lg" id="phone">
+                                                        </div><!-- .input-group -->
+
+                                                        <div class="input-group tight">
+
+                                                            <div class="select-style">
+                                                                <select name="country" class="lg" id="national">
+                                                                    <option value="Select your nationality">Select your nationality</option>
+                                                                    @if (nationalities != null && nationalities.Count > 0)
+                                                                    {
+                                                                        foreach (var nationality in nationalities.Where(nationality => nationality != null))
+                                                                        {
+                                                                            <option value="@nationality.ID">@nationality.Name</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </div><!-- .input-group -->
+                                                    </div>
+                                                    <span class="input-group">
+                                                        <textarea placeholder="Pick-up point, Food restrictions ..." class="lg" id="special-request"></textarea>
+                                                    </span>
+                                                    <div class="input-group ">
+                                                        <div>
+                                                            <input type="checkbox" name="cb_book_other_person" onchange="cbShowHideControl(this)" style="height: 12px; box-shadow: none; padding: 10px;" placeholder="Gender" id="cb_book_other_person" value="true">
+                                                            <label for="cb_book_other_person">
+                                                                Making this booking for someone else
+                                                            </label>
+                                                        </div>
+                                                        <div style="display: none" class="other_gender">
+                                                            <span>
+                                                                <input type="radio" name="gender_other_person" style="height: 15px; box-shadow: none; padding: 10px;" placeholder="Gender" id="gender_other_person" value="Mr">
+                                                                <label for="gender_other_person_male" style="font-weight: normal">
+                                                                    Mr
+                                                                </label>
+
+                                                                <input type="radio" name="gender_other_person" style="height: 15px; box-shadow: none; margin-left: 60px;" placeholder="Gender" id="gender_other_person_female" value="Ms">
+                                                                <label for="gender_other_person_female" style="font-weight: normal">
+                                                                    Ms
+                                                                </label>
+                                                            </span>
+                                                        </div>
+                                                        <div style="display: none" class="other_gender">
+                                                            <div class="input-group tight">
+                                                                <input type="text" placeholder="First Name" class="lg" id="firt_name_other_person">
+                                                            </div>
+                                                            <div class="input-group tight">
+                                                                <input type="text" placeholder="Last Name" class="lg" id="last_name_other_person">
+                                                            </div>
+                                                        </div>
+                                                    </div><!-- .input-group -->
+                                                    <div class="input-group ">
+                                                        <div>
+                                                            <input type="checkbox" name="cb_gift_voucher" onchange="cbCreateGiftVoucher(this)" style="height: 12px; box-shadow: none; padding: 10px;" id="cb_gift_voucher" value="true">
+                                                            <label for="cb_gift_voucher">
+                                                                Purchase it as a gift
+                                                            </label>
+                                                        </div>
+                                                        <div style="display: none" class="gift_voucher">
+                                                            <div class="input-group tight">
+                                                                <select name="gift_type" id="gift_type" class="lg">
+                                                                    <option value="All">All </option>
+                                                                    <option value="Birthday">Birthday </option>
+                                                                    <option value="Wedding">Wedding</option>
+                                                                    <option value="Thank you">Thank you</option>
+                                                                    <option value="Div">Div.</option>
+                                                                    <option value="Christmas">Christmas</option>
+                                                                    <option value="Occasion">Occasion</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="input-group tight">
+                                                            </div>
+                                                            <div class="input-group ">
+                                                                <textarea placeholder="Personal message" class="lg" id="personal_message"></textarea>
+                                                            </div>
+
+                                                        </div>
+                                                    </div><!-- .input-group -->
+                                                    <div class="input-group tight">
+                                                    </div><!-- .input-group -->
+
+
+                                                </div>
+                                                <div class="set-border">
+                                                    <div class="check-out-header">
+                                                        <h2 class="title" style="font-size: 17px">Select payment method</h2>
+                                                    </div>
+                                                    <div id="paymentType">
+
+                                                        <div class="radio">
+                                                            <label>
+                                                                <input type="radio" value="2" id="paymentPayLater" checked name="paymentType">
+                                                                Pay Later
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <hr style="border-top: 2px solid #eee;" />
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" disabled="" checked="" id="accept-terms">
+                                                            <a href="https://goreise.com/websites-rules" target="_new">I accept VGG's Terms of Use and Conditions</a>
+                                                        </label>
+                                                    </div>
+                                                    <div class="helper" style="font-size: 15px;margin-bottom: 20px;">
+                                                        <label style="margin: 0">Cancellation policy</label>
+                                                        <br>
+                                                        @Html.Raw(cancellation != null ? cancellation.Description : string.Empty)
+                                                    </div>
+                                                    <span class="input-group">
+                                                        <a onclick="proceedPaymentOption();" class="yellow_roundbtn pull-right" id="proceed">Book &amp; Pay Later!</a>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div id="pay-credit-card" style="display: none">
+                                                <div class="check-out-header">
+                                                    <h2 class="title" style="font-size: 17px">Payment Details</h2>
+                                                </div>
+                                                <div>
+                                                    <div class="input-group tight">
+                                                        <div class="select-style">
+                                                            <select class="lg" id="card-holder-payment-method">
+                                                                <option value="0">Please select one</option>
+                                                                <option value="Visa">Visa</option>
+                                                                <option value="MasterCard">MasterCard</option>
+                                                                <option value="Amex">American Express</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group tight">
+                                                    </div>
+                                                    <div class="input-group tight">
+                                                        <input type="text" placeholder="Cardholder First Name" class="lg" id="card-holder-firt-name">
+                                                    </div>
+                                                    <div class="input-group tight">
+                                                        <input type="text" placeholder="Cardholder Last Name" class="lg" id="card-holder-last-name">
+                                                    </div>
+                                                    <div class="input-group tight">
+                                                        <input type="text" placeholder="Credit Card Number" class="lg" id="card-holder-card-number">
+                                                    </div>
+
+                                                    <div class="input-group tight">
+                                                        <div class="col-md-4 col-xs-6">
+                                                            <input type="text" placeholder="CVV" id="card-holder-cvv" maxlength="500" class="lg" style="margin-left: -15px !important">
+                                                        </div>
+                                                        <div class="col-md-4 col-xs-3">
+                                                            <div class="select-style" style="margin-left: -30px; margin-right: 0px;">
+                                                                <select title="Exp Month" class="lg" id="card-holder-exp-month">
+                                                                    <option selected="selected" value="0">Month</option>
+                                                                    <option value="1">01</option>
+                                                                    <option value="2">02</option>
+                                                                    <option value="3">03</option>
+                                                                    <option value="4">04</option>
+                                                                    <option value="5">05</option>
+                                                                    <option value="6">06</option>
+                                                                    <option value="7">07</option>
+                                                                    <option value="8">08</option>
+                                                                    <option value="9">09</option>
+                                                                    <option value="10">10</option>
+                                                                    <option value="11">11</option>
+                                                                    <option value="12">12</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 col-xs-3">
+                                                            <div class="select-style" style="margin-left: -15px; margin-right: -15px;">
+                                                                <select title="Exp Year" class="lg" id="card-holder-exp-year">
+                                                                    <option selected="selected" value="0">Year</option>
+                                                                    <option value="2018">2018</option>
+                                                                    <option value="2019">2019</option>
+                                                                    <option value="2020">2020</option>
+                                                                    <option value="2021">2021</option>
+                                                                    <option value="2022">2022</option>
+                                                                    <option value="2023">2023</option>
+                                                                    <option value="2024">2024</option>
+                                                                    <option value="2025">2025</option>
+                                                                    <option value="2026">2026</option>
+                                                                    <option value="2027">2027</option>
+                                                                    <option value="2028">2028</option>
+                                                                    <option value="2029">2029</option>
+                                                                    <option value="2030">2030</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group tight" style="width: 100%">
+                                                        <input type="text" placeholder="Cardholder Address" class="lg" id="card-holder-address">
+                                                    </div>
+                                                </div>
+                                                <div class="helper" style="font-size: 14px;margin-bottom: 20px;">
+                                                    <label style="margin: 0">Cancellation policy</label>
+                                                    <br>
+                                                    @Html.Raw(cancellation != null ? cancellation.Description : string.Empty)
+                                                </div>
+                                                <div class="input-group">
+                                                    <a onclick="showPayLater();" class="pull-left" style="color: #58738a; cursor: pointer"> « Back to Your Information</a>
+                                                    <a onclick="proceedPaymentCreditCard();" class="yellow_roundbtn pull-right">Book &amp; Pay Now!</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        }
+                                    }
+                                </div>
+                            </section>
+                        </form>
+                        <form class="o-GeneralQuestions" aria-expanded="false">
+                            <h2><button class="o-InfoSectionCount" disabled="" role="tab" aria-current="false"><svg viewBox="0 0 26 26"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g class="bg" transform="translate(-211.000000, -20.000000)"><circle cx="224" cy="33" r="12"></circle></g></g><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="Helvetica-Bold, Helvetica" font-size="14" font-weight="bold"><g class="value"><text><tspan x="9" y="18">2</tspan></text></g></g></svg></button>Booking Questions<button class="o-GeneralQuestions-edit">edit</button></h2>
+                            <section aria-hidden="true">
+                                <label class="o-SelectInput">
+                                    <span>Complimentary Pickup</span>(Hotel pickup is offered for this activity, please enter your hotel details.)
+                                    <select class="o-SelectInput-select" name="hotel" required="" tabindex="0">
+                                        <option value="" disabled="" selected="">-- Please choose an option --</option>
+                                    </select><svg><use xlink:href="#CHEVRON"></use></svg>
+                                </label><button type="submit" class="o-GeneralQuestions-submit">Continue to Payment</button>
+                            </section>
+                        </form>
+                        <form class="o-Payment" aria-expanded="false"><h2><button class="o-InfoSectionCount" disabled="" role="tab" aria-current="false"><svg viewBox="0 0 26 26"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g class="bg" transform="translate(-211.000000, -20.000000)"><circle cx="224" cy="33" r="12"></circle></g></g><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="Helvetica-Bold, Helvetica" font-size="14" font-weight="bold"><g class="value"><text><tspan x="9" y="18">3</tspan></text></g></g></svg></button>Payment</h2><section aria-hidden="true"><fieldset><div class="o-BrowserPayElement"><button class="o-BrowserPayElement-button">Buy with<svg><use xlink:href="#GOOGLE_PAY"></use></svg></button><div class="o-BrowserPayElement-divider"><span>or</span></div></div><div class="StripeElement StripeElement--empty"><div class="__PrivateStripeElement" style="margin: 0px !important; padding: 0px !important; border: none !important; display: block !important; background: transparent !important; position: relative !important; opacity: 1 !important;"><input class="__PrivateStripeElement-input" aria-hidden="true" aria-label=" " autocomplete="false" maxlength="1" style="border: none !important; display: block !important; position: absolute !important; height: 1px !important; top: -1px !important; left: 0px !important; padding: 0px !important; margin: 0px !important; width: 100% !important; opacity: 0 !important; background: transparent !important; pointer-events: none !important; font-size: 16px !important;"></div></div><div class="o-Payment-creditCard"><span class="o-Payment-cards"><span class="o-Payment-visa"></span><span class="o-Payment-mastercard"></span><span class="o-Payment-amex"></span><span class="o-Payment-discover"></span><span class="o-Payment-dinersclub"></span></span></div></fieldset><button type="submit" class="o-SubmitLoadingButton" disabled="" aria-pressed="false">Book Now</button></section></form>
+                        <p class="o-Info-acknowledge">I acknowledge that this reservation is being placed through Placepass, a third party aggregator of guest experiences. By clicking "Book Now" you agree to be bound by the Placepass <a target="_blank" href="/terms">terms and conditions</a>, which includes a liability waiver, and <a target="_blank" href="/privacy">privacy policy</a>. Your credit card or other form of payment will list Placepass as the merchant of record.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="o-Orders-tickets">
+                <div class="o-Tickets o-Tickets--readonly">
+                    <div class="panel panel-default" style="padding: 6px; color: black;">
+                        <a href="mailto:cs@vinaday.com" style="color: black">✉️ cs@vinaday.com</a> <br />
+                        <a href="tel:842838388382" style="color: black">📞 (+84-28)38388382</a><br />
+                        <a href="tel:84916388382" style="color: black">💬 (+84)916388382</a><br />
+                    </div>
+                    <div class="panel panel-default" style="padding: 6px; color: black;">
+                        <img src="@Url.Content("~/Content/images/lowprice.png")" style="width: 100%;" />
+                    </div>
+                </div>
+              
+            </div>
+        </div>
+    </div>
+</aside>
+<div class="pd-nav"></div>
+<div class="content stepbooking">
+    <div class="container">
+
+    </div>
+</div>
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/app/payment-tour.js")"></script>
+    <script>
+        function cbShowHideControl(ctl) {
+            if (ctl.checked) {
+                $(".other_gender").show();
+            } else {
+                $(".other_gender").hide();
+            }
+        }
+        function cbCreateGiftVoucher(ctl) {
+            if (ctl.checked) {
+                $(".gift_voucher").show();
+            } else {
+                $(".gift_voucher").hide();
+            }
+        }
+
+    </script>
+}

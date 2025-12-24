@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Active = "Currency";
+    ViewBag.Title = "Currency Management";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@model List<Vinaday.Data.Models.City>
+<div class="page-title">
+    <h3>Currency Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="~/">Dashboard</a></li>
+            <li><a href="~/Configuration">Configuration</a></li>
+            <li class="active">Currency Management</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <div class="form-group col-md-12">
+                        <a data-toggle="modal" data-target="#add-new-modal" class="btn btn-info btn-addon m-b-sm btn-xs"><i class="fa fa-plus"></i>Add new</a>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div id="loadPane"></div>
+                    </div>
+                    <div class="table-responsive col-md-12">
+                        <div id="div-currency"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add-new-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new currency</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="new-name">Name <span class="text-danger">*</span></label>
+                        <input class="form-control" id="new-name" type="text" placeholder="Enter name">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="new-description">Description <span class="text-danger">*</span></label>
+                        <input class="form-control" id="new-description" type="text" placeholder="Enter description">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="new-price">Price <small>(for $1)</small></label>
+                        <input class="form-control" id="new-price" type="text" placeholder="Enter price">
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div id="new-error-list" style="display: none;">
+                            <div id="new-error-item" class="alert alert-danger" role="alert">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="insertCurrency();" class="btn btn-success">Add new</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-new-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Update currency for <span id="currency-name"></span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="edit-price">Price <small>(for $1)</small></label>
+                        <input class="form-control" id="edit-price" type="text" placeholder="Enter price">
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div id="edit-error-list" style="display: none;">
+                            <div id="edit-error-item" class="alert alert-danger" role="alert">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="edit-currency-id" value="" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="updateCurrency();" class="btn btn-success">Save change</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    if (typeof jQuery == 'undefined') {
+        var e = document.createElement('script');
+        e.src = '@Url.Content("~/assets/js/currency.js")';
+        e.type = 'text/javascript';
+        document.getElementsByTagName("head")[0].appendChild(e);
+    }
+</script>

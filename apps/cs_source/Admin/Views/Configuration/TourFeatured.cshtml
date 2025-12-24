@@ -1,0 +1,75 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+
+@{
+    ViewBag.Title = "Admin - Tour Featured";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+     .Where(c => c.Type == ClaimTypes.Role)
+     .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : "~/Views/Shared/_ContentLayout.cshtml";
+    List<Tour> tours = ViewBag.Tours;
+    List<TourModel> tourModels = ViewBag.Featureds;
+    var index = 1;
+}
+
+
+<div class="page-title">
+    <h3>Category Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="~/">Dashboard</a></li>
+            <li><a href="~/Configuration">Configuration</a></li>
+            <li class="active">Tour Featured</li>
+        </ol>
+    </div>
+</div>
+
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table id="region-data-table" class="table table-bordered table-striped table-condensed table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="text-align: center;">#</th>
+                                    <th scope="col" style="text-align: center;">Image</th>
+                                    <th scope="col" style="text-align: center;">Name</th>
+                                    <th style="text-align: center;" scope="col" class="action">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tourModel in tourModels)
+                                {
+                                    <tr>
+                                        <td style="text-align: center;"><span class="badge badge-success">@index</span></td>
+                                        <td>
+                                            <div style="text-align: center;">
+                                                <img style="width: 200px;" src="@tourModel.ImageUrl" alt="@tourModel.Name">
+                                            </div>
+                                        </td>
+                                        <td style="text-align: center;">@tourModel.Name</td>
+                                        <td style="width: 300px;">
+                                            <select class="tours form-control m-b-sm">
+                                                @foreach (var tour in tours)
+                                                {
+                                                    <option value="@tour.Id" @(tour.Id == tourModel.Id ? "selected" : string.Empty)>@tour.Name</option>
+                                                }
+                                            </select>
+                                        </td>
+                                    </tr>
+                                                index++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+﻿@model List<Vinaday.Data.Models.Extention.ItemModel>
+@{
+    var collectionValue = ViewBag.CollectionValue;
+}
+@if (Model.Count > 0)
+{
+    <h4>The Collection</h4>
+    <div role="alert" class="alert alert-success alert-dismissible">
+        <button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button>
+        Select the categories that apply to your property. This information will help us better target customers for you.
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form>
+
+                <div class="row">
+                    <div class="col-md-12" style="margin-left: -15px">
+                        <div class="col-md-4">
+                            <div class="form-group ">
+                                <label for="level">Level</label>
+                                <select class="form-control m-b-sm" id="level">
+                                    <option value="-1" >Select level of Collection</option>
+                                    <option value="3" @(collectionValue==3?"selected":"")>Level 1</option>
+                                    <option value="4" @(collectionValue==4?"selected":"")>Level 2</option>
+                                    <option value="5" @(collectionValue==5?"selected":"")>Level 3</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="style-form-hotel-style">
+                        @foreach (var item in Model)
+                        {
+                            <div class="col-md-3">
+                                <label class="checkbox inline">
+                                    <input type="checkbox" @(item.Checked ? "checked" : "") name="@item.Id" id="@item.Id" value="@item.Id">@item.Name
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <!-- Row -->
+    <div class="clearfix"></div>
+    <div class="pull-right">
+        <button type="button" onclick="getTabHotelFacility();" class="btn btn-default m-b-sm">Skip and Continue</button>
+        <button type="button" onclick="saveTabStyle();" class="btn btn-success m-b-sm">Save and Continue</button>
+    </div>
+}

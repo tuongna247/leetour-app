@@ -1,0 +1,72 @@
+﻿@if (Model.Count > 0)
+{
+
+    <div id="flight-ticket">
+        <h6 class="panel-title"><span class="badge badge-success" style="vertical-align: top">2</span> Fill all value for <b>Other Service</b></h6>
+        <hr />
+        <div class="form-group col-md-6">
+            <label for="product-name">Product Name</label>
+            <textarea rows="1" placeholder="Product Name" id="product-name" name="product-name" class="form-control"></textarea>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="description">Description</label>
+            <textarea rows="1" placeholder="Description" id="description" name="description" class="form-control"></textarea>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="check-in">Departs</label>
+            <input id="check-in" type="text" class="form-control m-b-sm" placeholder="Check-in">
+        </div>
+        <div class="form-group col-md-3">
+            <label for="check-out">Arrives</label>
+            <input id="check-out" type="text" class="form-control m-b-sm" placeholder="Check-out">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="cancellationpolicy">Cancellation Policy</label>
+            <input id="cancellationpolicy" type="text" class="form-control m-b-sm" placeholder="Cancellation Policy">
+        </div>
+        <div class="form-group col-md-3">
+            <label for="qty">Qty</label>
+            <select id="qty" class="form-control">
+                @for (var i = 1; i < 100; i++)
+                    {
+                    <option value="@i">@i</option>
+                    }
+            </select>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="price">Price</label>
+            <input id="price"  type="text"  class=" form-control  auto" placeholder="Price">
+        </div>
+
+        <div class="form-group col-md-3  ">
+            <label for="discount">Discount</label>
+            <input id="discount" type="text" class="form-control m-b-sm auto" value="0" placeholder="Discount">
+        </div>
+        <div class="form-group col-md-3">
+            <label for="total">Total</label>
+            <input id="total" readonly="readonly" type="text" class="form-control m-b-sm  auto" placeholder="Total" />
+
+        </div>
+       
+        <div class="form-group col-md-6 col-md-offset-6 ">
+        </div>
+
+        <div id="customer-view">
+            <h6 class="panel-title"><span class="badge badge-primary" style="vertical-align: top">3</span> Fill all value for <b>Customer</b></h6>
+            <hr/>
+            <div class="form-group col-md-6">
+                <label for="email">Email address</label>
+                <input type="email" placeholder="Enter email" id="email" name="email" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="phone">Phone</label>
+                <input type="phone" placeholder="Enter phone" id="phone" name="phone" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="text-right col-md-12">
+        <a class="btn btn-success" onclick="createOtherProductBooking();">Create your booking</a>
+    </div>
+
+
+}

@@ -1,0 +1,170 @@
+﻿@using System
+@{
+    Layout = "";
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html dir="ltr" style="background-color: rgb(0, 114, 198);">
+<head>
+    <!-- Title -->
+    <title>Vinaday | Login - Sign in</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta charset="UTF-8">
+    <meta name="description" content="Admin Dashboard" />
+    <meta name="keywords" content="admin,dashboard" />
+    <meta name="author" content="Steelcoders" />
+
+    <link href="/assets/css/login.ltr.css" rel="stylesheet" />
+    <link href="/Content/plugins/sweetalert-master/lib/sweet-alert.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body style="display: block;">
+    <div id="background_branding_container">
+        <img id="background_background_image" alt="logo" src="/assets/images/default_signin_illustration.jpg">
+    </div>
+    <div id="login_panel" class="login_panel" style="display: block;">
+        <div class="legal_container"></div>
+        <table class="login_panel_layout" style="height: 100%;">
+            <tbody>
+                <tr style="height: 100%;">
+                    <td id="login_panel_center">
+                        <div class="login_inner_container">
+                            <div id="true_inner" class="inner_container cred">
+                                <div class="login_workload_logo_container">
+                                    <h1 id="login_workload_logo_text" class="gianttext" style="visibility: visible;">Vinaday Travel</h1>
+                                </div>
+                                <div id="login-form">
+                                    <div class="spacer"></div>
+
+                                    <div id="login_error_container" class="login_error_container"></div>
+                                    <div class="login_cta_container normaltext">
+                                        <div id="login_cta_text" class="1">Sign in with your work vinday account</div>
+                                    </div>
+                                    <ul class="login_cred_container">
+
+                                        <li class="login_cred_field_container">
+                                            <div id="credentials">
+                                                <div id="cred_userid_container" class="login_textfield textfield">
+                                                    <span class="input_field textfield">
+                                                        <label for="user-name" class="no_display" aria-hidden="true">User account</label>
+                                                        <input tabindex="1" id="user-name" class="login_textfield textfield required email field normaltext" placeholder="Enter user name or email" type="text" name="login" spellcheck="false" alt="Enter user name or email" aria-label="User account" value="" autocomplete="off">
+                                                    </span>
+                                                </div>
+
+                                                <div id="cred_password_container" class="login_textfield textfield">
+                                                    <span class="input_field textfield">
+                                                        <label for="user-pass" class="no_display" aria-hidden="true">Password</label>
+                                                        <input tabindex="2" id="user-pass" class="login_textfield textfield required field normaltext" placeholder="Password" spellcheck="false" aria-label="Password" alt="Password" type="password" name="passwd" value="">
+                                                    </span>
+                                                </div>
+                                                <div class="spacer"></div>
+                                                <div id="cred_kmsi_container" class="login_textfield textfield">
+                                                    <input type="checkbox" name="KMSI" id="cred_keep_me_signed_in_checkbox" value="1">
+                                                    <label for="cred_keep_me_signed_in_checkbox" class="tinytext" style="vertical-align: text-top">Keep me signed in</label>
+                                                </div>
+
+                                            </div>
+                                        </li>
+
+                                        <li class="login_cred_options_container" id="login_cred_options_container">
+                                            <div id="cred_kmsi_container" class="subtext normaltext">
+                                            </div>
+                                            <span onclick="login();" tabindex="3" class="button normaltext" role="button">Sign in</span>
+                                            <div class="subtext smalltext">
+                                                <span>
+                                                    <a id="forgot-password" tabindex="4" href="#">Can’t access your account?</a>
+                                                </span>
+                                            </div>
+
+                                            <div id="error-list" style="display: none; color: red; font-size: 13px;" class="tinytext">
+                                                <hr style="color: white" />
+                                                <div id="error-item" class="alert alert-danger" role="alert">
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div id="login-forgot-password" style="display: none">
+                                    <div class="spacer"></div>
+
+                                    <div id="login_error_container" class="login_error_container"></div>
+                                    <div class="login_cta_container normaltext">
+                                        <div id="login_cta_text" class="1">Forgot password</div>
+                                    </div>
+                                    <ul class="login_cred_container">
+
+                                        <li class="login_cred_field_container">
+                                            <div id="credentials">
+                                                <div id="cred_userid_container" class="login_textfield textfield">
+                                                    <span class="input_field textfield">
+                                                        <label for="email" class="no_display" aria-hidden="true">Email</label>
+                                                        <input tabindex="5" id="email" class="login_textfield textfield required email field normaltext" placeholder="Enter your email" type="text" spellcheck="false" alt="Enter your email" autocomplete="off">
+                                                    </span>
+                                                </div>
+
+                                                <div id="cred_password_container" class="login_textfield textfield">
+                                                    <span class="input_field textfield">
+                                                        <label for="email-confirm" class="no_display" aria-hidden="true">Email confirm</label>
+                                                        <input tabindex="6" id="email-confirm" class="login_textfield textfield required field normaltext" placeholder="Enter your email confirm" spellcheck="false" alt="Enter your email confirm" type="text" autocomplete="off">
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        </li>
+
+                                        <li class="login_cred_options_container" id="login_cred_options_container">
+                                            <div id="cred_kmsi_container" class="subtext normaltext">
+                                            </div>
+                                            <span onclick="forgotPassword();" tabindex="7" class="button normaltext" role="button">Sent</span>
+                                            <div class="subtext smalltext">
+                                                <span>
+                                                    <a id="back-login" tabindex="8" href="#">Back to login?</a>
+                                                </span>
+                                            </div>
+
+                                            <div id="error-list" style="display: none; color: red; font-size: 13px;" class="tinytext">
+                                                <hr style="color: white" />
+                                                <div id="error-item" class="alert alert-danger" role="alert">
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="push">
+                            </div>
+                        </div>
+                        <div class="login_footer_container">
+                            <table id="footer_table">
+                                <tbody>
+                                    <tr>
+
+                                        <td>
+                                            <div class="footer tinytext">
+                                                <span class="corporate_footer">
+                                                    <span class="branding_footer">Your work account can be used anywhere you want.</span>
+                                                    <br />
+                                                    <span class="corp_link" id="footer_copyright_link">
+                                                        © @DateTime.Now.Year VINADAY.COM managed by VINADAY goREISE
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="/assets/plugins/jquery/jquery-2.1.3.min.js"></script>
+    <script src="/assets/js/pages/login.js"></script>
+    <script src="/Content/plugins/sweetalert-master/lib/sweet-alert.min.js"></script>
+</body>
+
+</html>

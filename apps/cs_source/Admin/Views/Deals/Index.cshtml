@@ -1,0 +1,186 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@model List<Deals>
+@{
+    ViewBag.Title = "Admin - Deals Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+     .Where(c => c.Type == ClaimTypes.Role)
+     .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : "~/Views/Shared/_ContentLayout.cshtml";
+
+    var index = 1;
+}
+<div class="page-title">
+    <h3>Deals Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Dashboard</a></li>
+            <li class="active">Deals Managerment</li>
+        </ol>
+    </div>
+</div>
+
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        @foreach (var deal in Model)
+                        {
+                            if (deal == null)
+                            {
+                                continue;
+                            }
+                            if (deal.Priority == 1)
+                            {
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <img alt="Image" style="width: 100%" src="@Url.Content(deal.ImageUrl)">
+                                                        <a onclick="uploadImage();" class="btn btn-success" style="margin-top: 10px">Change Image</a>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+
+                                                        <div class="form-group">
+                                                            <label>Title of Deal</label>
+                                                            <input id="name" value="@deal.Name" class="form-control" alt="@deal.Name">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Description</label>
+                                                            <textarea id="description" rows="4" placeholder="Enter Description" class="form-control">@deal.Description</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Url</label>
+                                                            <input id="url" value="@deal.Url" class="form-control" alt="@deal.Url">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Countdown Time</label>
+                                                            <input id="countdown" value="@deal.Countdown" class="form-control hotel-image-name" alt="@deal.Countdown">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Action</label>
+                                                            <select id="status" class="form-control m-b-sm">
+                                                                <option value="2" @(deal.Status == 2 ? "selected" : "")>Enable</option>
+                                                                <option value="1" @(deal.Status == 1 ? "selected" : "")>Disabled</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="hidden" id="id" value="@deal.Id" />
+                                                        <a class="btn btn-success" onclick="saveDeal();" style="margin-top: 10px">Save Change</a>
+                                                    </div>
+                                                </div>
+                                                <div class="modal fade" id="change-image-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-sm">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body">
+                                                                <form action="@Url.Content("/Deals/SaveUploadedPictures")" method="post" enctype="multipart/form-data" class="dropzone" id="dropForm" style="padding: 0;">
+                                                                    <input type="hidden" name="id" value="@deal.Id" />
+                                                                    <div class="fallback">
+                                                                        <input name="file" type="file" multiple />
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            }
+                        }
+                        <h3>More Deal</h3>
+                        <table class="table table-bordered">
+                            <tbody>
+                                @foreach (var deal in Model)
+                                {
+                                    if (deal == null)
+                                    {
+                                        continue;
+                                    }
+                                    if (deal.Priority != 1)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <img alt="Image" style="width: 100%" src="@Url.Content(deal.ImageUrl)">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Select hotel</label>
+                                                            <select class="form-control m-b-sm hotel-list">
+                                                                <option value="-1">Select a Hotel</option>
+                                                                @foreach (Hotel hotel in ViewBag.Hotels)
+                                                                {
+                                                                    <option value="@hotel.Id">@hotel.HotelName</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Action</label>
+                                                            <select class="form-control m-b-sm status">
+                                                                <option value="2" @(deal.Status == 2 ? "selected" : "")>Enable</option>
+                                                                <option value="1" @(deal.Status == 1 ? "selected" : "")>Disabled</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Title of Deal</label>
+                                                            <input value="@deal.Name" class="form-control name" alt="@deal.Name">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Description</label>
+                                                            <textarea rows="4" placeholder="Enter Description" class="form-control description">@deal.Description</textarea>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <input type="hidden" class="id" value="@deal.Id" />
+                                                        <a class="btn btn-success save-change-deal" style="margin-top: 10px">Save Change</a>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                    }
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (typeof jQuery == 'undefined') {
+        var e = document.createElement('script');
+        e.src = '@Url.Content("~/assets/js/deal.js")';
+        e.type = 'text/javascript';
+        document.getElementsByTagName("head")[0].appendChild(e);
+    }
+</script>

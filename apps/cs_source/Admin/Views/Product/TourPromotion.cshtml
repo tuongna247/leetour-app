@@ -1,0 +1,462 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+@{
+    ViewBag.Title = "Tour - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+    List<Tour_Promotion> promotions = ViewBag.Promotions;
+    List<CatDetail> promotionTypes = ViewBag.PromotionTypes;
+    var cancellations = ViewBag.Cancellations;
+    HotelCancellation hotelCancellation = ViewBag.HotelCancellation;
+    List<Room> roomTypes = ViewBag.RoomTypes;
+
+}
+@if (Model != null)
+{
+    <input type="hidden" id="tourId" value="@Model.Id" />
+    <div class="page-title">
+        <h3>Tour Promotion</h3>
+        <div class="page-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="active">@Model.Name</li>
+            </ol>
+        </div>
+    </div>
+    <div id="main-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-white">
+                    <div class="panel-heading clearfix">
+
+                        <div role="group" class="pull-right">
+                            <a href="@Url.Content(string.Format("~/Product/TourBasic/{0}", Model.Id))" class="btn btn-success m-b-sm">Basic Info</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourDetail/{0}", Model.Id))" class="btn btn-success m-b-sm">Detail</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPhoto/{0}", Model.Id))" class="btn btn-success m-b-sm">Photos galery</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourItinerary/{0}", Model.Id))" class="btn btn-success m-b-sm">Itinerary</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPrice/{0}", Model.Id))" class="btn btn-success m-b-sm">Rates Control</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourSurcharge/{0}", Model.Id))" class="btn btn-success m-b-sm">Surcharges</a>
+                            <a disabled href="@Url.Content(string.Format("~/Product/TourPromotion/{0}", Model.Id))" class="btn btn-success m-b-sm">Promotions</a>
+                            <a href="@Url.Content(string.Format("~/Product/TourPriceOption/{0}", Model.Id))" class="btn btn-success m-b-sm">Price Option</a>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="panel-body">
+                        <div style="margin-top: 30px" class="form-inline">
+                            <div class="form-group">
+                                <a class="btn btn-info btn-addon m-b-sm btn-xs" onclick="addTourPromotionShow();"><i class="fa fa-plus"></i>Add new</a>
+                            </div>
+                        </div>
+                        <div id="load-pane-before" style="position: static;"></div>
+                        <div style="min-height: 250px;" id="promotion-list">
+                            @if (promotions.Count > 0)
+                            {
+                                <div class="table-responsive">
+
+                                    <table id="promotion-result" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Id</th>
+                                                <th scope="col">Promotion name</th>
+
+                                                <th scope="col">Booking date</th>
+                                                <th scope="col">Stay date</th>
+                                                <th scope="col">Language</th>
+                                                <th scope="col">Person</th>
+                                                <th scope="col">Description</th>
+
+                                                <th class="text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var promotion in promotions)
+                                            {
+                                                <tr>
+                                                    <td>@promotion.Id</td>
+                                                    <td>
+                                                        @promotion.Name
+                                                    </td>
+
+                                                    <td>
+                                                        @if (promotion.PromotionType == (int)Utilities.PromotionType.EarlyBird)
+                                                        {
+                                                            <span>@string.Format("Booking before {0} {1}", promotion.MinimumDayAdvance, promotion.MinimumDayAdvance > 1 ? "days" : "day")</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>@(promotion.BookingDateFrom != null ? promotion.BookingDateFrom.Value.ToShortDateString() : "") to @(promotion.BookingDateTo != null ? promotion.BookingDateTo.Value.ToShortDateString() : "")</span>
+                                                        }
+                                                        <br /><span>(@Html.Raw(promotion.DateOfWeek))</span>
+                                                    </td>
+                                                    <td>
+                                                        <span>@(promotion.CheckIn != null ? promotion.CheckIn.Value.ToShortDateString() : "") to @(promotion.CheckOut != null ? promotion.CheckOut.Value.ToShortDateString() : "")</span>
+
+                                                    </td>
+                                                    <td>
+                                                        @if (promotion.Language == 0 || promotion.Language == null)
+                                                        {
+                                                            <text>All Language</text>
+                                                        }
+                                                        else if (promotion.Language == 1)
+                                                        {
+                                                            <text>English</text>
+                                                        }
+                                                        else
+                                                        {
+                                                            <text>VietNamese</text>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (promotion.NumberPerson == 0 || promotion.NumberPerson == null)
+                                                        {
+                                                            <text>All Person</text>
+                                                        }
+                                                        else if (promotion.NumberPerson > 0)
+                                                        {
+                                                            @promotion.NumberPerson
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @{
+                                                            string discountType;
+                                                            switch (promotion.DiscountType)
+                                                            {
+                                                                case (int)Utilities.DiscountType.Percent:
+
+                                                                    discountType = "Get " + promotion.Get + "% discount.";
+                                                                    break;
+
+                                                                case (int)Utilities.DiscountType.AmountDiscountPerNight:
+                                                                    switch (promotion.ApplyOn)
+                                                                    {
+                                                                        case (int)Utilities.ApplyOn.EveryNight:
+                                                                            discountType = "Get $" + promotion.Get +
+                                                                            " discount on every people.";
+                                                                            break;
+                                                                        default:
+                                                                            discountType = "Get $" + promotion.Get +
+                                                                            " discount on every people.";
+                                                                            break;
+                                                                    }
+                                                                    break;
+                                                                default:
+                                                                    switch (promotion.ApplyOn)
+                                                                    {
+                                                                        default:
+                                                                            discountType = "Stay " + promotion.MinimumStay +
+                                                                            " get " + promotion.Get + " free.";
+                                                                            break;
+                                                                    }
+                                                                    break;
+                                                            }}
+                                                        @discountType
+                                                    </td>
+
+                                                    <th class="text-center">
+                                                        <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteTourPromotion(@promotion.Id);"><small class="glyphicon glyphicon-trash"></small></a>
+                                                    </th>
+                                                </tr>
+                                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="text-center">No content for this time.</p>
+                                                            }
+                            <div class="clearfix"></div>
+
+                        </div>
+                        <div id="loadPane"></div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div><!-- Row -->
+    </div>
+    <div class="modal fade" id="promotion-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add new </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="rootwizard">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active"><a href="#tab1" data-toggle="tab"><span class="badge badge-success pull-left" style="margin-right: 5px">1</span> Promotion Type</a></li>
+                                    <li role="presentation"><a href="#tab2" data-toggle="tab"><span class="badge badge-success pull-left" style="margin-right: 5px">2</span> Condition</a></li>
+                                    <li role="presentation"><a href="#tab3" data-toggle="tab"><span class="badge badge-success pull-left" style="margin-right: 5px">3</span> Benefit</a></li>
+                                    <li role="presentation"><a href="#tab4" data-toggle="tab"><span class="badge badge-success pull-left" style="margin-right: 5px">4</span> Restriction</a></li>
+                                    <li role="presentation"><a href="#tab5" data-toggle="tab"><span class="badge badge-success pull-left" style="margin-right: 5px">5</span> Summary</a></li>
+                                </ul>
+
+
+                                <div class="progress progress-sm m-t-sm">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                    </div>
+                                </div>
+                                <form id="wizardForm">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active fade in" id="tab1">
+
+                                            <label for="promotion-type">Select promotion type:</label>
+                                            <div style="width: 30%">
+                                                <select id="promotion-type" class="form-control">
+                                                    @foreach (CatDetail promotionType in promotionTypes)
+                                                    {
+                                                        <option name="@promotionType.Name" value="@promotionType.Id">@promotionType.Name</option>
+                                                    }
+
+                                                </select>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="tab-pane fade" id="tab2">
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <div class="form-group col-md-6">
+                                                        <label for="stay-from">Stay date from:</label>
+                                                        <input type="text" class="form-control date-picker" id="stay-from" placeholder="Stay date from">
+                                                    </div>
+
+                                                    <div class="form-group col-md-6">
+                                                        <label for="stay-to">to:</label>
+                                                        <input type="text" class="form-control date-picker" id="stay-to" placeholder="Stay date to">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-6" id="book-date-div">
+                                                    <div class="form-group col-md-6">
+                                                        <label for="book-from">Book date from:</label>
+                                                        <input type="text" class="form-control date-picker" id="book-from" placeholder="Enter booking from">
+                                                    </div>
+
+                                                    <div class="form-group col-md-6">
+                                                        <label for="book-to">to:</label>
+                                                        <input type="text" class="form-control date-picker" id="book-to" placeholder="Enter booking to">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="date-week-table">Check-in on:</label>
+                                                    <div class="form-group" id="date-week-table">
+                                                        <div class="alert alert-success" role="alert">
+
+                                                            <input value="Sun" id="cbSun" type="checkbox" checked>Sun
+                                                            <input value="Mon" id="cbMon" type="checkbox" checked>Mon
+                                                            <input value="Tue" id="cbTue" type="checkbox" checked>Tue
+                                                            <input value="Wed" id="cbWed" type="checkbox" checked>Wed
+                                                            <input value="Thu" id="cbThu" type="checkbox" checked>Thu
+                                                            <input value="Fri" id="cbFri" type="checkbox" checked>Fri
+                                                            <input value="Sat" id="cbSat" type="checkbox" checked>Sat
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="tab3">
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <div id="discount-type-li">
+                                                        <label for="discount-type">Discount type:</label>
+                                                        <select id="discount-type" class="form-control">
+                                                            <option value="1" name="% Discount">% Discount</option>
+                                                            <option value="3" name="USD Amount Discount (Per People)">Amount Discount Per People</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <div class="col-md-3">
+                                                        <label for="percentage-get">Get: </label>
+                                                        <input type="text" value="0" name="percentage-get" class="form-control text-center" id="percentage-get">
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <label for="percentage-get">&nbsp;</label>
+                                                        <span class="form-control" id="percentage-get-description">% Discount</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="tab4">
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="person">Person Apply</label>
+                                                    <select id="person">
+                                                        <option value="0">All person</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                    </select>
+
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="language">Languages</label>
+                                                    <select id="language">
+                                                        <option value="0">All Languages</option>
+                                                        <option value="1">English</option>
+                                                        <option value="2">VietNam</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="cancellation-policy">Cancellation policy</label>
+                                                    <div class="controls">
+                                                        <select id="cancellation-policy" class="form-control">
+                                                            @if (hotelCancellation != null && hotelCancellation.CancellationPolicy.Name != null)
+                                                            {
+                                                            <option value="1" selected>Tour Standard Cancellation</option>
+                                                            <option value="2">Other Cancellation Policy</option>
+                                                            }
+                                                            else
+                                                            {
+                                                            <option value="1">Tour Standard Cancellation</option>
+                                                            <option value="2">Other Cancellation Policy</option>
+                                                            }
+                                                        </select>
+
+
+                                                    </div>
+                                                    <div>
+                                                        @if (hotelCancellation != null && hotelCancellation.CancellationPolicy.Name != null)
+                                                        {
+                                                        <div id="cancellation-description-hotel">@hotelCancellation.CancellationPolicy.Description</div>
+                                                        <div id="cancellation-description" style="display: none;"></div>
+                                                        <input type="hidden" id="cancel-name-hidden" value="@hotelCancellation.CancellationPolicy.Name" />
+                                                        <input type="hidden" id="cancel-id-hidden" value="@hotelCancellation.CancellationPolicy.Id" />
+                                                        }
+                                                        else
+                                                        {
+                                                        <div id="cancellation-description"></div>
+                                                        <input type="hidden" id="cancel-name-hidden" />
+                                                        <input type="hidden" id="cancel-id-hidden" />
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="cancellation-policy">&nbsp;</label>
+                                                    @if (hotelCancellation != null && hotelCancellation.CancellationPolicy.Name != null)
+                                                    {
+                                                        <span id="cancelation-name">@hotelCancellation.CancellationPolicy.Name</span>
+                                                        <select id="cancellation-list" style="display: none" class="form-control">
+                                                            @foreach (var cancellation in cancellations)
+                                                            {
+                                                                <option value="@cancellation.Id" name="@cancellation.Description">@cancellation.Name</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span style="display: none" id="cancelation-name">
+                                                            @if (hotelCancellation != null)
+                                                            {
+                                                                @hotelCancellation.CancellationPolicy.Name
+                                                            }
+                                                        </span>
+                                                        <select id="cancellation-list" class="form-control">
+                                                            @foreach (var cancellation in cancellations)
+                                                            {
+                                                                <option value="@cancellation.Id" name="@cancellation.Description">@cancellation.Name</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="tab5">
+                                            <h2 class="no-s">Summary</h2>
+                                            <div class="alert alert-info m-t-sm m-b-lg" role="alert">
+                                                <style>
+                                                    .summary-list {
+                                                        list-style: outside none none;
+                                                        margin-left: -40px;
+                                                    }
+
+                                                    .well-nice .well-nice {
+                                                        background-color: #edeef5;
+                                                        border-color: #e9ebf2;
+                                                        box-shadow: none;
+                                                    }
+
+                                                    .summary-list .label-field {
+                                                        display: inline-block;
+                                                        font-weight: normal;
+                                                        margin-right: 20px;
+                                                        text-align: right;
+                                                        width: 160px;
+                                                    }
+
+                                                    .summary-list p {
+                                                        margin: 0;
+                                                    }
+                                                </style>
+                                                <ul class="summary-list">
+                                                    <li class="control-group row-fluid">
+                                                        <div class="well well-small well-nice">
+                                                            <p><span class="label-field">Promotion name</span> <span id="span-promotion-name" class="field bold">Early Bird</span></p>
+                                                            <p><span class="label-field">Check-in on</span> <span class="field">Check in on Specific Days (<span id="span-date-of-week"></span>)</span></p>
+
+                                                            <p id="p-booking-date" style="display: none;"><span class="label-field">Booking date</span> <span class="field" id="span-booking-date-from">08/08/1978</span> - <span class="field" id="span-booking-date-to">08/08/1978</span></p>
+                                                            <p id="p-minimum-advance"><span class="label-field">Booking before</span> <span class="field" id="booking-before-from">08/08/1978</span> - <span class="field" id="booking-before-to">08/08/1978</span></p>
+                                                            <p><span class="label-field">Stay date</span> <span class="field" id="span-stay-date-from">08/08/1978</span> - <span class="field" id="span-stay-date-to">08/08/1978</span></p>
+                                                            <p><span class="label-field">Person</span> <span class="field" id="span-number_person"></span></p>
+                                                            <p><span class="label-field">Languages</span> <span class="field" id="span-Languages"></span></p>
+                                                            <p><span class="label-field">Discount type</span> <span class="field" id="span-discount-type">% Discount</span></p>
+
+                                                            <p><span class="label-field">Get</span> <span class="field" id="span-get">21.00% Discount</span></p>
+
+                                                        </div>
+                                                    </li>
+                                                    <li class="control-group row-fluid">
+                                                        <div class="well well-small well-nice">
+                                                            <p><span class="label-field">Cancellation policy</span> <span class="field" id="span-cancellation-policy">Cancel 7D prior arrival 1N charge, 3D charge 100%, No Show 100% charge</span></p>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <ul class="pager wizard">
+                                            <li class="previous"><a href="#" class="btn btn-default">Previous</a></li>
+                                            <li class="next"><a href="#" class="btn btn-default">Next</a></li>
+                                            <li id="load-pane-wizard"></li>
+                                            <li class="finish pull-right" style="display:none;"><a href="javascript:;" class="btn btn-default">Finish</a></li>
+                                        </ul>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div><!-- Row -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p>No content for this time!</p>
+                                                            }
+
+@section Scripts {
+    @Scripts.Render("~/bundles/tourjs")
+}
+

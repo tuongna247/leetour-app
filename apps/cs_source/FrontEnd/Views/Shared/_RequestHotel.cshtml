@@ -1,0 +1,109 @@
+﻿<section class="content-section form checkout style-2">
+    <div class="row" style="padding: 10px;">
+        <div id="show-inquiry">
+            <div class="col-md-12 " >
+                <h3 style="font-size: 18px;">Inquiry Form  </h3>
+                <div class="clearfix"></div>
+                <div >
+                    <span class="input-group tight" style="margin-bottom: 5px;">
+                        <span>
+                            <input type="radio" name="gender" style="height: 15px;box-shadow:none; padding: 10px;" placeholder="Gender" id="gender_male" value="Mr">
+                            <label for="gender_male" style="font-weight: normal">
+                                Mr
+                            </label>
+
+                            <input type="radio" name="gender" style="height: 15px; box-shadow: none; margin-left: 60px;" placeholder="Gender" id="gender_female" value="Ms">
+                            <label for="gender_female" style="font-weight: normal">
+                                Ms
+                            </label>
+                        </span>
+                    </span><!-- .input-group -->
+
+                    <span class="input-group tight">
+                        <i class="fa fa-user"></i>
+                        <input type="text" id="firt-name" class="lg" placeholder="Full Name" />
+                    </span><!-- .input-group -->
+
+                    <span class="input-group tight">
+                        <i class="fa fa-phone"></i>
+                        <input type="number" id="phone" class="lg" placeholder="Mobile Phone / WhatsApp" />
+                    </span><!-- .input-group -->
+                    <span class="input-group tight">
+                        <i class="fa fa-flag"></i>
+                        <input type="text" id="nationality" class="lg" placeholder="Nationality" />
+                    </span><!-- .input-group -->
+                    <span class="input-group tight">
+                        <i class="fa fa-envelope"></i>
+                        <input type="text" id="email" class="lg" placeholder="Email Address" />
+                    </span><!-- .input-group -->
+
+                    <span class="input-group tight">
+                        <i class="fa fa-envelope"></i>
+                        <input type="text" id="confirm-email" class="lg" placeholder="Email Address(re-confirm)" />
+                    </span><!-- .input-group -->
+
+                    <span class="input-group tight">
+                        <i class="fa fa-calendar"></i>
+                        <input type="text" id="travel-date" class="lg" placeholder="Travel Date" />
+                    </span><!-- .input-group -->
+
+                    <span class="input-group tight">
+                        <i class="fa fa-clock-o"></i>
+                        <input type="text" id="duration" class="lg" placeholder="Estimated Duration (day)" />
+                    </span><!-- .input-group -->
+                </div>
+
+                <div class="input-group tight" style="width: 100%">
+                    <div class="col-md-4" style="padding-right: 0">
+                        <input id="adult" type="text" style="margin-left: -15px !important; text-indent: 0" class="lg" placeholder="Adult" />
+                    </div>
+                    <div class="col-md-4" style="padding-left: 0; padding-right: 0;">
+                        <input id="children" type="text" style="; text-indent: 0" class="lg" placeholder="Children (2yrs to 12yrs)" />
+                    </div>
+                    <div class="col-md-4" style="padding-left: 0px;">
+                        <input id="infant" type="text" style="margin-left: 15px; text-indent: 0" class="lg" placeholder="Infants (0yrs to 2yrs)" />
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <span class="input-group">
+                    <textarea id="itinerary" class="lg" style="height: 80px;" placeholder="food allergies and restrictions (if meal included), remarks ... "></textarea>
+                </span>
+                <span class="input-group">
+                    <a onclick="sendInquiry();" style="width: 100%" class="yellow_roundbtn pull-left" id="proceed">Send inquiry</a>
+                </span>
+                <div>
+                    <span style="color: red">*</span> Required field
+                </div>
+            </div>
+        </div>
+        <div id="un-show-inquiry" style="display: none; text-align: center; margin-top: 10%">
+            <p>Your Inquiry has been sent</p>
+            <br />
+            <a href="https://goreise.com/">Go back >></a>
+        </div>
+    </div>
+</section>
+
+@section Styles{
+    @Styles.Render("~/plugins/dataPickerStyles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/dataPicker")
+
+    <script>
+        var total = 0;
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        $('#travel-date').datepicker({
+            todayBtn: "linked",
+            startDate: '1d',
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+       
+    </script>
+
+
+}

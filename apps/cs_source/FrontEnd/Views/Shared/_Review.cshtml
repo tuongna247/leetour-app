@@ -1,0 +1,140 @@
+﻿@model Vinaday.Data.Models.Extention.ReviewModel
+<style>
+    .rating-review {
+        background: #6ebff3 none repeat scroll 0 0;
+        border-bottom-left-radius: 4px;
+        top: 0px;
+        color: #fff;
+        float: right;
+        font-size: 14px;
+        font-weight: 100;
+        margin: 0;
+        padding: 5px 10px;
+        position: absolute;
+        right: 0;
+        font-weight: bold;
+    }
+</style>
+
+@if (Model.Reviews != null && Model.Reviews.Count > 0)
+{
+
+
+    <div class="col-md-8">
+
+        <section id="review-list">
+            <ul class="comments">
+                @foreach (var review in Model.Reviews)
+                {
+                    <li data-wow-delay="0.2s" class="anim fadeIn animated" style="visibility: visible; -webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s; display: none;border-bottom: 1px solid #ccc">
+                        <div class="wrapper" style="position: relative">
+
+                            <h2 class="info-title" style="font-size: 18px;">
+                                @review.Title
+                            </h2>
+                            <span style="  font-size: 12px;font-weight: bold;">
+                                Posted @review.CreateDate.ToString("MMM dd, yyyy"), by @review.CustomerName - @review.CustomerAddress
+                            </span>
+                            <p class="moreReview">
+                                @Html.Raw(review.Content)
+                            </p>
+                            <a href="#" class="rating-review">
+                                @review.RatingValue.0
+                            </a>
+                        </div><!-- .wrapper -->
+                    </li>
+                }
+            </ul>
+            <div style="margin-top: 10px; text-align: left;" class="clearfix">
+                <a style="color: #58738a" id="loadMoreReview" href="javascript:void(0);">Show all reviews</a>
+                <a style="color: #58738a" id="showLessReview" href="javascript:void(0);">Hide reviews</a>
+            </div>
+        </section>
+    </div>
+        <div class="col-md-4" style="margin-top: -20px">
+            <div class="clear-wrapper">
+                <div class="blog fadeInLeft animated">
+                    <span class="title-desc">
+                        <h2 style="color: rgb(107, 107, 107); font-size: 25px; margin: 0px;">@Html.Raw(Model.Title)</h2>
+                        <span class="score_from_number_of_reviews meta">Based on <strong>@Html.Raw(Model.Content)</strong> verified reviews</span>
+                    </span>
+                    <div class="date">
+                        <a class="day" href="javascript:void(0)">
+                            @Model.Score
+                        </a>
+                        <a class="month" href="javascript:void(0)">
+                            @Model.ScoreText
+                        </a>
+                    </div><!-- .date -->
+                    <!-- .title-desc -->
+                </div>
+                <div class="clearfix"></div>
+                @if (Model.ReviewDetail != null)
+                {
+                    <ul class="bars">
+                        <li style="margin: 5px 0 0">
+                            <strong>Service</strong>
+                            <span>@((Model.ReviewDetail.Service * 2).ToString("#.#")) out of 10</span>
+                            <div class="progress">
+                                <div data-value="@((Model.ReviewDetail.Service * 100) / 5)" role="progressbar" class="progress-bar animated" style="width: @((Model.ReviewDetail.Service * 100) / 5)%;"></div>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0 0">
+                            <strong>Rooms</strong>
+                            <span>@((Model.ReviewDetail.Room * 2).ToString("#.#")) out of 10</span>
+                            <div class="progress">
+                                <div data-value="@((Model.ReviewDetail.Room * 100) / 5)" role="progressbar" class="progress-bar animated" style="width: @((Model.ReviewDetail.Room * 100) / 5)%;"></div>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0 0">
+                            <strong>Value</strong>
+                            <span>@((Model.ReviewDetail.Value * 2).ToString("#.#")) out of 10</span>
+                            <div class="progress">
+                                <div data-value="@((Model.ReviewDetail.Value * 100) / 5)" role="progressbar" class="progress-bar animated" style="width: @((Model.ReviewDetail.Value * 100) / 5)%;"></div>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0 0">
+                            <strong>Sleep Quality</strong>
+                            <span>@((Model.ReviewDetail.SleepQuality * 2).ToString("#.#")) out of 10</span>
+                            <div class="progress">
+                                <div data-value="@((Model.ReviewDetail.SleepQuality * 100) / 5)" role="progressbar" class="progress-bar animated" style="width: @((Model.ReviewDetail.SleepQuality * 100) / 5)%;"></div>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0 0">
+                            <strong>Location</strong>
+                            <span>@((Model.ReviewDetail.Location * 2).ToString("#.#")) out of 10</span>
+                            <div class="progress">
+                                <div data-value="@((Model.ReviewDetail.Location * 100) / 5)" role="progressbar" class="progress-bar animated" style="width: @((Model.ReviewDetail.Location * 100) / 5)%;"></div>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0 0">
+                            <strong>Breakfast</strong>
+                            <span>@((Model.ReviewDetail.Breakfast * 2).ToString("#.#")) out of 10</span>
+                            <div class="progress">
+                                <div data-value="@((Model.ReviewDetail.Breakfast * 100) / 5)" role="progressbar" class="progress-bar animated" style="width: @((Model.ReviewDetail.Breakfast * 100) / 5)%;"></div>
+                            </div>
+                        </li>
+                        <li style="margin: 5px 0 0">
+                            <strong>Spa</strong>
+                            <span>@((Model.ReviewDetail.Spa * 2).ToString("#.#")) out of 10</span>
+                            <div class="progress">
+                                <div data-value="@((Model.ReviewDetail.Spa * 100) / 5)" role="progressbar" class="progress-bar animated" style="width: @((Model.ReviewDetail.Spa * 100) / 5)%;"></div>
+                            </div>
+                        </li>
+                    </ul>
+                }
+
+
+            </div>
+        </div>
+
+
+
+}
+else
+{
+    <div style="padding: 50px; text-align: center;">
+        <span style="color: rgb(245, 130, 32); font-weight: bold; text-align: center;">This hotel is not have review.</span>
+    </div>
+}
+

@@ -1,0 +1,244 @@
+﻿@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@{
+    ViewBag.Active = "Tour";
+    ViewBag.Page = "Management";
+    ViewBag.Title = "Itinerary";
+
+    Layout = "~/Views/Shared/_TourLayout.cshtml";
+
+    Tour tour = ViewBag.Tour;
+    List<ItemModel> mealItems = ViewBag.Meals;
+    List<ItemModel> transportItems = ViewBag.Transports;
+    Detail tourDetail = ViewBag.TourDetail;
+}
+<style>
+    .category-list .span4:nth-child(3n+1) {
+        margin-left: 0;
+    }
+</style>
+@if (tour != null)
+{
+    <input type="hidden" id="tourId" value="@tour.Id" />
+    if (tour.Type == (int)Vinaday.Web.Framework.Utilities.TourType.Tour)
+    {
+        <div id="main-content" class="main-content container-fluid">
+            <div class="row-fluid page-head">
+                <h2 class="page-title"><i class="fontello-icon-calendar-inv"></i>Itinerary <small> tour</small></h2>
+                <p class="pagedesc">
+                    @tour.Name
+                </p>
+            </div>
+            <div id="page-content" class="page-content tab-content overflow-y">
+                <nav>
+                    <ul class="btn-toolbar page-nav margin-btn">
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/BasicInformation/{0}", tour.Id))" style="width: 60px"><i class="fontello-icon-check f20"></i><span class="block">BASIC</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Detail/{0}", tour.Id))" style="width: 60px"><i class="fontello-icon-th-4 f20"></i><span class="block">DETAIL</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Photo/{0}", tour.Id))" style="width: 60px" data-toggle="modal"><i class=" fontello-icon-camera-3 f20"></i><span class="block">PHOTO</span></a></li>
+                        <li><a class="btn btn-well btn-glyph active" href="@(string.Format("~/Tour/Itinerary/{0}", tour.Id))" style="width: 60px"><i class=" fontello-icon-flight-1 f20"></i><span class="block">ITINERARY</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Price/{0}", tour.Id))" style="width: 60px" data-toggle="modal"><i class="fontello-icon-dollar f20"></i><span class="block">PRICE</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Promotion/{0}", tour.Id))" style="width: 60px" data-toggle="modal"><i class="fontello-icon-gift f20"></i><span class="block">DEAL</span></a></li>
+                    </ul>
+                    <hr class="margin-0x">
+                </nav>
+
+                <div class="well well-nice well-small">
+                    <a style="margin-bottom: 9px;" data-toggle="modal" class="btn btn-yellow btn-mini" onclick="showAddItineraryForm();">Add new</a>
+                    <div id="itinerary-list">
+                        @Html.Partial("_TourItinerary")
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a class="btn btn-yellow btn-mini" href="@Url.Content(string.Format("~/Tour/Price/{0}", tour.Id))">Continue</a>
+                    <a class="btn btn-yellow btn-mini" href="@Url.Content("/Tour/Management")" type="button">Cancel</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="add-itinerary-modal" class="modal hide fade" tabindex="-1" data-width="60%">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fontello-icon-cancel-1"></i></button>
+                <h3><i class="fontello-icon-article-alt opaci35"></i> Add <small id="contact-type-title">itinerary</small></h3>
+            </div>
+            <div class="modal-body">
+                <div class="well well-nice">
+                    <section>
+                        <div class="row-fluid">
+                            <fieldset>
+                                <ul class="form-list label-left list-bordered dotted">
+                                    <li class="control-group clearfix">
+                                        <label for="sort-order" class="span4">Date <span class="required">*</span></label>
+                                        <select id="sort-order" class="span8">
+                                            @for (var i = 1; i < 11; i++)
+                                            {
+                                                <option value="@i">@i</option>
+                                            }
+                                        </select>
+                                    </li>
+                                    <li class="control-group clearfix">
+                                        <label for="title" class="span4">Title <span class="required">*</span></label>
+                                        <input id="title" class="span8" type="text" value="" name="title">
+                                    </li>
+                                    <li class="control-group clearfix">
+                                        <label for="meal" class="span4">Meal: </label>
+                                        <div id="meal" class="span8 category-list">
+                                            <div class="row">
+                                                @if (mealItems != null)
+                                                {
+                                                    foreach (var mealItem in mealItems)
+                                                    {
+                                                        <div class="span4">
+                                                            <label class="checkbox inline">
+                                                                <input type="checkbox" @(mealItem.Checked ? "checked" : "") name="@mealItem.Id" id="@mealItem.Id" value="@mealItem.Id">@mealItem.Name
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+
+                                    </li>
+                                    <li class="control-group clearfix">
+                                        <label for="transport" class="span4">Transport : </label>
+
+                                        <div id="transport" class="span8 category-list">
+                                            <div class="row">
+                                                @if (transportItems != null)
+                                                {
+                                                    foreach (var transportItem in transportItems)
+                                                    {
+                                                        <div class="span4">
+                                                            <label class="checkbox inline">
+                                                                <input type="checkbox" @(transportItem.Checked ? "checked" : "") name="@transportItem.Id" id="@transportItem.Id" value="@transportItem.Id">@transportItem.Name
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="control-group clearfix">
+                                        <label for="content" class="span12">
+                                            Content :
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <textarea class="span12 clearfix" id="content" rows="10"></textarea>
+
+                                    </li>
+                                </ul>
+                            </fieldset>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-yellow btn-mini">Close</button>
+                <button type="button" id="save-contact" class="btn btn-yellow btn-mini" onclick="saveItinerary();">Save</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div id="main-content" class="main-content container-fluid">
+            <div class="row-fluid page-head">
+                <h2 class="page-title"><i class="fontello-icon-calendar-inv"></i>Itinerary <small> Day trip</small></h2>
+                <p class="pagedesc">
+                    @tour.Name
+                </p>
+            </div>
+            <div id="page-content" class="page-content tab-content overflow-y">
+
+                <nav>
+                    <ul class="btn-toolbar page-nav margin-btn">
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/BasicInformation/{0}", tour.Id))" style="width: 60px"><i class="fontello-icon-check f20"></i><span class="block">BASIC</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Detail/{0}", tour.Id))" style="width: 60px"><i class="fontello-icon-th-4 f20"></i><span class="block">DETAIL</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Photo/{0}", tour.Id))" style="width: 60px" data-toggle="modal"><i class=" fontello-icon-camera-3 f20"></i><span class="block">PHOTO</span></a></li>
+                        <li><a class="btn btn-well btn-glyph active" href="@(string.Format("~/Tour/Itinerary/{0}", tour.Id))" style="width: 60px"><i class=" fontello-icon-flight-1 f20"></i><span class="block">ITINERARY</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Price/{0}", tour.Id))" style="width: 60px" data-toggle="modal"><i class="fontello-icon-dollar f20"></i><span class="block">PRICE</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Promotion/{0}", tour.Id))" style="width: 60px" data-toggle="modal"><i class="fontello-icon-gift f20"></i><span class="block">DEAL</span></a></li>
+                    </ul>
+                    <hr class="margin-0x">
+                </nav>
+
+                @if (tourDetail != null)
+                {
+                    <div class="well well-nice" id="div-tour">
+                        <section>
+                            <div class="row-fluid">
+                                <fieldset>
+                                    <ul class="form-list label-left list-bordered dotted">
+                                        @*<li class="control-group clearfix">
+                                            <label for="title" class="span4">Title <span class="required">*</span></label>
+                                            <input id="title" class="span8" type="text" value="@tourDetail.Itininary" name="title">
+                                        </li>*@
+                                        <li class="control-group clearfix">
+                                            <label for="meal" class="span4">Meal: </label>
+                                            <div id="meal" class="span8 category-list">
+                                                <div class="row">
+                                                    @if (mealItems != null)
+                                                    {
+                                                        foreach (var mealItem in mealItems)
+                                                        {
+                                                            <div class="span4">
+                                                                <label class="checkbox inline">
+                                                                    <input type="checkbox" @(mealItem.Checked ? "checked" : "") name="@mealItem.Id" id="@mealItem.Id" value="@mealItem.Id">@mealItem.Name
+                                                                </label>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="control-group clearfix">
+                                            <label for="transport" class="span4">Transport : </label>
+
+                                            <div id="transport" class="span8 category-list">
+                                                <div class="row">
+                                                    @if (transportItems != null)
+                                                    {
+                                                        foreach (var transportItem in transportItems)
+                                                        {
+                                                            <div class="span4">
+                                                                <label class="checkbox inline">
+                                                                    <input type="checkbox" @(transportItem.Checked ? "checked" : "") name="@transportItem.Id" id="@transportItem.Id" value="@transportItem.Id">@transportItem.Name
+                                                                </label>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="control-group clearfix">
+                                            <label for="daytripContent" class="span12">
+                                                Content :
+                                                <span class="required">*</span>
+                                            </label>
+
+                                            <textarea class="span12 clearfix" id="daytripContent" rows="10">@Html.Raw(tourDetail.Content)</textarea>
+
+                                        </li>
+                                    </ul>
+                                </fieldset>
+                            </div>
+                        </section>
+                    </div>
+
+
+                    <div class="form-actions">
+                        <a class="btn btn-yellow btn-mini" onclick="updateItinerary('@tourDetail.Id');">Save and Continue</a>
+                        <a class="btn btn-yellow btn-mini" href="@Url.Content("/Tour/Management")" type="button">Cancel</a>
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+
+
+}
+else
+{
+    <p>Not content for this item</p>
+}

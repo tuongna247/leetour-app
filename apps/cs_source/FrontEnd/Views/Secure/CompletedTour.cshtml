@@ -1,0 +1,49 @@
+﻿@using Vinaday.Data.Models.Extention
+
+@{
+    ViewBag.Title = "Booking Completed";
+    BookingModel booking = ViewBag.Booking;
+}
+<style>
+    p {
+        font-size: 15px !important;
+    }
+</style>
+<div class="container" style="max-width: 970px; min-height: 750px">
+    <section class="content-section form checkout style-2" style="margin-top: 20%">
+        <div class="row">
+            @if (booking != null)
+            {
+                <div class="col-md-12 anim fadeInLeft">
+                    <div class="check-out-header">
+                        <h2 class="title">Booking <span>Completed</span></h2>
+                    </div>
+
+                    <div class="box-aside" style="border: medium none; margin-left: 15px;">
+                        <p class="bold">Your reservation code (PNR) is @booking.Order.Pnr.</p>
+                        <p>
+                            Your travel consultant will get back to you within next 5 minutes from <span class="bold">8:00 AM to 22:30 PM</span> everyday.
+                        </p>
+                        <p>
+                            Please, check the confirmation letter in your inbox/junk/spam mail or call <span class="bold">+84 916388382</span> for further information.
+                        </p>
+                        <p>Thank you!.</p>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="c"></div>
+
+                </div>
+                <div class="col-md-12 anim fadeInLeft">
+                    <p style="text-align: left; padding-left: 30px;">Back to</p>
+                    <p style="text-align: left; padding-left: 30px;">
+                        <span style="font-weight: bold">[English]</span>  <a href="https://goreise.com">goreise.com </a>
+                    </p>
+                    <p style="text-align: left; padding-left: 30px;">
+                        <span style="font-weight: bold">[Tiếng Việt] </span><a href="http://goreise.vn">goreise.vn </a>
+                    </p>
+                </div>
+            }
+
+        </div>
+    </section>
+</div>

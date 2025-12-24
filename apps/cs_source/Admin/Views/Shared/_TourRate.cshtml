@@ -1,0 +1,20 @@
+﻿@using System
+@if (Model.Tour != null)
+{
+    <label for="person-id">Person</label>
+    <select id="person-id" class="form-control">
+        @foreach (var rate in Model.Rates)
+        {
+            <option value="@rate.PersonNo">@Html.Raw(string.Format("{0} x ${1} (${2})", string.Format("{0} {1}", rate.PersonNo, rate.PersonNo > 1 ? "persons" : "person"), Math.Round((decimal)(rate.RetailRate + (rate.RetailRate * Model.Tour.CommissionRate / 100)), 2), (Math.Round((decimal)(rate.RetailRate + (rate.RetailRate * Model.Tour.CommissionRate / 100)), 2)) * rate.PersonNo))</option>
+        }
+    </select>
+}
+else
+{
+    <div class="form-group">
+        <label>Tour list</label>
+        <div class="alert alert-danger" style="margin-bottom: -5px;" role="alert">
+            No available price for this tour.
+        </div>
+    </div>
+}

@@ -1,0 +1,79 @@
+﻿@{
+    Layout = "~/Views/Shared/_PdfLayout.cshtml";
+    var imagePath = Server.MapPath("~/assets/images");
+}
+
+@using System.Globalization
+@model Vinaday.Data.Models.Voucher
+<div class="panel panel-transparent">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4" style="padding-left: 0!important">
+                <img src="@imagePath\logo.png" alt="" /><br />
+            </div>
+            <div class="col-md-8 text-right">
+                <h1 style="margin-top: 0;">Hotel Voucher</h1>
+                <address>
+                    <i>Please present either an electronic or paper copy of your hotel voucher upon check-in</i>
+                </address>
+                <br />
+            </div>
+            <div class="col-md-12">
+                <div class="pull-left">
+                    <address>
+                        <b>Booking No.: </b><span id="voucher-booking-id">@Model.BookingId</span><br />
+                        <b>Guest: </b><span id="voucher-guest">@Model.Guest</span><br />
+                        <b>Nationality: </b><span id="voucher-nationality">@Model.Nationality</span><br />
+                        <b>Hotel: </b><span id="voucher-name">@Model.Name</span><br />
+                        <b>Address: </b><span id="voucher-localtion">@Model.Localtion</span><br />
+                    </address>
+
+                </div>
+
+            </div>
+            <div class="col-md-12">
+                <h3 class="text-center" style="margin-top: 0;">
+                    <b>BOOKING DETAIL</b><br /><br />
+                </h3>
+            </div>
+            <div class="col-sm-12 table-responsive">
+                <table class="table table-bordered" id="voucher-table" style="margin-bottom:5px;background-color: #f6f2dd">
+                    <tbody>
+                        <tr>
+                            <td><b>No. of Rooms: </b>@(Model.Quantity == 0 ? "" : Model.Quantity.ToString(CultureInfo.InvariantCulture))</td>
+                            <td><b>No. of Extra Beds: </b>@(Model.Extra == 0 ? "" : Model.Extra.ToString(CultureInfo.InvariantCulture))</td>
+                        </tr>
+                        <tr>
+                            <td><b>No. of Adults: </b>@(Model.Adult == 0 ? "" : Model.Adult.ToString(CultureInfo.InvariantCulture))</td>
+                            <td><b>No. of Children: </b>@(Model.Children == 0 ? "" : Model.Children.ToString(CultureInfo.InvariantCulture))</td>
+                        </tr>
+                        <tr>
+                            <td><b>Room Type: </b><span id="voucher-description">@Model.Description</span></td>
+                            <td><b>Meal: </b>@(Model.Meal)</td>
+                        </tr>
+                        <tr>
+                            <td><b>Check-in: </b><span id="voucher-check-in">@Model.CheckIn.ToShortDateString()</span></td>
+                            <td><b>Check-out: </b><span id="voucher-check-out">@Model.CheckOut.ToShortDateString()</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><b>Promotion: </b><span id="voucher-promotion">@Model.Promotion</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><span id="voucher-cancellation">@Model.Cancellation</span></p>
+            </div>
+            <div class="col-md-12">
+                <div class="text-left">
+                    <b>VINADAY goREISE</b><br />
+                    98A Le Lai street District 1, Ho Chi Minh City Vietnam<br />
+                    Tell: (84-28) -38 388 382<br />
+                    Email: cs@vinaday.com
+                </div>
+            </div>
+
+        </div><!--row-->
+    </div>
+</div>
+
+
+

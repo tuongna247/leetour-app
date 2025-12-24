@@ -1,0 +1,158 @@
+﻿@using System.Collections.Generic
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@{
+    ViewBag.Active = "Tour";
+    ViewBag.Page = "Management";
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_TourLayout.cshtml";
+    Tour tour = ViewBag.Tour;
+    List<ItemModel> groupSizes = ViewBag.GroupSizes;
+    List<CancellationPolicy> cancellations = ViewBag.Cancellations;
+    List<ItemModel> durations = ViewBag.Durations;
+}
+@if (tour != null)
+{
+    <div id="main-content" class="main-content container-fluid">
+        <div class="row-fluid page-head">
+            <h2 class="page-title"><i class="fontello-icon-calendar-inv"></i>Detail <small> tour</small></h2>
+            <p class="pagedesc">
+                @tour.Name
+            </p>
+        </div>
+        <!-- // page head -->
+
+        <input type="hidden" id="tourId" value="@tour.Id" />
+        <div id="page-content" class="page-content tab-content overflow-y">
+            <div class="tab-pane padding-bottom30 active fade in">
+                <nav>
+                    <ul class="btn-toolbar margin-btn">
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/BasicInformation/{0}",tour.Id))" style="width:60px"><i class="fontello-icon-check f20"></i><span class="block">BASIC</span></a></li>
+                        <li><a class="btn btn-well btn-glyph active" href="@(string.Format("~/Tour/Detail/{0}", tour.Id))" style="width:60px"><i class="fontello-icon-th-4 f20"></i><span class="block">DETAIL</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Photo/{0}", tour.Id))" style="width:60px" data-toggle="modal"><i class=" fontello-icon-camera-3 f20"></i><span class="block">PHOTO</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Itinerary/{0}", tour.Id))" style=" width:60px"><i class=" fontello-icon-flight-1 f20"></i><span class="block">ITINERARY</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Price/{0}", tour.Id))" style="width:60px" data-toggle="modal"><i class="fontello-icon-dollar f20"></i><span class="block">PRICE</span></a></li>
+                        <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Promotion/{0}", tour.Id))" style="width:60px" data-toggle="modal"><i class="fontello-icon-gift f20"></i><span class="block">DEAL</span></a></li>
+                    </ul>
+                    <hr class="margin-0x">
+                </nav>
+                <div class="row-fluid">
+                    <div class="span8 grider">
+                        <div class="widget widget-simple">
+
+                            <div class="widget-content">
+                                <div class="widget-body">
+
+
+                                    <div class="row-fluid">
+                                        <div class="span12">
+                                            <fieldset>
+                                                <ul class="form-list label-left list-bordered dotted">
+                                                    <li class="control-group">
+                                                        <label for="start" class="control-label">Start : <span class="required">*</span></label>
+                                                        <div class="controls controls-row">
+                                                            <input id="start" class="span12 margin-right5" type="text" value="@tour.Start" placeholder="Enter Start" name="start">
+                                                        </div>
+                                                    </li>
+                                                    <li class="control-group">
+                                                        <label for="finish" class="control-label">Finish : <span class="required">*</span></label>
+                                                        <div class="controls controls-row">
+                                                            <input id="finish" class="span12 margin-right5" type="text" value="@tour.Finish" placeholder="Enter Finish" name="finish">
+                                                        </div>
+                                                    </li>
+                                                    <li class="control-group">
+                                                        <label for="group-size" class="control-label">Group size : <span class="required">*</span></label>
+                                                        <div class="controls controls-row">
+                                                            
+                                                            <select id="group-size" class="span12" name="group-size">
+                                                                @if (groupSizes!=null&&groupSizes.Count > 0)
+                                                                {
+                                                                    foreach (var groupSize in groupSizes.Where(groupSize => groupSize != null))
+                                                                    {
+                                                                        <option value="@groupSize.Name" @(tour.GroupSize == groupSize.Name ? "selected" : "")>@groupSize.Name</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </li>
+                                                    <li class="control-group">
+                                                        <label for="include" class="control-label">Include: </label>
+                                                        <div class="controls controls-row">
+                                                            <input id="include" class="span12 margin-right5" type="text" value="@tour.IncludeActivity" placeholder="Enter Include Activity">
+                                                        </div>
+                                                    </li>
+
+                                                    <li class="control-group">
+                                                        <label for="exclude" class="control-label">
+                                                            Exclude:
+                                                        </label>
+                                                        <div class="controls controls-row">
+                                                            <input id="exclude" class="span12 margin-right5" type="text" placeholder="Enter Exclude Activity" value="@tour.ExcludeActivity">
+                                                        </div>
+                                                    </li>
+                                                    <li class="control-group">
+                                                        <label for="duration" class="control-label">Duration : <span class="required">*</span></label>
+                                                        <div class="controls controls-row">
+                                                            @*<input id="duration" class="span12 margin-right5" type="text" value="@tour.Duration" placeholder="Enter Duration" name="duration">*@
+                                                            <select id="duration" class="span12" name="duration">
+                                                                @if (durations != null && durations.Count > 0)
+                                                                {
+                                                                    foreach (var duration in durations.Where(groupSize => groupSize != null))
+                                                                    {
+                                                                        <option value="@duration.Name" @(tour.Duration == duration.Name ? "selected" : "")>@duration.Name</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </li>
+                                                    <li class="control-group">
+                                                        <label for="notes" class="control-label">Notes : <span class="required">*</span></label>
+                                                        <div class="controls controls-row">
+                                                            <textarea style="width: 97.5%" class="span11 margin-right5" id="notes" placeholder="Enter Note" rows="10">@tour.Notes</textarea>
+                                                        </div>
+                                                    </li>
+                                                   
+                                                    <li class="control-group">
+                                                        <label for="cancellation" class="control-label">Cancellation <span class="required">*</span></label>
+                                                        <div class="controls">
+                                                            <select id="cancellation" class="span12" name="cancellation">
+
+                                                                @if (cancellations.Count > 0)
+                                                                {
+                                                                    foreach (var cancellation in cancellations.Where(cancellation => cancellation != null))
+                                                                    {
+                                                                        <option value="@cancellation.Id" @(tour.CancelationPolicy == cancellation.Id ? "selected" : "")>@cancellation.Name</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </fieldset>
+                                            <!-- // fieldset Input -->
+                                            <div class="form-actions">
+                                                <a class="btn btn-yellow btn-mini" onclick="updateDetail();">Save and continue</a>
+                                                <a class="btn btn-yellow btn-mini" href="@Url.Content("/Tour/Management")" type="button">Cancel</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- // Widget -->
+
+                    </div>
+                    @Html.Partial("_Notes")
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- // page content -->
+}
+else
+{
+    <p>Not content for this item</p>
+}

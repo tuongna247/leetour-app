@@ -1,0 +1,180 @@
+﻿@{
+    ViewBag.Active = "City";
+    ViewBag.Title = "City Management";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@model List<Vinaday.Data.Models.Country>
+@if (Model.Count > 0)
+{
+    <div class="page-title">
+        <h3>City Management</h3>
+        <div class="page-breadcrumb">
+            <ol class="breadcrumb">
+                <li><a href="~/">Dashboard</a></li>
+                <li><a href="~/Configuration">Configuration</a></li>
+                <li class="active">City Management</li>
+            </ol>
+        </div>
+    </div>
+    <div id="main-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-white">
+                    <div class="panel-body">
+                        <div class="form-group col-md-12">
+                            <a data-toggle="modal" data-target="#add-new-modal" class="btn btn-info btn-addon m-b-sm btn-xs"><i class="fa fa-plus"></i>Add new</a>
+                        </div>
+                        <div class="form-group col-md-4">
+
+                            <label for="country">Country</label>
+                            <select class="form-control m-b-sm" id="country">
+                                @foreach (var country in Model)
+                                {
+                                    <option value="@country.CountryId">@country.Name</option>
+                                }
+                            </select>
+                            
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div id="loadPane"></div>
+                        </div>
+                            <div class="table-responsive col-md-12">
+                                <div id="div-city"></div>
+                            </div>
+                        </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+}
+else
+{
+    <p>No content for this Item</p>
+}
+<div class="modal fade" id="add-new-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new city</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        
+                        <label for="new-country-id">Country <span class="text-danger">*</span></label>
+                        <select class="form-control m-b-sm" id="new-country-id">
+                            @foreach (var country in Model)
+                            {
+                                <option value="@country.CountryId">@country.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="new-description-en">Description <span class="text-danger">*</span></label>
+                        <input class="form-control" id="new-description-en" type="text" placeholder="Enter description">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="new-description-vn">Description vietnam <span class="text-danger">*</span></label>
+                        <input class="form-control" id="new-description-vn" type="text" placeholder="Enter description">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="new-priority">Priority <span class="text-danger">*</span></label>
+                        <input class="form-control" id="new-priority" type="text" placeholder="Enter priority">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div id="new-error-list" style="display: none;">
+                            <div id="new-error-item" class="alert alert-danger" role="alert">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="insertCity();" class="btn btn-success">Add new</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-new-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Update city</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="edit-description-en">Description <span class="text-danger">*</span></label>
+                        <input class="form-control" id="edit-description-en" type="text" placeholder="Enter description">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="edit-description-vn">Description vietnam <span class="text-danger">*</span></label>
+                        <input class="form-control" id="edit-description-vn" type="text" placeholder="Enter description">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="Seo_Title">SEO Title<span class="text-danger">*</span></label>
+                        <input class="form-control" id="Seo_Title" type="text" placeholder="SEO Title">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="SEO_Keyword">SEO_Keyword <span class="text-danger">*</span></label>
+                        <input class="form-control" id="SEO_Keyword" type="text" placeholder="Enter SEO Keyword">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="SEO_Description">SEO Description<span class="text-danger">*</span></label>
+                        <input class="form-control" id="SEO_Description" type="text" placeholder="Enter SEO Description">
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="SEO_Title_VN">SEO Title VN<span class="text-danger">*</span></label>
+                        <input class="form-control" id="SEO_Title_VN" type="text" placeholder="SEO Title VN">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="SEO_Keyword_VN">SEO_Keyword <span class="text-danger">*</span></label>
+                        <input class="form-control" id="SEO_Keyword_VN" type="text" placeholder="Enter SEO Keyword">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="SEO_Description_VN">SEO Description<span class="text-danger">*</span></label>
+                        <input class="form-control" id="SEO_Description_VN" type="text" placeholder="Enter SEO Description">
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="edit-priority">Priority <span class="text-danger">*</span></label>
+                        <input class="form-control" id="edit-priority" type="text" placeholder="Enter priority">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div id="edit-error-list" style="display: none;">
+                            <div id="edit-error-item" class="alert alert-danger" role="alert">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="edit-city-id" value="" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="updateCity();" class="btn btn-success">Save change</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.modal-content.large {
+    width: 800px ; /* respsonsive width */
+    margin-left:-200px; /* width/2) */ 
+}    
+</style>
+
+<script type="text/javascript">
+    if (typeof jQuery == 'undefined') {
+        var e = document.createElement('script');
+        e.src = '@Url.Content("~/assets/js/city.js")';
+        e.type = 'text/javascript';
+        document.getElementsByTagName("head")[0].appendChild(e);
+    }
+</script>

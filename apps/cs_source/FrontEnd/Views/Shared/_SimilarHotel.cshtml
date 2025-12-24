@@ -1,0 +1,24 @@
+﻿<div class="row">
+    @if (Model.Count > 0)
+    {
+        <div id="owl-deals" class="owl-carousel">
+
+            @foreach (var hotel in Model)
+            {
+                <div class="item hotel-item">
+                    <a class="featured-item grid-col grid-col--4" href="@hotel.HotelUrl">
+                        <div class="featured-picture" style="background-image: url('@Url.Content(hotel.ImageUrl)')"></div>
+                        <div class="featured-box--verticalAlignBottom featured-box--textAlignLeft">
+                            <div class="featured-content">
+                                <h2 class="featured-title"><b>@hotel.Name</b></h2>
+                                <p class="featured-description">Get best price <b> from $@hotel.PricePromotion</b> USD/night</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+
+        </div>
+       
+    }
+</div>

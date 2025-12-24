@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{79A96E2D-A30A-4826-8B37-C376CD63E2EF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Vinaday.Data</RootNamespace>
+    <AssemblyName>Vinaday.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\packages\EntityFramework.6.1.2-beta1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\packages\EntityFramework.6.1.2-beta1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Repository.Pattern, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Repository.Pattern.dll</HintPath>
+    </Reference>
+    <Reference Include="Repository.Pattern.Ef6, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Repository.Pattern.Ef6.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\AccessPermission.cs" />
+    <Compile Include="Models\AccountantOrderDetails.cs" />
+    <Compile Include="Models\AccountantOrders.cs" />
+    <Compile Include="Models\ADDRESS.cs" />
+    <Compile Include="Models\aspnet_Applications.cs" />
+    <Compile Include="Models\aspnet_Membership.cs" />
+    <Compile Include="Models\aspnet_Paths.cs" />
+    <Compile Include="Models\aspnet_PersonalizationAllUsers.cs" />
+    <Compile Include="Models\aspnet_PersonalizationPerUser.cs" />
+    <Compile Include="Models\aspnet_Profile.cs" />
+    <Compile Include="Models\aspnet_Roles.cs" />
+    <Compile Include="Models\aspnet_SchemaVersions.cs" />
+    <Compile Include="Models\aspnet_Users.cs" />
+    <Compile Include="Models\aspnet_WebEvent_Events.cs" />
+    <Compile Include="Models\Booking.cs" />
+    <Compile Include="Models\BOOKINGHISTORY.cs" />
+    <Compile Include="Models\BusinessCard.cs" />
+    <Compile Include="Models\CancellationPolicy.cs" />
+    <Compile Include="Models\CatDetail.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Category1.cs" />
+    <Compile Include="Models\CategoryDetail.cs" />
+    <Compile Include="Models\Mapping\TourReviewMap.cs" />
+    <Compile Include="Models\Mapping\tour_Rate3sMap.cs" />
+    <Compile Include="Models\Mapping\tour_Rate2sMap.cs" />
+    <Compile Include="Models\Mapping\tour_TopSiteMap.cs" />
+    <Compile Include="Models\Rate3.cs" />
+    <Compile Include="Models\Rate2.cs" />
+    <Compile Include="Models\TourReview.cs" />
+    <Compile Include="Models\TourTopSite.cs" />
+    <Compile Include="Models\Mapping\TourRateOptionsMap.cs" />
+    <Compile Include="Models\Mapping\ViewListTourMap.cs" />
+    <Compile Include="Models\TourRateOptions.cs" />
+    <Compile Include="Models\ViewListTour.cs" />
+    <Compile Include="Models\City.cs" />
+    <Compile Include="Models\COMMENT.cs" />
+    <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\CreditCard.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\CustomerCall.cs" />
+    <Compile Include="Models\DAYTRIP.cs" />
+    <Compile Include="Models\DAYTRIPBOOKING.cs" />
+    <Compile Include="Models\DAYTRIPBOOKINGHISTORY.cs" />
+    <Compile Include="Models\DayTripRate.cs" />
+    <Compile Include="Models\DAYTRIP_IMAGES.cs" />
+    <Compile Include="Models\DealHotelToursVN.cs" />
+    <Compile Include="Models\Deals.cs" />
+    <Compile Include="Models\Detail.cs" />
+    <Compile Include="Models\ExpandRates.cs" />
+    <Compile Include="Models\ExpandRatesModel.cs" />
+    <Compile Include="Models\ExpiredRoom.cs" />
+    <Compile Include="Models\Extention\BookingModel.cs" />
+    <Compile Include="Models\Extention\CancellationModel.cs" />
+    <Compile Include="Models\Extention\CategoryModel.cs" />
+    <Compile Include="Models\Extention\CustomerReviewModel.cs" />
+    <Compile Include="Models\Extention\DashboardModel.cs" />
+    <Compile Include="Models\Extention\DataTableData.cs" />
+    <Compile Include="Models\Extention\DecimalPrecisionAttribute.cs" />
+    <Compile Include="Models\Extention\HotelModel.cs" />
+    <Compile Include="Models\Extention\HotelSearchModel.cs" />
+    <Compile Include="Models\Extention\ItemModel.cs" />
+    <Compile Include="Models\Extention\OrderModel.cs" />
+    <Compile Include="Models\Extention\OrderModelView.cs" />
+    <Compile Include="Models\Extention\PaymentOrderModel.cs" />
+    <Compile Include="Models\Extention\PaymentOrderModel2.cs" />
+    <Compile Include="Models\Extention\ProductDetailModel.cs" />
+    <Compile Include="Models\Extention\ProductModel.cs" />
+    <Compile Include="Models\Extention\PromotionModel.cs" />
+    <Compile Include="Models\Extention\ReviewDetailModel.cs" />
+    <Compile Include="Models\Extention\ReviewModel.cs" />
+    <Compile Include="Models\Extention\RoomControlModel.cs" />
+    <Compile Include="Models\Extention\RoomModel.cs" />
+    <Compile Include="Models\Extention\SeoModel.cs" />
+    <Compile Include="Models\Extention\TourModel.cs" />
+    <Compile Include="Models\Extention\TourPopularModel.cs" />
+    <Compile Include="Models\Extention\UserModel.cs" />
+    <Compile Include="Models\Featured.cs" />
+    <Compile Include="Models\Hotel.cs" />
+    <Compile Include="Models\HotelCancellation.cs" />
+    <Compile Include="Models\HOTELFACILITY.cs" />
+    <Compile Include="Models\HotelFeatureds.cs" />
+    <Compile Include="Models\HotelCoupon.cs" />
+    <Compile Include="Models\HotelPackage_Surcharge.cs" />
+    <Compile Include="Models\HotelPackage.cs" />
+    <Compile Include="Models\HotelImages.cs" />
+    <Compile Include="Models\HOTELPROMOTION.cs" />
+    <Compile Include="Models\HOTELSURCHARGE.cs" />
+    <Compile Include="Models\IMAGE.cs" />
+    <Compile Include="Models\LANGUAGE.cs" />
+    <Compile Include="Models\Lotto.cs" />
+    <Compile Include="Models\LottoDetail.cs" />
+    <Compile Include="Models\Mapping\AccountantOrderDetailsMap.cs" />
+    <Compile Include="Models\Mapping\AccountantOrdersMap.cs" />
+    <Compile Include="Models\Mapping\ADDRESSMap.cs" />
+    <Compile Include="Models\Mapping\aspnet_ApplicationsMap.cs" />
+    <Compile Include="Models\Mapping\aspnet_MembershipMap.cs" />
+    <Compile Include="Models\Mapping\aspnet_PathsMap.cs" />
+    <Compile Include="Models\Mapping\aspnet_PersonalizationAllUsersMap.cs" />
+    <Compile Include="Models\Mapping\aspnet_PersonalizationPerUserMap.cs" />
+    <Compile Include="Models\Mapping\aspnet_ProfileMap.cs" />
+    <Compile Include="Models\Mapping\aspnet_RolesMap.cs" />
+    <Compile Include="Models\Mapping\aspnet_UsersMap.cs" />
+    <Compile Include="Models\Mapping\aspnet_WebEvent_EventsMap.cs" />
+    <Compile Include="Models\Mapping\BookinghistoryMap.cs" />
+    <Compile Include="Models\Mapping\BookingMap.cs" />
+    <Compile Include="Models\Mapping\BusinessCardMap.cs" />
+    <Compile Include="Models\Mapping\CancellationPolicyMap.cs" />
+    <Compile Include="Models\Mapping\CATDETAILMap.cs" />
+    <Compile Include="Models\Mapping\CATEGORY1Map.cs" />
+    <Compile Include="Models\Mapping\CategoryDetailMap.cs" />
+    <Compile Include="Models\Mapping\CategoryMap.cs" />
+    <Compile Include="Models\Mapping\CityMap.cs" />
+    <Compile Include="Models\Mapping\COMMENTMap.cs" />
+    <Compile Include="Models\Mapping\ContactMap.cs" />
+    <Compile Include="Models\Mapping\COUNTRYMap.cs" />
+    <Compile Include="Models\Mapping\CreditCardMap.cs" />
+    <Compile Include="Models\Mapping\CustomerCallMap.cs" />
+    <Compile Include="Models\Mapping\CUSTOMERMap.cs" />
+    <Compile Include="Models\Mapping\DAYTRIPBOOKINGHISTORYMap.cs" />
+    <Compile Include="Models\Mapping\DAYTRIPBOOKINGMap.cs" />
+    <Compile Include="Models\Mapping\DAYTRIPMap.cs" />
+    <Compile Include="Models\Mapping\DayTripRateMap.cs" />
+    <Compile Include="Models\Mapping\DAYTRIP_IMAGESMap.cs" />
+    <Compile Include="Models\Mapping\DealHotelToursVNMap.cs" />
+    <Compile Include="Models\Mapping\DealsMap.cs" />
+    <Compile Include="Models\Mapping\ExpandRatesMap.cs" />
+    <Compile Include="Models\Mapping\CouponCodeMap.cs" />
+    <Compile Include="Models\Mapping\ExpiredRoomMap.cs" />
+    <Compile Include="Models\Mapping\HotelCancellationMap.cs" />
+    <Compile Include="Models\Mapping\HOTELDETAILMap.cs" />
+    <Compile Include="Models\Mapping\HOTELFACILITYMap.cs" />
+    <Compile Include="Models\Mapping\HotelMap.cs" />
+    <Compile Include="Models\Mapping\HotelCouponMap.cs" />
+    <Compile Include="Models\Mapping\HotelPackage_SurchargeMap.cs" />
+    <Compile Include="Models\Mapping\HOTELPROMOTIONMap.cs" />
+    <Compile Include="Models\Mapping\HOTELSURCHARGEMap.cs" />
+    <Compile Include="Models\Mapping\hotel_FeaturedsMap.cs" />
+    <Compile Include="Models\Mapping\HOTEL_IMAGESMap.cs" />
+    <Compile Include="Models\Mapping\HotelPackageMap.cs" />
+    <Compile Include="Models\Mapping\IMAGEMap.cs" />
+    <Compile Include="Models\Mapping\LANGUAGEMap.cs" />
+    <Compile Include="Models\Mapping\LottoDetailMap.cs" />
+    <Compile Include="Models\Mapping\LottoMap.cs" />
+    <Compile Include="Models\Mapping\MediumMap.cs" />
+    <Compile Include="Models\Mapping\NationalityMap.cs" />
+    <Compile Include="Models\Mapping\NotifyMap.cs" />
+    <Compile Include="Models\Mapping\OrderDetailMap.cs" />
+    <Compile Include="Models\Mapping\OrderDetailMap2.cs" />
+    <Compile Include="Models\Mapping\OrderInformation2sMap.cs" />
+    <Compile Include="Models\Mapping\OrderInformationsMap.cs" />
+    <Compile Include="Models\Mapping\OrdersMap.cs" />
+    <Compile Include="Models\Mapping\OrdersMap2.cs" />
+    <Compile Include="Models\Mapping\PARTNERMap.cs" />
+    <Compile Include="Models\Mapping\PasswordResetRequestMap.cs" />
+    <Compile Include="Models\Mapping\PaymentOrder2Map.cs" />
+    <Compile Include="Models\Mapping\PaymentOrderDetail2Map.cs" />
+    <Compile Include="Models\Mapping\PaymentOrderDetailMap.cs" />
+    <Compile Include="Models\Mapping\PaymentOrderMap.cs" />
+    <Compile Include="Models\Mapping\PERMISSIONMap.cs" />
+    <Compile Include="Models\Mapping\ProfileCompanyMap.cs" />
+    <Compile Include="Models\Mapping\PromotionMap.cs" />
+    <Compile Include="Models\Mapping\PROMOTIONSTAYPAYMap.cs" />
+    <Compile Include="Models\Mapping\RateControlMap.cs" />
+    <Compile Include="Models\Mapping\RATEOFEXCHANGEMap.cs" />
+    <Compile Include="Models\Mapping\RECEIPTMap.cs" />
+    <Compile Include="Models\Mapping\Region1Map.cs" />
+    <Compile Include="Models\Mapping\RegionMap.cs" />
+    <Compile Include="Models\Mapping\ReviewDetailMap.cs" />
+    <Compile Include="Models\Mapping\ReviewMap.cs" />
+    <Compile Include="Models\Mapping\Role1Map.cs" />
+    <Compile Include="Models\Mapping\ROLEMap.cs" />
+    <Compile Include="Models\Mapping\RoomControlMap.cs" />
+    <Compile Include="Models\Mapping\RoomReguestMap.cs" />
+    <Compile Include="Models\Mapping\SeoMap.cs" />
+    <Compile Include="Models\Mapping\SpecialRateMap.cs" />
+    <Compile Include="Models\Mapping\SurchargeMap.cs" />
+    <Compile Include="Models\Mapping\sysdiagramMap.cs" />
+    <Compile Include="Models\Mapping\TipMap.cs" />
+    <Compile Include="Models\Mapping\TOURBOOKINGHISTORYMap.cs" />
+    <Compile Include="Models\Mapping\TOURBOOKINGMap.cs" />
+    <Compile Include="Models\Mapping\TOURDETAILMap.cs" />
+    <Compile Include="Models\Mapping\TOURMap.cs" />
+    <Compile Include="Models\Mapping\TourOperatorMap.cs" />
+    <Compile Include="Models\Mapping\TourOperatorsMap.cs" />
+    <Compile Include="Models\Mapping\TourPromotionMap.cs" />
+    <Compile Include="Models\Mapping\TourRateMap.cs" />
+    <Compile Include="Models\Mapping\TourSurchargeMap.cs" />
+    <Compile Include="Models\Mapping\tour_DetailsMap.cs" />
+    <Compile Include="Models\Mapping\tour_FeaturedsMap.cs" />
+    <Compile Include="Models\Mapping\tour_RatesMap.cs" />
+    <Compile Include="Models\Mapping\tour_ToursMap.cs" />
+    <Compile Include="Models\Mapping\User1Map.cs" />
+    <Compile Include="Models\Mapping\DealHotelToursMap.cs" />
+    <Compile Include="Models\Mapping\UserHotelMap.cs" />
+    <Compile Include="Models\Mapping\USERMap.cs" />
+    <Compile Include="Models\Mapping\VoucherMap.cs" />
+    <Compile Include="Models\Medium.cs" />
+    <Compile Include="Models\Nationality.cs" />
+    <Compile Include="Models\Notify.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\Order2.cs" />
+    <Compile Include="Models\OrderDetail.cs" />
+    <Compile Include="Models\OrderDetail2.cs" />
+    <Compile Include="Models\OrderInformation2s.cs" />
+    <Compile Include="Models\OrderInformations.cs" />
+    <Compile Include="Models\PARTNER.cs" />
+    <Compile Include="Models\PasswordResetRequest.cs" />
+    <Compile Include="Models\PaymentOrder.cs" />
+    <Compile Include="Models\PaymentOrder2.cs" />
+    <Compile Include="Models\PaymentOrderDetail.cs" />
+    <Compile Include="Models\PaymentOrderDetail2.cs" />
+    <Compile Include="Models\PERMISSION.cs" />
+    <Compile Include="Models\ProfileCompany.cs" />
+    <Compile Include="Models\Promotion.cs" />
+    <Compile Include="Models\PROMOTIONSTAYPAY.cs" />
+    <Compile Include="Models\Rate.cs" />
+    <Compile Include="Models\RateControl.cs" />
+    <Compile Include="Models\RateExchange.cs" />
+    <Compile Include="Models\RECEIPT.cs" />
+    <Compile Include="Models\Region.cs" />
+    <Compile Include="Models\Region1.cs" />
+    <Compile Include="Models\Review.cs" />
+    <Compile Include="Models\ReviewDetail.cs" />
+    <Compile Include="Models\ROLE.cs" />
+    <Compile Include="Models\Role1.cs" />
+    <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\RoomControl.cs" />
+    <Compile Include="Models\RoomReguest.cs" />
+    <Compile Include="Models\Seo.cs" />
+    <Compile Include="Models\SpecialRate.cs" />
+    <Compile Include="Models\Surcharge.cs" />
+    <Compile Include="Models\sysdiagram.cs" />
+    <Compile Include="Models\CouponCode.cs" />
+    <Compile Include="Models\Tip.cs" />
+    <Compile Include="Models\TOUR1.cs" />
+    <Compile Include="Models\Tour2.cs" />
+    <Compile Include="Models\TOURBOOKING.cs" />
+    <Compile Include="Models\TOURBOOKINGHISTORY.cs" />
+    <Compile Include="Models\TOURDETAIL.cs" />
+    <Compile Include="Models\TourOperator.cs" />
+    <Compile Include="Models\TourOperators.cs" />
+    <Compile Include="Models\TourRate.cs" />
+    <Compile Include="Models\Tour_Promotion.cs" />
+    <Compile Include="Models\Tour_Surcharge.cs" />
+    <Compile Include="Models\USER.cs" />
+    <Compile Include="Models\User1.cs" />
+    <Compile Include="Models\DealHotelTours.cs" />
+    <Compile Include="Models\UserHotel.cs" />
+    <Compile Include="Models\vinadayContext.cs" />
+    <Compile Include="Models\Voucher.cs" />
+    <Compile Include="Models\vw_aspnet_Applications.cs" />
+    <Compile Include="Models\vw_aspnet_MembershipUsers.cs" />
+    <Compile Include="Models\vw_aspnet_Profiles.cs" />
+    <Compile Include="Models\vw_aspnet_Roles.cs" />
+    <Compile Include="Models\vw_aspnet_Users.cs" />
+    <Compile Include="Models\vw_aspnet_UsersInRoles.cs" />
+    <Compile Include="Models\vw_aspnet_WebPartState_Paths.cs" />
+    <Compile Include="Models\vw_aspnet_WebPartState_Shared.cs" />
+    <Compile Include="Models\vw_aspnet_WebPartState_User.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>Copy "$(TargetPath)" "E:\Projects\GitControl\VinadayGit\Libs"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

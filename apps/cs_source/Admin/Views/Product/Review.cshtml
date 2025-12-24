@@ -1,0 +1,259 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Globalization
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@model Hotel
+@{
+    ViewBag.Title = "Reviews - Hotel Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+
+    List<Review> reviews = ViewBag.Reviews;
+    List<CatDetail> categories = ViewBag.Categories;
+    List<Nationality> nationalities = ViewBag.Nationalities;
+}
+<div class="page-title">
+    <h3>Reviews</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/Product/Hotel">Hotel Management</a></li>
+            <li class="active">Reviews</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <div role="group" class="pull-right clearfix">
+                        @if (Model.Id > 0)
+                        {
+                            <input type="hidden" id="hotel-id" value="@Model.Id" />
+                            <a href="@Url.Content("~/Product/HotelBasic/"+Model.Id)" class="btn btn-success m-b-sm">Basic Info</a>
+                            //<a href="http://goreise.com/rc/"+Model.Id class="btn btn-success m-b-sm">Room Management</a>
+                            <a href="@Url.Content("~/Product/RoomControl/"+Model.Id)" class="btn btn-success m-b-sm">Room Control</a>
+                            <a href="@Url.Content("~/Product/HotelPackage/"+Model.Id)" class="btn btn-success m-b-sm">Package</a>
+                            <a href="@Url.Content("~/Product/RateControl/"+Model.Id)" class="btn btn-success m-b-sm">Rate Control</a>
+                            <a href="@Url.Content("~/Product/Surcharge/"+Model.Id)" class="btn btn-success m-b-sm">Surcharges</a>
+                            <a href="@Url.Content("~/Product/Promotion/"+Model.Id)" class="btn btn-success m-b-sm">Promotions</a>
+                            <a href="@Url.Content("~/Product/HotelSeo/"+Model.Id)" class="btn btn-success m-b-sm">SEO</a>
+                            <a disabled href="#" class="btn btn-success m-b-sm">Reviews</a>
+                        }
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-info btn-addon m-b-sm btn-xs" type="button" data-toggle="modal" data-target="#update-reivew-modal"><i class="fa fa-plus"></i>Add new</button>
+                            <div class="clearfix"></div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Review content</th>
+
+
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach (var review in reviews)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <blockquote>
+                                                        <footer>
+                                                            <cite><b>@review.Title</b></cite>
+                                                            <a class="btn btn-danger btn-xs pull-right" href="javascript:void(0);" onclick="deleteReview('@review.Id');">
+                                                                <small class="glyphicon glyphicon-trash" style="color: #fff!important"></small>
+                                                            </a>
+                                                        </footer>
+                                                        <hr />
+
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p><b>Overall Rating: </b>@review.RatingValue/10<p />
+                                                                <p><b>Tips: </b>@review.Tips</p>
+                                                                <p><b>Content: </b>@review.Content</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="alert alert-success" role="alert">
+                                                                    <p><b>Customer: </b>@review.CustomerName<p/>
+                                                                    <p><b>Nationality: </b>@review.CustomerAddress<p/>
+                                                                    <p><b>Visit Date: </b>@review.VisitDate.ToString("MM/yyyy")</p>
+                                                                    <p><b>Create Date: </b>@review.CreateDate.ToString("MM/dd/yyyy HH:mm:ss")<p />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </blockquote>
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div><!-- Row -->
+    </div>
+    <div class="modal fade" id="update-reivew-modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add new review</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form>
+                                <div class="form-group">
+                                    <label for="cboDate">When did you travel?</label>
+                                    <select id="cboDate" class="form-control m-b-sm">
+                                        <option value="">Select one</option>
+                                        @for (var i = 0; i < 12; i++)
+                                        {
+                                            var date = DateTime.Now.AddMonths(-i);
+                                            <option value="@date.ToString("MM,yyyy")">
+                                                @(date.ToString("MMMM - yyyy"))
+                                            </option>
+                                        }
+
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Your overall rating of this property:</label>
+                                    <div id="over-view">
+                                        <fieldset>
+                                            <label class="radio" style="display: inline;cursor: pointer">
+                                                <input id="over-view-01" class="radio" type="radio" name="over-view" value="1">
+                                            </label>
+                                            <label class="radio" style="display: inline;cursor: pointer">
+                                                <input id="over-view-02" class="radio" type="radio" name="over-view" value="2">
+                                            </label>
+                                            <label class="radio" style="display: inline;cursor: pointer">
+                                                <input id="over-view-03" class="radio" type="radio" name="over-view" value="3">
+                                            </label>
+                                            <label class="radio" style="display: inline;cursor: pointer">
+                                                <input id="over-view-04" class="radio" type="radio" name="over-view" value="4">
+                                            </label>
+                                            <label class="radio" style="display: inline;cursor: pointer">
+                                                <input id="over-view-05" class="radio" type="radio" name="over-view" value="5">
+                                            </label>
+                                            <label class="radio" style="display: inline;cursor: pointer">
+                                                <input id="over-view-06" class="radio" type="radio" name="over-view" value="6">
+                                            </label>
+                                            <label class="radio" style="display: inline;cursor: pointer">
+                                                <input id="over-view-07" class="radio" type="radio" name="over-view" value="7">
+                                            </label>
+                                            <label class="radio" style="display: inline;cursor: pointer">
+                                                <input id="over-view-08" class="radio" type="radio" name="over-view" value="8">
+                                            </label>
+                                            <label class="radio" style="display: inline;cursor: pointer">
+                                                <input id="over-view-09" class="radio" type="radio" name="over-view" value="9">
+                                            </label>
+                                            <label class="radio" style="display: inline;cursor: pointer">
+                                                <input id="over-view-10" class="radio" type="radio" name="over-view" value="10">
+                                            </label>
+                                            <!-- // form item -->
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title">Title of your review:</label>
+                                    <input id="title" class="form-control" type="text" placeholder="Title of your review">
+                                </div>
+                                <div class="form-group">
+                                    <label for="content">Your review: <span class="help-inline">(200 character minimum)</span></label>
+                                    <textarea id="content" class="form-control" rows="3" placeholder="Your review"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tip">Your tip:<span class="help-inline">(Add a tip to help travelers choose good hotel)</span></label>
+                                    <textarea id="tip" class="form-control" rows="3" placeholder="Your tip"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="share">Sharing with friends:</label>
+                                    <label id="share" class="checkbox">
+                                        <input class="checkbox" type="checkbox" id="checkbox-share">
+                                        Show add your real name and photo to friends who view your reviews on Vinaday.com.
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <form>
+                                <div class="form-group">
+                                    <label for="country">Country:</label>
+                                    <select id="country" class="form-control">
+                                        @foreach (var nationality in nationalities)
+                                        {
+                                            <option value="@nationality.Name">@nationality.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="customer">Customre Name:</label>
+                                    <input id="customer" class="form-control" type="text" placeholder="Your name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="review-type">What sort of trip was this?</label>
+                                    <select id="review-type" class="form-control">
+                                        <option value="1">Business</option>
+                                        <option value="2">Couples</option>
+                                        <option value="3">Family</option>
+                                        <option value="2">Friends</option>
+                                        <option value="3">Solo</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <table id="review-rating" class="table">
+                                        <tbody>
+                                            @foreach (var item in categories)
+                                            {
+                                                <tr id="@item.Id" class="rating">
+                                                    <td><label for="@item.Id">@item.Name</label></td>
+                                                    <td>
+                                                        <div>
+                                                            <fieldset>
+                                                                @for (var i = 1; i < 6; i++)
+                                                                {
+                                                                    <label class="radio" style="display: inline;cursor: pointer">
+                                                                        <input id="@item.Id" class="radio" type="radio" name="@item.Id" value="@i">
+                                                                    </label>
+                                                                }
+                                                            </fieldset>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!-- Row -->
+                </div>
+                <div class="modal-footer">
+                    <div id="loadPane"></div>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" onclick="addReview(); ">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- Main Wrapper -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/hoteljs")
+}

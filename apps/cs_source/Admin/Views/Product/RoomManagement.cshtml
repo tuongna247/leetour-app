@@ -1,0 +1,137 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@model Hotel
+@{
+    ViewBag.Title = "Rooms - Hotel Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+
+    List<Room> rooms = ViewBag.Rooms;
+}
+<div class="page-title">
+    <h3>Hotel Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/Product/Hotel">Hotel Management</a></li>
+            <li class="active">Rooms Management</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading clearfix">
+                    <div role="group" class="pull-right">
+                        <input type="hidden" id="hotel-id" value="@Model.Id" />
+                        <a href="@(string.Format("~/Product/HotelBasic/{0}", Model.Id))" class="btn btn-success m-b-sm">Basic Info</a>
+                        <a disabled href="#" class="btn btn-success m-b-sm">Room Management</a>
+                        <a href="@(string.Format("~/Product/RoomControl/{0}", Model.Id))" class="btn btn-success m-b-sm">Room Control</a>
+                        <a href="@(string.Format("~/Product/HotelPackage/{0}", Model.Id))" class="btn btn-success m-b-sm">Package</a>
+                        <a href="@(string.Format("~/Product/RateControl/{0}", Model.Id))" class="btn btn-success m-b-sm">Rate Control</a>
+                        <a href="@(string.Format("~/Product/Surcharge/{0}", Model.Id))" class="btn btn-success m-b-sm">Surcharges</a>
+                        <a href="@(string.Format("~/Product/Promotion/{0}", Model.Id))" class="btn btn-success m-b-sm">Promotions</a>
+                        <a href="@(string.Format("~/Product/HotelSeo/{0}", Model.Id))" class="btn btn-success m-b-sm">SEO</a>
+                        <a href="@(string.Format("~/Product/Review/{0}", Model.Id))" class="btn btn-success m-b-sm">Reviews</a>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div id="loadPane"></div>
+                        <div class="col-md-12">
+                            <button onclick="addRoomShow();" class="btn btn-info btn-addon m-b-sm btn-xs" type="button"><i class="fa fa-plus"></i>Add new room</button>
+                            <div class="clearfix"></div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center">Id</th>
+                                        <th class="text-center">Photo</th>
+                                        <th class="text-center">Room name</th>
+                                        <th class="text-center">Sort</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    @if (rooms.Count > 0)
+                                    {
+                                        foreach (var room in rooms)
+                                        {
+                                            <tr>
+                                                <td class="text-center">
+                                                    <p>@room.Id</p></td>
+                                                <td class="text-center" style="padding: 5px !important; width: 300px;"><img style="width: 300px" src="@(room.ImageUrl)" alt="Image"></td>
+                                                <td class="text-center">
+                                                    @room.Name
+                                                </td>
+                                                <td class="text-center">
+                                                    @room.Sort
+                                                </td>
+                                                <td class="text-center">
+                                                    <p>@(room.Status == false ? "De-Active" : "Active")</p>
+                                                </td>
+                                                <th class="text-center">
+                                                    <a @(room.Status == false ? "disabled" : "") class="btn btn-success btn-xs" href="javascript:void(0);" onclick="getRoom('@room.Id')">
+                                                        <small class="glyphicon glyphicon-edit"></small>
+                                                    </a>
+                                                    <a @(room.Status == false ? "disabled" : "") class="btn btn-danger btn-xs" href="javascript:void(0);" onclick="deleteRoom('@room.Id')">
+                                                        <small class="glyphicon glyphicon-trash"></small>
+                                                    </a>
+                                                </th>
+                                            </tr>
+                                        }
+                                    }
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="clearfix"></div>
+                            <button onclick="addRoomShow();" class="btn btn-info btn-addon m-b-sm btn-xs" type="button"><i class="fa fa-plus"></i>Add new room</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- Row -->
+    <div id="room-content">
+
+    </div>
+    <div class="modal fade" id="add-room-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add new room</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="add-room-name">Room Name:</label>
+                                <input id="add-room-name" class="form-control m-b-sm" type="text" placeholder="Room Name">
+                            </div>
+                        </div>
+                    </div><!-- Row -->
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Close</a>
+                    <a class="btn btn-success" onclick="addRoom();">Add new</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- Main Wrapper -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/hoteljs")
+}

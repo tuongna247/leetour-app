@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7359871D-B4B5-4E77-B4F8-CC2976CF8BA2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Vinaday.Core</RootNamespace>
+    <AssemblyName>Vinaday.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Repository.Pattern, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Repository.Pattern.dll</HintPath>
+    </Reference>
+    <Reference Include="Repository.Pattern.Ef6, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Repository.Pattern.Ef6.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AccountantOrderDetailRepository.cs" />
+    <Compile Include="Repositories\AccountantOrderRepository.cs" />
+    <Compile Include="Repositories\BookingRepository.cs" />
+    <Compile Include="Repositories\BusinessCardRepository.cs" />
+    <Compile Include="Repositories\CancellationRepository.cs" />
+    <Compile Include="Repositories\CatDetailRepository.cs" />
+    <Compile Include="Repositories\CategoryDetailRepository.cs" />
+    <Compile Include="Repositories\CategoryRepository.cs" />
+    <Compile Include="Repositories\CatRepository.cs" />
+    <Compile Include="Repositories\CityRepository.cs" />
+    <Compile Include="Repositories\ContactRepository.cs" />
+    <Compile Include="Repositories\CountryRepository.cs" />
+    <Compile Include="Repositories\CreditCardRepository.cs" />
+    <Compile Include="Repositories\CustomerRepository.cs" />
+    <Compile Include="Repositories\DealsRepository.cs" />
+    <Compile Include="Repositories\FeaturedHotelRepository.cs" />
+    <Compile Include="Repositories\TourRate3Repository.cs" />
+    <Compile Include="Repositories\TourRate2Repository.cs" />
+    <Compile Include="Repositories\TourTopSiteRepository.cs" />
+    <Compile Include="Repositories\FeaturedRepository.cs" />
+    <Compile Include="Repositories\HotelCancellationRepository.cs" />
+    <Compile Include="Repositories\HotelImageRepository.cs" />
+    <Compile Include="Repositories\HotelRepository.cs" />
+    <Compile Include="Repositories\LottoDetailRepository.cs" />
+    <Compile Include="Repositories\LottoRepository.cs" />
+    <Compile Include="Repositories\MediaRepository.cs" />
+    <Compile Include="Repositories\NationalityRepository.cs" />
+    <Compile Include="Repositories\NotifyRepository.cs" />
+    <Compile Include="Repositories\Order2Repository.cs" />
+    <Compile Include="Repositories\OrderDetail2Repository.cs" />
+    <Compile Include="Repositories\OrderDetailRepository.cs" />
+    <Compile Include="Repositories\OrderInformation2Repository.cs" />
+    <Compile Include="Repositories\OrderInformationRepository.cs" />
+    <Compile Include="Repositories\OrderRepository.cs" />
+    <Compile Include="Repositories\PaymentOrderDetailRepository.cs" />
+    <Compile Include="Repositories\PaymentOrderDetailRepository2.cs" />
+    <Compile Include="Repositories\PaymentOrderRepository.cs" />
+    <Compile Include="Repositories\PaymentOrderRepository2.cs" />
+    <Compile Include="Repositories\PromotionRepository.cs" />
+    <Compile Include="Repositories\RateExchangeRepository.cs" />
+    <Compile Include="Repositories\RegionRepository.cs" />
+    <Compile Include="Repositories\ReviewDetailRepository.cs" />
+    <Compile Include="Repositories\ReviewRepository.cs" />
+    <Compile Include="Repositories\RoomControlRepository.cs" />
+    <Compile Include="Repositories\RoomReguestRepository.cs" />
+    <Compile Include="Repositories\RoomRepository.cs" />
+    <Compile Include="Repositories\SeoRepository.cs" />
+    <Compile Include="Repositories\SpecialRateRepository.cs" />
+    <Compile Include="Repositories\SurchargeRepository.cs" />
+    <Compile Include="Repositories\TipRepository.cs" />
+    <Compile Include="Repositories\TourDetailRepository.cs" />
+    <Compile Include="Repositories\TourExpandRateRepository.cs" />
+    <Compile Include="Repositories\TourPromotionRepository.cs" />
+    <Compile Include="Repositories\TourRateRepository.cs" />
+    <Compile Include="Repositories\TourRepository.cs" />
+    <Compile Include="Repositories\TourSurchargeRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Repositories\VoucherRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vinaday.Data\Vinaday.Data.csproj">
+      <Project>{79a96e2d-a30a-4826-8b37-c376cd63e2ef}</Project>
+      <Name>Vinaday.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>Copy "$(TargetPath)" "E:\Projects\GitControl\VinadayGit\Libs"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

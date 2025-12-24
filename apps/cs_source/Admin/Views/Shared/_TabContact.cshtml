@@ -1,0 +1,90 @@
+﻿@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+@{
+    Contact contactReservation = ViewBag.ContactReservation;
+    Contact contactMarketing = ViewBag.ContactMarketing;
+    Contact contactAccountant = ViewBag.ContactAccount;
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (contactReservation != null)
+            {
+                <tr>
+                    <th>Reservation</th>
+                    <th>@string.Format("{0} {1} {2}", contactReservation.SALUTATION, contactReservation.FIRSTNAME, contactReservation.LASTNAME)</th>
+
+                    <th>@contactReservation.EMAILADDRESS</th>
+                    <th>@Utilities.FormatPhone(contactReservation.PHONE)</th>
+                    <th class="text-center">
+                        <a class="btn btn-success btn-xs" href="javascript:void(0);" onclick="getContact('@contactReservation.CONTACTID','-1')">
+                            <small class="glyphicon glyphicon-edit"></small>
+                        </a>
+                    </th>
+                </tr>
+            }
+            @if (contactMarketing != null)
+            {
+                <tr>
+                    <th>Marketing</th>
+                    <th>@string.Format("{0} {1} {2}", contactMarketing.SALUTATION, contactMarketing.FIRSTNAME, contactMarketing.LASTNAME)</th>
+
+                    <th>@contactMarketing.EMAILADDRESS</th>
+                    <th>@Utilities.FormatPhone(contactMarketing.PHONE)</th>
+                    <th class="text-center">
+                        <a class="btn btn-success btn-xs" href="javascript:void(0);" onclick="getContact('@contactMarketing.CONTACTID','-1')">
+                            <small class="glyphicon glyphicon-edit"></small>
+                        </a>
+                    </th>
+                </tr>
+            }
+            @if (contactAccountant != null)
+            {
+                <tr>
+                    <th>Accounts/Finance</th>
+                    <th>@string.Format("{0} {1} {2}", contactAccountant.SALUTATION, contactAccountant.FIRSTNAME, contactAccountant.LASTNAME)</th>
+                    <th>@contactAccountant.EMAILADDRESS</th>
+                    <th>@Utilities.FormatPhone(contactAccountant.PHONE)</th>
+                    <th class="text-center">
+                        <a class="btn btn-success btn-xs" href="javascript:void(0);" onclick="getContact('@contactAccountant.CONTACTID','-1')">
+                            <small class="glyphicon glyphicon-edit"></small>
+                        </a>
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="pull-left">
+    <form>
+        @if (contactReservation == null)
+        {
+            <a class="btn btn-success btn-addon m-b-sm btn-xs" onclick="getContact('-1','1')"><i class="fa fa-plus"></i>Reservation</a>
+            <br />
+        }
+        @if (contactMarketing == null)
+        {
+            <a class="btn btn-primary btn-addon m-b-sm btn-xs" onclick="getContact('-1','2')"><i class="fa fa-plus"></i>Marketing</a>
+            <br />
+        }
+        @if (contactAccountant == null)
+        {
+            <a class="btn btn-info btn-addon m-b-sm btn-xs" onclick="getContact('-1','3')"><i class="fa fa-plus"></i>Accounts/Finance</a>
+        }
+    </form>
+</div>
+<div class="clearfix"></div>
+<div class="pull-right">
+    <button type="button" onclick="getTabProperty();" class="btn btn-default m-b-sm">Continue</button>
+</div>
+<div id="update-contact"></div>

@@ -1,0 +1,121 @@
+﻿@using System.Collections.Generic
+@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+@{
+    List<Nationality> nationalities = ViewBag.Nationalities;
+}
+
+@if (Model != null)
+{
+    Customer customer = Model;
+    <h6 class="panel-title"><span class="badge badge-primary" style="vertical-align: top">3</span> Fill all value for <b>Customer</b></h6>
+    <hr />
+    <div class="form-group col-md-6">
+        <label for="first-name">First Name</label>
+        <input type="text" placeholder="First Name" id="first-name" value="@customer.Firstname" name="first-name" class="form-control">
+    </div>
+    <div class="form-group  col-md-6">
+        <label for="last-name">Last Name</label>
+        <input type="text" placeholder="Last Name" id="last-name" value="@customer.Lastname" name="last-name" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="email">Email address</label>
+        <input type="email" placeholder="Enter email" id="email" value="@customer.Email" name="email" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="email-confirm">Email(re-confirm)</label>
+        <input type="email" placeholder="Enter email" id="email-confirm" value="@customer.Email" name="email-confirm" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="phone">Phone</label>
+        <input type="text" placeholder="Phone" id="phone" value="@Utilities.FormatPhone(customer.PhoneNumber)" name="phone" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="national">National</label>
+        <select id="national" class="form-control">
+            <option value="-1">Select a national</option>
+            @if (nationalities.Count > 0)
+            {
+                foreach (var nationality in nationalities)
+                {
+                    <option value="@nationality.ID" @(customer.NationalId == nationality.ID ? "selected" : "")>@nationality.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="form-group col-md-12">
+        <label for="special-request">Special Request?</label>
+        <textarea rows="4" placeholder="Special Request?" id="special-request" name="special-request" class="form-control"></textarea>
+    </div>
+}
+else
+{
+    <h6 class="panel-title"><span class="badge badge-primary" style="vertical-align: top">3</span> Fill all value for <b>Customer</b></h6>
+    <hr />
+    <div class="form-group col-md-6">
+        <label for="first-name">First Name</label>
+        <input type="text" placeholder="First Name" id="first-name" name="first-name" class="form-control">
+    </div>
+    <div class="form-group  col-md-6">
+        <label for="last-name">Last Name</label>
+        <input type="text" placeholder="Last Name" id="last-name" name="last-name" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="email">Email address</label>
+        <input type="email" placeholder="Enter email" id="email" name="email" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="email-confirm">Email(re-confirm)</label>
+        <input type="email" placeholder="Enter email" id="email-confirm" name="email-confirm" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="phone">Phone</label>
+        <input type="text" placeholder="Phone" id="phone" name="phone" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="national">National</label>
+        <select id="national" class="form-control">
+            <option value="-1">Select a national</option>
+            @if (nationalities.Count > 0)
+            {
+                foreach (var nationality in nationalities)
+                {
+                    <option value="@nationality.ID">@nationality.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="form-group col-md-12">
+        <label for="special-request">Special Request?</label>
+        <textarea rows="4" placeholder="Special Request?" id="special-request" name="special-request" class="form-control"></textarea>
+    </div>
+}
+<div class="form-group col-md-12">
+    <label class="checkbox">
+        <input id="guest-checkbox" type="checkbox">Making this booking for someone else.
+    </label>
+</div>
+<div id="add-guest-form" style="display: none">
+    <div class="form-group col-md-4">
+        <label for="guest-first-name">Guest first name</label>
+        <input type="text" placeholder="Guest first name" id="guest-first-name" name="guest-first-name" class="form-control">
+    </div>
+    <div class="form-group col-md-4">
+        <label for="guest-last-name">Guest last name</label>
+        <input type="text" placeholder="Guest last name" id="guest-last-name" name="guest-last-name" class="form-control">
+    </div>
+    <div class="form-group col-md-4">
+        <label for="national">Country of residence</label>
+        <select id="guest-national" class="form-control">
+            <option value="-1">Select a national</option>
+            @if (nationalities.Count > 0)
+            {
+                foreach (var nationality in nationalities)
+                {
+                    <option value="@nationality.ID">@nationality.Name</option>
+                }
+            }
+        </select>
+    </div>
+</div>
+

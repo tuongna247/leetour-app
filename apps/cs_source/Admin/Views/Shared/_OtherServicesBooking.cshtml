@@ -1,0 +1,66 @@
+﻿@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+@if (Model != null)
+{
+    ProductModel product = Model;
+    Customer customer = ViewBag.Customer;
+    Nationality nationality = ViewBag.Nationality;
+    <div class="modal fade" id="create-booking-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="clearfix">
+
+                        <div class="pull-right">
+                            <p class="text-right">
+                                <b>@string.Format("{0} {1}", customer.Firstname, customer.Lastname)</b><br>
+                                @Utilities.FormatPhone(customer.PhoneNumber)<br>
+                                @customer.Email<br/>
+                                @nationality.Name<br/>
+                                
+                                
+                            </p>
+                        </div>
+                        <div class="pull-left">
+                            <p class="text-left">
+                                <b>@product.Name</b><br>
+                                @product.DetailName<br />
+                                C/I: @product.CheckIn.ToShortDateString() - C/O: @product.CheckOut.ToShortDateString()<br>
+                                Total: @String.Format("{0:C}", product.TotalPrice) <br/>
+                                @if (product.CancellationPolicy != null)
+                                {
+                                    <text>Cancellation Policy: </text> @product.CancellationPolicy.Description
+                                }
+                                
+                            </p>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default pull-left" data-dismiss="modal">Close</a>
+                    <a class="btn btn-success" onclick="addOtherServices(3);">Create</a>
+                    <a class="btn btn-primary" onclick="addOtherServices(4);">Create and confirm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="modal fade" id="create-booking-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <p>Product is not available.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

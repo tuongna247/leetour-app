@@ -1,0 +1,89 @@
+﻿
+@using System.Security.Claims
+@using Vinaday.Admin.Models
+@using Vinaday.Web.Framework
+@{
+    ViewBag.Active = "Customer";
+    ViewBag.Title = "Customers Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+     .Where(c => c.Type == ClaimTypes.Role)
+     .Select(c => c.Value).FirstOrDefault();
+    
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : "~/Views/Shared/_SaleLayout.cshtml";
+    List<ApplicationUser> users = ViewBag.Users;
+}
+
+<div class="page-title">
+    <h3>Customer List</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Customer List</li>
+        </ol>
+    </div>
+</div>
+
+<div id="main-wrapper">
+    <div class="row">
+
+        <div class="panel panel-white">
+            <div class="panel-body">
+                @if (role.Contains("Master Admin"))
+                {  <div class="col-md-12">
+                    <a data-toggle="modal" data-target="#import-modal" class="btn btn-info btn-addon m-b-sm btn-xs"><i class="fa fa-plus"></i>Import excel</a>
+                </div>
+                }
+                <div class="col-md-12">
+                    <hr />
+                    <table id="data-table" class="table table-hover"></table>
+                </div>
+                @if (role.Contains("Master Admin"))
+                {
+                    <div class="col-md-2">
+                        <select id="user-assign" class="form-control">
+                            <option value="None">None</option>
+                            @foreach (var user in users)
+                            {
+                                <option value="@user.UserName">@user.UserName</option>
+                            }
+                        </select>
+
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-success m-b-sm" id="assign" onclick="saveAssign();" type="button">Assign</button>
+                    </div>
+                    <div class="col-md-8">
+                    </div>
+                }
+
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div id="customer-div">
+
+</div>
+
+<div class="modal fade" id="import-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <form action="@Url.Content("/Customer/ImportExcel")" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneHotelForm" style="padding: 0;">
+                    <input type="hidden" name="id" />
+                    <div class="fallback">
+                        <input name="file" type="file" multiple />
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/customer")
+}

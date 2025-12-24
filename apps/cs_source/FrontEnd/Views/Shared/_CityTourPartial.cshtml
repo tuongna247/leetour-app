@@ -1,0 +1,13 @@
+﻿@using Vinaday.Data.Models
+@{
+    List<City> cities = ViewBag.Cities;
+}
+<select id="city" style="border: 1px solid #e2e2e2; color: black; box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.01) inset; display: block; height: 34px; position: relative; width: 100%">
+    @if (cities != null && cities.Count > 0)
+    {
+        foreach (var city in cities)
+        {
+            <option value="@Vinaday.Web.Framework.Utilities.GenerateSlug(city.Description)">@city.Description</option>
+        }
+    }
+</select>

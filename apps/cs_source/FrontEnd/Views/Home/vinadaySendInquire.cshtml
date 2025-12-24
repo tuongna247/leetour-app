@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Working at VINADAY goREISE";
+    Layout = "~/Views/Shared/_TourLayout.cshtml";
+}
+<div class="container" style="max-width: 970px;">
+
+    <section class="content-section form checkout style-2">
+        <div class="row">
+            <div id="show-inquiry">
+                <div class="col-md-4 col-md-push-8">
+                    <div class="box-aside box-right-top">
+                        <div id="information-price">
+                            <p style="text-align: center;" class="hidden-xs">
+                                <a href="https://www.tripadvisor.com/Attraction_Review-g293925-d2608200-Reviews-Vinaday_Travel_Day_Trips-Ho_Chi_Minh_City.html">
+                                    <img style="width: 189px; margin-top: 5px;" src="/Content/images/certificate.jpg" alt="sertificate">
+                                </a>
+
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-8 col-md-pull-4 anim fadeInLeft">
+                    <div style="font-size: 13px; margin-top: 15px;">Tên Coupon: @ViewBag.productinfo <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Giá : @ViewBag.Amount vnđ.</div>
+                    <div class="clearfix"></div>
+                    <div style="margin-top: 20px;">
+                        <span class="input-group tight">
+                            <i class="fa fa-user"></i>
+                            <input type="text" id="firt-name" class="lg" placeholder="Họ và tên lót" />
+                            <input type="hidden" id="productinfo" class="lg" value="@ViewBag.productinfo"/>
+                            <input type="hidden" id="amount" class="lg" value="@ViewBag.Amount" />
+                            <input type="hidden" id="surl" class="lg" value="@ViewBag.surl" />
+                        </span><!-- .input-group -->
+
+                        <span class="input-group tight">
+                            <i class="fa fa-user"></i>
+                            <input type="text" id="last-name" class="lg" placeholder="Tên" />
+                        </span><!-- .input-group -->
+
+                        <span class="input-group tight">
+                            <i class="fa fa-envelope"></i>
+                            <input type="text" id="email" class="lg" placeholder="Địa chỉ mail" />
+                        </span><!-- .input-group -->
+                        <span class="input-group tight">
+                            <i class="fa fa-envelope"></i>
+                            <input type="text" id="confirm-email" class="lg" placeholder="Địa chỉ mail (xác nhận)" />
+                        </span><!-- .input-group -->
+                        <span class="input-group tight">
+                            <i class="fa fa-mobile-phone"></i>
+                            <input type="text" id="phone" class="lg" placeholder="Số điện thoại" />
+                        </span><!-- .input-group -->
+                    </div>
+
+                    <div class="clearfix"></div>
+                   
+                    <span class="input-group tight">
+                        <a onclick="sendHotelInquiry();" style="width: 100%" class="yellow_roundbtn pull-left" id="proceed">Send inquiry</a>
+                    </span>
+                    <div class="clearfix"></div>
+                    <div>
+                        <span style="color: red">*</span> Required field
+                    </div>
+                </div>
+            </div>
+            <div id="un-show-inquiry" style="display: none; text-align: center; margin-top: 10%">
+                <p>Your Inquiry has been sent</p>
+                <br />
+                <a href="https://goreise.com/">Go back >></a>
+            </div>
+        </div>
+    </section>
+</div>

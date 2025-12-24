@@ -1,0 +1,2642 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Diagnostics
+@using System.Linq
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+@using System.Linq
+@using System.Security.Claims
+@using System.Web
+@using System.Web.Security
+@using Microsoft.AspNet.Identity
+@{
+    Layout = "";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+           .Where(c => c.Type == ClaimTypes.Role)
+           .Select(c => c.Value).FirstOrDefault();
+
+    var avatar = ((ClaimsIdentity)User.Identity).FindFirst("Avatar").Value;
+    var firstName = ((ClaimsIdentity)User.Identity).FindFirst("FirstName").Value;
+    var lastName = ((ClaimsIdentity)User.Identity).FindFirst("LastName").Value;
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Title -->
+    <title>Vinaday | Admin Dashboard</title>
+
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta charset="UTF-8">
+    <meta name="description" content="Admin Dashboard" />
+    <meta name="keywords" content="admin,dashboard" />
+    <meta name="author" content="Steelcoders" />
+
+    <!-- Styles -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+    <link href="~/assets/plugins/pace-master/themes/blue/pace-theme-flash.css" rel="stylesheet" />
+    <link href="~/assets/plugins/uniform/css/uniform.default.min.css" rel="stylesheet" />
+    <link href="~/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/line-icons/simple-line-icons.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/offcanvasmenueffects/css/menu_cornerbox.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/waves/waves.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/switchery/switchery.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/3d-bold-navigation/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/slidepushmenus/css/component.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/weather-icons-master/css/weather-icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/metrojs/MetroJs.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css" />
+    <!-- Theme Styles -->
+    <link href="~/assets/css/modern.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/themes/white.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/custom.css" rel="stylesheet" type="text/css" />
+
+    <script src="/assets/plugins/3d-bold-navigation/js/modernizr.js"></script>
+    <script src="/assets/plugins/offcanvasmenueffects/js/snap.svg-min.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+@if (role.Contains("Master Admin"))
+{
+    <body class="page-header-fixed">
+        <div class="overlay"></div>
+        <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s1">
+            
+        </nav>
+        <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
+            
+        </nav>
+        <div class="menu-wrap">
+            <nav class="profile-menu">
+                <div class="profile"><img src="@avatar" width="52" alt="@string.Format("{0} {1}",firstName,lastName)" /><span>@string.Format("{0} {1}", firstName, lastName)</span></div>
+               
+            </nav>
+            <button class="close-button" id="close-button">Close Menu</button>
+        </div>
+        <form class="search-form" action="#" method="GET">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control search-input" placeholder="Search...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default close-search waves-effect waves-button waves-classic" type="button"><i class="fa fa-times"></i></button>
+                </span>
+            </div><!-- Input Group -->
+        </form><!-- Search Form -->
+        @if (Model != null)
+        {
+            <main class="page-content content-wrap">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="sidebar-pusher">
+                            <a href="javascript:void(0);" class="waves-effect waves-button waves-classic push-sidebar">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </div>
+                            <div class="logo-box">
+                                    <a href="@Url.Content("~/Dashboard/Index")" class="logo-text"><img src="@Url.Content("~/Content/img/logo.png")"/></a>
+                            </div><!-- Logo Box -->
+                        <div class="search-button">
+                            <a href="javascript:void(0);" class="waves-effect waves-button waves-classic show-search"><i class="fa fa-search"></i></a>
+                        </div>
+                        <div class="topmenu-outer">
+                            <div class="top-menu">
+                                <ul class="nav navbar-nav navbar-left">
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic sidebar-toggle"><i class="fa fa-bars"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic toggle-fullscreen"><i class="fa fa-expand"></i></a>
+                                    </li>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                            <i class="fa fa-envelope"></i><span class="badge badge-success pull-right">@Model.TotalEmailNoneRead</span>
+                                        </a>
+                                        <ul class="dropdown-menu title-caret dropdown-lg" role="menu">
+                                            <li><p class="drop-title">You have @Model.TotalEmailNoneRead new  messages !</p></li>
+                                            <li class="dropdown-menu-list slimscroll messages">
+                                                <ul class="list-unstyled">
+
+                                                    @if (Model.TotalEmailNoneRead > 0)
+                                                    {
+                                                        foreach (var reguest in Model.RoomReguests)
+                                                        {
+                                                            <li>
+                                                                <a href="~/Mailbox/Message/@reguest.Id">
+                                                                    <div class="msg-img">
+                                                                        <div class="online on">
+                                                                        </div>
+                                                                        <img class="img-circle" src="/Content/img/NoProfile.jpg" alt="">
+                                                                    </div>
+                                                                    <p class="msg-name">@string.Format("{0} {1}", reguest.FirstName, reguest.LastName)</p>
+                                                                    <p class="msg-text">@string.Format("{0}", !string.IsNullOrEmpty(reguest.Note) ? reguest.Note : string.Format("Request: {0}", reguest.HotelName))</p>
+                                                                    <p class="msg-time">
+                                                                        @string.Format("{0} {1} ago", (DateTime.Now - reguest.CreateDate).Hours != 0 ?
+                                                                     string.Format("{0} hours", (DateTime.Now - reguest.CreateDate).Hours) : string.Empty,
+                                                                     string.Format("{0} minutes", (DateTime.Now - reguest.CreateDate).Minutes))
+                                                                    </p>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>
+                                                            <p class="msg-text">No reguest !</p>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                            <li class="drop-all"><a href="~/Mailbox/Inbox" class="text-center">All Messages</a></li>
+                                        </ul>
+                                    </li>
+                                    
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                            <span class="user-name">@firstName<i class="fa fa-angle-down"></i></span>
+                                            <img class="img-circle avatar" src="@avatar" width="40" height="40" alt="">
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-list" role="menu">
+                                            <li role="presentation">
+                                                <a href="Dashboard/Index"><i class="fa fa-user"></i>Profile</a>
+                                            </li>
+                                            
+                                            <li role="presentation">
+                                                <a href="~/Mailbox/Inbox">
+                                                    <i class="fa fa-envelope"></i>Inbox
+                                                </a>
+                                            </li>
+                                            <li role="presentation" class="divider"></li>
+                                            <li role="presentation">
+                                                <a href="~/Home/LockScreen"><i class="fa fa-lock"></i>Lock screen</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="@Url.Content("~/Account/LogOff")"><i class="fa fa-sign-out m-r-xs"></i>Log out</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Content("~/Account/LogOff")" class="waves-effect waves-button waves-classic">
+                                            <span><i class="fa fa-sign-out m-r-xs"></i>Log out</span>
+                                        </a>
+                                    </li>
+                                  
+                                </ul><!-- Nav -->
+                            </div><!-- Top Menu -->
+                        </div>
+                    </div>
+                </div><!-- Navbar -->
+                <div class="page-sidebar sidebar">
+                    <div class="page-sidebar-inner slimscroll">
+                        <div class="sidebar-header">
+                            <div class="sidebar-profile">
+                                <a href="javascript:void(0);" id="profile-menu-link">
+                                    <div class="sidebar-profile-image">
+                                        <img src="@avatar" class="img-circle img-responsive" alt="">
+                                    </div>
+                                    <div class="sidebar-profile-details">
+                                        <span>@string.Format("{0} {1}", firstName, lastName)<br><small>@role</small></span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <ul class="menu accordion-menu">
+                            <li class="active"><a href="@Url.Content("~//Dashboard/Index")" class="waves-effect waves-button"><span class="menu-icon glyphicon glyphicon-home"></span><p>Dashboard</p></a></li>
+                            <li class="droplink">
+                                <a href="#" class="waves-effect waves-button">
+                                    <span class="menu-icon glyphicon glyphicon-shopping-cart"></span><p>Sales</p><span class="arrow"></span>
+                                </a>
+                                <ul class="sub-menu">
+                            <li><a href="@Url.Content("~/Booking/OrderCreate")">Create Order</a></li>
+                            <li><a href="@Url.Content("~/Booking/Order")">Management Order</a></li>
+                            <li><a href="@Url.Content("~/Booking/TourOperator")">Tour Operator</a></li>
+                            <li><a href="@Url.Content("~/Product/HotelCouponCode")">Hotel Coupon</a></li>
+                            <li><a href="@Url.Content("~/Mailbox/Inbox")">Order Inbox </a></li>
+                            <li><a href="@Url.Content("~/deals/")">Hot Deal</a></li>
+                            <li><a href="@Url.Content("~/Lotto")">Mini Game</a></li>
+                                </ul>
+                            </li>
+                            <li class="droplink">
+                                <a href="#" class="waves-effect waves-button">
+                                    <span class="menu-icon glyphicon glyphicon-briefcase"></span><p>Products</p><span class="arrow"></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li class="droplink">
+                                        <a href="#"><p>Hotels</p><span class="arrow"></span></a>
+                                        <ul class="sub-menu">
+                                    <li><a href="@Url.Content("~/Product/HotelBasic")">Create</a></li>
+                                    <li><a href="@Url.Content("~/Product/Hotel")">Management</a></li>
+                                    <li><a href="@Url.Content("~/Configuration/HotelFeatured")">Top Featured</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="droplink">
+                                        <a href="#"><p>Tours</p><span class="arrow"></span></a>
+                                        <ul class="sub-menu">
+                                    <li><a href="@Url.Content("~/Product/TourBasic")">Create</a></li>
+                                    <li><a href="@Url.Content("~/Product/Tour")">Management</a></li>
+                                    <li><a href="@Url.Content("~/Configuration/TourFeatured")">Top Featured</a></li>
+                                    <li><a href="@Url.Content("~/Product/TourReview")">Tour Review</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="@Url.Content("~/Product/CouponCode")">
+                                    <p>Coupon Code</p></a>
+                            </li>
+                            <li>
+                                <a href="@Url.Content("~/Product/DealTourHotel")"><p>Deal Tour Hotel</p></a>
+                            </li>
+                        </ul>
+                            </li>
+                          
+                            <li class="droplink">
+                                <a href="#" class="waves-effect waves-button"><span class="menu-icon glyphicon glyphicon-user"></span><p>Users</p><span class="arrow"></span></a>
+                                <ul class="sub-menu">
+                                    <li class="droplink">
+                                        <a href="#"><p>Users </p><span class="arrow"></span></a>
+                                <ul class="sub-menu">
+                                    <li><a href="@Url.Content("~/user/index")">User List</a></li>
+                                    <li><a href="@Url.Content("~/role/index")">Role List</a></li>
+                                </ul>
+                            </li>
+                            <li class="droplink">
+                                <a href="#"><p>Customers</p><span class="arrow"></span></a>
+                                <ul class="sub-menu">
+                                    <li><a href="@Url.Content("~/Customer")">Management</a></li>
+                                    <li><a href="#">Reset Password</a></li>
+                                    <li><a href="#">Customer Reports</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="droplink">
+                                <a href="#" class="waves-effect waves-button"><span class="menu-icon glyphicon glyphicon-cog"></span><p>System</p><span class="arrow"></span></a>
+                                <ul class="sub-menu">
+                            <li><a href="@Url.Content("~/Setting")">Settings</a></li>
+                            <li><a href="@Url.Content("~/Configuration")">Configurations</a></li>
+                            <li><a href="#">Log</a></li>
+                        </ul>
+                            </li>
+                        </ul>
+                    </div><!-- Page Sidebar Inner -->
+                </div><!-- Page Sidebar -->
+                <div class="page-inner">
+                    <div class="page-title">
+                        <h3>Dashboard</h3>
+                        <div class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li><a href="~/Dashboard/Index">Home</a></li>
+                                <li class="active">Dashboard</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div id="main-wrapper">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6">
+                                <div class="panel info-box panel-white">
+                                    <div class="panel-body">
+                                        <div class="info-box-stats">
+                                            <p class="counter">@Model.TotalUser.ToString("##,###")</p>
+                                            <span class="info-box-title">All user for System</span>
+                                        </div>
+                                        <div class="info-box-icon">
+                                            <i class="icon-users"></i>
+                                        </div>
+                                        <div class="info-box-progress">
+                                            <div class="progress progress-xs progress-squared bs-n">
+                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="panel info-box panel-white">
+                                    <div class="panel-body">
+                                        <div class="info-box-stats">
+                                            <p class="counter">@Model.TotalOrder.ToString("##,###")</p>
+                                            <span class="info-box-title">All booking for this month</span>
+                                        </div>
+                                        <div class="info-box-icon">
+                                            <i class="icon-bag"></i>
+                                        </div>
+                                        <div class="info-box-progress">
+                                            <div class="progress progress-xs progress-squared bs-n">
+                                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="panel info-box panel-white">
+                                    <div class="panel-body">
+                                        <div class="info-box-stats">
+                                            <p>$<span class="counter">@Model.TotalRevenue</span></p>
+                                            <span class="info-box-title">Monthly revenue goal</span>
+                                        </div>
+                                        <div class="info-box-icon">
+                                            <i class="icon-basket"></i>
+                                        </div>
+                                        <div class="info-box-progress">
+                                            <div class="progress progress-xs progress-squared bs-n">
+                                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="panel info-box panel-white">
+                                    <div class="panel-body">
+                                        <div class="info-box-stats">
+                                            <p class="counter">@Model.TotalEmail.ToString("##,###")</p>
+                                            <span class="info-box-title">New reguest emails recieved</span>
+                                        </div>
+                                        <div class="info-box-icon">
+                                            <i class="icon-envelope"></i>
+                                        </div>
+                                        <div class="info-box-progress">
+                                            <div class="progress progress-xs progress-squared bs-n">
+                                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- Row -->
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="panel panel-white">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">Booking Stats</h4>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-responsive project-stats">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Name</th>
+                                                                <th>Status</th>
+                                                                <th>Total</th>
+                                                                <th>Progress</th>
+                                                            </tr>
+                                                        </thead>
+                                                        @if (Model.Orders.Count > 0)
+                                                        {
+                                                            List<Order> orders = Model.Orders;
+
+                                                            var holding = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Holding).ToList();
+                                                            var percentHolding = (int)(0.5f + ((100f * holding.Count) / orders.Count));
+
+                                                            var paid = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Paid).ToList();
+                                                            var percentPaid = (int)(0.5f + ((100f * paid.Count) / orders.Count));
+
+                                                            var cancel = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Cancelled).ToList();
+                                                            var percentCancel = (int)(0.5f + ((100f * cancel.Count) / orders.Count));
+
+                                                            var refunded = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Refunded).ToList();
+                                                            var percentRefunded = (int)(0.5f + ((100f * refunded.Count) / orders.Count));
+
+                                                            var amended = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Amended).ToList();
+                                                            var percentAmended = (int)(0.5f + ((100f * amended.Count) / orders.Count));
+
+                                                            var inactive = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Defautl).ToList();
+                                                            var percentInactive = (int)(0.5f + ((100f * inactive.Count) / orders.Count));
+
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row">1</th>
+                                                                    <td>Holding Booking</td>
+                                                                    <td><span class="label label-primary">Holding</span></td>
+                                                                    <td>@holding.Count bookings</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@(percentHolding)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentHolding)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">2</th>
+                                                                    <td>Booking Paid</td>
+                                                                    <td><span class="label label-success">Paid</span></td>
+                                                                    <td>@(string.Format("{0} {1}", paid.Count, paid.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@(percentPaid)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentPaid)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">3</th>
+                                                                    <td>Booking Cancelled</td>
+                                                                    <td><span class="label label-danger">Canceled</span></td>
+                                                                    <td>@(string.Format("{0} {1}", cancel.Count, cancel.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percentCancel" aria-valuemin="0" aria-valuemax="100" style="width: @(percentCancel)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">4</th>
+                                                                    <td>Booking Amended</td>
+                                                                    <td><span class="label label-info">Amended</span></td>
+                                                                    <td>@(string.Format("{0} {1}", amended.Count, amended.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@percentAmended" aria-valuemin="0" aria-valuemax="100" style="width: @(percentAmended)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">5</th>
+                                                                    <td>Booking Refunded</td>
+                                                                    <td><span class="label label-warning">Refunded</span></td>
+                                                                    <td>@(string.Format("{0} {1}", refunded.Count, refunded.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="@(percentRefunded)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentRefunded)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">6</th>
+                                                                    <td>Booking Inactive</td>
+                                                                    <td><span class="label label-primary">Inactive</span></td>
+                                                                    <td>@(string.Format("{0} {1}", inactive.Count, inactive.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="@(percentInactive)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentInactive)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row">No content for this time.</th>
+
+                                                                </tr>
+                                                            </tbody>
+                                                        }
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+
+                                            <div class="stats-info">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">Inbox</h4>
+                                                    <div class="panel-control">
+                                                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Reload" class="panel-reload"><i class="icon-reload"></i></a>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="panel-body">
+                                                        <div class="inbox-widget slimscroll">
+                                                            @if (Model.Emails.Count > 0)
+                                                            {
+                                                                foreach (var email in Model.Emails)
+                                                                {
+                                                                    <a href="~/Mailbox/Message/@email.Id">
+                                                                        <div class="inbox-item">
+                                                                            <div class="inbox-item-img"><img src="/Content/img/NoProfile.jpg" class="img-circle" alt=""></div>
+                                                                            <p class="inbox-item-author">@string.Format("{0} {1}", email.FirstName, email.LastName)</p>
+                                                                            <p class="inbox-item-text">@string.Format("{0}", (!string.IsNullOrEmpty(email.Note) && email.Note.Length > 30) ? string.Format("{0}...", email.Note.Substring(0, 30)) : string.Format("Request: {0}", email.HotelName)).</p>
+                                                                            <p class="inbox-item-date">
+                                                                                @email.CreateDate.ToString("hh:mm tt")
+                                                                            </p>
+                                                                        </div>
+                                                                    </a>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <div class="inbox-item">
+
+                                                                    <p class="inbox-item-text">No Email for this time.</p>
+
+                                                                </div>
+
+                                                            }
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div><!-- Main Wrapper -->
+
+                    <div class="page-footer">
+                        <span id="siteseal" style="float: right">
+                            <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=oy6YGgmFMQF9f0vSOkR0iMUiMvcli06Wtgoz1E9o6LiU7J6Kd8sKt4v2GjvB"></script>
+                        </span>
+                        <p class="no-s">@DateTime.Now.Year &copy; Vinaday Travel by VINADAY goREISE</p>
+                    </div>
+
+                </div><!-- Page Inner -->
+            </main><!-- Page Content -->
+        }
+        else
+        {
+            <p>No content for this page.</p>
+        }
+        <nav class="cd-nav-container" id="cd-nav">
+            <header>
+                <h3>Navigation</h3>
+                <a href="#" class="cd-close-nav">Close</a>
+            </header>
+            <ul class="cd-nav list-unstyled">
+                <li class="cd-selected" data-menu="index">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-home"></i>
+                        </span>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li data-menu="profile">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-user"></i>
+                        </span>
+                        <p>Profile</p>
+                    </a>
+                </li>
+                <li data-menu="inbox">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-envelope"></i>
+                        </span>
+                        <p>Mailbox</p>
+                    </a>
+                </li>
+                <li data-menu="#">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-tasks"></i>
+                        </span>
+                        <p>Tasks</p>
+                    </a>
+                </li>
+                <li data-menu="#">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-cog"></i>
+                        </span>
+                        <p>Settings</p>
+                    </a>
+                </li>
+                <li data-menu="calendar">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                        <p>Calendar</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="cd-overlay"></div>
+
+        <!-- Javascripts -->
+        <script src="/assets/plugins/jquery/jquery-2.1.3.min.js"></script>
+        <script src="/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <script src="/assets/plugins/pace-master/pace.min.js"></script>
+        <script src="/assets/plugins/jquery-blockui/jquery.blockui.js"></script>
+        <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+        <script src="/assets/plugins/switchery/switchery.min.js"></script>
+        <script src="/assets/plugins/uniform/jquery.uniform.min.js"></script>
+        <script src="/assets/plugins/offcanvasmenueffects/js/classie.js"></script>
+        <script src="/assets/plugins/offcanvasmenueffects/js/main.js"></script>
+        <script src="/assets/plugins/waves/waves.min.js"></script>
+        <script src="/assets/plugins/3d-bold-navigation/js/main.js"></script>
+        <script src="/assets/plugins/waypoints/jquery.waypoints.min.js"></script>
+        <script src="/assets/plugins/jquery-counterup/jquery.counterup.min.js"></script>
+        <script src="/assets/plugins/toastr/toastr.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.time.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.symbol.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.resize.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.tooltip.min.js"></script>
+        <script src="/assets/plugins/curvedlines/curvedLines.js"></script>
+        <script src="/assets/plugins/metrojs/MetroJs.min.js"></script>
+        <script src="/assets/js/modern.js"></script>
+        <script src="/assets/js/pages/dashboard.js"></script>
+    </body>
+}
+@if (role.ToLower().Contains("master seo"))
+{
+    <body class="page-header-fixed">
+        <div class="overlay"></div>
+        <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s1">
+            <h3><span class="pull-left">Chat</span><a href="javascript:void(0);" class="pull-right" id="closeRight"><i class="fa fa-times"></i></a></h3>
+            <div class="slimscroll">
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar2.png" alt=""><span>Sandra smith<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar3.png" alt=""><span>Amily Lee<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar4.png" alt=""><span>Christopher Palmer<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar5.png" alt=""><span>Nick Doe<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar2.png" alt=""><span>Sandra smith<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar3.png" alt=""><span>Amily Lee<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar4.png" alt=""><span>Christopher Palmer<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar5.png" alt=""><span>Nick Doe<small>Hi! How're you?</small></span></a>
+            </div>
+        </nav>
+        <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
+            <h3><span class="pull-left">Sandra Smith</span> <a href="javascript:void(0);" class="pull-right" id="closeRight2"><i class="fa fa-angle-right"></i></a></h3>
+            <div class="slimscroll chat">
+                <div class="chat-item chat-item-left">
+                    <div class="chat-image">
+                        <img src="/assets/images/avatar2.png" alt="">
+                    </div>
+                    <div class="chat-message">
+                        Hi There!
+                    </div>
+                </div>
+                <div class="chat-item chat-item-right">
+                    <div class="chat-message">
+                        Hi! How are you?
+                    </div>
+                </div>
+                <div class="chat-item chat-item-left">
+                    <div class="chat-image">
+                        <img src="/assets/images/avatar2.png" alt="">
+                    </div>
+                    <div class="chat-message">
+                        Fine! do you like my project?
+                    </div>
+                </div>
+                <div class="chat-item chat-item-right">
+                    <div class="chat-message">
+                        Yes, It's clean and creative, good job!
+                    </div>
+                </div>
+                <div class="chat-item chat-item-left">
+                    <div class="chat-image">
+                        <img src="/assets/images/avatar2.png" alt="">
+                    </div>
+                    <div class="chat-message">
+                        Thanks, I tried!
+                    </div>
+                </div>
+                <div class="chat-item chat-item-right">
+                    <div class="chat-message">
+                        Good luck with your sales!
+                    </div>
+                </div>
+            </div>
+            <div class="chat-write">
+                <form class="form-horizontal" action="javascript:void(0);">
+                    <input type="text" class="form-control" placeholder="Say something">
+                </form>
+            </div>
+        </nav>
+        <div class="menu-wrap">
+            <nav class="profile-menu">
+                <div class="profile"><img src="@avatar" width="52" alt="@string.Format("{0} {1}",firstName,lastName)" /><span>@string.Format("{0} {1}", firstName, lastName)</span></div>
+                <div class="profile-menu-list">
+                    <a href="#"><i class="fa fa-star"></i><span>Favorites</span></a>
+                    <a href="#"><i class="fa fa-bell"></i><span>Alerts</span></a>
+                    <a href="#"><i class="fa fa-envelope"></i><span>Messages</span></a>
+                    <a href="#"><i class="fa fa-comment"></i><span>Comments</span></a>
+                </div>
+            </nav>
+            <button class="close-button" id="close-button">Close Menu</button>
+        </div>
+        <form class="search-form" action="#" method="GET">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control search-input" placeholder="Search...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default close-search waves-effect waves-button waves-classic" type="button"><i class="fa fa-times"></i></button>
+                </span>
+            </div><!-- Input Group -->
+        </form><!-- Search Form -->
+        @if (Model != null)
+        {
+            <main class="page-content content-wrap">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="sidebar-pusher">
+                            <a href="javascript:void(0);" class="waves-effect waves-button waves-classic push-sidebar">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </div>
+                        <div class="logo-box">
+                            <a href="@Url.Content("~/Dashboard/Index")" class="logo-text"><img src="@Url.Content("~/Content/img/logo.png")" /></a>
+                        </div><!-- Logo Box -->
+                        <div class="search-button">
+                            <a href="javascript:void(0);" class="waves-effect waves-button waves-classic show-search"><i class="fa fa-search"></i></a>
+                        </div>
+                        <div class="topmenu-outer">
+                            <div class="top-menu">
+                                <ul class="nav navbar-nav navbar-left">
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic sidebar-toggle"><i class="fa fa-bars"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#cd-nav" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-diamond"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic toggle-fullscreen"><i class="fa fa-expand"></i></a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                            <i class="fa fa-cogs"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-md dropdown-list theme-settings" role="menu">
+                                            <li class="li-group">
+                                                <ul class="list-unstyled">
+                                                    <li class="no-link" role="presentation">
+                                                        Fixed Header
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right fixed-header-check" checked>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="li-group">
+                                                <ul class="list-unstyled">
+                                                    <li class="no-link" role="presentation">
+                                                        Fixed Sidebar
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right fixed-sidebar-check">
+                                                        </div>
+                                                    </li>
+                                                    <li class="no-link" role="presentation">
+                                                        Horizontal bar
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right horizontal-bar-check">
+                                                        </div>
+                                                    </li>
+                                                    <li class="no-link" role="presentation">
+                                                        Toggle Sidebar
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right toggle-sidebar-check">
+                                                        </div>
+                                                    </li>
+                                                    <li class="no-link" role="presentation">
+                                                        Compact Menu
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right compact-menu-check">
+                                                        </div>
+                                                    </li>
+                                                    <li class="no-link" role="presentation">
+                                                        Hover Menu
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right hover-menu-check">
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="li-group">
+                                                <ul class="list-unstyled">
+                                                    <li class="no-link" role="presentation">
+                                                        Boxed Layout
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right boxed-layout-check">
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="li-group">
+                                                <ul class="list-unstyled">
+                                                    <li class="no-link" role="presentation">
+                                                        Choose Theme Color
+                                                        <div class="color-switcher">
+                                                            <a class="colorbox color-blue" href="?theme=blue" title="Blue Theme" data-css="blue"></a>
+                                                            <a class="colorbox color-green" href="?theme=green" title="Green Theme" data-css="green"></a>
+                                                            <a class="colorbox color-red" href="?theme=red" title="Red Theme" data-css="red"></a>
+                                                            <a class="colorbox color-white" href="?theme=white" title="White Theme" data-css="white"></a>
+                                                            <a class="colorbox color-purple" href="?theme=purple" title="purple Theme" data-css="purple"></a>
+                                                            <a class="colorbox color-dark" href="?theme=dark" title="Dark Theme" data-css="dark"></a>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="no-link"><button class="btn btn-default reset-options">Reset Options</button></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic show-search"><i class="fa fa-search"></i></a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                            <i class="fa fa-envelope"></i><span class="badge badge-success pull-right">@Model.TotalEmailNoneRead</span>
+                                        </a>
+                                        <ul class="dropdown-menu title-caret dropdown-lg" role="menu">
+                                            <li><p class="drop-title">You have @Model.TotalEmailNoneRead new  messages !</p></li>
+                                            <li class="dropdown-menu-list slimscroll messages">
+                                                <ul class="list-unstyled">
+
+                                                    @if (Model.TotalEmailNoneRead > 0)
+                                                    {
+                                                        foreach (var reguest in Model.RoomReguests)
+                                                        {
+                                                            <li>
+                                                                <a href="~/Mailbox/Message/@reguest.Id">
+                                                                    <div class="msg-img">
+                                                                        <div class="online on">
+                                                                        </div>
+                                                                        <img class="img-circle" src="/Content/img/NoProfile.jpg" alt="">
+                                                                    </div>
+                                                                    <p class="msg-name">@string.Format("{0} {1}", reguest.FirstName, reguest.LastName)</p>
+                                                                    <p class="msg-text">@string.Format("{0}", !string.IsNullOrEmpty(reguest.Note) ? reguest.Note : string.Format("Request: {0}", reguest.HotelName))</p>
+                                                                    <p class="msg-time">
+                                                                        @string.Format("{0} {1} ago", (DateTime.Now - reguest.CreateDate).Hours != 0 ?
+                                                                     string.Format("{0} hours", (DateTime.Now - reguest.CreateDate).Hours) : string.Empty,
+                                                                     string.Format("{0} minutes", (DateTime.Now - reguest.CreateDate).Minutes))
+                                                                    </p>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>
+                                                            <p class="msg-text">No reguest !</p>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                            <li class="drop-all"><a href="~/Mailbox/Inbox" class="text-center">All Messages</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                            <i class="fa fa-bell"></i><span class="badge badge-success pull-right">@Model.TotalNotifyNoneRead</span>
+                                        </a>
+                                        <ul class="dropdown-menu title-caret dropdown-lg" role="menu">
+                                            <li><p class="drop-title">You have @Model.TotalNotifyNoneRead pending tasks !</p></li>
+                                            <li class="dropdown-menu-list slimscroll tasks">
+                                                <ul class="list-unstyled">
+                                                    @if (Model.TotalNotifyNoneRead > 0)
+                                                    {
+                                                        foreach (var notify in Model.Notifies)
+                                                        {
+                                                            <li>
+                                                                <a href="#">
+                                                                    <div class="task-icon badge badge-success"><i class="icon-bell"></i></div>
+                                                                    <span class="badge badge-roundless badge-default pull-right">
+                                                                        @*@notify.CreateDate.ToString("d' Days 'h' Hours 'm' Minutes 's' Seconds'")*@
+                                                                        @notify.CreateDate.ToString("m' minutes'")
+                                                                    </span>
+                                                                    <p class="task-details">@notify.NotifyTitle</p>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>
+                                                            <p class="task-details">No notify for this time.</p>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                            <li class="drop-all"><a href="#" class="text-center">All Tasks</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                            <span class="user-name">@firstName<i class="fa fa-angle-down"></i></span>
+                                            <img class="img-circle avatar" src="@avatar" width="40" height="40" alt="">
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-list" role="menu">
+                                            <li role="presentation">
+                                                <a href="Dashboard/Index"><i class="fa fa-user"></i>Profile</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="cDashboard/Index"><i class="fa fa-bell"></i>Notify</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="~/Mailbox/Inbox">
+                                                    <i class="fa fa-envelope"></i>Inbox
+                                                </a>
+                                            </li>
+                                            <li role="presentation" class="divider"></li>
+                                            <li role="presentation">
+                                                <a href="~/Home/LockScreen"><i class="fa fa-lock"></i>Lock screen</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="@Url.Content("/Account/LogOff")"><i class="fa fa-sign-out m-r-xs"></i>Log out</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Content("/Account/LogOff")" class="waves-effect waves-button waves-classic">
+                                            <span><i class="fa fa-sign-out m-r-xs"></i>Log out</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic" id="showRight">
+                                            <i class="fa fa-comments"></i>
+                                        </a>
+                                    </li>
+                                </ul><!-- Nav -->
+                            </div><!-- Top Menu -->
+                        </div>
+                    </div>
+                </div><!-- Navbar -->
+                <div class="page-sidebar sidebar">
+                    <div class="page-sidebar-inner slimscroll">
+                        <div class="sidebar-header">
+                            <div class="sidebar-profile">
+                                <a href="javascript:void(0);" id="profile-menu-link">
+                                    <div class="sidebar-profile-image">
+                                        <img src="@avatar" class="img-circle img-responsive" alt="">
+                                    </div>
+                                    <div class="sidebar-profile-details">
+                                        <span>@string.Format("{0} {1}", firstName, lastName)<br><small>@role</small></span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <ul class="menu accordion-menu">
+                            <li class="active"><a href="~/Dashboard/Index" class="waves-effect waves-button"><span class="menu-icon glyphicon glyphicon-home"></span><p>Dashboard</p></a></li>
+                            <li class="droplink">
+                                <a href="#" class="waves-effect waves-button">
+                                    <span class="menu-icon glyphicon glyphicon-briefcase"></span><p>Products</p><span class="arrow"></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li class="droplink">
+                                        <a href="#"><p>Hotels</p><span class="arrow"></span></a>
+                                        <ul class="sub-menu">
+                                            <li><a href="@Url.Content("/Product/Hotel")">Management</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="droplink">
+                                        <a href="#"><p>Tours</p><span class="arrow"></span></a>
+                                        <ul class="sub-menu">
+                                            <li><a href="@Url.Content("/Product/Tour")">Management</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                         
+                        </ul>
+                    </div><!-- Page Sidebar Inner -->
+                </div><!-- Page Sidebar -->
+                <div class="page-inner">
+                    <div class="page-title">
+                        <h3>Dashboard</h3>
+                        <div class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li><a href="~/Dashboard/Index">Home</a></li>
+                                <li class="active">Dashboard</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div id="main-wrapper">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6">
+                                <div class="panel info-box panel-white">
+                                    <div class="panel-body">
+                                        <div class="info-box-stats">
+                                            <p class="counter">@Model.TotalUser.ToString("##,###")</p>
+                                            <span class="info-box-title">All user for System</span>
+                                        </div>
+                                        <div class="info-box-icon">
+                                            <i class="icon-users"></i>
+                                        </div>
+                                        <div class="info-box-progress">
+                                            <div class="progress progress-xs progress-squared bs-n">
+                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="panel info-box panel-white">
+                                    <div class="panel-body">
+                                        <div class="info-box-stats">
+                                            <p class="counter">@Model.TotalOrder.ToString("##,###")</p>
+                                            <span class="info-box-title">All booking for this month</span>
+                                        </div>
+                                        <div class="info-box-icon">
+                                            <i class="icon-bag"></i>
+                                        </div>
+                                        <div class="info-box-progress">
+                                            <div class="progress progress-xs progress-squared bs-n">
+                                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="panel info-box panel-white">
+                                    <div class="panel-body">
+                                        <div class="info-box-stats">
+                                            <p>$<span class="counter">@Model.TotalRevenue</span></p>
+                                            <span class="info-box-title">Monthly revenue goal</span>
+                                        </div>
+                                        <div class="info-box-icon">
+                                            <i class="icon-basket"></i>
+                                        </div>
+                                        <div class="info-box-progress">
+                                            <div class="progress progress-xs progress-squared bs-n">
+                                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="panel info-box panel-white">
+                                    <div class="panel-body">
+                                        <div class="info-box-stats">
+                                            <p class="counter">@Model.TotalEmail.ToString("##,###")</p>
+                                            <span class="info-box-title">New reguest emails recieved</span>
+                                        </div>
+                                        <div class="info-box-icon">
+                                            <i class="icon-envelope"></i>
+                                        </div>
+                                        <div class="info-box-progress">
+                                            <div class="progress progress-xs progress-squared bs-n">
+                                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- Row -->
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="panel panel-white">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">Booking Stats</h4>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-responsive project-stats">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Name</th>
+                                                                <th>Status</th>
+                                                                <th>Total</th>
+                                                                <th>Progress</th>
+                                                            </tr>
+                                                        </thead>
+                                                        @if (Model.Orders.Count > 0)
+                                                        {
+                                                            List<Order> orders = Model.Orders;
+
+                                                            var holding = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Holding).ToList();
+                                                            var percentHolding = (int)(0.5f + ((100f * holding.Count) / orders.Count));
+
+                                                            var paid = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Paid).ToList();
+                                                            var percentPaid = (int)(0.5f + ((100f * paid.Count) / orders.Count));
+
+                                                            var cancel = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Cancelled).ToList();
+                                                            var percentCancel = (int)(0.5f + ((100f * cancel.Count) / orders.Count));
+
+                                                            var refunded = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Refunded).ToList();
+                                                            var percentRefunded = (int)(0.5f + ((100f * refunded.Count) / orders.Count));
+
+                                                            var amended = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Amended).ToList();
+                                                            var percentAmended = (int)(0.5f + ((100f * amended.Count) / orders.Count));
+
+                                                            var inactive = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Defautl).ToList();
+                                                            var percentInactive = (int)(0.5f + ((100f * inactive.Count) / orders.Count));
+
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row">1</th>
+                                                                    <td>Holding Booking</td>
+                                                                    <td><span class="label label-primary">Holding</span></td>
+                                                                    <td>@holding.Count bookings</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@(percentHolding)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentHolding)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">2</th>
+                                                                    <td>Booking Paid</td>
+                                                                    <td><span class="label label-success">Paid</span></td>
+                                                                    <td>@(string.Format("{0} {1}", paid.Count, paid.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@(percentPaid)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentPaid)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">3</th>
+                                                                    <td>Booking Cancelled</td>
+                                                                    <td><span class="label label-danger">Canceled</span></td>
+                                                                    <td>@(string.Format("{0} {1}", cancel.Count, cancel.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percentCancel" aria-valuemin="0" aria-valuemax="100" style="width: @(percentCancel)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">4</th>
+                                                                    <td>Booking Amended</td>
+                                                                    <td><span class="label label-info">Amended</span></td>
+                                                                    <td>@(string.Format("{0} {1}", amended.Count, amended.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@percentAmended" aria-valuemin="0" aria-valuemax="100" style="width: @(percentAmended)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">5</th>
+                                                                    <td>Booking Refunded</td>
+                                                                    <td><span class="label label-warning">Refunded</span></td>
+                                                                    <td>@(string.Format("{0} {1}", refunded.Count, refunded.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="@(percentRefunded)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentRefunded)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">6</th>
+                                                                    <td>Booking Inactive</td>
+                                                                    <td><span class="label label-primary">Inactive</span></td>
+                                                                    <td>@(string.Format("{0} {1}", inactive.Count, inactive.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="@(percentInactive)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentInactive)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row">No content for this time.</th>
+
+                                                                </tr>
+                                                            </tbody>
+                                                        }
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+
+                                            <div class="stats-info">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">Inbox</h4>
+                                                    <div class="panel-control">
+                                                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Reload" class="panel-reload"><i class="icon-reload"></i></a>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="panel-body">
+                                                        <div class="inbox-widget slimscroll">
+                                                            @if (Model.Emails.Count > 0)
+                                                            {
+                                                                foreach (var email in Model.Emails)
+                                                                {
+                                                                    <a href="~/Mailbox/Message/@email.Id">
+                                                                        <div class="inbox-item">
+                                                                            <div class="inbox-item-img"><img src="/Content/img/NoProfile.jpg" class="img-circle" alt=""></div>
+                                                                            <p class="inbox-item-author">@string.Format("{0} {1}", email.FirstName, email.LastName)</p>
+                                                                            <p class="inbox-item-text">@string.Format("{0}", (!string.IsNullOrEmpty(email.Note) && email.Note.Length > 30) ? string.Format("{0}...", email.Note.Substring(0, 30)) : string.Format("Request: {0}", email.HotelName)).</p>
+                                                                            <p class="inbox-item-date">
+                                                                                @email.CreateDate.ToString("hh:mm tt")
+                                                                            </p>
+                                                                        </div>
+                                                                    </a>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <div class="inbox-item">
+
+                                                                    <p class="inbox-item-text">No Email for this time.</p>
+
+                                                                </div>
+
+                                                            }
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div><!-- Main Wrapper -->
+
+                    <div class="page-footer">
+                        <span id="siteseal" style="float: right">
+                            <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=oy6YGgmFMQF9f0vSOkR0iMUiMvcli06Wtgoz1E9o6LiU7J6Kd8sKt4v2GjvB"></script>
+                        </span>
+                        <p class="no-s">@DateTime.Now.Year &copy; Vinaday Travel by VINADAY goREISE</p>
+                    </div>
+
+                </div><!-- Page Inner -->
+            </main><!-- Page Content -->
+        }
+        else
+        {
+            <p>No content for this page.</p>
+        }
+        <nav class="cd-nav-container" id="cd-nav">
+            <header>
+                <h3>Navigation</h3>
+                <a href="#" class="cd-close-nav">Close</a>
+            </header>
+            <ul class="cd-nav list-unstyled">
+                <li class="cd-selected" data-menu="index">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-home"></i>
+                        </span>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li data-menu="profile">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-user"></i>
+                        </span>
+                        <p>Profile</p>
+                    </a>
+                </li>
+                <li data-menu="inbox">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-envelope"></i>
+                        </span>
+                        <p>Mailbox</p>
+                    </a>
+                </li>
+                <li data-menu="#">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-tasks"></i>
+                        </span>
+                        <p>Tasks</p>
+                    </a>
+                </li>
+                <li data-menu="#">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-cog"></i>
+                        </span>
+                        <p>Settings</p>
+                    </a>
+                </li>
+                <li data-menu="calendar">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                        <p>Calendar</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="cd-overlay"></div>
+
+        <!-- Javascripts -->
+        <script src="/assets/plugins/jquery/jquery-2.1.3.min.js"></script>
+        <script src="/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <script src="/assets/plugins/pace-master/pace.min.js"></script>
+        <script src="/assets/plugins/jquery-blockui/jquery.blockui.js"></script>
+        <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+        <script src="/assets/plugins/switchery/switchery.min.js"></script>
+        <script src="/assets/plugins/uniform/jquery.uniform.min.js"></script>
+        <script src="/assets/plugins/offcanvasmenueffects/js/classie.js"></script>
+        <script src="/assets/plugins/offcanvasmenueffects/js/main.js"></script>
+        <script src="/assets/plugins/waves/waves.min.js"></script>
+        <script src="/assets/plugins/3d-bold-navigation/js/main.js"></script>
+        <script src="/assets/plugins/waypoints/jquery.waypoints.min.js"></script>
+        <script src="/assets/plugins/jquery-counterup/jquery.counterup.min.js"></script>
+        <script src="/assets/plugins/toastr/toastr.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.time.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.symbol.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.resize.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.tooltip.min.js"></script>
+        <script src="/assets/plugins/curvedlines/curvedLines.js"></script>
+        <script src="/assets/plugins/metrojs/MetroJs.min.js"></script>
+        <script src="/assets/js/modern.js"></script>
+        <script src="/assets/js/pages/dashboard.js"></script>
+    </body>
+}
+else if (role.Contains("Content Editor"))
+{
+    <body class="page-header-fixed">
+        <div class="overlay"></div>
+        <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s1">
+            <h3><span class="pull-left">Chat</span><a href="javascript:void(0);" class="pull-right" id="closeRight"><i class="fa fa-times"></i></a></h3>
+            
+        </nav>
+        <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
+            <h3><span class="pull-left">Sandra Smith</span> <a href="javascript:void(0);" class="pull-right" id="closeRight2"><i class="fa fa-angle-right"></i></a></h3>
+            
+            <div class="chat-write">
+                <form class="form-horizontal" action="javascript:void(0);">
+                    <input type="text" class="form-control" placeholder="Say something">
+                </form>
+            </div>
+        </nav>
+
+        @if (Model != null)
+        {
+            <main class="page-content content-wrap">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="sidebar-pusher">
+                            <a href="javascript:void(0);" class="waves-effect waves-button waves-classic push-sidebar">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </div>
+                        <div class="logo-box">
+                            <a href="@Url.Content("~/Dashboard/Index")" class="logo-text"><img src="@Url.Content("~/Content/img/logo.png")" /></a>
+                        </div><!-- Logo Box -->
+                        <div class="search-button">
+                            <a href="javascript:void(0);" class="waves-effect waves-button waves-classic show-search"><i class="fa fa-search"></i></a>
+                        </div>
+                        <div class="topmenu-outer">
+                            <div class="top-menu">
+                                <ul class="nav navbar-nav navbar-left">
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic sidebar-toggle"><i class="fa fa-bars"></i></a>
+                                    </li>
+
+                                </ul>
+                                <ul class="nav navbar-nav navbar-right">
+
+
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                            <span class="user-name">@firstName<i class="fa fa-angle-down"></i></span>
+                                            <img class="img-circle avatar" src="@avatar" width="40" height="40" alt="">
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-list" role="menu">
+                                            <li role="presentation">
+                                                <a href="#"><i class="fa fa-user"></i>Profile</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="#"><i class="fa fa-bell"></i>Notify</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="#">
+                                                    <i class="fa fa-envelope"></i>Inbox
+                                                </a>
+                                            </li>
+                                            <li role="presentation" class="divider"></li>
+                                            <li role="presentation">
+                                                <a href="~/Home/LockScreen"><i class="fa fa-lock"></i>Lock screen</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="@Url.Content("/Account/LogOff")"><i class="fa fa-sign-out m-r-xs"></i>Log out</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Content("/Account/LogOff")" class="waves-effect waves-button waves-classic">
+                                            <span><i class="fa fa-sign-out m-r-xs"></i>Log out</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic" id="showRight">
+                                            <i class="fa fa-comments"></i>
+                                        </a>
+                                    </li>
+                                </ul><!-- Nav -->
+                            </div><!-- Top Menu -->
+                        </div>
+                    </div>
+                </div><!-- Navbar -->
+                <div class="page-sidebar sidebar">
+                    <div class="page-sidebar-inner slimscroll">
+                        <div class="sidebar-header">
+                            <div class="sidebar-profile">
+                                <a href="javascript:void(0);" id="profile-menu-link">
+                                    <div class="sidebar-profile-image">
+                                        <img src="@avatar" class="img-circle img-responsive" alt="">
+                                    </div>
+                                    <div class="sidebar-profile-details">
+                                        <span>@string.Format("{0} {1}", firstName, lastName)<br><small>@role</small></span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <ul class="menu accordion-menu">
+                            <li class="active"><a href="~/Dashboard/Index" class="waves-effect waves-button"><span class="menu-icon glyphicon glyphicon-home"></span><p>Dashboard</p></a></li>
+
+                            <li class="droplink">
+                                <a href="#" class="waves-effect waves-button">
+                                    <span class="menu-icon glyphicon glyphicon-briefcase"></span><p>Products</p><span class="arrow"></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li class="droplink">
+                                        <a href="#"><p>Hotels</p><span class="arrow"></span></a>
+                                        <ul class="sub-menu">
+                                            <li><a href="@Url.Content("/Product/HotelDetail")">Create</a></li>
+                                            <li><a href="@Url.Content("/Product/Hotel")">Management</a></li>
+                                            <li><a href="@Url.Content("/Configuration/HotelFeatured")">Top Featured</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="droplink">
+                                        <a href="#"><p>Tours</p><span class="arrow"></span></a>
+                                        <ul class="sub-menu">
+                                            <li><a href="@Url.Content("/Product/TourBasic")">Create</a></li>
+                                            <li><a href="@Url.Content("/Product/Tour")">Management</a></li>
+                                            <li><a href="@Url.Content("/Configuration/TourFeatured")">Top Featured</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="~/Home/DinningClub">Dinning Club</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </div><!-- Page Sidebar Inner -->
+                </div><!-- Page Sidebar -->
+                <div class="page-inner">
+                    <div class="page-title">
+                        <h3>Dashboard</h3>
+                        <div class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li><a href="~/Dashboard/Index">Home</a></li>
+                                <li class="active">Dashboard</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div id="main-wrapper">
+
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="panel panel-white">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">Booking Stats</h4>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-responsive project-stats">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Name</th>
+                                                                <th>Status</th>
+                                                                <th>Total</th>
+                                                                <th>Progress</th>
+                                                            </tr>
+                                                        </thead>
+                                                        @if (Model.Orders.Count > 0)
+                                                        {
+                                                            List<Order> orders = Model.Orders;
+
+                                                            var holding = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Holding).ToList();
+                                                            var percentHolding = (int)(0.5f + ((100f * holding.Count) / orders.Count));
+
+                                                            var paid = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Paid).ToList();
+                                                            var percentPaid = (int)(0.5f + ((100f * paid.Count) / orders.Count));
+
+                                                            var cancel = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Cancelled).ToList();
+                                                            var percentCancel = (int)(0.5f + ((100f * cancel.Count) / orders.Count));
+
+                                                            var refunded = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Refunded).ToList();
+                                                            var percentRefunded = (int)(0.5f + ((100f * refunded.Count) / orders.Count));
+
+                                                            var amended = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Amended).ToList();
+                                                            var percentAmended = (int)(0.5f + ((100f * amended.Count) / orders.Count));
+
+                                                            var inactive = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Defautl).ToList();
+                                                            var percentInactive = (int)(0.5f + ((100f * inactive.Count) / orders.Count));
+
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row">1</th>
+                                                                    <td>Holding Booking</td>
+                                                                    <td><span class="label label-primary">Holding</span></td>
+                                                                    <td>@holding.Count bookings</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@(percentHolding)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentHolding)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">2</th>
+                                                                    <td>Booking Paid</td>
+                                                                    <td><span class="label label-success">Paid</span></td>
+                                                                    <td>@(string.Format("{0} {1}", paid.Count, paid.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@(percentPaid)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentPaid)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">3</th>
+                                                                    <td>Booking Cancelled</td>
+                                                                    <td><span class="label label-danger">Canceled</span></td>
+                                                                    <td>@(string.Format("{0} {1}", cancel.Count, cancel.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percentCancel" aria-valuemin="0" aria-valuemax="100" style="width: @(percentCancel)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">4</th>
+                                                                    <td>Booking Amended</td>
+                                                                    <td><span class="label label-info">Amended</span></td>
+                                                                    <td>@(string.Format("{0} {1}", amended.Count, amended.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@percentAmended" aria-valuemin="0" aria-valuemax="100" style="width: @(percentAmended)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">5</th>
+                                                                    <td>Booking Refunded</td>
+                                                                    <td><span class="label label-warning">Refunded</span></td>
+                                                                    <td>@(string.Format("{0} {1}", refunded.Count, refunded.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="@(percentRefunded)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentRefunded)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">6</th>
+                                                                    <td>Booking Inactive</td>
+                                                                    <td><span class="label label-primary">Inactive</span></td>
+                                                                    <td>@(string.Format("{0} {1}", inactive.Count, inactive.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="@(percentInactive)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentInactive)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row">No content for this time.</th>
+
+                                                                </tr>
+                                                            </tbody>
+                                                        }
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div><!-- Main Wrapper -->
+
+                    <div class="page-footer">
+                        <span id="siteseal" style="float: right">
+                            <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=oy6YGgmFMQF9f0vSOkR0iMUiMvcli06Wtgoz1E9o6LiU7J6Kd8sKt4v2GjvB"></script>
+                        </span>
+                        <p class="no-s">2015 &copy; Vinaday Travel by VINADAY goREISE</p>
+                    </div>
+
+                </div><!-- Page Inner -->
+            </main><!-- Page Content -->
+        }
+        else
+        {
+            <p>No content for this page.</p>
+        }
+        <nav class="cd-nav-container" id="cd-nav">
+            <header>
+                <h3>Navigation</h3>
+                <a href="#" class="cd-close-nav">Close</a>
+            </header>
+            <ul class="cd-nav list-unstyled">
+                <li class="cd-selected" data-menu="index">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-home"></i>
+                        </span>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li data-menu="profile">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-user"></i>
+                        </span>
+                        <p>Profile</p>
+                    </a>
+                </li>
+                <li data-menu="inbox">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-envelope"></i>
+                        </span>
+                        <p>Mailbox</p>
+                    </a>
+                </li>
+                <li data-menu="#">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-tasks"></i>
+                        </span>
+                        <p>Tasks</p>
+                    </a>
+                </li>
+                <li data-menu="#">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-cog"></i>
+                        </span>
+                        <p>Settings</p>
+                    </a>
+                </li>
+                <li data-menu="calendar">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                        <p>Calendar</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="cd-overlay"></div>
+
+        <!-- Javascripts -->
+        <script src="/assets/plugins/jquery/jquery-2.1.3.min.js"></script>
+        <script src="/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <script src="/assets/plugins/pace-master/pace.min.js"></script>
+        <script src="/assets/plugins/jquery-blockui/jquery.blockui.js"></script>
+        <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+        <script src="/assets/plugins/switchery/switchery.min.js"></script>
+        <script src="/assets/plugins/uniform/jquery.uniform.min.js"></script>
+        <script src="/assets/plugins/offcanvasmenueffects/js/classie.js"></script>
+        <script src="/assets/plugins/offcanvasmenueffects/js/main.js"></script>
+        <script src="/assets/plugins/waves/waves.min.js"></script>
+        <script src="/assets/plugins/3d-bold-navigation/js/main.js"></script>
+        <script src="/assets/plugins/waypoints/jquery.waypoints.min.js"></script>
+        <script src="/assets/plugins/jquery-counterup/jquery.counterup.min.js"></script>
+        <script src="/assets/plugins/toastr/toastr.min.js"></script>
+
+        <script src="/assets/plugins/metrojs/MetroJs.min.js"></script>
+        <script src="/assets/js/modern.js"></script>
+        <script src="/assets/js/pages/dashboard.js"></script>
+    </body>
+}
+else if (role.Contains("Salesperson"))
+{
+    <body class="page-header-fixed">
+        <div class="overlay"></div>
+        <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s1">
+            <h3><span class="pull-left">Chat</span><a href="javascript:void(0);" class="pull-right" id="closeRight"><i class="fa fa-times"></i></a></h3>
+            <div class="slimscroll">
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar2.png" alt=""><span>Sandra smith<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar3.png" alt=""><span>Amily Lee<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar4.png" alt=""><span>Christopher Palmer<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar5.png" alt=""><span>Nick Doe<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar2.png" alt=""><span>Sandra smith<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar3.png" alt=""><span>Amily Lee<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar4.png" alt=""><span>Christopher Palmer<small>Hi! How're you?</small></span></a>
+                <a href="javascript:void(0);" class="showRight2"><img src="/assets/images/avatar5.png" alt=""><span>Nick Doe<small>Hi! How're you?</small></span></a>
+            </div>
+        </nav>
+        <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
+            <h3><span class="pull-left">Sandra Smith</span> <a href="javascript:void(0);" class="pull-right" id="closeRight2"><i class="fa fa-angle-right"></i></a></h3>
+            
+            <div class="chat-write">
+                <form class="form-horizontal" action="javascript:void(0);">
+                    <input type="text" class="form-control" placeholder="Say something">
+                </form>
+            </div>
+        </nav>
+
+        @if (Model != null)
+        {
+            <main class="page-content content-wrap">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="sidebar-pusher">
+                            <a href="javascript:void(0);" class="waves-effect waves-button waves-classic push-sidebar">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </div>
+                        <div class="logo-box">
+                            <a href="@Url.Content("~/Dashboard/Index")" class="logo-text"><img src="@Url.Content("~/Content/img/logo.png")" /></a>
+                        </div><!-- Logo Box -->
+                        <div class="search-button">
+                            <a href="javascript:void(0);" class="waves-effect waves-button waves-classic show-search"><i class="fa fa-search"></i></a>
+                        </div>
+                        <div class="topmenu-outer">
+                            <div class="top-menu">
+                                <ul class="nav navbar-nav navbar-left">
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic sidebar-toggle"><i class="fa fa-bars"></i></a>
+                                    </li>
+
+                                </ul>
+                                <ul class="nav navbar-nav navbar-right">
+
+
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                            <span class="user-name">@firstName<i class="fa fa-angle-down"></i></span>
+                                            <img class="img-circle avatar" src="@avatar" width="40" height="40" alt="">
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-list" role="menu">
+                                            <li role="presentation">
+                                                <a href="#"><i class="fa fa-user"></i>Profile</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="#"><i class="fa fa-bell"></i>Notify</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="#">
+                                                    <i class="fa fa-envelope"></i>Inbox
+                                                </a>
+                                            </li>
+                                            <li role="presentation" class="divider"></li>
+                                            <li role="presentation">
+                                                <a href="~/Home/LockScreen"><i class="fa fa-lock"></i>Lock screen</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="@Url.Content("/Account/LogOff")"><i class="fa fa-sign-out m-r-xs"></i>Log out</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Content("/Account/LogOff")" class="waves-effect waves-button waves-classic">
+                                            <span><i class="fa fa-sign-out m-r-xs"></i>Log out</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic" id="showRight">
+                                            <i class="fa fa-comments"></i>
+                                        </a>
+                                    </li>
+                                </ul><!-- Nav -->
+                            </div><!-- Top Menu -->
+                        </div>
+                    </div>
+                </div><!-- Navbar -->
+                <div class="page-sidebar sidebar">
+                    <div class="page-sidebar-inner slimscroll">
+                        <div class="sidebar-header">
+                            <div class="sidebar-profile">
+                                <a href="javascript:void(0);" id="profile-menu-link">
+                                    <div class="sidebar-profile-image">
+                                        <img src="@avatar" class="img-circle img-responsive" alt="">
+                                    </div>
+                                    <div class="sidebar-profile-details">
+                                        <span>@string.Format("{0} {1}", firstName, lastName)<br><small>@role</small></span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <ul class="menu accordion-menu">
+                            <li class="active">
+                                <a href="~/Dashboard/Index" class="waves-effect waves-button"><span class="menu-icon glyphicon glyphicon-home"></span><p>Dashboard</p></a>
+                            </li>
+                            <li><a href="~/Booking/OrderCreate">Create Order</a></li>
+                            <li><a href="~/Booking/OrderForUser">Management Order</a></li>
+                            <li><a href="~/Booking/TourOperator">Tour Operator</a></li>
+                            <li><a href="~/Customer">Management</a></li>
+                        </ul>
+                    </div><!-- Page Sidebar Inner -->
+                </div><!-- Page Sidebar -->
+                <div class="page-inner">
+                    <div class="page-title">
+                        <h3>Dashboard</h3>
+                        <div class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li><a href="~/Dashboard/Index">Home</a></li>
+                                <li class="active">Dashboard</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div id="main-wrapper">
+
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="panel panel-white">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">Booking Stats</h4>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-responsive project-stats">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Name</th>
+                                                                <th>Status</th>
+                                                                <th>Total</th>
+                                                                <th>Progress</th>
+                                                            </tr>
+                                                        </thead>
+                                                        @if (Model.Orders.Count > 0)
+                                                        {
+                                                            List<Order> orders = Model.Orders;
+
+                                                            var holding = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Holding).ToList();
+                                                            var percentHolding = (int)(0.5f + ((100f * holding.Count) / orders.Count));
+
+                                                            var paid = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Paid).ToList();
+                                                            var percentPaid = (int)(0.5f + ((100f * paid.Count) / orders.Count));
+
+                                                            var cancel = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Cancelled).ToList();
+                                                            var percentCancel = (int)(0.5f + ((100f * cancel.Count) / orders.Count));
+
+                                                            var refunded = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Refunded).ToList();
+                                                            var percentRefunded = (int)(0.5f + ((100f * refunded.Count) / orders.Count));
+
+                                                            var amended = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Amended).ToList();
+                                                            var percentAmended = (int)(0.5f + ((100f * amended.Count) / orders.Count));
+
+                                                            var inactive = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Defautl).ToList();
+                                                            var percentInactive = (int)(0.5f + ((100f * inactive.Count) / orders.Count));
+
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row">1</th>
+                                                                    <td>Holding Booking</td>
+                                                                    <td><span class="label label-primary">Holding</span></td>
+                                                                    <td>@holding.Count bookings</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@(percentHolding)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentHolding)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">2</th>
+                                                                    <td>Booking Paid</td>
+                                                                    <td><span class="label label-success">Paid</span></td>
+                                                                    <td>@(string.Format("{0} {1}", paid.Count, paid.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@(percentPaid)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentPaid)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">3</th>
+                                                                    <td>Booking Cancelled</td>
+                                                                    <td><span class="label label-danger">Canceled</span></td>
+                                                                    <td>@(string.Format("{0} {1}", cancel.Count, cancel.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percentCancel" aria-valuemin="0" aria-valuemax="100" style="width: @(percentCancel)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">4</th>
+                                                                    <td>Booking Amended</td>
+                                                                    <td><span class="label label-info">Amended</span></td>
+                                                                    <td>@(string.Format("{0} {1}", amended.Count, amended.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@percentAmended" aria-valuemin="0" aria-valuemax="100" style="width: @(percentAmended)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">5</th>
+                                                                    <td>Booking Refunded</td>
+                                                                    <td><span class="label label-warning">Refunded</span></td>
+                                                                    <td>@(string.Format("{0} {1}", refunded.Count, refunded.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="@(percentRefunded)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentRefunded)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">6</th>
+                                                                    <td>Booking Inactive</td>
+                                                                    <td><span class="label label-primary">Inactive</span></td>
+                                                                    <td>@(string.Format("{0} {1}", inactive.Count, inactive.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="@(percentInactive)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentInactive)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row">No content for this time.</th>
+
+                                                                </tr>
+                                                            </tbody>
+                                                        }
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div><!-- Main Wrapper -->
+
+                    <div class="page-footer">
+                        <span id="siteseal" style="float: right">
+                            <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=oy6YGgmFMQF9f0vSOkR0iMUiMvcli06Wtgoz1E9o6LiU7J6Kd8sKt4v2GjvB"></script>
+                        </span>
+                        <p class="no-s">2015 &copy; Vinaday Travel by VINADAY goREISE</p>
+                    </div>
+
+                </div><!-- Page Inner -->
+            </main><!-- Page Content -->
+        }
+        else
+        {
+            <p>No content for this page.</p>
+        }
+        <nav class="cd-nav-container" id="cd-nav">
+            <header>
+                <h3>Navigation</h3>
+                <a href="#" class="cd-close-nav">Close</a>
+            </header>
+            <ul class="cd-nav list-unstyled">
+                <li class="cd-selected" data-menu="index">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-home"></i>
+                        </span>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li data-menu="profile">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-user"></i>
+                        </span>
+                        <p>Profile</p>
+                    </a>
+                </li>
+                <li data-menu="inbox">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-envelope"></i>
+                        </span>
+                        <p>Mailbox</p>
+                    </a>
+                </li>
+                <li data-menu="#">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-tasks"></i>
+                        </span>
+                        <p>Tasks</p>
+                    </a>
+                </li>
+                <li data-menu="#">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-cog"></i>
+                        </span>
+                        <p>Settings</p>
+                    </a>
+                </li>
+                <li data-menu="calendar">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                        <p>Calendar</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="cd-overlay"></div>
+
+        <!-- Javascripts -->
+        <script src="/assets/plugins/jquery/jquery-2.1.3.min.js"></script>
+        <script src="/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <script src="/assets/plugins/pace-master/pace.min.js"></script>
+        <script src="/assets/plugins/jquery-blockui/jquery.blockui.js"></script>
+        <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+        <script src="/assets/plugins/switchery/switchery.min.js"></script>
+        <script src="/assets/plugins/uniform/jquery.uniform.min.js"></script>
+        <script src="/assets/plugins/offcanvasmenueffects/js/classie.js"></script>
+        @*<script src="/assets/plugins/offcanvasmenueffects/js/main.js"></script>*@
+        <script src="/assets/plugins/waves/waves.min.js"></script>
+        <script src="/assets/plugins/3d-bold-navigation/js/main.js"></script>
+        <script src="/assets/plugins/waypoints/jquery.waypoints.min.js"></script>
+        <script src="/assets/plugins/jquery-counterup/jquery.counterup.min.js"></script>
+        <script src="/assets/plugins/toastr/toastr.min.js"></script>
+
+        <script src="/assets/plugins/metrojs/MetroJs.min.js"></script>
+        @*<script src="/assets/js/modern.js"></script>*@
+        <script src="/assets/js/pages/dashboard.js"></script>
+    </body>
+}
+else if (role.Contains("Accountant"))
+{
+    <body class="page-header-fixed">
+
+        <div class="menu-wrap">
+            <nav class="profile-menu">
+                <div class="profile"><img src="@avatar" width="52" alt="@string.Format("{0} {1}",firstName,lastName)" /><span>@string.Format("{0} {1}", firstName, lastName)</span></div>
+                <div class="profile-menu-list">
+                    <a href="#"><i class="fa fa-star"></i><span>Favorites</span></a>
+                    <a href="#"><i class="fa fa-bell"></i><span>Alerts</span></a>
+                    <a href="#"><i class="fa fa-envelope"></i><span>Messages</span></a>
+                    <a href="#"><i class="fa fa-comment"></i><span>Comments</span></a>
+                </div>
+            </nav>
+            <button class="close-button" id="close-button">Close Menu</button>
+        </div>
+        <form class="search-form" action="#" method="GET">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control search-input" placeholder="Search...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default close-search waves-effect waves-button waves-classic" type="button"><i class="fa fa-times"></i></button>
+                </span>
+            </div><!-- Input Group -->
+        </form><!-- Search Form -->
+        @if (Model != null)
+        {
+            <main class="page-content content-wrap">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="sidebar-pusher">
+                            <a href="javascript:void(0);" class="waves-effect waves-button waves-classic push-sidebar">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </div>
+                        <div class="logo-box">
+                            <a href="@Url.Content("~/Dashboard/Index")" class="logo-text"><img src="@Url.Content("~/Content/img/logo.png")" /></a>
+                        </div><!-- Logo Box -->
+
+                        <div class="topmenu-outer">
+                            <div class="top-menu">
+                                <ul class="nav navbar-nav navbar-left">
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic sidebar-toggle"><i class="fa fa-bars"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#cd-nav" class="waves-effect waves-button waves-classic cd-nav-trigger"><i class="fa fa-diamond"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic toggle-fullscreen"><i class="fa fa-expand"></i></a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                            <i class="fa fa-cogs"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-md dropdown-list theme-settings" role="menu">
+                                            <li class="li-group">
+                                                <ul class="list-unstyled">
+                                                    <li class="no-link" role="presentation">
+                                                        Fixed Header
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right fixed-header-check" checked>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="li-group">
+                                                <ul class="list-unstyled">
+                                                    <li class="no-link" role="presentation">
+                                                        Fixed Sidebar
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right fixed-sidebar-check">
+                                                        </div>
+                                                    </li>
+                                                    <li class="no-link" role="presentation">
+                                                        Horizontal bar
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right horizontal-bar-check">
+                                                        </div>
+                                                    </li>
+                                                    <li class="no-link" role="presentation">
+                                                        Toggle Sidebar
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right toggle-sidebar-check">
+                                                        </div>
+                                                    </li>
+                                                    <li class="no-link" role="presentation">
+                                                        Compact Menu
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right compact-menu-check">
+                                                        </div>
+                                                    </li>
+                                                    <li class="no-link" role="presentation">
+                                                        Hover Menu
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right hover-menu-check">
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="li-group">
+                                                <ul class="list-unstyled">
+                                                    <li class="no-link" role="presentation">
+                                                        Boxed Layout
+                                                        <div class="ios-switch pull-right switch-md">
+                                                            <input type="checkbox" class="js-switch pull-right boxed-layout-check">
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="li-group">
+                                                <ul class="list-unstyled">
+                                                    <li class="no-link" role="presentation">
+                                                        Choose Theme Color
+                                                        <div class="color-switcher">
+                                                            <a class="colorbox color-blue" href="?theme=blue" title="Blue Theme" data-css="blue"></a>
+                                                            <a class="colorbox color-green" href="?theme=green" title="Green Theme" data-css="green"></a>
+                                                            <a class="colorbox color-red" href="?theme=red" title="Red Theme" data-css="red"></a>
+                                                            <a class="colorbox color-white" href="?theme=white" title="White Theme" data-css="white"></a>
+                                                            <a class="colorbox color-purple" href="?theme=purple" title="purple Theme" data-css="purple"></a>
+                                                            <a class="colorbox color-dark" href="?theme=dark" title="Dark Theme" data-css="dark"></a>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="no-link"><button class="btn btn-default reset-options">Reset Options</button></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                            <span class="user-name">@firstName<i class="fa fa-angle-down"></i></span>
+                                            <img class="img-circle avatar" src="@avatar" width="40" height="40" alt="">
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-list" role="menu">
+                                            <li role="presentation">
+                                                <a href="~/"><i class="fa fa-user"></i>Profile</a>
+                                            </li>
+
+                                            <li role="presentation" class="divider"></li>
+                                            <li role="presentation">
+                                                <a href="~/Home/LockScreen"><i class="fa fa-lock"></i>Lock screen</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="@Url.Content("/Account/LogOff")"><i class="fa fa-sign-out m-r-xs"></i>Log out</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Content("/Account/LogOff")" class="waves-effect waves-button waves-classic">
+                                            <span><i class="fa fa-sign-out m-r-xs"></i>Log out</span>
+                                        </a>
+                                    </li>
+
+                                </ul><!-- Nav -->
+                            </div><!-- Top Menu -->
+                        </div>
+                    </div>
+                </div><!-- Navbar -->
+                <div class="page-sidebar sidebar">
+                    <div class="page-sidebar-inner slimscroll">
+                        <div class="sidebar-header">
+                            <div class="sidebar-profile">
+                                <a href="javascript:void(0);" id="profile-menu-link">
+                                    <div class="sidebar-profile-image">
+                                        <img src="@avatar" class="img-circle img-responsive" alt="">
+                                    </div>
+                                    <div class="sidebar-profile-details">
+                                        <span>@string.Format("{0} {1}", firstName, lastName)<br><small>@role</small></span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <ul class="menu accordion-menu">
+                            <li class="active"><a href="~/" class="waves-effect waves-button"><span class="menu-icon glyphicon glyphicon-home"></span><p>Dashboard</p></a></li>
+                            <li><a href="~/Booking/OrderOfAccountant" class="waves-effect waves-button"><span class="menu-icon icon-bag"></span><p>Orders</p></a></li>
+                        </ul>
+                    </div><!-- Page Sidebar Inner -->
+                </div><!-- Page Sidebar -->
+                <div class="page-inner">
+                    <div class="page-title">
+                        <h3>Dashboard</h3>
+                        <div class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="active">Accountant Dashboard</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div id="main-wrapper">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <div class="panel panel-white">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">Booking Stats</h4>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-responsive project-stats">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Name</th>
+                                                                <th>Status</th>
+                                                                <th>Total</th>
+                                                                <th>Progress</th>
+                                                            </tr>
+                                                        </thead>
+                                                        @if (Model.Orders.Count > 0)
+                                                        {
+                                                            List<Order> orders = Model.Orders;
+
+                                                            var holding = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Holding).ToList();
+                                                            var percentHolding = (int)(0.5f + ((100f * holding.Count) / orders.Count));
+
+                                                            var paid = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Paid).ToList();
+                                                            var percentPaid = (int)(0.5f + ((100f * paid.Count) / orders.Count));
+
+                                                            var cancel = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Cancelled).ToList();
+                                                            var percentCancel = (int)(0.5f + ((100f * cancel.Count) / orders.Count));
+
+                                                            var refunded = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Refunded).ToList();
+                                                            var percentRefunded = (int)(0.5f + ((100f * refunded.Count) / orders.Count));
+
+                                                            var amended = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Amended).ToList();
+                                                            var percentAmended = (int)(0.5f + ((100f * amended.Count) / orders.Count));
+
+                                                            var inactive = orders.Where(o => o.Status == (int)Utilities.BookingStatus.Defautl).ToList();
+                                                            var percentInactive = (int)(0.5f + ((100f * inactive.Count) / orders.Count));
+
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row">1</th>
+                                                                    <td>Holding Booking</td>
+                                                                    <td><span class="label label-primary">Holding</span></td>
+                                                                    <td>@holding.Count bookings</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@(percentHolding)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentHolding)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">2</th>
+                                                                    <td>Booking Paid</td>
+                                                                    <td><span class="label label-success">Paid</span></td>
+                                                                    <td>@(string.Format("{0} {1}", paid.Count, paid.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@(percentPaid)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentPaid)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">3</th>
+                                                                    <td>Booking Cancelled</td>
+                                                                    <td><span class="label label-danger">Canceled</span></td>
+                                                                    <td>@(string.Format("{0} {1}", cancel.Count, cancel.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percentCancel" aria-valuemin="0" aria-valuemax="100" style="width: @(percentCancel)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th scope="row">4</th>
+                                                                    <td>Booking Amended</td>
+                                                                    <td><span class="label label-info">Amended</span></td>
+                                                                    <td>@(string.Format("{0} {1}", amended.Count, amended.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@percentAmended" aria-valuemin="0" aria-valuemax="100" style="width: @(percentAmended)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">5</th>
+                                                                    <td>Booking Refunded</td>
+                                                                    <td><span class="label label-warning">Refunded</span></td>
+                                                                    <td>@(string.Format("{0} {1}", refunded.Count, refunded.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="@(percentRefunded)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentRefunded)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row">6</th>
+                                                                    <td>Booking Inactive</td>
+                                                                    <td><span class="label label-primary">Inactive</span></td>
+                                                                    <td>@(string.Format("{0} {1}", inactive.Count, inactive.Count > 1 ? "bookings" : "booking"))</td>
+                                                                    <td>
+                                                                        <div class="progress progress-sm">
+                                                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="@(percentInactive)" aria-valuemin="0" aria-valuemax="100" style="width: @(percentInactive)%">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row">No content for this time.</th>
+
+                                                                </tr>
+                                                            </tbody>
+                                                        }
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="panel info-box panel-white">
+                                            <div class="panel-body">
+                                                <div class="info-box-stats">
+                                                    <p class="counter">@Model.TotalUser.ToString("##,###")</p>
+                                                    <span class="info-box-title">All user for System</span>
+                                                </div>
+                                                <div class="info-box-icon">
+                                                    <i class="icon-users"></i>
+                                                </div>
+                                                <div class="info-box-progress">
+                                                    <div class="progress progress-xs progress-squared bs-n">
+                                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel info-box panel-white">
+                                            <div class="panel-body">
+                                                <div class="info-box-stats">
+                                                    <p><span class="counter">@String.Format("{0:C2}", Model.TotalRevenue)</span></p>
+                                                    <span class="info-box-title">Monthly revenue goal</span>
+                                                </div>
+                                                <div class="info-box-icon">
+                                                    <i class="icon-basket"></i>
+                                                </div>
+                                                <div class="info-box-progress">
+                                                    <div class="progress progress-xs progress-squared bs-n">
+                                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel info-box panel-white">
+                                            <div class="panel-body">
+                                                <div class="info-box-stats">
+                                                    <p class="counter">@Model.TotalOrder.ToString("##,###")</p>
+                                                    <span class="info-box-title">All booking for this month</span>
+                                                </div>
+                                                <div class="info-box-icon">
+                                                    <i class="icon-bag"></i>
+                                                </div>
+                                                <div class="info-box-progress">
+                                                    <div class="progress progress-xs progress-squared bs-n">
+                                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel info-box panel-white">
+                                            <div class="panel-body">
+                                                <div class="info-box-stats">
+                                                    <p class="counter">@Model.TotalEmail.ToString("##,###")</p>
+                                                    <span class="info-box-title">New reguest emails recieved</span>
+                                                </div>
+                                                <div class="info-box-icon">
+                                                    <i class="icon-envelope"></i>
+                                                </div>
+                                                <div class="info-box-progress">
+                                                    <div class="progress progress-xs progress-squared bs-n">
+                                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div><!-- Main Wrapper -->
+
+                    <div class="page-footer">
+                        <span id="siteseal" style="float: right">
+                            <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=oy6YGgmFMQF9f0vSOkR0iMUiMvcli06Wtgoz1E9o6LiU7J6Kd8sKt4v2GjvB"></script>
+                        </span>
+                        <p class="no-s">2015 &copy; Vinaday Travel by VINADAY goREISE</p>
+                    </div>
+
+                </div><!-- Page Inner -->
+            </main><!-- Page Content -->
+        }
+        else
+        {
+            <p>No content for this page.</p>
+        }
+        <nav class="cd-nav-container" id="cd-nav">
+            <header>
+                <h3>Navigation</h3>
+                <a href="#" class="cd-close-nav">Close</a>
+            </header>
+            <ul class="cd-nav list-unstyled">
+                <li class="cd-selected" data-menu="index">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-home"></i>
+                        </span>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li data-menu="profile">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-user"></i>
+                        </span>
+                        <p>Profile</p>
+                    </a>
+                </li>
+                <li data-menu="inbox">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-envelope"></i>
+                        </span>
+                        <p>Mailbox</p>
+                    </a>
+                </li>
+                <li data-menu="#">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-tasks"></i>
+                        </span>
+                        <p>Tasks</p>
+                    </a>
+                </li>
+                <li data-menu="#">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-cog"></i>
+                        </span>
+                        <p>Settings</p>
+                    </a>
+                </li>
+                <li data-menu="calendar">
+                    <a href="javsacript:void(0);">
+                        <span>
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                        <p>Calendar</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="cd-overlay"></div>
+
+        <!-- Javascripts -->
+        <script src="/assets/plugins/jquery/jquery-2.1.3.min.js"></script>
+        <script src="/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <script src="/assets/plugins/pace-master/pace.min.js"></script>
+        <script src="/assets/plugins/jquery-blockui/jquery.blockui.js"></script>
+        <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+        <script src="/assets/plugins/switchery/switchery.min.js"></script>
+        <script src="/assets/plugins/uniform/jquery.uniform.min.js"></script>
+        <script src="/assets/plugins/offcanvasmenueffects/js/classie.js"></script>
+        @*<script src="/assets/plugins/offcanvasmenueffects/js/main.js"></script>*@
+        <script src="/assets/plugins/waves/waves.min.js"></script>
+        <script src="/assets/plugins/3d-bold-navigation/js/main.js"></script>
+        <script src="/assets/plugins/waypoints/jquery.waypoints.min.js"></script>
+        <script src="/assets/plugins/jquery-counterup/jquery.counterup.min.js"></script>
+        <script src="/assets/plugins/toastr/toastr.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.time.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.symbol.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.resize.min.js"></script>
+        <script src="/assets/plugins/flot/jquery.flot.tooltip.min.js"></script>
+        <script src="/assets/plugins/curvedlines/curvedLines.js"></script>
+        <script src="/assets/plugins/metrojs/MetroJs.min.js"></script>
+        @*<script src="/assets/js/modern.js"></script>*@
+        <script src="/assets/js/pages/dashboard.js"></script>
+    </body>
+}
+</html>

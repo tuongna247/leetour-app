@@ -1,0 +1,120 @@
+﻿<div id="header-container">
+    <div id="header">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                    @*<a class="brand" href="javascript:void(0);"><img src="~/Content/assets/img/demo/logo-brand1.png"></a>*@
+                    <div class="search-global">
+                        <input id="globalSearch" class="search search-query input-medium" type="search">
+                        <a class="search-button" href="javascript:void(0);"><i class="fontello-icon-search-5"></i></a>
+                    </div>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+
+                            <li> <a href="@Url.Action("Index", "Dashboard")"><span class="fontello-icon-home-1"></span>Dashboard</a> </li>
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                                    <span class="fontello-icon-list-1"></span>Categories<b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-submenu">
+                                        <a tabindex="-1" href="javascript:void(0);">Counties</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a tabindex="-1" href="#">City</a></li>
+                                            <li><a tabindex="-1" href="#">Region</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown-submenu">
+                                        <a tabindex="-1" href="javascript:void(0);">Hotels</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a tabindex="-1" href="#">In-Hotel Facity</a></li>
+                                            <li><a tabindex="-1" href="#">In-Room Facity</a></li>
+                                            <li><a tabindex="-1" href="#">Cancellation Policy</a></li>
+                                            <li><a tabindex="-1" href="#">Promotion</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="fontello-icon-folder-2"></span>Products <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Hotels</a></li>
+                                    <li><a href="@Url.Action("Management", "Tour")">Tours</a></li>
+                                    <li><a href="#">Dinning Club</a></li>
+                                    @*<li><a href="#">Tour Operator</a></li>*@
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="fontello-icon-basket-1"></span>Sales <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Hotels</a></li>
+                                    <li class="dropdown-submenu">
+                                        <a tabindex="-1" href="javascript:void(0);">Tours</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a tabindex="-1" href="#">Countries</a></li>
+                                            <li><a tabindex="-1" href="#">City</a></li>
+                                            <li><a href="#">Region</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="divider"></li>
+                                    @*<li class="nav-header">Nav header</li>*@
+                                    <li><a href="#">Bestsellers</a></li>
+
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="fontello-icon-users"></span>Users <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Customers</a></li>
+                                    <li><a href="#">Users</a></li>
+                                    <li><a href="#">Customer reports</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="fontello-icon-wrench-2"></span>Configuration <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Currencies</a></li>
+                                    <li><a href="@Url.Action("Category", "Configuration")">Categories</a></li>
+                                    <li class="dropdown-submenu">
+                                        <a tabindex="-1" href="javascript:void(0);">Countries</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a tabindex="-1" href="#">Countries</a></li>
+                                            <li><a tabindex="-1" href="#">City</a></li>
+                                            <li><a href="#">Region</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li><a href="#">Email Accounts</a></li>
+                                    <li><a href="#">SEO</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span class="fontello-icon-cog-4"></span>System <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Log</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- // navbar -->
+
+        <div class="header-drawer">
+            <div class="mobile-nav text-center visible-phone"> <a href="javascript:void(0);" class="mobile-btn" data-toggle="collapse" data-target=".sidebar"><i class="aweso-icon-chevron-down"></i> Components</a> </div>
+            <!-- // Resposive navigation -->
+            <div class="hidden-phone">
+                <ul id="breadcrumbs" class="breadcrumb">
+                    @DateTime.Now.ToLongDateString()
+                </ul>
+            </div>
+            <!-- // breadcrumbs -->
+
+        </div>
+        <!-- // drawer -->
+
+    </div>
+</div>

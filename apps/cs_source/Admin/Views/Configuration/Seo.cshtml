@@ -1,0 +1,134 @@
+﻿@using System.Linq
+@using System.Security.Claims
+@{
+    ViewBag.Title = "SEO - Configuration";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : "~/Views/Shared/_ContentLayout.cshtml";
+}
+<style>
+    tbody tr th {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    .table td, .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px !important;
+    }
+
+    a {
+        margin-bottom: 0 !important;
+    }
+</style>
+<div class="page-title">
+    <h3>Configuration</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="~/">Dashboard</a></li>
+            <li><a href="~/Configuration">Configuration</a></li>
+            <li class="active">SEO OnPage</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="panel-body">
+                                <h5>Setting SEO OnPage.</h5>
+                                <table class="table">
+
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                <div class="col-sm-8 text-left" style="margin-top: 6px;">
+                                                    <span style="vertical-align: top" class="badge badge-success">1</span> <b>Update all Key for search hotel</b>
+                                                </div>
+                                                <div class="col-sm-4 text-right">
+                                                    <a href="@Url.Content("/Seo/InsertSearchKey")" class="btn btn-success m-b-sm">Update</a>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <div class="col-sm-8 text-left" style="margin-top: 6px;">
+                                                    <span style="vertical-align: top" class="badge badge-success">2</span> Update SEO for Tour
+                                                </div>
+                                                <div class="col-sm-4 text-right">
+                                                    <a href="@Url.Content("/Seo/InsertSeo")" class="btn btn-success m-b-sm">Update</a>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <div class="col-sm-8 text-left" style="margin-top: 6px;">
+                                                    <span style="vertical-align: top" class="badge badge-success">3</span> Reset all Title of Local language
+                                                </div>
+                                                <div class="col-sm-4 text-right">
+                                                    <a href="#" class="btn btn-success m-b-sm">Reset</a>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <div class="col-sm-8 text-left" style="margin-top: 6px;">
+                                                    <span style="vertical-align: top" class="badge badge-success">4</span> Reset all Title of English language
+                                                </div>
+                                                <div class="col-sm-4 text-right">
+                                                    <a href="#" class="btn btn-success m-b-sm">Reset</a>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="panel panel-transparent">
+                                <div class="panel-heading clearfix">
+                                    <h4 class="panel-title"><i class="icon-pin"></i> Tips for SEO OnPage.</h4>
+                                </div>
+                                <div class="panel-body" style="background-color: #f9f2f4">
+                                    <h5>The perfect Title Tag:</h5>
+                                    <ul>
+                                        <li><h6>most important keyword of the page at the beginning of the title tag.</h6></li>
+                                        <li><h6>should animate to click, exciting, litte filler words, complete phrases.</h6></li>
+                                        <li><h6>no longer than 57 characters!</h6></li>
+                                        <li><h6>should describe the content of the page.</h6></li>
+                                        <li><h6>brand name at the end separated by a hyphen or a pipe.</h6></li>
+                                    </ul>
+                                    <h5>The perfect META Description:</h5>
+                                    <ul>
+                                        <li><h6>160 - 180 characters.</h6></li>
+                                        <li><h6>encourages the user to click.</h6></li>
+                                        <li><h6>interesting and exciting, easy to read.</h6></li>
+                                        <li><h6>focus on the goal of the page.</h6></li>
+                                        <li><h6>should describe the content of the page.</h6></li>
+                                        <li><h6>describes the page with the main keywords.</h6></li>
+                                    </ul>
+                                    <h5>The perfect Text:</h5>
+                                    <ul>
+                                        <li><h6>has at least 500 words.</h6></li>
+                                        <li><h6>is for <b>users</b>, not for search engines.</h6></li>
+                                        <li><h6>has a keyword density between 3 and 5%.</h6></li>
+                                        <li><h6>is of high quality.</h6></li>
+                                        <li><h6>is not a copy from other pages.</h6></li>
+                                        <li><h6>has lists, tables, pictures.</h6></li>
+                                        <li><h6>has paragraphs, headings, subheadings.</h6></li>
+                                        <li><h6>has internal and external links to related topics.</h6></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="loadPane"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->

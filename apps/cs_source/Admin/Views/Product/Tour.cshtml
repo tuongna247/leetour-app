@@ -1,0 +1,71 @@
+﻿@using System
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Web.Framework
+
+@{
+    ViewBag.Title = "Tour - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+           .Where(c => c.Type == ClaimTypes.Role)
+           .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+}
+
+<div class="page-title">
+    <h3>Vinaday Travel</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="active">98A Le Lai street, Dist 1, Ho Chi Minh City, VietNam</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <a href="@Url.Content("~/Product/TourBasic")" class="btn btn-success m-b-sm">Add New Tour</a>
+                    @if (Model.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table id="tour-list-2" class="display table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Id<span class="column-sorter"></span></th>
+                                        <th>Name<span class="column-sorter"></span></th>
+                                        <th>Type<span class="column-sorter"></span></th>
+                                        <th>Create date<span class="column-sorter"></span></th>
+                                        <th style="width: 50px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var tour in Model)
+                                    {
+                                        <tr>
+                                            <td>@tour.Id</td>
+                                            <td>@tour.Name</td>
+                                            <td>@(Enum.GetName(typeof(Utilities.TourType), tour.Type))</td>
+                                            <td>@(tour.ModifiedDate.ToShortDateString())</td>
+                                            <td>
+                                                <a class="btn btn-success btn-xs" href="@Url.Content(string.Format("~/Product/TourBasic/{0}", tour.Id))"><small class="glyphicon glyphicon-edit"></small></a>
+                                                <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteTour('@tour.Id');"><small class="glyphicon glyphicon-trash"></small></a>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/tourjs")
+}
+

@@ -1,0 +1,906 @@
+@{
+
+    ViewBag.Title = "Tour List";
+    Layout = null;
+}
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="assets/logo-symbol.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        Holiday Packages 2025 & Travel in Vietnam, Laos, Myanmar (Burma),
+        Cambodia, Thailand by VINADAY TRAVEL
+    </title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script defer
+            src="https://www.jscache.com/wejs?wtype=selfserveprop&amp;uniq=154&amp;locationId=2608200&amp;lang=en_US&amp;rating=true&amp;nreviews=0&amp;writereviewlink=true&amp;popIdx=true&amp;iswide=false&amp;border=false&amp;display_version=2"
+            onload="this.loadtrk = true"></script>
+    <script type="javascripts" src="@Url.Content("~/Content/assets/index-CoNZ9jbW.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery-2.1.3.js")"></script>
+    <script src="@Url.Content("~/Scripts/app/TourIndex.js")"></script>
+    <link rel="stylesheet" href="@Url.Content("~/Content/assets/index-Tv2w2_74.css")">
+</head>
+  <body>
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200">
+      <nav class="px-4 lg:px-6 py-2.5">
+        <div
+          class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl"
+        >
+          <a href="/" class="flex items-center">
+            <img src="@Url.Content("~/Content/assets/logo.svg")" alt="Vinaday Goreise" class="h-10 w-auto" />
+          </a>
+          <div class="flex items-center lg:order-2">
+            <button
+              type="button"
+              class="hidden sm:inline-flex items-center text-gray-500 hover:text-gray-900 font-medium rounded-lg text-sm px-4 py-2"
+            >
+              Discover
+            </button>
+            <button
+              type="button"
+              class="flex mr-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300"
+              id="notification-button"
+              aria-expanded="false"
+              data-dropdown-toggle="notification-dropdown"
+            >
+              <i class="fas fa-bell text-gray-500 mx-2"></i>
+            </button>
+
+            <button
+              type="button"
+              class="flex mr-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300"
+              id="user-menu-button"
+              aria-expanded="false"
+              data-dropdown-toggle="user-dropdown"
+            >
+              <i class="fas fa-user-circle text-gray-500 mx-2 text-2xl"></i>
+            </button>
+
+            <!-- Dropdown menu -->
+            <div
+              id="user-dropdown"
+              class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700"
+            >
+              <ul
+                class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                aria-labelledby="user-menu-button"
+              >
+                <li>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >Dashboard</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >Settings</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >Earnings</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >Sign out</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Hero Section with Search -->
+    <section class="relative">
+      <div class="hero-image w-full h-[500px] bg-cover bg-center relative">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div
+          class="absolute top-0 left-0 md:top-1/2 md:translate-y-[-50%] lg:left-1/2 lg:translate-x-[-50%] w-full pt-6 md:pt-0 px-2 md:px-10 flex flex-col items-center justify-center text-white"
+        >
+            <h1 class="text-4xl font-bold mb-2 text-center">
+                From the pulse of Saigon to the poetry of the Mekong - savor Vietnam's treasures in unparalleled luxury.
+            </h1>
+          <p class="text-xl mb-8 hidden md:block text-center">
+            Join expert-led tours across Southern Vietnam. Daily departures,
+            local guides, unforgettable experiences
+          </p>
+
+          <!-- Search Form -->
+          <div class="w-full max-w-2xl px-4 mt-3">
+            <div class="md:bg-white rounded-full md:shadow-lg px-4 py-2">
+                <div class="flex flex-wrap md:flex-nowrap">
+                    <div class="bg-white rounded-lg mb-2 w-full md:w-[57%] p-2 relative md:after:absolute md:after:right-0 md:after:top-1/2 md:after:-translate-y-1/2 md:after:h-10 md:after:w-[1px] md:after:bg-gray-200">
+                        <label class="text-xs text-gray-500 block">By City</label>
+                        <div class="flex items-center">
+                            <div class="w-4/7">
+                                <label for="country-select" class="sr-only">Choose a country</label>
+                                <select id="country-select"
+                                        class="border border-white hover:bg-gray-50 hover:border-gray-300 text-gray-900 text-sm rounded-lg block p-2 w-full truncate">
+                                    <option selected>Choose a country</option>
+                                    <option value="1">Vietnam</option>
+                                    <option value="2">Thailand</option>
+                                    <option value="3">Laos</option>
+                                    <option value="4">Cambodia</option>
+                                    <option value="5">Myanmar</option>
+                                </select>
+                            </div>
+                            <div class="ml-2 w-3/7">
+                                <label for="city-select" class="sr-only">Choose a city</label>
+                                <select id="city-select"
+                                        class="border border-white hover:bg-gray-50 hover:border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2 truncate">
+                                    <option selected>Choose a city</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg mb-2 w-full md:w-[33%] p-2 pl-4">
+                        <label class="text-xs text-gray-500 block">By Keywords</label>
+                        <div class="flex items-center">
+                            <input type="text" id="selectTypeKeyword"
+                                   placeholder="Where do you want to go ?"
+                                   class="w-full text-gray-800 focus:outline-none text-sm pt-2" />
+                        </div>
+                    </div>
+                    <button type="button" onclick="searchMain();"
+                            class="hidden md:block bg-green-600 hover:bg-green-700 text-white rounded-full px-3 py-2 md:ml-auto self-center">
+                        <i class="fas fa-search"></i>
+                    </button>
+
+                    <input type="button" onclick="searchMain();"
+                           class="block md:hidden bg-green-600 hover:bg-green-700 text-white rounded-lg w-full px-3 py-2" value="Search"/>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Book with Vinaday Goreise -->
+    <section class="py-10 container mx-auto px-4">
+      <h2 class="text-2xl font-bold text-center mb-10">Why Us ?</h2>
+
+      <div
+        class="relative px-8 italic text-gray-700 text-lg max-w-3xl mx-auto text-center"
+      >
+        <span class="absolute left-0 top-0 text-6xl text-green-600 opacity-50"
+          >&quot;</span
+        >
+        VINADAY GOREISE is a local tour operator in Ho Chi Minh City, offering
+        daily guaranteed trips to the Cu Chi Tunnels and Mekong Delta. We
+        provide affordable, authentic local experiences with friendly guides,
+        small groups, and the lowest prices. Explore Vietnam the local way -
+        cheap, good, and guaranteed every day.
+        <span
+          class="absolute right-0 bottom-[-2rem] text-6xl text-green-600 opacity-50"
+          >&quot;</span
+        >
+      </div>
+    </section>
+
+    <!-- Top Tours -->
+    <section class="py-10 container mx-auto px-4">
+      <h2 class="text-2xl font-bold mb-6">Top Tours</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Tour 1 -->
+
+        <div class="bg-white rounded-lg overflow-hidden shadow-md">
+          <a
+            href="/tour/cu-chi-tunnels-half-day-small-group-tour-max-10-persons-p115"
+          >
+            <div class="relative">
+              <img
+                src="@Url.Content("~/Content/assets/cuchi-D-XGL2xo.jpg")"
+                alt="Cu Chi Tunnels Tour"
+                class="w-full h-48 object-cover"
+                loading="lazy"
+              />
+              <div
+                class="absolute top-2 left-2 bg-pink-600 text-white text-xs px-2 py-1 rounded"
+              >
+                Early Bird Deal
+              </div>
+              <button
+                class="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md"
+              >
+                <i class="far fa-heart text-gray-500"></i>
+              </button>
+            </div>
+            <div class="p-4">
+              <div class="flex items-center text-xs text-gray-600 mb-2">
+                <span class="mr-2">4.5 (1,200+)</span>
+                <span class="flex items-center">
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star-half-alt text-yellow-400"></i>
+                </span>
+              </div>
+              <h3 class="font-bold text-sm mb-2">Cu Chi Tunnels</h3>
+              <div class="flex justify-between items-end mt-4">
+                <div>
+                  <span class="text-xs text-gray-500">from</span>
+                  <div class="font-bold">$12</div>
+                  <span class="text-xs text-gray-500">per person</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Tour 2 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-md">
+          <a href="/tour/cu-chi-tunnels-and-my-tho-full-day-p1409">
+            <div class="relative">
+              <img
+                src="@Url.Content("~/Content/assets/cuchi-2-sssTnoUE.jpg")"
+                alt="Cu Chi Tunnels & Mekong Full Day"
+                class="w-full h-48 object-cover"
+                loading="lazy"
+              />
+              <div
+                class="absolute top-2 left-2 bg-pink-600 text-white text-xs px-2 py-1 rounded"
+              >
+                Best Seller
+              </div>
+              <button
+                class="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md"
+              >
+                <i class="far fa-heart text-gray-500"></i>
+              </button>
+            </div>
+            <div class="p-4">
+              <div class="flex items-center text-xs text-gray-600 mb-2">
+                <span class="mr-2">4.7 (900+)</span>
+                <span class="flex items-center">
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star-half-alt text-yellow-400"></i>
+                </span>
+              </div>
+              <h3 class="font-bold text-sm mb-2">
+                Cu Chi Tunnels & Mekong Full Day
+              </h3>
+              <div class="flex justify-between items-end mt-4">
+                <div>
+                  <span class="text-xs text-gray-500">from</span>
+                  <div class="font-bold">$40</div>
+                  <span class="text-xs text-gray-500">per person</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Tour 3 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-md">
+          <a href="/tour/private-tour-a-day-my-tho-ben-tre-p1399">
+            <div class="relative">
+              <img
+                src="@Url.Content("~/Content/assets/mekong-C4mQLfQp.jpg")"
+                alt="Mekong Delta My-Tho Ben Tre"
+                class="w-full h-48 object-cover"
+                loading="lazy"
+              />
+              <button
+                class="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md"
+              >
+                <i class="far fa-heart text-gray-500"></i>
+              </button>
+            </div>
+            <div class="p-4">
+              <div class="flex items-center text-xs text-gray-600 mb-2">
+                <span class="mr-2">4.8 (750+)</span>
+                <span class="flex items-center">
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400"></i>
+                </span>
+              </div>
+              <h3 class="font-bold text-sm mb-2">
+                Mekong Delta My-Tho Ben Tre
+              </h3>
+              <div class="flex justify-between items-end mt-4">
+                <div>
+                  <span class="text-xs text-gray-500">from</span>
+                  <div class="font-bold">$12</div>
+                  <span class="text-xs text-gray-500">per person</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Tour 4 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-md">
+          <a href="/tour/small-group-classic-mekong-delta-tour-in-2-days-p3702">
+            <div class="relative">
+              <img
+                src="@Url.Content("~/Content/assets/mekong-2-BvkqH9xp.jpg")"
+                alt="Mekong Delta 2 Days"
+                class="w-full h-48 object-cover"
+                loading="lazy"
+              />
+              <div
+                class="absolute top-2 left-2 bg-pink-600 text-white text-xs px-2 py-1 rounded"
+              >
+                Special Offer
+              </div>
+              <button
+                class="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md"
+              >
+                <i class="far fa-heart text-gray-500"></i>
+              </button>
+            </div>
+            <div class="p-4">
+              <div class="flex items-center text-xs text-gray-600 mb-2">
+                <span class="mr-2">4.6 (1,100+)</span>
+                <span class="flex items-center">
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star-half-alt text-yellow-400"></i>
+                </span>
+              </div>
+              <h3 class="font-bold text-sm mb-2">Mekong Delta 2 Days</h3>
+              <div class="flex justify-between items-end mt-4">
+                <div>
+                  <span class="text-xs text-gray-500">from</span>
+                  <div class="font-bold">$99</div>
+                  <span class="text-xs text-gray-500">per person</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Tour 5 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-md">
+          <a
+            href="/tour/best-ho-chi-minh-city-itinerary-4-days-saigon-south-vietnam-p3704"
+          >
+            <div class="relative">
+              <img
+                src="@Url.Content("~/Content/assets/hcm-DxujlYAq.jpg")"
+                alt="Best of Ho Chi Minh and South Vietnam"
+                class="w-full h-48 object-cover"
+                loading="lazy"
+              />
+              <button
+                class="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md"
+              >
+                <i class="far fa-heart text-gray-500"></i>
+              </button>
+            </div>
+            <div class="p-4">
+              <div class="flex items-center text-xs text-gray-600 mb-2">
+                <span class="mr-2">4.6 (1,100+)</span>
+                <span class="flex items-center">
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star-half-alt text-yellow-400"></i>
+                </span>
+              </div>
+              <h3 class="font-bold text-sm mb-2">
+                Best of Ho Chi Minh and South Vietnam
+              </h3>
+              <div class="flex justify-between items-end mt-4">
+                <div>
+                  <span class="text-xs text-gray-500">from</span>
+                  <div class="font-bold">$230</div>
+                  <span class="text-xs text-gray-500">per person</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Tour 6 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-md">
+          <a
+            href="/tour/discover-cu-chi-tunnels-in-the-morning-by-les-rives-speedboat-p90"
+          >
+            <div class="relative">
+              <img
+                src="@Url.Content("~/Content/assets/cuchi-3-Wsa1pC6T.jpg")"
+                alt="Cu Chi Tunnels by speedboat V.I.P"
+                class="w-full h-48 object-cover"
+                loading="lazy"
+              />
+
+              <button
+                class="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md"
+              >
+                <i class="far fa-heart text-gray-500"></i>
+              </button>
+            </div>
+            <div class="p-4">
+              <div class="flex items-center text-xs text-gray-600 mb-2">
+                <span class="mr-2">4.6 (1,100+)</span>
+                <span class="flex items-center">
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star text-yellow-400 mr-1"></i>
+                  <i class="fas fa-star-half-alt text-yellow-400"></i>
+                </span>
+              </div>
+              <h3 class="font-bold text-sm mb-2">
+                Cu Chi Tunnels by speedboat V.I.P
+              </h3>
+              <div class="flex justify-between items-end mt-4">
+                <div>
+                  <span class="text-xs text-gray-500">from</span>
+                  <div class="font-bold">$99</div>
+                  <span class="text-xs text-gray-500">per person</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top Destinations -->
+    <section class="py-10 container mx-auto px-4">
+      <h2 class="text-2xl font-bold mb-6">Top Destinations</h2>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <a
+          href="/searchs/ho-chi-minh-and-surrounds/key-none/filter-all/price-all/page-1"
+          class="destination-card relative rounded-lg overflow-hidden h-40"
+        >
+          <img
+            src="@Url.Content("~/Content/assets/hcm-1-CkXDwnb7.jpg")"
+            alt="Ho Chi Minh city & South"
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
+          ></div>
+          <div class="absolute bottom-3 left-3 text-white font-bold">
+            Ho Chi Minh city & South
+          </div>
+        </a>
+
+        <a
+          href="/searchs/hoian-and-central-vietnam/key-none/filter-all/price-all/page-1"
+          class="destination-card relative rounded-lg overflow-hidden h-40"
+        >
+          <img
+            src="@Url.Content("~/Content/assets/hoian-BmWAOfUe.jpg")"
+            alt="Hoi An and Central"
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
+          ></div>
+          <div class="absolute bottom-3 left-3 text-white font-bold">
+            Hoi An and Central
+          </div>
+        </a>
+
+        <a
+          href="/searchs/hanoi-and-surrounds/key-none/filter-all/price-all/page-1"
+          class="destination-card relative rounded-lg overflow-hidden h-40"
+        >
+          <img
+            src="@Url.Content("~/Content/assets/hanoi-CDn-7QJI.jpg")"
+            alt="Hanoi and North"
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
+          ></div>
+          <div class="absolute bottom-3 left-3 text-white font-bold">
+            Hanoi and North
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Keep things flexible -->
+    <section class="py-10 bg-green-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center mb-4">
+          Enjoy Flexibility in Planning
+        </h2>
+        <p class="text-center text-gray-600 max-w-2xl mx-auto">
+          Save your spot on top tours today and keep your plans open with Pay
+          Later flexibility.
+        </p>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-10 container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div id="TA_selfserveprop154" class="TA_selfserveprop">
+          <div id="CDSWIDSSP" class="widSSP widSSPnarrow" style="width: 240px">
+            <a
+              class="widSSPClickWrap"
+              target="_blank"
+              href="https://www.tripadvisor.com/Attraction_Review-g293925-d2608200-Reviews-Vinaday_Goreise_Travel-Ho_Chi_Minh_City-m11900-m11900.html"
+              onclick="ta.cds.handleTALink(11900,this);return true;"
+            ></a>
+            <div class="widSSPData cx_brand_refresh">
+              <div class="widSSPBranding">
+                <dl>
+                  <dt>
+                    <a target="_blank" href="https://www.tripadvisor.com/"
+                      ><img
+                        src="https://www.tripadvisor.com/img/cdsi/img2/branding/v2/Tripadvisor_lockup_horizontal_secondary_registered-11900-2.svg"
+                        alt="TripAdvisor"
+                        class="logo"
+                    /></a>
+                  </dt>
+                </dl>
+              </div>
+              <!--/ cdsBranding-->
+              <div class="widSSPComponent">
+                <div class="widSSPSummary">
+                  <dl>
+                    <a
+                      target="_blank"
+                      href="https://www.tripadvisor.com/Attraction_Review-g293925-d2608200-Reviews-Vinaday_Goreise_Travel-Ho_Chi_Minh_City.html"
+                      onclick="ta.cds.handleTALink(11900,this);return true;"
+                      rel="nofollow"
+                    >
+                      <dt class="widSSPH18">Vinaday Goreise Travel</dt>
+                    </a>
+                  </dl>
+                </div>
+                <!--/ cdsSummary-->
+              </div>
+              <!--/ cdsComponent-->
+              <div class="widSSPComponent widSSPOptional">
+                <div class="widSSPTrvlRtng">
+                  <dl>
+                    <dt class="widSSPH11">Tripadvisor Traveler Rating</dt>
+                    <dd>
+                      <div class="widSSPOverall">
+                        <span class="ui_bubble_rating bubble_47"></span>
+                        <span>298 reviews</span>
+                      </div>
+                      <!--/ overall -->
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <!--/ cdsComponent -->
+              <div class="widSSPWrap widSSPOptional">
+                <div class="widSSPInformation">
+                  <div class="widSSPWrap">
+                    <dl><dt class="widSSPH11">Tripadvisor Ranking</dt></dl>
+                    <div class="widSSPPopIdx widSSPSingle">
+                      <span class="widSSPPopIdxData">
+                        <span class="widSSPPopIdxData">
+                          <sup>#</sup>147 of 1295
+                        </span>
+                        Tours in Ho Chi Minh City
+                      </span>
+                    </div>
+                    <!--/ popIdx-->
+                  </div>
+                  <!--/ cdsWrap-->
+                </div>
+                <!--/ cdsInformation-->
+              </div>
+              <!--/ cdsWrap-->
+              <div class="widSSPAll">
+                <ul class="widSSPReadReview">
+                  <li>
+                    <a
+                      href="https://www.tripadvisor.com/Attraction_Review-g293925-d2608200-Reviews-Vinaday_Goreise_Travel-Ho_Chi_Minh_City.html"
+                      id="allreviews"
+                      onclick="ta.cds.handleTALink(11900,this);window.open(this.href, 'newTAWindow', 'toolbar=1,resizable=1,menubar=1,location=1,status=1,scrollbars=1,width=800,height=600'); return false"
+                      rel="nofollow"
+                      >Read reviews</a
+                    >
+                  </li>
+                </ul>
+                <ul class="widSSPWriteReview">
+                  <li>
+                    <a
+                      href="https://www.tripadvisor.com/UserReview-g293925-d2608200-Vinaday_Goreise_Travel-Ho_Chi_Minh_City.html"
+                      id="writereview"
+                      onclick="ta.cds.handleTALink(11900,this);window.open(this.href, 'newTAWindow', 'toolbar=1,resizable=1,menubar=1,location=1,status=1,scrollbars=1,width=800,height=600'); return false"
+                      rel="nofollow"
+                      >Write a review</a
+                    >
+                  </li>
+                </ul>
+              </div>
+              <!--/ cdsAll-->
+            </div>
+            <!--/ cdsData-->
+          </div>
+          <!--/ CDSPOP.cdsBx-->
+        </div>
+
+        <!-- Review 1 -->
+        <div class="w-full bg-white p-4 rounded-lg shadow-sm self-stretch">
+          <div class="flex items-center mb-2">
+            <span class="flex items-center mr-2">
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-green-700"></i>
+            </span>
+            <span class="text-xs text-gray-500">10 minutes ago</span>
+          </div>
+          <h6 class="font-semibold mb-1">Best travel agency in Vietnam</h6>
+          <p class="text-sm mb-3 text-gray-600">
+            The third time I travel with them. The best travel agency in
+            Vietnam, good, nice and cheap. I did the Mekong Delta tour with
+            Cuchi. Everything very well organized. 10/10
+          </p>
+          <p class="text-xs text-gray-500">Xabi_sevi | Spain</p>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="w-full bg-white p-4 rounded-lg shadow-sm self-stretch">
+          <div class="flex items-center mb-2">
+            <span class="flex items-center mr-2">
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-green-700"></i>
+            </span>
+            <span class="text-xs text-gray-500">30 minutes ago</span>
+          </div>
+          <h6 class="font-semibold mb-1">Great tours at a great price.</h6>
+          <p class="text-sm mb-3 text-gray-600">
+            I was introduced to Le Ly through my friend. Le was very
+            communicative via phone, WhatsApp and email. She quickly responded
+            to all my questions.<br />
+            All the tours I went were great and professional. I loved that I can
+            pay for the tours online. I will recommend my friends to use this
+            company if they want a tour.
+          </p>
+          <p class="text-xs text-gray-500">easyroc75 | United Kingdom</p>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="w-full bg-white p-4 rounded-lg shadow-sm self-stretch">
+          <div class="flex items-center mb-2">
+            <span class="flex items-center mr-2">
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-green-700 mr-0.5"></i>
+              <i class="fas fa-star text-gray-500"></i>
+            </span>
+            <span class="text-xs text-gray-500">1 day ago</span>
+          </div>
+          <h6 class="font-semibold mb-1">Vietnam and Cambodia at a Glance</h6>
+          <p class="text-sm mb-3 text-gray-600">
+            Just completed a 14 day tour of Vietnam and Cambodia. It was a
+            really memorable trip and organised so well by Rosie from Best Price
+            Travel. Rosie arranged the trip, happily made itinerary changes at
+            my request, and supported me throughout. Impressed with Best Price
+            Travel and Rosie and look forward to my next trip.
+          </p>
+          <p class="text-xs text-gray-500">Max M | Australia</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Free Cancellation -->
+    <section class="py-10 bg-green-50">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-2xl font-bold mb-4">Free cancellation</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          You'll receive a full refund if you cancel at least 24 hours in
+          advance of most experiences.
+        </p>
+      </div>
+    </section>
+
+    <!-- Top Attractions -->
+    <section class="py-10 container mx-auto px-4">
+      <h2 class="text-2xl font-bold mb-6">Top Attractions</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Attraction 1 -->
+        <div class="flex items-start">
+          <div class="w-20 h-20 rounded-lg overflow-hidden mr-4 flex-shrink-0">
+            <img
+              src="@Url.Content("~/Content/assets/cuchi-4-Bowifdwu.jpg")"
+              alt="Cu Chi Tunnels"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div>
+            <h3 class="font-bold mb-1">Cu Chi Tunnels</h3>
+            <p class="text-sm text-gray-600">3,000 Tours and Activities</p>
+          </div>
+        </div>
+
+        <!-- Attraction 2 -->
+        <div class="flex items-start">
+          <div class="w-20 h-20 rounded-lg overflow-hidden mr-4 flex-shrink-0">
+            <img
+              src="@Url.Content("~/Content/assets/operahouse-NOsvxYIS.jpeg")"
+              alt="Opera House"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div>
+            <h3 class="font-bold mb-1">Opera House</h3>
+            <p class="text-sm text-gray-600">323 Tours and Activities</p>
+          </div>
+        </div>
+
+        <!-- Attraction 3 -->
+        <div class="flex items-start">
+          <div class="w-20 h-20 rounded-lg overflow-hidden mr-4 flex-shrink-0">
+            <img
+              src="@Url.Content("~/Content/assets/postoffice-DisERWUm.jpg")"
+              alt="Central Post Office"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div>
+            <h3 class="font-bold mb-1">Central Post Office</h3>
+            <p class="text-sm text-gray-600">192 Tours and Activities</p>
+          </div>
+        </div>
+
+        <!-- Attraction 4 -->
+        <div class="flex items-start">
+          <div class="w-20 h-20 rounded-lg overflow-hidden mr-4 flex-shrink-0">
+            <img
+              src="@Url.Content("~/Content/assets/oldquarter-Bnr7ko3l.jpg")"
+              alt="Hanoi Old Quarter"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div>
+            <h3 class="font-bold mb-1">Hanoi Old Quarter</h3>
+            <p class="text-sm text-gray-600">183 Tours and Activities</p>
+          </div>
+        </div>
+
+        <!-- Attraction 5 -->
+        <div class="flex items-start">
+          <div class="w-20 h-20 rounded-lg overflow-hidden mr-4 flex-shrink-0">
+            <img
+              src="@Url.Content("~/Content/assets/hcmmausoleum-DdidZRte.jpg")"
+              alt="Ho Chi Minh’s mausoleum"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div>
+            <h3 class="font-bold mb-1">Ho Chi Minh’s mausoleum</h3>
+            <p class="text-sm text-gray-600">92 Tours and Activities</p>
+          </div>
+        </div>
+
+        <!-- Attraction 6 -->
+        <div class="flex items-start">
+          <div class="w-20 h-20 rounded-lg overflow-hidden mr-4 flex-shrink-0">
+            <img
+              src="@Url.Content("~/Content/assets/buivien-CBeSMXM_.jpg")"
+              alt="Bui Vien walking street"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div>
+            <h3 class="font-bold mb-1">Bui Vien walking street</h3>
+            <p class="text-sm text-gray-600">54 Tours and Activities</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white pt-10 pb-6">
+      <div
+        class="px-4 flex flex-col md:flex-row md:justify-center gap-8 mb-8 w-full"
+      >
+        <div
+          class="flex gap-8 md:gap-12 border-y-neutral-300 md:border-r-[1px] pr-8"
+        >
+          <div class="flex flex-col space-y-4 w-10">
+            <a href="/"
+              ><img
+                src="@Url.Content("~/Content/assets/logo-symbol.svg")"
+                alt="Vinaday Goreise logo"
+                class="w-10"
+            /></a>
+            <a
+              href="https://www.tripadvisor.com/Attraction_Review-g293925-d2608200-Reviews-Vinaday_Goreise_Travel-Ho_Chi_Minh_City.html"
+              target="_blank"
+              ><img src="@Url.Content("~/Content/assets/tripadvisor.svg")" alt="TripAdvisor" class="w-10"
+            /></a>
+          </div>
+
+          <div class="flex flex-col text-sm">
+            <p class="font-semibold mb-2">Book online or call:</p>
+            <p>WhatsApp Chat: +84 916388382</p>
+            <p>Email: cs@vinaday.com</p>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold mb-4">Company</h3>
+
+          <div class="grid grid-cols-2 gap-8 md:gap-12">
+            <div>
+              <ul class="text-sm space-y-2">
+                <li>
+                  <a href="/about-us" class="hover:text-gray-300">About Us</a>
+                </li>
+                <li>
+                  <a href="/websites-rules" class="hover:text-gray-300"
+                    >Website's Rules</a
+                  >
+                </li>
+                <li>
+                  <a href="/refund-policy" class="hover:text-gray-300"
+                    >Refund Policy</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <ul class="text-sm space-y-2">
+                <li>
+                  <a href="/payment-information" class="hover:text-gray-300"
+                    >Payment</a
+                  >
+                </li>
+                <li>
+                  <a href="/careers" class="hover:text-gray-300">Careers</a>
+                </li>
+                <li>
+                  <a href="/chinh-sach-chung" class="hover:text-gray-300"
+                    >Common Policy</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-xs text-gray-500 text-center px-2">
+        &copy; <span id="copyright-year"></span> VINADAY goREISE. All rights
+        reserved. Most hotels are independently owned and operated.
+      </div>
+    </footer>
+  </body>
+</html>

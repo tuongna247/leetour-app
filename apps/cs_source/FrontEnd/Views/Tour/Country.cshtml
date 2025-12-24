@@ -1,0 +1,453 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web.UI.WebControls
+@using PagedList.Mvc
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@model PagedList.IPagedList<TourModel>
+@{
+    var country = ViewBag.country;
+    var cities = (Dictionary<string, int>)ViewBag.Cities;
+    var key = ViewBag.Key;
+    string currentStyle = "";
+    Layout = "~/Views/Shared/_TourLayout.cshtml";
+    var tourList = new List<Tour>();
+    if (ViewBag.TotalItem != null)
+    {
+        tourList = (List<Tour>)ViewBag.TotalItem;
+    }
+    List<ItemModel> travelStyles2 = ViewBag.TravelStyles;
+    //var total = ViewBag.TotalItem;
+    var title = tourList.Count > 0 ? string.Format("{0} {1} {2} found", country, tourList.Count, tourList.Count > 1 ? "activities" : "activitie") : string.Format("No activities found for {0}.", !string.IsNullOrEmpty(country) ? country : key);
+    ViewBag.Title = title;
+    var filter = ViewBag.City;
+    var city = ViewBag.City ?? "all";
+    var cityKey = !string.IsNullOrEmpty(city) ? Vinaday.Web.Framework.Utilities.GenerateSlug(city) : "all";
+    string[] filterList = new string[0];
+    if (!string.IsNullOrEmpty(filter))
+    {
+        filter = filter.Replace(", ", "|").Replace(" ", "-");
+        filterList = filter.ToString().Split('|');
+    }
+    decimal tourPrice = 0;
+}
+@section nofollow {
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
+}
+<link href="~/Content/tours/search.css" rel="stylesheet" />
+<link href="~/Content/tours/Plugins/SidebarTransitions/SidebarTransitions/css/component.css" rel="stylesheet" />
+<link href="@Url.Content("~/Content/plugins/multiselect/jquery.multiselect.css")" rel="stylesheet" />
+<div class="clear"></div>
+<input type="hidden" value="@filter" id="hdnCityValue" />
+<input type="hidden" value="@country" id="hdnCountry" />
+<section class="services services-detail hidden-xs">
+    <div class="container">
+        <div class="pull-right">
+            <ul>
+                <li class="hidden-xs hidden-sm">
+                    <div class="title-services">goreise.com gives you:</div>
+                </li>
+                <li>
+                    <span class="fa fa-check-circle"></span>
+                    <p class="caption-services">
+                        <span>The best selection</span>
+                    </p>
+                </li>
+                <li>
+                    <span class="fa fa-gift"></span>
+                    <p class="caption-services">
+                        <span>The lowest prices</span>
+                    </p>
+                </li>
+                <li>
+                    <span class="fa fa-shopping-cart"></span>
+                    <p class="caption-services">
+                        <span>Fast &amp; easy booking</span>
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<section class="content-section search-content">
+    <div class="container subpage subpage2" style="padding-left: 10px; padding-right: 10px;">
+        <div class="breadcrumb" xmlns:v="http://rdf.data-vocabulary.org/#">
+            <span typeof="v:Breadcrumb">
+                <a property="v:title" rel="v:url" href="/">
+                    Home
+                </a>&nbsp;››&nbsp;
+            </span>
+            <input type="hidden" id="hdnCountry" value="@country" />
+            @if (!string.IsNullOrEmpty(country))
+            {
+                <span typeof="v:Breadcrumb">
+                    @country
+                </span>
+            }
+            else
+            {
+                <span typeof="v:Breadcrumb">
+                    @key
+                </span>
+            }
+
+        </div>
+        @if (tourList.Count > 0)
+        {
+
+            <div class="">
+                <div style="width: 400px; text-align: center; margin: 0 auto;">
+                <div class="sort-filter">
+                    <div class="sort-title">
+                        @if (!string.IsNullOrEmpty(country))
+                        {
+                            <h2>Found @tourList.Count activities in @country</h2>
+                        }
+                        else
+                        {
+                            <h2>Found @tourList.Count activities </h2>
+                        }
+                    </div>
+                </div>
+
+                <article class="box-accordion box box-duration">
+                    <div class="content-accordion box-content">
+                        <input type="hidden" name="Country" value="@ViewBag.Country"/>
+                        <select name="cities" multiple="multiple" class="3col active searchCity">
+                            @foreach (var _city in cities)
+                            {
+                                string id = _city.Key.Split('-')[1];
+                                string cityName = _city.Key.Split('-')[0];
+                                bool ischecked = false;
+                                if (filterList != null && filterList.Length > 0)
+                                {
+                                    ischecked = filterList.Any(a => a.Equals(id));
+                                }
+                                <option @if (ischecked)
+                                        {
+                                            <text> selected="selected" </text>
+                                        }
+                                    value="@id">
+                                    @cityName (@_city.Value)
+                                </option>
+                            }
+
+                        </select>
+                    </div>
+                </article>
+
+                @if (travelStyles2.Count > 0)
+                {
+                    <article class="box-accordion box box-duration">
+                        <div class="content-accordion box-content">
+                            <select name="cities" multiple="multiple" class="3col active_style searchCity">
+                                @if (travelStyles2.Count > 0)
+                                {
+                                    foreach (var travelStyle in travelStyles2)
+                                    {
+                                        string link = string.Empty;
+                                        var array = filter.Split(',');
+                                        bool isSelected = filter.IndexOf(travelStyle.Slug.Replace("-", " ")) > -1;
+                                        for (int i = 0; i < array.Length; i++)
+                                        {
+                                            var arrayTemp = array;
+                                            var itemTemp = array[i];
+                                            if (itemTemp == null)
+                                            {
+                                                continue;
+                                            }
+                                            var strLink = string.Empty;
+                                            for (var j = 0; j < arrayTemp.Length; j++)
+                                            {
+                                                var itemTem = arrayTemp[j];
+
+                                                if (!string.IsNullOrEmpty(itemTem))
+                                                {
+                                                    strLink += string.Format("{0}|", Vinaday.Web.Framework.Utilities.GenerateSlug(itemTem));
+                                                }
+                                            }
+                                            strLink = strLink.Substring(0, strLink.Length - 1);
+
+                                        }
+
+
+                                        <option @if (isSelected)
+                                                {
+                                                    <text> selected="selected" </text>
+                                                } value="@travelStyle.Name">@travelStyle.Name</option>
+
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </article>
+                }
+                <div class="checkrate" style="margin-bottom: 10px; margin-top: 10px; padding-bottom: 40px;">
+
+                    <span class="input-group" style="float: left; width: 100%; margin-right: 3px;">
+                        <input id="search-key" onkeypress="SearchContent(event)" style="width: 100%; color: rgb(102, 102, 102); padding: 7px; font-size: 16px;" type="text" value="@((string.IsNullOrEmpty(key) || key == "none") ? "" : key.Replace("-", " "))" placeholder="Enter tour name...">
+                        <i class="glyphicon glyphicon-search form-control-feedback"></i>
+                    </span>
+
+                </div>
+
+            </div>
+
+
+                @if (Model.Count > 0)
+                {
+                    foreach (var tour in Model)
+                    {
+                        var rate = tour.Rates.FirstOrDefault();
+                        var link = Url.Action("Detail", "Tour", new { id = tour.Id, title = tour.Seo.Slug });
+                        <article class="r clearfix">
+                            <a class="hotel_name" target="_new" href="@link" class="sd">
+                                <img src="@(Url.Content(tour.ImageUrl))" class="hidden-lg  hidden-md" alt="@tour.Name">
+                                <div class="hidden-lg hidden-md ">
+                                    <div class="showdetailsmall"> </div>
+                                    <span class="cell">
+                                        <h4>@tour.Name</h4>
+                                        <more>
+                                            @if (rate != null)
+                                            {
+                                                tourPrice = Math.Round((decimal)(rate.RetailRate + (rate.RetailRate * (tour.Tour != null ? tour.Tour.CommissionRate : 0) / 100)), 2);
+                                                <text> from $@tourPrice  -</text>
+                                            }
+                                            <span style="font-size: 13px;">@tour.Duration</span>
+                                        </more>
+                                    </span>
+
+                                </div>
+                                <div class="img hidden-sm hidden-sx" alt="@tour.Name" style="background-image: url('@(Url.Content(tour.ImageUrl))')"></div>
+                                <div class="detail visible-lg visible-md">
+                                    <h2 class="title" style="text-transform: uppercase;">
+                                        @tour.Name
+                                    </h2>
+                                    <div>@tour.Tour.Location</div>
+                                    <div style="height: 136px; overflow: hidden">@Html.Raw(tour.Tour.Overview)</div>
+                                    <div class="lastDiv">
+                                        <b>Best for:</b>
+                                        @if (travelStyles2.Count > 0 && tour.Tour != null && tour.Tour.TravelStyle != null)
+                                        {
+                                            currentStyle = "";
+                                            var styleIds = tour.Tour.TravelStyle.Split(',');
+                                            foreach (var styleId in styleIds)
+                                            {
+                                                foreach (var travelStyleItems2 in travelStyles2)
+                                                {
+                                                    if (styleId.Equals(travelStyleItems2.Id.ToString()))
+                                                    {
+                                                        currentStyle += travelStyleItems2.Name + " ,";
+                                                    }
+                                                }
+                                            }
+                                            if (currentStyle.Length > 0)
+                                            {
+                                                currentStyle = currentStyle.Substring(0, currentStyle.Length - 1);
+                                            }
+                                        }
+                                        @currentStyle
+                                    </div>
+                                </div>
+                            </a>
+
+                            <aside class="visible-lg">
+                                <ul>
+                                    <li>
+                                        <svg>
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-moon-stroke">
+                                                <svg id="svg-moon-stroke" viewBox="0 0 512 512" width="100%" height="100%">
+                                                    <path d="m346 412c24.7-12.5 46-30.7 62.3-53.2-0.816 0.38-1.5 0.809-2.31 1.19-79.8 37.2-173 5.24-209-71.3-35.7-76.6 0.001-169 79.8-206 0.544-0.254 0.997-0.465 1.58-0.628-83.1-5.27-158 49-180 129-21 81.6 19.5 167 96.6 203 48.3 22.2 104 21.2 152-2.79z"></path>
+                                                </svg>
+                                            </use>
+                                        </svg>
+                                        <span>@tour.Duration</span>
+                                    </li>
+                                    <li ng-if="hotel.Price>0">
+
+                                        @if (rate != null)
+                                        {
+                                            tourPrice = Math.Round((decimal)(rate.RetailRate + (rate.RetailRate * (tour.Tour != null ? tour.Tour.CommissionRate : 0) / 100)), 2);
+                                            <svg>
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-pound-stroke">
+                                                    <svg id="svg-pound-stroke" viewBox="0 0 512 512" width="100%" height="100%">
+                                                        <path d="m 374.62662,432.37888 -237.25324,0 0,-65.29968 q 25.12333,-7.90103 33.63282,-24.63263 8.50951,-16.73159 8.50951,-50.19478 l -35.65888,0 0,-50.42719 35.65888,0 0,-60.65201 q 0,-44.38521 29.78329,-72.96835 29.98589,-28.58312 79.01686,-28.58312 27.55464,0 45.58669,3.950511 18.23466,3.718128 28.97284,7.203867 l 0,72.503562 -9.11731,0 q -15.39816,-10.922 -28.97286,-15.33729 -13.57469,-4.64765 -25.32592,-4.64765 -21.07119,0 -34.03806,13.94299 -12.76427,13.71061 -12.76427,38.57562 l 0,46.01187 88.53944,0 0,50.42719 -88.53944,0 q 0,20.68209 -9.72516,41.36423 -9.52252,20.68208 -24.51548,29.97743 l 0,2.55623 156.21029,0 0,66.2292 z"></path>
+                                                    </svg>
+                                                </use>
+                                            </svg>
+
+                                                        <span>  from $@tourPrice </span>
+                                        }
+
+                                    </li>
+                                    <li class="enquiry">
+                                        <!-- Component - H3 Call us -->
+                                        <h3 class="call-us">
+                                            Call us on
+                                            <span class="InfinityNumber">(+84) 028 383 88382 </span>
+                                            to start tailoring your holiday
+                                        </h3>
+                                        <!-- /Component - H3 Call us -->
+                                    </li>
+                                    <li>
+                                        <a href="@link">
+                                            <span class="rotate">
+                                                <svg>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-arrow-stroke">
+                                                        <svg id="svg-arrow-stroke" viewBox="0 0 512 512" width="100%" height="100%">
+                                                            <path d="M351 0 161 256 351 512"></path>
+                                                        </svg>
+                                                    </use>
+                                                </svg>
+                                            </span>
+                                            <span>View this Tour</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </aside>
+                        </article>
+                    }
+                }
+                <div class="activities-show-more">
+                    @Html.PagedListPager(Model, page => Url.Action("Country", new { page }))
+                </div>
+
+            </div>
+      
+        }
+        else
+        {
+            <div class="sort-filter" style="border: none;">
+                <div class="sort-title" style="border: none;">
+                    No activities found for
+                    <h1 style="text-transform: capitalize">@(!string.IsNullOrEmpty(country) ? country : key)</h1>.
+                </div>
+                <div class="form-inline">
+                    <div class="form-group has-feedback">
+                    </div>
+                </div>
+            </div>
+            <div style="background-color: #dff0d8 !important; border-color: #afdd9c; color: #468847; margin-bottom: 20px; padding: 30px 30px 30px 56px;">
+                <i class="fa fa-warning" style="color: -moz-activehyperlinktext; font-size: 30px; margin-right: 8px;"></i><strong>Sorry! No activities found.</strong> Please try using more flexible filters or searching within a larger region.
+            </div>
+
+        }
+        </div>
+    </section>
+    @section scripts
+{
+        <script src="~/Content/tours/Plugins/SidebarTransitions/SidebarTransitions/js/classie.js"></script>
+        <script src="~/Content/tours/Plugins/SidebarTransitions/SidebarTransitions/js/sidebarEffects.js"></script>
+        <script src="~/Scripts/tours/tourCountry.js"></script>
+        <script src="@Url.Content("~/Content/plugins/multiselect/jquery.multiselect.js")"></script>
+        <script>
+            jQuery(document).ready(function ($) {
+                var active = true;
+                $('.filter-tours').hide();
+                $('select[multiple].active.3col').multiselect({
+                    columns: 2,
+                    placeholder: 'FILTER',
+                    search: true,
+                    searchOptions: {
+                        'default': 'Filter'
+                    },
+                    onOptionClick: onOptionClick,
+                    selectAll: false
+                });
+
+                $('select[multiple].active_style.3col').multiselect({
+                    columns: 2,
+                    placeholder: 'Style',
+                    search: true,
+                    searchOptions: {
+                        'default': 'Style'
+                    },
+                    onOptionClick: onOptionClickStyle,
+                    selectAll: false
+                });
+
+            });
+
+            function onOptionClick(element, option) {
+                var city = '';
+                for (var i = 0; i < element.childElementCount; i++) {
+                    if (element[i].selected) {
+                        city += element[i].value + '|';
+                    }
+                }
+                if (city == '') {
+                    city = 'all';
+                }
+                var key = $("#search-key").val();
+                if (key == '') {
+                    key = 'none';
+                }
+                var filter = 'none';
+                var country = $("#hdnCountry").val();
+                var url = "/" + country + "/key-" + key;
+                url += "/city-" + city.slice(0, -1);
+                url += "/filter-" + filter;
+                url += "/page-1";
+                window.location.href = url;
+            }
+
+            function onOptionClickStyle(element, option) {
+                var key = $("#search-key").val();
+                var filter = '';
+                for (var i = 0; i < element.childElementCount; i++) {
+                    if (element[i].selected) {
+                        filter += element[i].value + '|';
+                    }
+                }
+                var city = $("#hdnCityValue").val();
+                if (city == 'al') {
+                    city = "all";
+                }
+                if (filter == '') {
+                    filter = 'none';
+                } else {
+                    filter = filter.slice(0, -1);
+                }
+                if (key == '') {
+                    key = 'none';
+                }
+                var country = $("#hdnCountry").val();
+                var url = "/" + country + "/key-" + key;
+                url += "/city-" + city;
+                url += "/filter-" + filter;
+                url += "/page-1";
+                window.location.href = url;
+            }
+            //
+            function SearchContent(e) {
+                if (e.key == 'Enter') {
+                    debugger;
+                    var city = $("#hdnCityValue").val();
+                    var country = $("#hdnCountry").val();
+                    var key = $("#search-key").val();
+                    var filter = '';
+                    if (key === '') {
+                        key = 'none';
+                    }
+                    if (city === 'al') {
+                        city = "all";
+                    }
+                    if (filter === '') {
+                        filter = 'none';
+                    }
+                    var url = "/" + country + "/key-" + key;
+                    url += "/city-" + city;
+                    url += "/filter-" + filter;
+                    url += "/page-1";
+                    window.location.href = url;
+                }
+
+
+            }
+
+
+        </script>
+    }
+    <link href="~/Content/tours/search.css" rel="stylesheet" />

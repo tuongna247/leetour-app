@@ -1,0 +1,1715 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using System.Web
+@using System.Web.Security
+@using Microsoft.AspNet.Identity
+@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+@using Vinaday.Data.Models
+@{
+    ViewBag.Title = "Hotel Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : "~/Views/Shared/_ContentLayout.cshtml";
+    Contact contactMain = ViewBag.ContactMain;
+    Contact contactReservation = ViewBag.ContactReservation;
+
+    Contact contactMarketing = ViewBag.ContactMarketing;
+    Contact contactAccount = ViewBag.ContactAccount;
+    List<CatDetail> catDetail = ViewBag.HotelStyles;
+}
+
+<div class="page-title">
+    <h3>Hotel Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Hotel Management</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading clearfix">
+                    <div role="group" class="pull-right">
+                        <a disabled href="/Home/HotelEdit" class="btn btn-success m-b-sm">Basic Info</a>
+                        <a href="/Home/RoomManagement" class="btn btn-success m-b-sm">Room Management</a>
+                        <a href="/Home/RoomControl" class="btn btn-success m-b-sm">Room Control</a>
+                        <a href="/Home/RateControl" class="btn btn-success m-b-sm">Rate Control</a>
+                        <a href="/Home/Surcharge" class="btn btn-success m-b-sm">Surcharges</a>
+                        <a href="/Home/Promotion" class="btn btn-success m-b-sm">Promotions</a>
+                        <a href="/Home/HotelSeo" class="btn btn-success m-b-sm">SEO</a>
+                        <a href="/Home/Review" class="btn btn-success m-b-sm">Reviews</a>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="panel-body">
+                    <div class="tabs-left" role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#tab1" role="tab" data-toggle="tab">Step 1: <i>General Information</i></a></li>
+                            <li role="presentation"><a href="#tab2" role="tab" data-toggle="tab">Step 2: <i>Contact Information</i></a></li>
+                            <li role="presentation"><a href="#tab3" role="tab" data-toggle="tab">Step 3: <i>Property Details</i></a></li>
+                            <li role="presentation"><a href="#tab4" role="tab" data-toggle="tab">Step 4: <i>Hotel Style</i></a></li>
+                            <li role="presentation"><a href="#tab5" role="tab" data-toggle="tab">Step 5: <i>Hotel Facilities</i></a></li>
+                            <li role="presentation"><a href="#tab6" role="tab" data-toggle="tab">Step 6: <i>Room Facilities</i></a></li>
+                            <li role="presentation"><a href="#tab7" role="tab" data-toggle="tab">Step 7: <i>Sports and Recreation</i></a></li>
+                            <li role="presentation"><a href="#tab8" role="tab" data-toggle="tab">Step 8: <i>Hotel Pictures</i></a></li>
+                            <li role="presentation"><a href="#tab9" role="tab" data-toggle="tab">Step 9: <i>Useful Information</i></a></li>
+                            <li role="presentation"><a href="#tab10" role="tab" data-toggle="tab">Step 10: <i>Cancelation Policy</i></a></li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content col-md-9">
+                            @if (Model != null)
+                            {
+                                <div role="tabpanel" class="tab-pane active fade in" id="tab1">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h4>Basic Info</h4>
+                                            <form>
+                                                <div class="form-group">
+                                                    <label for="country">Country</label>
+                                                    <select id="country" class="form-control m-b-sm">
+                                                        @foreach (Country country in ViewBag.Countries)
+                                                        {
+                                                            <option value="@country.CountryId" @(country.CountryId == Model.CountryId ? "selected" : "")>@country.Name</option>
+                                                        }
+
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="city">City</label>
+                                                    <select id="city" class="form-control m-b-sm">
+                                                        @foreach (City city in ViewBag.Cities)
+                                                        {
+                                                            <option value="@city.CityId" @(city.CityId == Model.CityId ? "selected" : "")>@city.Name</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="hotel-name">Hotel Name</label>
+                                                    <input id="hotel-name" class="form-control" value="@Model.Name" placeholder="Hotel Name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="phone">Phone</label>
+                                                    <input id="phone" class="form-control" value="@Model.Phone" placeholder="Phone">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h4>Main Contact Info</h4>
+                                            @if (contactMain != null)
+                                            {
+                                                <form>
+                                                    <div class="form-group">
+                                                        <label for="salutation">Salutation</label>
+                                                        <select id="salutation" class="form-control m-b-sm">
+                                                            <option @(contactMain.SALUTATION == "Mr." ? "selected" : "")>Mr.</option>
+                                                            <option @(contactMain.SALUTATION == "Mrs." ? "selected" : "")>Mrs.</option>
+                                                            <option @(contactMain.SALUTATION == "Ms." ? "selected" : "")>Ms.</option>
+                                                            <option @(contactMain.SALUTATION == "Dr." ? "selected" : "")>Dr.</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="first-name">First Name</label>
+                                                        <input id="first-name" value="@contactMain.FIRSTNAME" class="form-control" placeholder="First Name">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="last-name">Last Name</label>
+                                                        <input id="last-name" value="@contactMain.LASTNAME" class="form-control" placeholder="Last Name">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="email">Email Address</label>
+                                                        <input id="email" value="@contactMain.EMAILADDRESS" class="form-control" placeholder="Email Address">
+                                                    </div>
+                                                </form>
+                                            }
+
+                                        </div>
+                                    </div><!-- Row -->
+                                    <div role="group" class="pull-right">
+                                        <button type="button" class="btn btn-success m-b-sm">Save and Continue</button>
+                                    </div>
+                                    @*<div class="clearfix"></div>
+                                        <div role="alert" class="alert alert-danger">
+                                            Change a few things up and try submitting again.
+                                        </div>*@
+                                </div>
+                            }
+
+                            <div role="tabpanel" class="tab-pane fade" id="tab2">
+                                @if (contactReservation != null)
+                                {
+                                    <h4>Reservation Contact Info</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label for="salutation">Salutation</label>
+                                                    <select id="salutation" class="form-control m-b-sm">
+                                                        <option @(contactReservation.SALUTATION == "Mr." ? "selected" : "")>Mr.</option>
+                                                        <option @(contactReservation.SALUTATION == "Mrs." ? "selected" : "")>Mrs.</option>
+                                                        <option @(contactReservation.SALUTATION == "Ms." ? "selected" : "")>Ms.</option>
+                                                        <option @(contactReservation.SALUTATION == "Dr." ? "selected" : "")>Dr.</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="first-name">First Name</label>
+                                                    <input id="first-name" value="@contactReservation.FIRSTNAME" class="form-control" placeholder="First Name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="last-name">Last Name</label>
+                                                    <input id="last-name" value="@contactReservation.LASTNAME" class="form-control" placeholder="Last Name">
+                                                </div>
+
+
+                                            </form>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label for="phone">Phone</label>
+                                                    <input id="phone" value="@Utilities.FormatPhone(contactReservation.PHONE)" class="form-control" placeholder="Phone">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="fax">Fax</label>
+                                                    <input id="fax" value="@contactReservation.FAX" class="form-control" placeholder="Fax">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="email">Email Address</label>
+                                                    <input id="email" value="@contactReservation.EMAILADDRESS" class="form-control" placeholder="Email Address">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div><!-- Row -->
+                                }
+                                @if (contactMarketing != null)
+                                {
+                                    <h4>Marketing Contact Info</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label for="salutation">Salutation</label>
+                                                    <select id="salutation" class="form-control m-b-sm">
+                                                        <option @(contactMarketing.SALUTATION == "Mr." ? "selected" : "")>Mr.</option>
+                                                        <option @(contactMarketing.SALUTATION == "Mrs." ? "selected" : "")>Mrs.</option>
+                                                        <option @(contactMarketing.SALUTATION == "Ms." ? "selected" : "")>Ms.</option>
+                                                        <option @(contactMarketing.SALUTATION == "Dr." ? "selected" : "")>Dr.</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="first-name">First Name</label>
+                                                    <input id="first-name" value="@contactMarketing.FIRSTNAME" class="form-control" placeholder="First Name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="last-name">Last Name</label>
+                                                    <input id="last-name" value="@contactMarketing.LASTNAME" class="form-control" placeholder="Last Name">
+                                                </div>
+
+
+                                            </form>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label for="phone">Phone</label>
+                                                    <input id="phone" value="@Utilities.FormatPhone(contactMarketing.PHONE)" class="form-control" placeholder="Phone">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="fax">Fax</label>
+                                                    <input id="fax" value="@contactMarketing.FAX" class="form-control" placeholder="Fax">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="email">Email Address</label>
+                                                    <input id="email" value="@contactMarketing.EMAILADDRESS" class="form-control" placeholder="Email Address">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div><!-- Row -->
+                                }
+                                @if (contactAccount != null)
+                                {
+                                    <h4>Account Contact Info</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label for="salutation">Salutation</label>
+                                                    <select id="salutation" class="form-control m-b-sm">
+                                                        <option @(contactAccount.SALUTATION == "Mr." ? "selected" : "")>Mr.</option>
+                                                        <option @(contactAccount.SALUTATION == "Mrs." ? "selected" : "")>Mrs.</option>
+                                                        <option @(contactAccount.SALUTATION == "Ms." ? "selected" : "")>Ms.</option>
+                                                        <option @(contactAccount.SALUTATION == "Dr." ? "selected" : "")>Dr.</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="first-name">First Name</label>
+                                                    <input id="first-name" value="@contactAccount.FIRSTNAME" class="form-control" placeholder="First Name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="last-name">Last Name</label>
+                                                    <input id="last-name" value="@contactAccount.LASTNAME" class="form-control" placeholder="Last Name">
+                                                </div>
+
+
+                                            </form>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label for="phone">Phone</label>
+                                                    <input id="phone" value="@Utilities.FormatPhone(contactAccount.PHONE)" class="form-control" placeholder="Phone">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="fax">Fax</label>
+                                                    <input id="fax" value="@contactAccount.FAX" class="form-control" placeholder="Fax">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="email">Email Address</label>
+                                                    <input id="email" value="@contactAccount.EMAILADDRESS" class="form-control" placeholder="Email Address">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div><!-- Row -->
+                                }
+
+
+                                <div class="pull-left">
+
+                                    <form>
+                                        <button class="btn btn-primary btn-addon m-b-sm btn-xs" type="button"><i class="fa fa-plus"></i>Marketing</button>
+                                        <br />
+                                        <button class="btn btn-info btn-addon m-b-sm btn-xs" type="button"><i class="fa fa-plus"></i>Accounts/Finance</button>
+                                    </form>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-default m-b-sm">Skip and Continue</button>
+                                    <button type="button" class="btn btn-success m-b-sm">Save and Continue</button>
+                                </div>
+                                @*<div class="clearfix"></div>
+                                    <div role="alert" class="alert alert-danger">
+                                        Change a few things up and try submitting again.
+                                    </div>*@
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab3">
+                                <h4>Hotel Description</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="hotel-name">Hotel Name</label>
+                                                <input id="hotel-name" class="form-control" placeholder="Hotel Name">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="star">Star Rating</label>
+                                                <select id="star" class="form-control m-b-sm">
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="number">Number of Rooms</label>
+                                                <select id="number" class="form-control m-b-sm">
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select>
+                                            </div>
+
+
+                                        </form>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="type">Type of Accommodation</label>
+                                                <select id="type" class="form-control m-b-sm">
+                                                    <option>Hotel</option>
+                                                    <option>Apartment</option>
+                                                    <option>Resort</option>
+                                                    <option>Villa</option>
+                                                    <option>Guest house</option>
+                                                    <option>Private Villa</option>
+                                                    <option>Homestay</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="hotel-chain">Hotel Chain</label>
+                                                <input id="hotel-chain" class="form-control" placeholder="Hotel Chain">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="hotel-brand">Hotel Brand</label>
+                                                <input id="hotel-brand" class="form-control" placeholder="Hotel Brand">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div><!-- Row -->
+                                <div class="clearfix"></div>
+                                <h4>Hotel Address</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="country">Country</label>
+                                                <select id="country" class="form-control m-b-sm">
+                                                    <option>Vietname</option>
+                                                    <option>Thanland</option>
+                                                    <option>Campodia</option>
+                                                    <option>Laos</option>
+                                                    <option>Myanmar</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="city">City</label>
+                                                <select id="city" class="form-control m-b-sm">
+                                                    <option>Ho Chi Minh</option>
+                                                    <option>Ha Noi</option>
+                                                    <option>Hoi An</option>
+                                                    <option>Ha Long Bay</option>
+                                                    <option>An Giang</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="address">Street Address (English)</label>
+                                                <textarea id="address" class="form-control" placeholder="Street Address (English)"></textarea>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="city">Area</label>
+                                                <select id="city" class="form-control m-b-sm">
+                                                    <option>Ho Chi Minh</option>
+                                                    <option>Ha Noi</option>
+                                                    <option>Hoi An</option>
+                                                    <option>Ha Long Bay</option>
+                                                    <option>An Giang</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="phone">Phone</label>
+                                                <input id="phone" class="form-control" placeholder="Phone">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="address">Street Address (Local Language)</label>
+                                                <textarea id="address" class="form-control" placeholder="Street Address (Local Language)"></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div><!-- Row -->
+                                <div class="clearfix"></div>
+                                <h4>Hotel Location</h4>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <form>
+                                            <img alt="" src="/assets/images/map.png" style="width: 100%;height: 332px;">
+                                        </form>
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="longtitude">Longtitude</label>
+                                                <input id="longtitude" class="form-control" placeholder="Longtitude">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="latitude">Latitude</label>
+                                                <input id="latitude" class="form-control" placeholder="Latitude">
+                                            </div>
+                                            <div role="alert" class="alert alert-success">
+                                                <i class="fa fa-warning"></i>  WARNING – You must click and search the map to find your hotel location.
+                                                Right click on correct spot to fix location. Not correctly locating your hotel will result in customer complaints.
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div><!-- Row -->
+                                <div class="clearfix"></div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-default m-b-sm">Skip and Continue</button>
+                                    <button type="button" class="btn btn-success m-b-sm">Save and Continue</button>
+                                </div>
+                                @*<div class="clearfix"></div>
+                                    <div role="alert" class="alert alert-danger">
+                                        Change a few things up and try submitting again.
+                                    </div>*@
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab4">
+                                <h4>Hotel Style</h4>
+                                <div role="alert" class="alert alert-success alert-dismissible">
+                                    <button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button>
+                                    Please select the categories that apply to your property. This information will help us better target customers for you.
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form>
+                                            <div class="row">
+                                                @if (catDetail.Count > 0)
+                                                {
+                                                    foreach (CatDetail catrgory in catDetail)
+                                                    {
+                                                        <div class="col-md-4">
+                                                            <label class="checkbox inline">
+                                                                <input type="checkbox" name="cb_hotelStyle" id="@catrgory.Id" value="@catrgory.Id"><b>@catrgory.Name</b>
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                }
+
+                                                @*<div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelStyle" checked="checked" id="183" value="183"><b>Premium Hotel</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelStyle" id="184" value="184"><b>Budget Hotel</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelStyle" id="185" value="185"><b>Boutique Hotel</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelStyle" id="186" value="186"><b>Romance Hotel</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelStyle" id="188" value="188"><b>Luxury Resort</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelStyle" id="189" value="189"><b>Premium Resort</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelStyle" id="190" value="190"><b>Budget Resort</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelStyle" id="191" value="191"><b>Cruise</b>
+                                                    </label>
+                                                </div>*@
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div><!-- Row -->
+                                <div class="clearfix"></div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-default m-b-sm">Skip and Continue</button>
+                                    <button type="button" class="btn btn-success m-b-sm">Save and Continue</button>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab5">
+                                <h4>Hotel Facilities</h4>
+                                <div role="alert" class="alert alert-success alert-dismissible">
+                                    <button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button>
+                                    Please select the facilities available at your hotel.
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="10" value="10"><b>24/7 Room Service</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="11" value="11"><b>Bar/Pub</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="12" value="12"><b>Chapel/Shrine</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="13" value="13"><b>Disabled Facilities/Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="14" value="14"><b>Allergy-Free Room</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="15" value="15"><b>Baggage Store</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="16" value="16"><b>Buffet Breakfast</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="17" value="17"><b>Car Park</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="18" value="18"><b>Connecting Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="19" value="19"><b>Designated Smoking Area</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="20" value="20"><b>Elevator</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="21" value="21"><b>Executive Floor</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="22" value="22"><b>Express Check-In/Out</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="23" value="23"><b>Family Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="24" value="24"><b>Free WiFi Internet</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="25" value="25"><b>Garden </b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="26" value="26"><b>Gay Friendly</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="27" value="27"><b>Heating </b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="28" value="28"><b>Internet (chargeable)</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="29" value="29"><b>Multilingual Staff</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="30" value="30"><b>Newspapers </b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="31" value="31"><b>Non-Smoking Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="32" value="32"><b>Poolside Bar</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="33" value="33"><b>Private Beach Area</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="34" value="34"><b>Restaurant</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="35" value="35"><b>Restaurant (buffet)</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="36" value="36"><b>Safety Deposit Box</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="37" value="37"><b>Shops in Hotel</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="38" value="38"><b>Ski Storage</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="39" value="39"><b>Soundproofed Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="40" value="40"><b>Sun Terrace</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="41" value="41"><b>Valet Parking </b>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div><!-- Row -->
+                                <div class="clearfix"></div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-default m-b-sm">Skip and Continue</button>
+                                    <button type="button" class="btn btn-success m-b-sm">Save and Continue</button>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab6">
+                                <h4>Room Facilities</h4>
+                                <div role="alert" class="alert alert-success alert-dismissible">
+                                    <button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button>
+                                    Please select the facilities available in your rooms.<br />
+                                    Please note: only select facilities available in all rooms
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="10" value="10"><b>24/7 Room Service</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="11" value="11"><b>Bar/Pub</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="12" value="12"><b>Chapel/Shrine</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="13" value="13"><b>Disabled Facilities/Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="14" value="14"><b>Allergy-Free Room</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="15" value="15"><b>Baggage Store</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="16" value="16"><b>Buffet Breakfast</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="17" value="17"><b>Car Park</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="18" value="18"><b>Connecting Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="19" value="19"><b>Designated Smoking Area</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="20" value="20"><b>Elevator</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="21" value="21"><b>Executive Floor</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="22" value="22"><b>Express Check-In/Out</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="23" value="23"><b>Family Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="24" value="24"><b>Free WiFi Internet</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="25" value="25"><b>Garden </b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="26" value="26"><b>Gay Friendly</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="27" value="27"><b>Heating </b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="28" value="28"><b>Internet (chargeable)</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="29" value="29"><b>Multilingual Staff</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="30" value="30"><b>Newspapers </b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="31" value="31"><b>Non-Smoking Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="32" value="32"><b>Poolside Bar</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="33" value="33"><b>Private Beach Area</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="34" value="34"><b>Restaurant</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="35" value="35"><b>Restaurant (buffet)</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="36" value="36"><b>Safety Deposit Box</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="37" value="37"><b>Shops in Hotel</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="38" value="38"><b>Ski Storage</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="39" value="39"><b>Soundproofed Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="40" value="40"><b>Sun Terrace</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="41" value="41"><b>Valet Parking </b>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div><!-- Row -->
+                                <div class="clearfix"></div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-default m-b-sm">Skip and Continue</button>
+                                    <button type="button" class="btn btn-success m-b-sm">Save and Continue</button>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab7">
+                                <h4>Sports and Recreation</h4>
+                                <div role="alert" class="alert alert-success alert-dismissible">
+                                    <button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button>
+                                    Please select any sports and recreation facilities available at your hotel.
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="10" value="10"><b>24/7 Room Service</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="11" value="11"><b>Bar/Pub</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="12" value="12"><b>Chapel/Shrine</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="13" value="13"><b>Disabled Facilities/Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="14" value="14"><b>Allergy-Free Room</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="15" value="15"><b>Baggage Store</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="16" value="16"><b>Buffet Breakfast</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="17" value="17"><b>Car Park</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="18" value="18"><b>Connecting Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="19" value="19"><b>Designated Smoking Area</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="20" value="20"><b>Elevator</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="21" value="21"><b>Executive Floor</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="22" value="22"><b>Express Check-In/Out</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="23" value="23"><b>Family Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="24" value="24"><b>Free WiFi Internet</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="25" value="25"><b>Garden </b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="26" value="26"><b>Gay Friendly</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="27" value="27"><b>Heating </b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="28" value="28"><b>Internet (chargeable)</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="29" value="29"><b>Multilingual Staff</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="30" value="30"><b>Newspapers </b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="31" value="31"><b>Non-Smoking Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="32" value="32"><b>Poolside Bar</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="33" value="33"><b>Private Beach Area</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="34" value="34"><b>Restaurant</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="35" value="35"><b>Restaurant (buffet)</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="36" value="36"><b>Safety Deposit Box</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="37" value="37"><b>Shops in Hotel</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="38" value="38"><b>Ski Storage</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" id="39" value="39"><b>Soundproofed Rooms</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="40" value="40"><b>Sun Terrace</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="checkbox inline">
+                                                        <input type="checkbox" name="cb_hotelfacility" checked="checked" id="41" value="41"><b>Valet Parking </b>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div><!-- Row -->
+                                <div class="clearfix"></div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-default m-b-sm">Skip and Continue</button>
+                                    <button type="button" class="btn btn-success m-b-sm">Save and Continue</button>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab8">
+                                <h4>Hotel Pictures</h4>
+                                <div role="alert" class="alert alert-success alert-dismissible">
+                                    <button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button>
+                                    Instruction: browse your files and select the pictures to upload. Check the color of the border on this screen to identify their quality.
+                                </div>
+                                <div class="pull-left">
+                                    <button type="button" class="btn btn-info m-b-sm">Add Images</button>
+                                    <button type="button" class="btn btn-danger m-b-sm">Delete Selected</button>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><input type="checkbox"> </th>
+                                                            <th>Detail</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <img alt="Image" style="width: 100%" src="http://www.dev.vinaday.com/Uploads/HotelImages/69/693/635366698460052806_tbn.jpg">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <input id="hotel-name" class="form-control" placeholder="Image Title">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <select id="picture-type" class="form-control m-b-sm">
+                                                                                <option>Select picture type</option>
+                                                                                <option>Beach</option>
+                                                                                <option>Business</option>
+                                                                                <option>French Restaurant</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio" checked="checked">Gallery
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">MainPhoto
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">RoomType
+                                                                                </label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <a href="javascript:void(0);">Delete this Image</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <img alt="Image" style="width: 100%" src="http://www.dev.vinaday.com/Uploads/HotelImages/69/693/635366698460052806_tbn.jpg">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <input id="hotel-name" class="form-control" placeholder="Image Title">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <select id="picture-type" class="form-control m-b-sm">
+                                                                                <option>Select picture type</option>
+                                                                                <option>Beach</option>
+                                                                                <option>Business</option>
+                                                                                <option>French Restaurant</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio" checked="checked">Gallery
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">MainPhoto
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">RoomType
+                                                                                </label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <a href="javascript:void(0);">Delete this Image</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <img alt="Image" style="width: 100%" src="http://www.dev.vinaday.com/Uploads/HotelImages/69/693/635366698460052806_tbn.jpg">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <input id="hotel-name" class="form-control" placeholder="Image Title">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <select id="picture-type" class="form-control m-b-sm">
+                                                                                <option>Select picture type</option>
+                                                                                <option>Beach</option>
+                                                                                <option>Business</option>
+                                                                                <option>French Restaurant</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio" checked="checked">Gallery
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">MainPhoto
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">RoomType
+                                                                                </label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <a href="javascript:void(0);">Delete this Image</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <img alt="Image" style="width: 100%" src="http://www.dev.vinaday.com/Uploads/HotelImages/69/693/635366698460052806_tbn.jpg">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <input id="hotel-name" class="form-control" placeholder="Image Title">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <select id="picture-type" class="form-control m-b-sm">
+                                                                                <option>Select picture type</option>
+                                                                                <option>Beach</option>
+                                                                                <option>Business</option>
+                                                                                <option>French Restaurant</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio" checked="checked">Gallery
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">MainPhoto
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">RoomType
+                                                                                </label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <a href="javascript:void(0);">Delete this Image</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <img alt="Image" style="width: 100%" src="http://www.dev.vinaday.com/Uploads/HotelImages/69/693/635366698460052806_tbn.jpg">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <input id="hotel-name" class="form-control" placeholder="Image Title">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <select id="picture-type" class="form-control m-b-sm">
+                                                                                <option>Select picture type</option>
+                                                                                <option>Beach</option>
+                                                                                <option>Business</option>
+                                                                                <option>French Restaurant</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio" checked="checked">Gallery
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">MainPhoto
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">RoomType
+                                                                                </label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <a href="javascript:void(0);">Delete this Image</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <img alt="Image" style="width: 100%" src="http://www.dev.vinaday.com/Uploads/HotelImages/69/693/635366698460052806_tbn.jpg">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <input id="hotel-name" class="form-control" placeholder="Image Title">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <select id="picture-type" class="form-control m-b-sm">
+                                                                                <option>Select picture type</option>
+                                                                                <option>Beach</option>
+                                                                                <option>Business</option>
+                                                                                <option>French Restaurant</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio" checked="checked">Gallery
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">MainPhoto
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">RoomType
+                                                                                </label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <a href="javascript:void(0);">Delete this Image</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <img alt="Image" style="width: 100%" src="http://www.dev.vinaday.com/Uploads/HotelImages/69/693/635366698460052806_tbn.jpg">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <input id="hotel-name" class="form-control" placeholder="Image Title">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <select id="picture-type" class="form-control m-b-sm">
+                                                                                <option>Select picture type</option>
+                                                                                <option>Beach</option>
+                                                                                <option>Business</option>
+                                                                                <option>French Restaurant</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio" checked="checked">Gallery
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">MainPhoto
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <input type="radio">RoomType
+                                                                                </label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <a href="javascript:void(0);">Delete this Image</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div><!-- Row -->
+                                <div class="clearfix"></div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-default m-b-sm">Skip and Continue</button>
+                                    <button type="button" class="btn btn-success m-b-sm">Save and Continue</button>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab9">
+                                <h4>Useful Information</h4>
+                                <div role="alert" class="alert alert-success alert-dismissible">
+                                    <button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button>
+                                    Please tick the boxes and fill in any additional information about your hotel that can be useful to our customers. If you do not tick the box, the information will not show on the website.
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox">
+                                            <input type="checkbox" checked="checked" value="True">Airport Transfer Available
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="radio ">
+                                            <input type="radio" value="Yes"> Yes
+                                        </label>
+                                        <label class="radio ">
+                                            <input type="radio" value="No"> No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox">
+                                            <input type="checkbox" value="True">Airport Transfer Fee
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input id="hotel-name" disabled class="form-control" placeholder="Airport Transfer Fee">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" value="True">Breakfast Charge (when not included in room rate)
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input id="hotel-name" disabled class="form-control" placeholder="Breakfast Charge">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" checked="checked" value="True">Check-Out
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input id="hotel-name" class="form-control" placeholder="Check-Out">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" value="True" checked="checked">Distance from City Center
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input id="hotel-name" class="form-control" placeholder="Distance from City Center">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" checked="checked" value="True">Earliest Check-In
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input id="hotel-name" class="form-control" placeholder="Earliest Check-In">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" checked="checked" value="True">Number of Restaurants
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input id="hotel-name" class="form-control" placeholder="Number of Restaurants">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" checked="checked" value="True">Parking Available
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="radio" value="Yes"> Yes
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="radio" value="No"> No
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" checked="checked" value="True">Room Service (Yes, No, 24 Hrs)
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="radio" value="Yes"> Yes
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="radio" value="No"> No
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="radio" value="24Hrs"> 24Hrs
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" checked="checked" value="True">Room Voltage
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input id="hotel-name" class="form-control" placeholder="Room Voltage">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" value="True">Time to Airport (Minutes)
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input id="hotel-name" disabled class="form-control" placeholder="Time to Airport">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" value="True">Year Hotel Built
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input id="hotel-name" disabled class="form-control" placeholder="Year Hotel Built">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" value="True">Year Hotel Last Renovated
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input id="hotel-name" disabled class="form-control" placeholder="Year Hotel Last Renovated">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-default m-b-sm">Skip and Continue</button>
+                                    <button type="button" class="btn btn-success m-b-sm">Save and Continue</button>
+                                </div>
+                                @*<div class="clearfix"></div>
+                                    <div role="alert" class="alert alert-danger">
+                                        Change a few things up and try submitting again.
+                                    </div>*@
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab10">
+                                <h4>Cancelation Policy</h4>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+
+                                                            <div class="form-group">
+                                                                <label for="hotel-chain">Check in Date from</label>
+                                                                <input type="text" class="form-control date-picker">
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="form-group">
+                                                                <label for="hotel-chain">Check in Date until</label>
+                                                                <input type="text" class="form-control date-picker">
+                                                            </div>
+
+                                                        </th>
+                                                        <th>
+                                                            <label for="hotel-chain">Cancellation Policy</label>
+                                                            <div class="form-group">
+                                                                <select id="cancellation-type" class="form-control m-b-sm">
+                                                                    <option value="-1" name="">Select cancellation</option>
+                                                                    <option value="1" name="Any cancellation received within 10 days prior to arrival date will incur the full period charge. Failure to arrive at your hotel will be treated as a No-Show and no refund will be given.">Cancel 10D prior arrival charge 100%. No Show 100% charge</option>
+                                                                    <option value="2" name="Any cancellation received within 10 days prior to arrival date will incur the first night charge. Failure to arrive at your hotel will be treated as a No-Show and no refund will be given.">Cancel 10D prior arrival 1N charge. No Show 100% charge</option>
+                                                                    <option value="3" name="Any cancellation received within 14 days prior to arrival date will incur the full period charge. Failure to arrive at your hotel will be treated as a No-Show and no refund will be given.">Cancel 14D prior arrival charge 100%. No Show 100% charge</option>
+                                                                    <option value="4" name="Any cancellation received within 14 days prior to arrival date will incur the first night charge. Failure to arrive at your hotel will be treated as a No-Show and will incur the first night charge.">Cancel 14D prior arrival 1N charge. No Show 1N charge</option>
+                                                                    <option value="5" name="Any cancellation received within 14 days prior to arrival date will incur the first night charge. Failure to arrive at your hotel will be treated as a No-Show and no refund will be given.">Cancel 14D prior arrival 1N charge. No Show 100% charge</option>
+                                                                    <option value="6" name="Any cancellation received within 14 days prior to arrival date will incur a charge of 50% of the booking value. Failure to arrive at your hotel will be treated as a No-Show and no refund will be given.">Cancel 14D prior arrival charge 50%. No Show 100% charge</option>
+                                                                    <option value="7" name="Any cancellation received within 1 day prior to arrival date will incur the full period charge. Failure to arrive at your hotel will be treated as a No-Show and will incur the first night charge .">Cancel 1D prior arrival charge 100%. No Show 1N charge</option>
+                                                                    <option value="8" name="Any cancellation received within 1 day prior to arrival date will incur the full period charge. Failure to arrive at your hotel will be treated as a No-Show and no refund will be given.">Cancel 1D prior arrival charge 100%. No Show 100% charge</option>
+                                                                    <option value="9" name="Any cancellation received within 1 day prior to arrival date will incur the first night charge. Failure to arrive at your hotel will be treated as a No-Show and will incur the first night charge .">Cancel 1D prior arrival 1N charge. No Show 1N charge</option>
+                                                                    <option value="10" name="Any cancellation received within 1 day prior to arrival date will incur the first night charge. Failure to arrive at your hotel will be treated as a No-Show and will incur a charge of 50% of the booking value .">Cancel 1D prior arrival 1N charge. No Show 50% charge</option>
+
+                                                                </select>
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="form-group">
+                                                                <a id="add-cancellation" class="btn btn-small btn-info"> Add</a>
+                                                            </div>
+
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+
+                                            </table>
+                                        </form>
+
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>From Date</th>
+                                                        <th>Until Date</th>
+                                                        <th>Cancellation Policy</th>
+                                                        <th>Description</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th><p>10-31-2014</p></th>
+                                                        <th><p>12-31-2015</p></th>
+                                                        <th><p>Cancel 7D prior arrival 1N charge. 3D charge 100%. No Show 100% charge</p></th>
+                                                        <th><p>Any cancellation received within 7 days prior to arrival date will incur the first night charge. Any cancellation received within 3 days prior to arrival date will incur the full period charge. Failure to arrive at your hotel will be treated as a No-Show and no refund will be given.</p></th>
+                                                        <th><a class="btn btn-small btn-danger">Remove</a></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th><p>10-31-2014</p></th>
+                                                        <th><p>12-31-2015</p></th>
+                                                        <th><p>Cancel 7D prior arrival 1N charge. 3D charge 100%. No Show 100% charge</p></th>
+                                                        <th><p>Any cancellation received within 7 days prior to arrival date will incur the first night charge. Any cancellation received within 3 days prior to arrival date will incur the full period charge. Failure to arrive at your hotel will be treated as a No-Show and no refund will be given.</p></th>
+                                                        <th><a class="btn btn-small btn-danger">Remove</a></th>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div><!-- Row -->
+                                <div class="clearfix"></div>
+                                <div class="pull-right">
+
+                                    <button type="button" class="btn btn-success m-b-sm">Complete</button>
+                                </div>
+                                @*<div class="clearfix"></div>
+                                    <div role="alert" class="alert alert-danger">
+                                        Change a few things up and try submitting again.
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->

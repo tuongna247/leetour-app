@@ -1,0 +1,134 @@
+﻿@using System.Linq
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@{
+    var countries = ViewBag.PartialCountries;
+    var items = ViewBag.PartialTravelStyles;
+    var cities = ViewBag.PartialCities;
+}
+@model Tour
+<div class="panel-body">
+    <input type="hidden" id="child-tour-id" value="@Model.Id" />
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="panel panel-white">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="title">Title</label>
+                                    <div class="col-sm-10">
+                                        <input id="title" value="@Model.Name" type="text" class="form-control" placeholder="Title">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="title">Type</label>
+                                    <div class="col-sm-10">
+                                        <select id="type" class="form-control">
+                                            <option value="1" @(Model.Type == 1 ? "selected" : "")>Tour</option>
+                                            <option value="2" @(Model.Type == 2 ? "selected" : "")>Day trip</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="country">Country</label>
+                                    <div class="col-sm-10">
+                                        <select id="country" class="form-control">
+                                            @if (countries.Count > 0)
+                                            {
+                                                foreach (var country in countries)
+                                                {
+                                                    if (country == null)
+                                                    {
+                                                        continue;
+                                                    }
+                                                    <option value="@country.CountryId" @(country.CountryId == Model.CountryId ? "selected" : "")>@country.Name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="city">City</label>
+                                    <div class="col-sm-10">
+                                        <select id="city" multiple="multiple" class="form-control">
+                                            @if (cities.Count > 0)
+                                            {
+                                                foreach (var city in cities)
+                                                {
+                                                    if (city == null)
+                                                    {
+                                                        continue;
+                                                    }
+                                                    <option value="@city.Id" @(city.Checked ? "selected" : "")>@city.Name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="description">Description</label>
+                                    <div class="col-sm-10">
+                                        <div id="description">@Html.Raw(Model.Description)</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="location">Location</label>
+                                    <div class="col-sm-10">
+                                        <input id="location" value="@Model.Location" type="text" class="form-control" placeholder="Location">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="travel-style">Travel style</label>
+                                    <div class="col-sm-10">
+                                        <div id="travel-style">
+                                            @if (items != null)
+                                            {
+                                                foreach (var item in items)
+                                                {
+
+                                                    <div class="checkbox col-md-6">
+                                                        <label>
+                                                            <input type="checkbox" @(item.Checked ? "checked" : "") name="@item.Id" id="@item.Id" value="@item.Id">@item.Name
+                                                        </label>
+                                                    </div>
+
+                                                }
+                                            }
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="over-view">Over View</label>
+                                    <div class="col-sm-10">
+                                        <div id="over-view">@Html.Raw(Model.Overview)</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="search-keys">Keys</label>
+                                    <div class="col-sm-10">
+                                        <textarea style="padding: 15px; border: 1px solid #bdc5c9" class="col-sm-12" rows="4" cols="50" id="search-keys" placeholder="Search key">@Html.Raw(Model.SearchKey)</textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="pull-right">
+        <a class="btn btn-success m-b-sm" onclick="updateTourStep1();">Save and continue</a>
+        <a class="btn btn-default m-b-sm" href="@Url.Content("/Tour")">Cancel</a>
+    </div>
+</div>

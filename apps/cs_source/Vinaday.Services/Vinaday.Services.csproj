@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BF0282C5-4347-4902-8ED4-F34CD0CD6C03}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Vinaday.Services</RootNamespace>
+    <AssemblyName>Vinaday.Services</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Data.OData.5.6.1\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Repository.Pattern, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Repository.Pattern.dll</HintPath>
+    </Reference>
+    <Reference Include="Repository.Pattern.Ef6, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Repository.Pattern.Ef6.dll</HintPath>
+    </Reference>
+    <Reference Include="Service.Pattern, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Service.Pattern.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.Http.OData, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.OData.5.1.2\lib\net45\System.Web.Http.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Vinaday.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Vinaday.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Implements\AccountantOrderDetailService.cs" />
+    <Compile Include="Implements\AccountantOrderService.cs" />
+    <Compile Include="Implements\BookingService.cs" />
+    <Compile Include="Implements\BusinessCardService.cs" />
+    <Compile Include="Implements\CancellationService.cs" />
+    <Compile Include="Implements\CatDetailService.cs" />
+    <Compile Include="Implements\CategoryDetailService.cs" />
+    <Compile Include="Implements\CategoryService.cs" />
+    <Compile Include="Implements\TourReviewService.cs" />
+    <Compile Include="Implements\TourRateService3.cs" />
+    <Compile Include="Implements\TourRateService2.cs" />
+    <Compile Include="Implements\TourTopSiteService.cs" />
+    <Compile Include="Implements\TourRateOptionsService.cs" />
+    <Compile Include="Implements\DealHotelToursVNService.cs" />
+    <Compile Include="Implements\DealHotelToursService.cs" />
+    <Compile Include="Implements\HotelCouponService.cs" />
+    <Compile Include="Implements\CouponCodeService.cs" />
+    <Compile Include="Implements\CatService.cs" />
+    <Compile Include="Implements\CityService.cs" />
+    <Compile Include="Implements\ContactService.cs" />
+    <Compile Include="Implements\CountryService.cs" />
+    <Compile Include="Implements\CreditCardService.cs" />
+    <Compile Include="Implements\CustomerService.cs" />
+    <Compile Include="Implements\DealService.cs" />
+    <Compile Include="Implements\FeaturedHotelService.cs" />
+    <Compile Include="Implements\FeaturedService.cs" />
+    <Compile Include="Implements\HotelCancellationService.cs" />
+    <Compile Include="Implements\HotelPackageSurchargeService.cs" />
+    <Compile Include="Implements\HotelService.cs" />
+    <Compile Include="Implements\HotelPackageService.cs" />
+    <Compile Include="Implements\TourOperatorsService.cs" />
+    <Compile Include="Implements\ViewListTourService.cs" />
+    <Compile Include="Interface\IAccountantOrderDetailService.cs" />
+    <Compile Include="Interface\IAccountantOrderService.cs" />
+    <Compile Include="Interface\IBookingService.cs" />
+    <Compile Include="Interface\IBusinessCardService.cs" />
+    <Compile Include="Interface\ICancellationService.cs" />
+    <Compile Include="Interface\ICatDetailService.cs" />
+    <Compile Include="Interface\ICategoryDetailService.cs" />
+    <Compile Include="Interface\ICategoryService.cs" />
+    <Compile Include="Interface\ICatService.cs" />
+    <Compile Include="Interface\ICityService.cs" />
+    <Compile Include="Interface\IContactService.cs" />
+    <Compile Include="Interface\ICountryService.cs" />
+    <Compile Include="Interface\ICreditCardService.cs" />
+    <Compile Include="Interface\ICustomerService.cs" />
+    <Compile Include="Interface\IDealService.cs" />
+    <Compile Include="Interface\IFeaturedHotelService.cs" />
+    <Compile Include="Interface\ITourRateService3.cs" />
+    <Compile Include="Interface\ITourRateService2.cs" />
+    <Compile Include="Interface\ITourTopSiteService.cs" />
+    <Compile Include="Interface\IFeaturedService.cs" />
+    <Compile Include="Interface\IHotelCancellationService.cs" />
+    <Compile Include="Interface\IHotelService.cs" />
+    <Compile Include="Interface\IImageService.cs" />
+    <Compile Include="Interface\ILottoService.cs" />
+    <Compile Include="Interface\ImageService.cs" />
+    <Compile Include="Interface\IMediaService.cs" />
+    <Compile Include="Interface\INationalityService.cs" />
+    <Compile Include="Interface\IOrderDetailService.cs" />
+    <Compile Include="Interface\IOrderDetailService2.cs" />
+    <Compile Include="Interface\IOrderInformationService.cs" />
+    <Compile Include="Interface\IOrderInformationService2.cs" />
+    <Compile Include="Interface\IOrderService.cs" />
+    <Compile Include="Interface\IOrderService2.cs" />
+    <Compile Include="Interface\IPaymentOrderDetailService.cs" />
+    <Compile Include="Interface\IPaymentOrderDetailService2.cs" />
+    <Compile Include="Interface\IPaymentOrderService.cs" />
+    <Compile Include="Interface\IPaymentOrderService2.cs" />
+    <Compile Include="Interface\IPromotionService.cs" />
+    <Compile Include="Interface\IRateExchangeService.cs" />
+    <Compile Include="Interface\IRegionService.cs" />
+    <Compile Include="Interface\IReviewDetailService.cs" />
+    <Compile Include="Interface\IReviewService.cs" />
+    <Compile Include="Interface\IRoomControlService.cs" />
+    <Compile Include="Interface\IRoomReguestService.cs" />
+    <Compile Include="Interface\IRoomService.cs" />
+    <Compile Include="Interface\ISeoService.cs" />
+    <Compile Include="Interface\ISpecialRateService.cs" />
+    <Compile Include="Interface\ISurchargeService.cs" />
+    <Compile Include="Interface\ITipService.cs" />
+    <Compile Include="Interface\ITourDetailService.cs" />
+    <Compile Include="Interface\ITourExpandRateService.cs" />
+    <Compile Include="Interface\ITourPromotionService.cs" />
+    <Compile Include="Interface\ITourOperatorsService.cs" />
+    <Compile Include="Interface\ITourRateService.cs" />
+    <Compile Include="Interface\ITourService.cs" />
+    <Compile Include="Interface\ITourSurchargeService.cs" />
+    <Compile Include="Interface\IUserService.cs" />
+    <Compile Include="Interface\IVoucherService.cs" />
+    <Compile Include="Implements\LottoService.cs" />
+    <Compile Include="Implements\MediaService.cs" />
+    <Compile Include="Implements\NationalityService.cs" />
+    <Compile Include="Implements\OrderDetailService.cs" />
+    <Compile Include="Implements\OrderDetailService2.cs" />
+    <Compile Include="Implements\OrderInformationService.cs" />
+    <Compile Include="Implements\OrderInformationService2.cs" />
+    <Compile Include="Implements\OrderService.cs" />
+    <Compile Include="Implements\OrderService2.cs" />
+    <Compile Include="Implements\PaymentOrderDetailService.cs" />
+    <Compile Include="Implements\PaymentOrderDetailService2.cs" />
+    <Compile Include="Implements\PaymentOrderService.cs" />
+    <Compile Include="Implements\PaymentOrderService2.cs" />
+    <Compile Include="Implements\PromotionService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Implements\RateExchangeService.cs" />
+    <Compile Include="Implements\RegionService.cs" />
+    <Compile Include="Implements\ReviewDetailService.cs" />
+    <Compile Include="Implements\ReviewService.cs" />
+    <Compile Include="Implements\RoomControlService.cs" />
+    <Compile Include="Implements\RoomReguestService.cs" />
+    <Compile Include="Implements\RoomService.cs" />
+    <Compile Include="Implements\SeoService.cs" />
+    <Compile Include="Implements\SpecialRateService.cs" />
+    <Compile Include="Implements\SurchargeService.cs" />
+    <Compile Include="Implements\TipService.cs" />
+    <Compile Include="Implements\TourDetailService.cs" />
+    <Compile Include="Implements\TourExpandRateService.cs" />
+    <Compile Include="Implements\TourPromotionService.cs" />
+    <Compile Include="Implements\TourRateService.cs" />
+    <Compile Include="Implements\TourService.cs" />
+    <Compile Include="Implements\TourSurchargeService.cs" />
+    <Compile Include="Implements\UserService.cs" />
+    <Compile Include="Implements\Utilities.cs" />
+    <Compile Include="Implements\VoucherService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vinaday.Data\Vinaday.Data.csproj">
+      <Project>{79a96e2d-a30a-4826-8b37-c376cd63e2ef}</Project>
+      <Name>Vinaday.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>Copy "$(TargetPath)" "E:\Projects\GitControl\VinadayGit\Libs"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

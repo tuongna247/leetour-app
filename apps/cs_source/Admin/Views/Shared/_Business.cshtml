@@ -1,0 +1,87 @@
+﻿@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+@model Vinaday.Data.Models.BusinessCard
+@{
+    List<OrderModel> orders = ViewBag.OrderHistories;
+}
+<div class="modal fade" id="customer-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Customer management</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="user-name">User name </label>
+                        <input class="form-control" id="user-name" type="text" placeholder="Enter user name" value="@Model.FullName">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email">Email </label>
+                        <input disabled class="form-control" id="email" type="text" placeholder="Enter email" value="@Model.Email">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="phone-number">Phone number </label>
+                        <input disabled class="form-control" id="phone-number" type="text" placeholder="Enter your phone" value="@Utilities.FormatPhone(Model.Phone)">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email-second">Email Second </label>
+                        <input class="form-control" id="email-second" type="text" placeholder="Enter email" value="@Model.EmailSecond">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="phone-second-number">Phone second number </label>
+                        <input class="form-control" id="phone-second-number" type="text" placeholder="Enter your phone" value="@Utilities.FormatPhone(Model.PhoneSecond)">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="note">Note</label>
+                        <textarea placeholder="Plase note for action" class="form-control" id="note">@Html.Raw(Model.Note)</textarea>
+                    </div>
+                    <div class="form-group col-md-12 text-left">
+                        <label class="checkbox inline">
+                            <input id="is-call" type="checkbox" @(Model.IsCall ? "checked" : "") value="@Model.IsCall"><b style="text-transform: capitalize;">Called?</b>
+                        </label>
+
+                        <label class="checkbox inline">
+                            <input id="wrong-number" type="checkbox" @(Model.WrongNumber ? "checked" : "") value="@Model.WrongNumber"><b style="text-transform: capitalize;">Wrong number?</b>
+                        </label>
+                        <label class="checkbox inline">
+                            <input id="disconnected" type="checkbox" @(Model.Disconnected == true ? "checked" : "") value="@Model.Disconnected"><b style="text-transform: capitalize;">Disconnected?</b>
+                        </label>
+                    </div>
+                    @if (orders.Count > 0)
+                    {
+                        <div class="form-group col-md-12">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Booking Date</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in orders.Where(order => order != null))
+                                    {
+                                        <tr>
+                                            <td>@order.ProductName</td>
+                                            <td>@order.CreatedDate</td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="customer-id" value="@Model.Id" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="saveCustomer();" class="btn btn-success">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,339 @@
+﻿@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@{
+
+    ViewBag.Title = "Tour List";
+    Layout = null;
+    List<Vinaday.Web.Home.Models.ViewListTourMapping> tours = ViewBag.Tours;
+    List<Country> countries = ViewBag.Countries;
+    var index = 0;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Holiday Packages @DateTime.Now.Year & Travel in Vietnam, Laos, Myanmar (Burma), Cambodia, Thailand by VINADAY TRAVEL </title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="content-language" content="en-us" />
+    <meta name="description" content="VINADAY goREISE (Vinaday Travel) specializing in arranging and managing quality tourism destinations  for people travelling within Vietnam, Laos, Cambodia, Thailand, Myanmar. Our popular trips are Mekong Delta Trip, Cu Chi Tunnels …">
+    <link rel="alternate" href="https://goreise.com" hreflang="en-us" />
+    @Styles.Render("~/Content/vinaday")
+    @Styles.Render("~/Content/tour-css")
+    <link href="@Url.Content("~/Content/css/all.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/index.css")" rel="stylesheet" />
+
+    <!-- TrustBox script -->
+    <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+    <!-- End TrustBox script -->
+    <link rel="alternate" hreflang="en-gb" href="alternateURL">
+
+    <script type='application/ld+json'>
+        {
+        "@@context": "http://www.schema.org",
+        "@@type": "TravelAgency",
+        "name": "Vinaday Travel",
+        "url": "https://vinadaytravel.com",
+        "logo": "https://vinadaytravel.com/blog/wp-content/uploads/2018/10/logo-Vinaday-Travel-2.png",
+        "image": "https://vinadaytravel.com/blog/wp-content/uploads/2018/10/logo-Vinaday-Travel-2.png",
+        "description": "VINADAY goREISE Vinaday Travel specializing in arranging and managing quality tourism destinations for people travelling within Vietnam, Laos, Cambodia, Thailand, Myanmar Our popular trips are Mekong Delta Trip, Cu Chi Tunnels …",
+        "address": {
+        "@@type": "PostalAddress",
+        "streetAddress": "1th floor, 230 De Tham, Pham Ngu Lao Ward, Distric 1, HCMC",
+        "addressLocality": "HCM",
+        "addressRegion": "AA",
+        "postalCode": "70000",
+        "addressCountry": "Vietnam"
+        },
+        "geo": {
+        "@@type": "GeoCoordinates",
+        "latitude": "10.767833",
+        "longitude": "106.6917963"
+        },
+        "hasMap": "https://www.google.com/maps?cid=5810638270893728819&hl=vi&_ga=2.30493501.306306877.1543288630-853305580.1534385490",
+        "openingHours": "Mo, Tu, We, Th, Fr, Sa, Su 08:00-21:00",
+        "contactPoint": {
+        "@@type": "ContactPoint",
+        "telephone": "+84 916388382",
+        "contactType": "Hotline"
+        }
+        }
+    </script>
+</head>
+<body ng-controller="hotelController" style="background-color: #f1f1f1;"> 
+    <div id="outer-wrap">
+        <div id="inner-wrap" itemtype="http://schema.org/Hotel" itemscope="">
+            @Html.Partial("_Header")
+            <div class="ibanner">
+                <div class="container">
+                    <div class="cbanner">
+                        <h1 style="text-shadow: 1px 1px 1px #000080; margin-bottom: 0;font-size: 22px;">
+                            A Pro-Tour Operator with 90%
+                        </h1>
+                        <h2 style="text-shadow: 1px 1px 1px #000080; font-size: 19px; margin-top: 0;">
+                            Excellent Reviews on Tripadvisor.
+                        </h2>
+                        <div class="isearch">
+                            <div class="itabs clearfix">
+                                <div class="tab-content">
+                                    <div id="hotel-search-form">
+                                        <div class="form-search clearfix">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 descriptionTitle">
+                                                <p class="on-desktop">
+                                                    <div class="form-inline">
+                                                        <div id="search-city-form">
+                                                            <div class="form-group">
+                                                                <div class="search-home-text">
+
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <input type="radio" id="selectTypeCity" name="selectType" checked="checked" value="City" />
+                                                                <label for="selectTypeCity">Search By City</label>
+
+                                                                <div class="search-home-text">
+                                                                    <fieldset>
+                                                                        <select id="country-tour" style="border: 1px solid #e2e2e2; color: black; box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.01) inset; display: block; height: 34px; position: relative; width: 100%">
+                                                                            @if (countries.Count > 0)
+                                                                            {
+                                                                                <option selected="selected" value="-1">Where do you want to go? </option>
+                                                                                foreach (var country in countries)
+                                                                                {
+                                                                                    <option value="@country.CountryId">@country.Name</option>
+                                                                                }
+                                                                            }
+                                                                        </select>
+                                                                    </fieldset>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div style="height: 25px;"> </div>
+                                                                <div class="search-home-calendar">
+                                                                    <fieldset>
+                                                                        <div id="city-list">
+                                                                        </div>
+                                                                    </fieldset>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input type="radio" id="selectTypeKeyword" name="selectType" value="Keyword" />
+                                                                <label for="selectTypeKeyword">Search By Keywords</label>
+
+                                                                <div class="search-home-text">
+                                                                    <fieldset style="margin-bottom: 20px">
+                                                                        <input type="text" id="search-name" onkeypress="return searchByTourPress(event)" placeholder="Search for destinations, Tours and Activities" class="search-name">
+                                                                    </fieldset>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                            <div class="search-home-form">
+                                                                <input type="button" value="Search" onclick="searchMain();" class="btn-search" id="searchHeader1">
+                                                            </div>
+
+
+                                                        </div>
+
+                                                    </div>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container" style="max-width: 1220px; padding-top: 5px;">
+                <section class="content-section form checkout style-2" style="margin-top: 20px; background-color: transparent">
+                    <div class="row">
+                        <div id="show-inquiry" style="background-color: transparent">
+
+                            <div class="col-md-3 hidden-md-down  hidden-xs" style="margin-bottom: 10px;">
+
+                                <div style="padding: 6px; background-color: white; margin-bottom: 10px;">
+                                    <div>
+                                        <div class="social-cover-photo-CoverPhoto__no_cover_photo--5ssTp social-cover-photo-CoverPhoto__narrow--3DL3N">
+
+                                        </div>
+                                        <img class="img-circle img-responsive" style="width:100px; margin: -38px auto 10px" src="/Content/images/NoProfile.jpg" alt="">
+                                    </div>
+                                    <h1 style="margin-bottom: -10px;font-size:14px;">
+                                        Hello <b>Guest</b>
+                                    </h1>
+                                    <h2 style="font-size:14px;">
+                                        Let's talk about your holiday
+                                    </h2>
+
+                                </div>
+
+                                <div class="hidden-md-down  hidden-xs" id="information-price" style="background-color: white;">
+                                    <p style="text-align: center;" class="hidden-xs">
+                                        <div id="TA_selfserveprop154" class="TA_selfserveprop">
+                                            <ul id="h6DI3PTvG" class="TA_links Hha3WH8pO"><li id="vJj7gTabhxgk" class="sZ6hIQIVjkr"><a target="_blank" href="https://www.tripadvisor.com/"><img src="https://www.tripadvisor.com/img/cdsi/img2/branding/150_logo-11900-2.png" alt="TripAdvisor" /></a></li></ul>
+                                        </div>
+                                        <script async src="https://www.jscache.com/wejs?wtype=selfserveprop&amp;uniq=154&amp;locationId=2608200&amp;lang=en_US&amp;rating=true&amp;nreviews=0&amp;writereviewlink=true&amp;popIdx=true&amp;iswide=false&amp;border=false&amp;display_version=2" data-loadtrk onload="this.loadtrk = true"></script>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 " style="">
+                                <div style="padding: 6px; background-color: white;">
+                                    <h2 style="text-align: center">OUR CONCEPT</h2>
+                                    <div style="font-size: 14px; margin: 10px 5px; text-align: justify">
+                                        Now you don’t need to spend your valuable time checking the millions of hotels, resorts, day trips and holiday packages for your upcoming trip. You can choose from our collection of more than 500 luxury hotels, resorts, day trips and holiday packages in Southeast Asia which are hand-picked by dedicated, highly-experienced teams. To keep up with the demands of luxury travel, each booking is carefully handled by a dedicated GOREISE team member. Each GOREISE specialist has been trained to meet the unique needs of each guest, providing impeccable service that leaves guests dazzled and wanting to return again.
+                                    </div>
+                                </div>
+                                <div style="background-color: white; margin-top: 10px;">
+                                    <a href="https://goreise.com/inquiry" alt="Tailor tour">
+                                        <img src="@Url.Content("~/Content/images/tour/tour_content_banner.jpg")" style="width: 100%;" />
+
+                                    </a>
+
+                                </div>
+
+                                <div style="padding: 6px; background-color: white; margin-top: 10px;">
+                                    <div style="font-weight:bolder; font-size:22px">
+                                        Recommended for you
+                                    </div>
+                                    <div style="font-weight:bolder; font-size:16px">
+                                        Best Daily Tours & Holiday Packages
+                                    </div>
+                                    <div class="owl-carousel-hotel owl-theme">
+                                        @foreach (var tour in tours)
+                                        {
+                                            var link = Url.Action("Detail", "Tour", new { id = tour.Id, title = tour.PageUrl, country = tour.SHORTNAME });
+                                            <a class="featured-item grid-col grid-col--3" href="@link">
+                                                <div class="featured-picture" style="background-image: url('@Url.Content(tour.OriginalPath)')"></div>
+                                                <div class="featured-box--verticalAlignBottom featured-box--textAlignLeft">
+                                                    <div class="featured-content">
+                                                        <h2 class="featured-title"><b>@tour.Name</b></h2>
+                                                        @tour.Duration
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+
+                                @if (tours.Count > 0)
+                                {
+                                    <table class="table table-striped table-td-middle-align " style="background-color: white">
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <b>TOP-SELLING TOURS</b>
+                                                </td>
+                                            </tr>
+                                            @foreach (var tour in tours)
+                                            {
+                                                var link = Url.Action("Detail", "Tour", new { id = tour.Id, title = tour.PageUrl, country = tour.SHORTNAME });
+                                                <tr class="table-departure__item ">
+                                                    <td style="width: 100%">
+                                                        <a href="@link" style="font-size: 10px; line-height: 14px; color: black; vertical-align: middle" title="@tour.Name">@tour.Name</a><br />
+                                                        <a href="@link" title="Book now" style="color: red; font-weight: bold; font-size: 11px;" class="book-link">@tour.Duration</a>
+
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                        <div id="un-show-inquiry" style="display: none; text-align: center; margin-top: 10%">
+                            <p>Your Inquiry has been sent</p>
+                            <br />
+                            <a href="https://vinadaytravel.com">Go back >></a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            
+        </div>
+    </div>
+
+    @Html.Partial("_Footer")
+
+    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/tourindex")
+    <script src="~/Scripts/offcanvas-navigation.js"></script>	
+    <script>
+
+        $(document).ready(function () {
+            var owl_hotel = $('.owl-carousel-hotel');
+            owl_hotel.owlCarousel({
+                stagePadding: 10,
+                items: 2,
+                loop: true,
+                //margin: 20,
+                autoplay: true,
+                autoplayTimeout: 1000,
+                autoplayHoverPause: true
+            });
+            var owl_tour = $('.owl-carousel-tour');
+            owl_tour.owlCarousel({
+                stagePadding: 10,
+                items: 2,
+                loop: true,
+                //margin: 20,
+                autoplay: true,
+                autoplayTimeout: 1000,
+                autoplayHoverPause: true
+            });
+        });
+        $('#country-tour option[value=-1]').prop('selected', true);
+        function searchMain() {
+            var searchByCity = $("#selectTypeCity").is(':checked');
+            var searchByText = $("#selectTypeKeyword").is(':checked');
+            if (searchByCity) {
+                var name = $("#city").val();
+                if (name == '' || typeof name === "undefined" || name == null) {
+                    swal({ title: "Information!", text: "Please select city for your vacation!", confirmButtonText: "OK" });
+                    return false;
+                } else if (name == "all") {
+                    var country = $("#country-tour option:selected").text();;
+                    var url = "/" + country + "/key-none/city-all/filter-none/page-1";
+                    window.location.href = url;
+                } else {
+                    var url = "/search/" + name + "/key-none/filter-all/price-all/page-1";
+                    window.location.href = url;
+                }
+            } else if (searchByText) {
+                searchByTour();
+            }
+
+        }
+        function searchByTourPress(e) {
+            if (e.keyCode === 13) {
+                e.preventDefault(); // Ensure it is only this code that rusn
+                searchByTour();
+            }
+        }
+        function searchByTour() {
+            var name = $("#search-name").val();
+            var url = "/search/all/key-" + name.trim() + "/filter-all/price-all/page-1";
+            window.location.href = url;
+        }
+
+    </script>
+    <a href="#" id="backToTop"></a>
+    <!-- Global site tag (gtag.js) - Google Ads: 982836284 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-982836284"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'AW-982836284');
+    </script>
+</body>
+</html>

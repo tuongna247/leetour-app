@@ -1,0 +1,340 @@
+﻿@using System.Collections.Generic
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@{
+    ViewBag.Active = "Tour";
+    ViewBag.Page = "Management";
+    ViewBag.Title = "Basic Information";
+    //Layout = "~/Views/Shared/_TourLayout.cshtml";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    List<Region1> regions = ViewBag.Regions;
+    List<Country> countries = ViewBag.Countries;
+    Tour tour = ViewBag.Tour;
+    List<ItemModel> items = ViewBag.TravelStyles;
+    List<ItemModel> cities = ViewBag.Cities;
+}
+<style>
+    #travel-style div.span4:nth-child(3n+1) {
+        margin-left: 0;
+    }
+</style>
+<div id="main-content" class="main-content container-fluid">
+    <!-- // page head -->
+    @if (tour != null)
+    {
+        <div class="row-fluid page-head">
+            <h2 class="page-title"><i class="fontello-icon-calendar-inv"></i>Basic <small> information</small></h2>
+            <p class="pagedesc">
+                @tour.Name
+            </p>
+        </div>
+        <div id="page-content" class="page-content tab-content overflow-y">
+
+            <input type="hidden" id="tourId" value="@tour.Id" />
+            @*<div class="page-header">
+                    <h3><i class="aweso-icon-list-alt opaci35"></i> @tour.Name <small>@tour.TourCode.ToUpper()</small></h3>
+                </div>*@
+            <nav>
+                <ul class="btn-toolbar page-nav margin-btn">
+                    <li><a class="btn btn-well btn-glyph active" href="@(string.Format("~/Tour/BasicInformation/{0}",tour.Id))" style="width:60px"><i class="fontello-icon-check f20"></i><span class="block">BASIC</span></a></li>
+                    <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Detail/{0}", tour.Id))" style="width:60px"><i class="fontello-icon-th-4 f20"></i><span class="block">DETAIL</span></a></li>
+                    <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Photo/{0}", tour.Id))" style="width:60px" data-toggle="modal"><i class=" fontello-icon-camera-3 f20"></i><span class="block">PHOTO</span></a></li>
+                    <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Itinerary/{0}", tour.Id))" style=" width:60px"><i class=" fontello-icon-flight-1 f20"></i><span class="block">ITINERARY</span></a></li>
+                    <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Price/{0}", tour.Id))" style="width:60px" data-toggle="modal"><i class="fontello-icon-dollar f20"></i><span class="block">PRICE</span></a></li>
+                    <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Promotion/{0}", tour.Id))" style="width:60px" data-toggle="modal"><i class="fontello-icon-gift f20"></i><span class="block">DEAL</span></a></li>
+                </ul>
+                <hr class="margin-0x">
+            </nav>
+            <div class="row-fluid">
+                <div class="span8 grider">
+                    <div class="widget widget-simple">
+                        <div class="widget-content">
+                            <div class="widget-body">
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <fieldset>
+                                            <ul class="form-list label-left list-bordered dotted">
+                                                <li class="control-group">
+                                                    <label for="type" class="control-label">Type: </label>
+                                                    <div class="controls">
+                                                        <select id="type" class="span12" name="type" disabled>
+                                                            <option value="1" @(tour.Type == 1 ? "selected" : "")>Tour</option>
+                                                            <option value="2" @(tour.Type == 2 ? "selected" : "")>Day trip</option>
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="title" class="control-label">Title: <span class="required">*</span></label>
+                                                    <div class="controls controls-row">
+                                                        <input id="title" class="span12 margin-right5" type="text" value="@tour.Name" name="title">
+                                                    </div>
+                                                </li>
+                                                <!-- // form item -->
+                                                <li class="control-group">
+                                                    <label for="country" class="control-label">Country: </label>
+                                                    <div class="controls">
+                                                        <select id="country" class="span12" name="country">
+                                                            @if (countries.Count > 0)
+                                                            {
+                                                                foreach (var country in countries.Where(country => country != null))
+                                                                {
+                                                                    <option value="@country.CountryId" @(country.CountryId == tour.CountryId ? "selected" : "")>@country.Name</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="country" class="control-label">City: </label>
+                                                    <div class="controls">
+                                                        <select id="city" multiple="multiple">
+                                                            @if (cities.Count > 0)
+                                                            {
+                                                                foreach (var city in cities.Where(city => city != null))
+                                                                {
+                                                                    <option value="@city.Id" @(city.Checked ? "selected" : "")>@city.Name</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="description" class="control-label">Description: </label>
+                                                    <div class="controls">
+                                                        <textarea style="width: 97.5%;" class="margin-right5" id="description" rows="5">@Html.Raw(tour.Description)</textarea>
+                                                    </div>
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="location" class="control-label">Location: <span class="required">*</span></label>
+                                                    <div class="controls controls-row">
+                                                        <input id="location" class="span12 margin-right5" type="text" value="@tour.Location" name="location">
+                                                    </div>
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="travel-style" class="control-label">Travel style: <span class="required">*</span></label>
+                                                    <div class="controls controls-row" id="travel-style">
+                                                        @if (items != null)
+                                                        {
+                                                            foreach (var item in items)
+                                                            {
+                                                                <div class="span4">
+                                                                    <label class="checkbox inline">
+                                                                        <input type="checkbox" @(item.Checked ? "checked" : "") name="@item.Id" id="@item.Id" value="@item.Id"><b>@item.Name</b>
+                                                                    </label>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="over-view" class="control-label">
+                                                        Over View :
+                                                        <span class="required">*</span>
+                                                    </label>
+                                                    <div class="controls controls-row">
+                                                        <textarea style="width: 97.5%;" class="margin-right5" id="over-view" rows="10">@Html.Raw(tour.Overview)</textarea>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </fieldset>
+                                        <!-- // fieldset Input -->
+                                        <div class="form-actions">
+                                            <a id="save" class="btn btn-yellow btn-mini" onclick="updateBasicInformation();">Save and continue</a>
+                                            <a class="btn btn-yellow btn-mini" href="@Url.Content("/Tour/Management")" type="button">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- // Widget -->
+
+                </div>
+                @Html.Partial("_Notes")
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="tab-pane padding-bottom30 active fade in">
+            <div class="page-header">
+                <h3><i class="aweso-icon-list-alt opaci35"></i> Basic <small>Information</small></h3>
+            </div>
+            <div class="row-fluid">
+                <div class="span8 grider">
+                    <div class="widget widget-simple">
+
+                        <div class="widget-content">
+                            <div class="widget-body">
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <fieldset>
+                                            <ul class="form-list label-left list-bordered dotted">
+                                                <li class="control-group">
+                                                    <label for="type" class="control-label">Type: </label>
+                                                    <div class="controls">
+                                                        <select id="type" class="span12" name="type">
+                                                            <option value="1" selected="selected">Tour</option>
+                                                            <option value="2">Day trip</option>
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="title" class="control-label">Title: <span class="required">*</span></label>
+                                                    <div class="controls controls-row">
+                                                        <input id="title" class="span12 margin-right5" type="text" value="" name="title">
+                                                    </div>
+                                                </li>
+                                                <!-- // form item -->
+                                                <li class="control-group">
+                                                    <label for="country" class="control-label">Country: </label>
+                                                    <div class="controls">
+                                                        <select id="country" class="span12" name="country">
+                                                            @if (countries.Count > 0)
+                                                            {
+                                                                foreach (var country in countries.Where(country => country != null))
+                                                                {
+                                                                    <option value="@country.CountryId">@country.Name</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="country" class="control-label">City: </label>
+                                                    <div class="controls">
+                                                        <select id="city" multiple="multiple">
+                                                            @if (cities.Count > 0)
+                                                            {
+                                                                foreach (var city in cities.Where(city => city != null))
+                                                                {
+                                                                    <option value="@city.Id">@city.Name</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="description" class="control-label">Description: </label>
+                                                    <div class="controls">
+                                                        <textarea style="width: 97.5%;" class="margin-right5" id="description" rows="5"></textarea>
+                                                    </div>
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="location" class="control-label">Location: <span class="required">*</span></label>
+                                                    <div class="controls controls-row">
+                                                        <input id="location" class="span12 margin-right5" type="text" value="" name="location">
+                                                    </div>
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="travel-style" class="control-label">Travel style: <span class="required">*</span></label>
+                                                    <div class="controls controls-row">
+                                                        <div class="control-group" id="travel-style">
+                                                            @if (items != null)
+                                                            {
+                                                                foreach (var item in items)
+                                                                {
+                                                                    <div class="span4">
+                                                                        <label class="checkbox inline">
+                                                                            <input type="checkbox" @(item.Checked ? "checked" : "") name="@item.Id" id="@item.Id" value="@item.Id"><b>@item.Name</b>
+                                                                        </label>
+                                                                    </div>
+                                                                }
+                                                            }
+
+                                                        </div>
+                                                    </div>
+
+                                                </li>
+                                                <li class="control-group">
+                                                    <label for="over-view" class="control-label">
+                                                        Over View :
+                                                        <span class="required">*</span>
+                                                    </label>
+                                                    @*<div class="controls controls-row">
+                                                            <textarea class="span8 margin-right5" id="over-view" rows="10"></textarea>
+                                                        </div>*@
+
+                                                    <div class="controls controls-row">
+                                                        <textarea id="over-view" style="width: 97.5%;" rows="10" placeholder="Enter text ..."></textarea>
+                                                        <!-- // fieldset Input Grid Sizig -->
+                                                    </div>
+
+                                                </li>
+                                            </ul>
+                                        </fieldset>
+                                        <!-- // fieldset Input -->
+                                        <div class="form-actions">
+                                            <a id="save" class="btn btn-yellow btn-mini" onclick="saveBasicInformation();">Create and continue</a>
+                                            <a class="btn btn-yellow btn-mini" href="@Url.Content("/Tour/Management")" type="button">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- // Widget -->
+
+                </div>
+                <!-- // Column -->
+
+                <div class="span4 grider">
+                    <div class="widget widget-simple widget-notes">
+                        <div class="widget-header">
+                            <h4><i class="fontello-icon-edit"></i> Notes</h4>
+                            <div class="widget-tool"><a class="btn btn-green btn-small btn-glyph" href="javascript:void(0);"> show all</a></div>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-body">
+                                <form id="formNotes" class="form-dark">
+                                    <fieldset>
+                                        <label for="accountTaxVat" class="control-label"> Title</label>
+                                        <input id="accountTaxVat" class="input-block-level" type="text">
+                                        <label for="accountNotes">Note Text:</label>
+                                        <textarea id="accountNotes" class="input-block-level" rows="4"></textarea>
+                                    </fieldset>
+                                    <!-- // fieldset Input -->
+
+                                    <button class="btn btn-yellow btn-block">Add a note</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="widget-header">
+                            <h4><i class="fontello-icon-list-alt"></i> Last Note for Account </h4>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-body">
+                                <ol class="widget-list list-dotted">
+                                    <li class="media">
+                                        <span class="pull-left"><span class="item-icon fontello-icon-pin-1"></span></span>
+                                        <div class="media-body">
+                                            <span class="date">10:30 AM</span> <span class="quick-menu-icon pull-right"> <a class="edit fontello-icon-edit"></a> <a class="state fontello-icon-archive"></a> <a class="state fontello-icon-trash-1"></a> </span>
+                                            <p class="note">Pellentesque malesuada nulla nunc nunc facilisi Donec tellus nec Donec et. Pellentesque metus dolor neque consequat scelerisque.</p>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <span class="pull-left"><span class="item-icon fontello-icon-pin-1"></span></span>
+                                        <div class="media-body">
+                                            <span class="date">09-09-2012 02:30 PM</span> <span class="quick-menu-icon pull-right"> <a class="edit fontello-icon-edit"></a> <a class="state fontello-icon-archive"></a> <a class="state fontello-icon-trash-1"></a> </span>
+                                            <p class="note">Pellentesque malesuada nulla nunc nunc facilisi Donec tellus nec Donec et. Pellentesque metus dolor neque consequat scelerisque.</p>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <span class="pull-left"><span class="item-icon fontello-icon-pin-1"></span></span>
+                                        <div class="media-body">
+                                            <span class="date">08-15-2012 11:50 AM</span> <span class="quick-menu-icon pull-right"> <a class="edit fontello-icon-edit"></a> <a class="state fontello-icon-archive"></a> <a class="state fontello-icon-trash-1"></a> </span>
+                                            <p class="note">Pellentesque malesuada nulla nunc nunc facilisi Donec tellus nec Donec et. Pellentesque metus dolor neque consequat scelerisque.</p>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- // Column -->
+
+            </div>
+        </div>
+    }
+</div>

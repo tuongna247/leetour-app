@@ -1,0 +1,52 @@
+﻿@if (Model.Count > 0)
+{
+
+    <div id="tour">
+        <div class="col-md-12">
+            <h6 class="panel-title"><span class="badge badge-success" style="vertical-align: top">2</span> Fill all value for <b>Tour Order</b></h6>
+            <hr />
+            <div class="form-group col-md-6">
+                <label for="tour-list">Tour list</label>
+                <select id="tour-list" class="form-control">
+                    <option value="-1">Select a tour</option>
+                    @foreach (var tour in Model)
+                    {
+                        <option value="@tour.Id">@tour.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <div id="person">
+                    <label>Person</label>
+                    <div class="alert alert-success" style="margin-bottom: 10px;" role="alert">
+                        No available tour selected.
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="check-in">Depart Date:</label>
+                <input id="check-in" type="text" class="form-control m-b-sm" placeholder="Check-in">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="voucher">Discount</label>
+                <input id="voucher" type="text" class="form-control m-b-sm" placeholder="Discount">
+            </div>
+        </div>
+        <div id="customer-view" class="col-md-12">
+            <h6 class="panel-title"><span class="badge badge-primary" style="vertical-align: top">3</span> Fill all value for <b>Customer</b></h6>
+            <hr />
+            <div class="form-group col-md-6">
+                <label for="email">Email address</label>
+                <input type="email" placeholder="Enter email" id="email" name="email" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="phone">Phone</label>
+                <input type="phone" placeholder="Enter phone" id="phone" name="phone" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="text-right col-md-12">
+        <a class="btn btn-success" onclick="createTourBooking();">Create your booking</a>
+    </div>
+
+}

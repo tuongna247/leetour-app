@@ -1,0 +1,177 @@
+﻿@using System.Collections.Generic
+@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+@{
+    ViewBag.Active = "Tour";
+    ViewBag.Page = "Management";
+    ViewBag.Title = "Photo";
+    Layout = "~/Views/Shared/_TourLayout.cshtml";
+    Tour tour = ViewBag.Tour;
+    List<Medium> images = ViewBag.Images;
+
+    var m = images.FirstOrDefault(i => i.MediaType == (int)Utilities.MediaType.Banner);
+
+}
+@if (tour != null)
+{
+    <div id="main-content" class="main-content container-fluid">
+        <div class="row-fluid page-head">
+            <h2 class="page-title"><i class="fontello-icon-calendar-inv"></i>Photos <small> galery</small></h2>
+            <p class="pagedesc">
+                @tour.Name
+            </p>
+        </div>
+        <nav>
+            <ul class="btn-toolbar page-nav margin-btn">
+                <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/BasicInformation/{0}", tour.Id))" style="width: 60px"><i class="fontello-icon-check f20"></i><span class="block">BASIC</span></a></li>
+                <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Detail/{0}", tour.Id))" style="width: 60px"><i class="fontello-icon-th-4 f20"></i><span class="block">DETAIL</span></a></li>
+                <li><a class="btn btn-well btn-glyph active" href="@(string.Format("~/Tour/Photo/{0}", tour.Id))" style="width: 60px" data-toggle="modal"><i class=" fontello-icon-camera-3 f20"></i><span class="block">PHOTO</span></a></li>
+                <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Itinerary/{0}", tour.Id))" style="width: 60px"><i class=" fontello-icon-flight-1 f20"></i><span class="block">ITINERARY</span></a></li>
+                <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Price/{0}", tour.Id))" style="width: 60px" data-toggle="modal"><i class="fontello-icon-dollar f20"></i><span class="block">PRICE</span></a></li>
+                <li><a class="btn btn-well btn-glyph" href="@(string.Format("~/Tour/Promotion/{0}", tour.Id))" style="width: 60px" data-toggle="modal"><i class="fontello-icon-gift f20"></i><span class="block">DEAL</span></a></li>
+            </ul>
+            <hr class="margin-0x">
+        </nav>
+        <div class="row-fluid">
+            <div class="span12 grider">
+                <div class="widget widget-simple">
+                    <div class="widget-content">
+                        <div class="widget-body">
+                            <div class="row-fluid">
+                                <div class="span12 form-dark">
+                                    <section>
+                                        <div>
+                                            @using (Html.BeginForm("Uploads", "Tour", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                            {
+                                                <input type="hidden" name="id" value="@ViewBag.TourId" />
+                                                <label for="files">Select images for upload to library:</label>
+                                                <input type="file" name="files" value="" multiple="multiple" />
+                                                <input id="btnUpload" class="btn btn-file" type="submit" value="Upload Image" />
+                                            }
+                                        </div>
+                                    </section>
+                                    @if (images.Count > 0)
+                                    {
+                                        <section>
+                                            <div class="row-fluid">
+                                                <div class="span6 grider-item">
+                                                    <h4 class="simple-header">
+                                                        <i class="fontello-icon-edit"></i> Edit item
+                                                    </h4>
+                                                    @{
+                                        Medium media = images.FirstOrDefault();
+                                        if (media != null && media.MediaType == (int)Utilities.MediaType.Gallery)
+                                        {
+                                            <div class="well well-nice">
+                                                <div id="previewImage" class="preview-image">
+                                                    <img src="@Url.Content(media.OriginalPath)" alt="@media.AlternateText">
+                                                </div>
+                                                <form id="formNextAccountSettings" class="form-horizontal form-condensed form-dark label-left no-margin-bootom">
+                                                    <fieldset>
+                                                        <ul class="form-list">
+                                                            <li class="control-group">
+                                                                <label for="fileTile" class="control-label">Image Title</label>
+                                                                <div id="fileTile">
+                                                                    <input class="input-block-level" type="text" value="@media.Title">
+                                                                </div>
+                                                                <input type="hidden" id="media-id" value="@media.Id" />
+                                                                <input type="hidden" id="owner-id" value="@tour.Id" />
+                                                            </li>
+                                                            <!-- // form item -->
+                                                        </ul>
+                                                    </fieldset>
+                                                    <!-- // fieldset Input -->
+
+                                                    <div>
+                                                        <button id="save" class="btn btn-yellow btn-mini" onclick="saveMedia();">Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        }
+                                                    }
+                                                </div>
+                                                <!-- // column -->
+
+                                                <div class="span6 grider-item gallery-well gallery-small">
+                                                    <h4 class="simple-header">
+                                                        <i class="fontello-icon-picture"></i> Gallery
+                                                    </h4>
+                                                    <ul id="gallery" class="thumbnails thumbnails-inline horizontal200" data-toggle="modal-gallery" data-target="#modal-gallery" data-selector="a[rel=gallery]">
+                                                        @foreach (var image in images.Where(i => i.MediaType == (int)Utilities.MediaType.Gallery))
+                                                        {
+                                                            <li class="thumbnail">
+                                                                <div class="nailthumb-container show-loading">
+                                                                    <a href="@Url.Content(image.OriginalPath)" title="@image.Title" rel="gallery"></a>
+                                                                </div>
+                                                                <div class="gall-caption">
+                                                                    <span class="menu-icon">
+                                                                        <a href="@Url.Content(image.OriginalPath)" id="@image.Id" title="@image.Title" class="btn-glyph edit fontello-icon-edit"></a>
+                                                                        <a onclick="deleteMedia('@image.Id') " class=" btn-glyph delete fontello-icon-trash-4"></a>
+                                                                    </span>
+                                                                </div>
+                                                            </li>
+                                                        }
+                                                        <!-- // gallery item -->
+                                                    </ul>
+
+                                                    <!-- pagination -->
+                                                    <div class="pagination pagination-boo margin-right10">
+                                                        <div class="gall-legend pull-left">
+                                                            <!-- Item oriented legend -->
+                                                            <strong id="legend2"></strong>
+                                                        </div>
+                                                        <ul class="holder pull-right"></ul>
+                                                    </div>
+                                                </div>
+                                                <!-- // column -->
+
+                                            </div>
+                                            <!-- // Example row -->
+
+                                        </section>
+                                    }
+                                    else
+                                    {
+                                        <p>No content for this Item</p>
+                                    }
+                                    <section>
+                                        <div>
+                                            @using (Html.BeginForm("Upload", "Tour", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                            {
+                                                <label for="files">Select images for upload banner :</label>
+                                                <span style="color: red" id="validationTxt"></span>
+                                                <input type="hidden" name="id" value="@ViewBag.TourId" />
+                                                <br /><input type="file" name="files" id="photo" />
+                                                <input id="submit-banner" class="btn btn-file" disabled type="submit" value="Upload" />
+                                            }
+                                        </div>
+                                        @if (m != null)
+                                        {
+                                            <div class="thumbnail" style="width: 217px;margin: 10px;">
+                                                <img style="margin-bottom: 5px;" src="@(m.ThumbnailPath != null ? Url.Content(Url.Content(m.ThumbnailPath)) : string.Empty)" alt="">
+                                                <a style="margin: 10px 0 10px 197px" class=" btn-glyph delete fontello-icon-trash-4" onclick="deleteMedia('@m.Id') "></a>
+                                            </div>
+                                        }
+
+                                    </section>
+
+
+
+                                    <div class="form-actions">
+                                        <a title="Continue" class="btn btn-yellow btn-mini" href="@Url.Content(string.Format("~/Tour/Itinerary/{0}", tour.Id))">Continue</a>
+                                        <a class="btn btn-yellow btn-mini" href="@Url.Content("/Tour/Management")" type="button">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+else
+{
+    <p>Not content for this item</p>
+}

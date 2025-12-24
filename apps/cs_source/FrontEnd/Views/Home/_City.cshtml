@@ -1,0 +1,432 @@
+﻿@{
+    //ViewBag.Title = "goreise.com/: Hotels - Tours - Day Trips Booking - Lowest Rates Guaranteed!";
+    Layout = null;
+    Vinaday.Data.Models.City city = (Vinaday.Data.Models.City)ViewBag.Cities;
+}
+
+<!DOCTYPE html>
+<html ng-app="vinadayApp" ng-controller="hotelController">
+<head>
+    <title data-ng-bind="searchText">Searching... VINADAY goREISE (Vinaday Travel) - Tours - Day Trips - Hotels</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="fragment" content="!" />
+
+    <meta property="og:title" content="Searching... VINADAY goREISE (Vinaday Travel) - Tours - Day Trips - Hotels" />
+    <meta property="og:description" content="@Html.Raw(HttpUtility.HtmlDecode(city.SEO_Description))" />
+    <meta property="og:keyword" content="@Html.Raw(HttpUtility.HtmlDecode(city.SEO_Keyword))" />
+    <link rel="alternate" href="https://goreise.com/city" hreflang="en-us" />
+    @Styles.Render("~/Content/bootstrapCSS")
+    @Styles.Render("~/Content/vinadayCSS")
+    @Styles.Render("~/Content/pluginsCSS")
+    <link href="~/Content/plugins/angular-loading-bar-master/src/loading-bar.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div id="outer-wrap">
+        <div id="inner-wrap" itemtype="http://schema.org/Hotel" itemscope="">
+            @Html.Partial("_Header")
+
+            <div class="container hidden-xs">
+                <div class="subpage" style="margin-top: 0!important;text-align: left;">
+                    <article class="breadcrumb" xmlns:v="http://rdf.data-vocabulary.org/#">
+                        <span typeof="v:Breadcrumb">
+                            <a property="v:title" rel="v:url" href="https://goreise.com/">
+                                Home
+                            </a>&nbsp;››&nbsp;
+                        </span>
+                        <span>
+                            {{city}}
+                        </span>
+                    </article>
+                    <h1 style="font-size: 20px;margin-top:0" class="title_fitter_ks">{{pagingInfo.totalItems}}  hotels in {{city}}</h1>
+                </div>
+            </div>  
+            <div class="section-filter">
+                <div class="main clearfix">
+                    <div class="column">
+                        <div class="col-xs-12 col-sm-3 tour-results-left" id="sidebar" role="navigation">
+                            <div class="hidden-sm hidden-md hidden-lg">
+                                <button id="collapse-init" class="btn btn-info" style="font-size: 17px;font-weight: bold;margin-bottom: 5px;width: 100%;">
+                                    Filter results
+                                </button>
+                                <div id="filter-tours" class="filter-tours">
+                                    <div class="sidebar-nav">
+                                        <div class="filter">
+                                            <div class="filter-tilte">
+                                                Filter hotels by
+                                            </div>
+                                            <article class="checkrate" style="margin-bottom: 5px; padding-bottom: 40px;">
+                                                <form class="form-inline" ng-submit="search()" role="form">
+                                                    <span class="input-group" style="float: left; width: 100%; margin-right: 3px;">
+                                                        <input id="key" ng-model="pagingInfo.search" style="padding: 3px 5px 3px 10px !important; height: 32px !important; width: 100%" type="text" placeholder="Enter hotel name...">
+                                                    </span>
+                                                </form>
+                                            </article>
+
+                                            <div id="accordion" class="panel-group panel-group-vinaday">
+                                                <div class="panel panel-info panel-vinaday">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a href="javascript:;" data-toggle="collapse" data-parent="#collapseOne" data-target="#collapseOne" style="text-decoration: none;" class="clearfix">
+                                                                <span class="pull-right" style="font-size: 12px;margin-top: 2px;">
+                                                                    <i class="fa fa-chevron-down"></i>
+                                                                </span>
+                                                                <span class="pull-left">Star Rating</span>
+                                                            </a>
+                                                        </h4>
+                                                    </div>
+                                                    <div id="collapseOne" class="panel-collapse collapse in" style="height: auto;">
+                                                        <div class="panel-body">
+                                                            <article class="box box-vinaday">
+                                                                <div class="box-content">
+
+                                                                    <ul class="list-unstyled" ng-repeat="star in stars">
+
+                                                                        <li class="checkbox">
+                                                                            <label>
+                                                                                <input ng-click="search()" type="checkbox" checklist-model="filters" checklist-value="star.Key">
+                                                                                <i class="star star_{{star.Value}}"></i>
+                                                                                <span class="badge">{{star.Count}}</span>
+                                                                            </label>
+                                                                        </li>
+
+                                                                    </ul>
+
+                                                                </div>
+                                                            </article>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-info panel-vinaday">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a href="javascript:;" data-parent="#collapseTwo" data-toggle="collapse" data-target="#collapseTwo" style="text-decoration: none;" class="clearfix">
+                                                                <span class="pull-left">The Collection</span><span class="pull-right" style="font-size: 12px;margin-top: 2px;"><i class="fa fa-chevron-right"></i></span>
+                                                            </a>
+
+                                                        </h4>
+                                                    </div>
+                                                    <div id="collapseTwo" class="panel-collapse collapse in">
+                                                        <div class="panel-body">
+                                                            <article class="box box-vinaday">
+
+                                                                <div class="box-content">
+                                                                    <ul class="list-unstyled" ng-repeat="style in styles">
+                                                                        <li class="checkbox">
+                                                                            <label>
+                                                                                <input ng-click="search()" type="checkbox" checklist-model="filters" checklist-value="style.Key">
+                                                                                {{style.Value}}
+                                                                                <span class="badge">{{style.Count}}</span>
+                                                                            </label>
+                                                                        </li>
+
+                                                                    </ul>
+                                                                </div>
+                                                            </article>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-info panel-vinaday">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a href="javascript:;" data-parent="#collapseThree" data-toggle="collapse" data-target="#collapseThree" style="text-decoration: none;" class="clearfix">
+                                                                <span class="pull-left">Hotel Area</span><span class="pull-right" style="font-size: 12px;margin-top: 2px;"><i class="fa fa-chevron-right"></i></span>
+                                                            </a>
+
+                                                        </h4>
+                                                    </div>
+                                                    <div id="collapseThree" class="panel-collapse collapse in">
+                                                        <div class="panel-body">
+                                                            <article class="box box-vinaday">
+                                                                <div class="box-content">
+                                                                    <ul class="list-unstyled" ng-repeat="region in regions">
+                                                                        <li class="checkbox">
+                                                                            <label style="width: 85%!important">
+                                                                                <input ng-click="search()" type="checkbox" checklist-model="filters" checklist-value="region.Key">
+                                                                                {{region.Value}}
+                                                                            </label>
+                                                                            <span class="badge">{{region.Count}}</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </article>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hidden-xs">
+                                <div id="filter-tours">
+                                    <div class="sidebar-nav">
+                                        <div class="filter">
+                                            <div class="filter-tilte">
+                                                Filter hotels by
+                                            </div>
+                                            <article class="checkrate" style="margin-bottom: 5px; padding-bottom: 40px;">
+                                                <form class="form-inline" ng-submit="search()" role="form">
+                                                    <span class="input-group" style="float: left; width: 100%; margin-right: 3px;">
+                                                        <input id="key" ng-model="pagingInfo.search" style="padding: 3px 5px 3px 10px !important; height: 32px !important; width: 100%" type="text" placeholder="Enter hotel name...">
+                                                    </span>
+                                                </form>
+                                            </article>
+
+                                            <div id="accordion" class="panel-group panel-group-vinaday">
+                                                <div class="panel panel-info panel-vinaday">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a href="javascript:;" data-toggle="collapse" data-parent="#collapseOne" data-target="#collapseOne" style="text-decoration: none;" class="clearfix">
+                                                                <span class="pull-right" style="font-size: 12px;margin-top: 2px;">
+                                                                    <i class="fa fa-chevron-down"></i>
+                                                                </span>
+                                                                <span class="pull-left">Star Rating</span>
+                                                            </a>
+                                                        </h4>
+                                                    </div>
+                                                    <div id="collapseOne" class="panel-collapse collapse in" style="height: auto;">
+                                                        <div class="panel-body">
+                                                            <article class="box box-vinaday">
+                                                                <div class="box-content">
+
+                                                                    <ul class="list-unstyled" ng-repeat="star in stars">
+
+                                                                        <li class="checkbox">
+                                                                            <label>
+                                                                                <input ng-click="search()" type="checkbox" checklist-model="filters" checklist-value="star.Key">
+                                                                                <i class="star star_{{star.Value}}"></i>
+                                                                                <span class="badge">{{star.Count}}</span>
+                                                                            </label>
+                                                                        </li>
+
+                                                                    </ul>
+
+                                                                </div>
+                                                            </article>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-info panel-vinaday">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a href="javascript:;" data-parent="#collapseTwo" data-toggle="collapse" data-target="#collapseTwo" style="text-decoration: none;" class="clearfix">
+                                                                <span class="pull-left">The Collection</span><span class="pull-right" style="font-size: 12px;margin-top: 2px;"><i class="fa fa-chevron-right"></i></span>
+                                                            </a>
+
+                                                        </h4>
+                                                    </div>
+                                                    <div id="collapseTwo" class="panel-collapse collapse in">
+                                                        <div class="panel-body">
+                                                            <article class="box box-vinaday">
+
+                                                                <div class="box-content">
+                                                                    <ul class="list-unstyled" ng-repeat="style in styles">
+                                                                        <li class="checkbox">
+                                                                            <label>
+                                                                                <input ng-click="search()" type="checkbox" checklist-model="filters" checklist-value="style.Key">
+                                                                                {{style.Value}}
+                                                                                <span class="badge">{{style.Count}}</span>
+                                                                            </label>
+                                                                        </li>
+
+                                                                    </ul>
+                                                                </div>
+                                                            </article>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-info panel-vinaday">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a href="javascript:;" data-parent="#collapseThree" data-toggle="collapse" data-target="#collapseThree" style="text-decoration: none;" class="clearfix">
+                                                                <span class="pull-left">Hotel Area</span><span class="pull-right" style="font-size: 12px;margin-top: 2px;"><i class="fa fa-chevron-right"></i></span>
+                                                            </a>
+
+                                                        </h4>
+                                                    </div>
+                                                    <div id="collapseThree" class="panel-collapse collapse in">
+                                                        <div class="panel-body">
+                                                            <article class="box box-vinaday">
+                                                                <div class="box-content">
+                                                                    <ul class="list-unstyled" ng-repeat="region in regions">
+                                                                        <li class="checkbox">
+                                                                            <label style="width: 85%!important">
+                                                                                <input ng-click="search()" type="checkbox" checklist-model="filters" checklist-value="region.Key">
+                                                                                {{region.Value}}
+                                                                            </label>
+                                                                            <span class="badge">{{region.Count}}</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </article>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-9 tour-results-right">
+                            <div class="content-filter">
+                                <div class="tier-head clearfix">
+                                    <div class="sort-by form-inline pull-right" style="line-height: 5px;position: relative;top: -2px;">
+                                        <span>Sort by:</span>
+                                        <div class="select-style">
+                                            <select class="sort-combobox" ng-model="selectedSort"
+                                                    ng-options="keySort as keySort.name for keySort in keySorts"
+                                                    ng-init="selectedSort = check(selected,keySorts)"
+                                                    ng-change="updateSort(selectedSort)"></select>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="tier clearfix" ng-repeat="hotel in hotels">
+                                    <div class="item1">
+                                        <div class="item11">
+                                            <a target="_new" href="{{hotel.HotelUrl}}" title="" class="img">
+                                                <img ng-src="{{hotel.ImageUrl}}" alt="{{hotel.Name}}">
+                                            </a>
+                                        </div>
+                                        <div class="item12">
+                                            <h2 class="title">
+                                                <a target="_new" href="{{hotel.HotelUrl}}">
+                                                    {{hotel.Name}}
+                                                    <span ng-switch="hotel.CollectionValue">
+                                                        <img ng-switch-when="3" style="margin-top: -5px;" src="~/Content/images/thecollection3.png" alt="{{hotel.Name}}">
+                                                        <img ng-switch-when="4" style="margin-top: -5px;" src="~/Content/images/thecollection4.png" alt="{{hotel.Name}}">
+                                                        <img ng-switch-when="5" style="margin-top: -5px;" src="~/Content/images/thecollection5.png" alt="{{hotel.Name}}">
+                                                        <span ng-switch-default></span>
+                                                    </span>
+                                                </a>
+                                            </h2>
+                                            <span class="star star_{{hotel.Star}}"></span>
+                                            <a target="_new" href="{{hotel.HotelUrl}}"><address> {{hotel.Address}}</address></a>
+                                            <a href="tel:+84838388382" class="phoneEsr"><i class="fa fa-phone"></i> (+84-8) 38 388 382</a>
+                                            <div class="amenities">
+                                                <span ng-repeat="theCollection in hotel.TheCollections" class="freebreakfast"><i class="fa fa-check"></i> {{theCollection.Description}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item2">
+                                        <div ng-show="ReviewModel == null">
+                                            <div class="superlative">
+                                                {{hotel.ReviewModel.Title}}
+                                            </div>
+                                            <a ng-show="hotel.ReviewModel.Content != null" target="_new" href="{{hotel.HotelUrl}}" title="" class="review-link">Score from <strong>{{hotel.ReviewModel.Content}}</strong> reviews</a>
+                                        </div>
+                                        <div ng-if="hotel.Price == 0">
+                                            <a class="yellow_roundbtn" target="_new" href="{{hotel.HotelUrl}}">On request</a>
+                                        </div>
+                                        <div ng-if="hotel.Price != 0">
+                                            <div class="price-avg">
+                                                <div class="price-was">
+                                                    ${{hotel.Price}}
+                                                </div>
+                                                <div class="price-new">
+                                                    ${{hotel.PricePromotion}}
+                                                </div>
+                                            </div>
+                                            <div class="price-avg-text">avg/night</div>
+                                            <a class="yellow_roundbtn" target="_new" href="{{hotel.HotelUrl}}">Show prices</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="tier-foot">
+                                    <button style=" margin-top 5px;width 100%;" class="btn btn-info btn-small" ng-show="hasMore()" ng-click="showMore()">
+                                        <i class="icon-plus icon-white"></i> Load more hotels
+                                    </button>
+
+                                    <div ng-show="loadingContent" style="text-align: center;">
+                                        <div class="lightBox" style="opacity: 0.6; z-index: 10;display: inline"> </div>
+                                        <div class="loader-content" style="z-index: 11"></div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div style="border-top: 1px solid #6ebff3; font-size: 30px; margin-bottom: 20px; position: relative; text-align: right;margin-top: 5px;">
+                                        <h2 style="font-size: 12px; color: #6ebff3; margin-top: 5px;">{{statusBar}}</h2>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div ng-show="loading">
+                <div class="m-app-loading" ng-animate-children>
+                    <div class="animated-container" style="background-color: #fff;">
+
+                        <div class="messaging">
+                            <div align="center">
+                                <div class="contener_general">
+                                    <div class="contener_mixte">
+                                        <div class="ballcolor ball_1">&nbsp;</div>
+                                    </div>
+                                    <div class="contener_mixte">
+                                        <div class="ballcolor ball_2">&nbsp;</div>
+                                    </div>
+                                    <div class="contener_mixte">
+                                        <div class="ballcolor ball_3">&nbsp;</div>
+                                    </div>
+                                    <div class="contener_mixte">
+                                        <div class="ballcolor ball_4">&nbsp;</div>
+                                    </div>
+                                </div>
+
+                                <div style="padding-top: 35px;">
+                                    <div style="color: #999999; font-weight: 300; font-size: 30px; font-family: 'Roboto'; padding-top: 20px;">
+                                        Searching the best deals...
+                                    </div>
+
+                                    <div style="color: #999999; font-weight: 300; font-size: 20px; font-family: 'Roboto';">
+                                        one moment please
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @Scripts.Render("~/bundles/jquery")
+            @Scripts.Render("~/bundles/angular")
+            @Scripts.Render("~/bundles/hotel1")
+            @Html.Partial("_Footer")
+
+            @Scripts.Render("~/bundles/modernizr")
+            @Scripts.Render("~/bundles/pluginsJS")
+            @Scripts.Render("~/bundles/google-analytics")
+
+            <script>
+                jQuery(document).ready(function ($) {
+                    var active = true;
+                    $('.filter-tours').hide();
+                    $('#collapse-init').click(function (e) {
+                        e.preventDefault();
+                        if (active) {
+                            active = false;
+                            $('.filter-tours').show();
+                        } else {
+                            active = true;
+                            $('.filter-tours').hide();
+                        }
+                    });
+                });
+            </script>
+
+        </div>
+    </div>
+    <a href="#" id="backToTop"></a>
+</body>
+</html>

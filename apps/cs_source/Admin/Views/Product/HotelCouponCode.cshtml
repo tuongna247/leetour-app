@@ -1,0 +1,209 @@
+﻿@using System
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Web.Framework
+@using Vinaday.Data.Models
+@{
+    ViewBag.Title = "Coupon Code - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+           .Where(c => c.Type == ClaimTypes.Role)
+           .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+    var hotelList = ViewBag.HotelList as List<Hotel>;
+    var tourList = ViewBag.TourList as List<Tour>; ;
+    var cityList = ViewBag.City as List<City>; ;
+}
+
+<div class="page-title">
+    <h3>Hotel Coupon Code List</h3>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+
+                    <a class="btn btn-info btn-addon m-b-sm btn-xs" onclick="showAddCoupon();"><i class="fa fa-plus"></i>Add new</a>
+                    @if (Model != null)
+                    {
+                        <div class="table-responsive">
+                            <table id="tour-list-2" class="display table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Hotel<span class="column-sorter"></span></th>
+                                        <th>Name<span class="column-sorter"></span></th>
+                                        <th>Description<span class="column-sorter"></span></th>
+                                        <th>Start<span class="column-sorter"></span></th>
+                                        <th>Price<span class="column-sorter"></span></th>
+                                        <th>Discount<span class="column-sorter"></span></th>
+                                        <th>FromDate<span class="column-sorter"></span></th>
+                                        <th>Today<span class="column-sorter"></span></th>
+                                        <th style="width: 50px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (Vinaday.Data.Models.HotelCoupon coupon in Model)
+                                    {
+
+                                        <tr>
+                                            <td>@coupon.HotelId</td>
+                                            <td style="width: 20%">@coupon.Name</td>
+                                            <td style="width: 38%">@Html.Raw(coupon.Description) </td>
+                                            <td>@coupon.HotelStart </td>
+                                            <td>@coupon.Price </td>
+                                            <td>@coupon.Discount </td>
+                                            <td>@coupon.StartDate </td>
+                                            <td>@coupon.EndDate </td>
+
+                                            <td style="width: 80px;">
+                                                <a href="javascript:void(0);" class="btn btn-success btn-xs" onclick="EditHotelCoupon('@coupon.Id');"><small class="glyphicon glyphicon-edit"></small></a>
+                                                <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="DeleteHotelCoupon('@coupon.Id');"><small class="glyphicon glyphicon-trash"></small></a>
+
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+</div>
+<div class="modal fade" id="couponCode-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add Hotel Coupon </h4>
+
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="wizardForm">
+                            <div class="row">
+                                <div id="load-pane-wizard"></div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="form-group col-md-6">
+                                        <label for="Name">From date:</label>
+                                        <input type="text" class="form-control m-b-sm date-picker" id="StartDate">
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="Description">Todate:</label>
+                                        <input type="text" class="form-control m-b-sm date-picker" id="EndDate">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-group col-md-12">
+                                        <label for="Description">Hotel:</label>
+                                        <div id="hotelList">
+
+                                            <select id="HotelId" class="form-control">
+                                                <option value="0">All Hotel</option>
+                                                @foreach (var hotel in hotelList)
+                                                {
+                                                    <option value="@hotel.Id">@hotel.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group ">
+                                    <div class="form-group col-md-3">
+                                        <div>
+                                            <label for="TotalQty">Quantity:</label><br/>
+                                            <input type="text" class="form-control" id="TotalQty" placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <div>
+                                            <label for="TotalQty">Sales Quantity:</label><br />
+                                            <input type="text" class="form-control" id="SalesQty" placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="Price">Price:</label><br />
+                                        <input type="text" class="form-control" id="Price" />
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <div id="valueType">
+                                            <label for="Discount">Discount:</label><br />
+                                            <input type="text" class="form-control" id="Discount" placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label for="Name">Name:</label>
+                                    <textarea id="Name" class="form-control" rows="3" placeholder="Name"></textarea>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="Description">Description:</label>
+                                    <textarea id="Description" class="form-control" rows="6" placeholder="Description"></textarea>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label for="ConditionUsing">Using Condition:</label>
+                                    <textarea id="ConditionUsing" class="form-control" rows="6" placeholder="ConditionUsing"></textarea>
+                                </div>
+
+                              
+                                <div class="form-group ">
+                                    <div class="form-group col-md-6">
+                                        <a onclick="return AddHotelCoupon();" href="javascript:void(0);" class="btn btn-default">Save</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div><!-- Row -->
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-couponCode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" id="couponCode-edit">
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/couponjs")
+    <script>
+       
+        $(document).ready(function () {
+
+            $('#tour-list-2').dataTable({
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [],
+                "lengthMenu": [[25, 50, 100, 500, 1000, 3000], [25, 50, 100, 500, 1000, 3000]]
+
+            });
+
+            $('#Description').summernote({
+                height: 80
+            });
+            $('#ConditionUsing').summernote({
+                height: 200
+            });
+            $('#DescriptionEdit').summernote({
+                height: 80
+            });
+            $('#ConditionUsingEdit').summernote({
+                height: 200
+            });
+        });
+    </script>
+
+}
+

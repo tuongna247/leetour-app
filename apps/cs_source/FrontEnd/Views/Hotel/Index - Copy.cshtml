@@ -1,0 +1,470 @@
+﻿@using Vinaday.Data.Models
+@{
+    List<Country> countries = ViewBag.GetCountries;
+    Deals deal = ViewBag.Deal;
+    var countdown = deal != null ? (deal.Countdown - DateTime.Now).TotalHours : 0;
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>goreise.com: Luxury Hotels & Resorts - Vacation Packages </title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="content-language" content="en-us" />
+    <meta name="p:domain_verify" content="a4ecc80122954f5d87d32c589df1bc70" />
+    <meta name="msvalidate.01" content="9FA5185F018B486BE7BD03AF994F2EF6" />
+    <meta name="description" content="luxury vacation package deals, luxury 5 star hotels, luxury 5 star resort, luxury vacation packages, luxury beach holiday, luxury travel packages, luxury vacation packages all inclusive, luxury collection - all inclusive vacation packages, luxury collection vacation packages, luxurious all-inclusive resorts luxurious , luxury vacation packages in vietnam, mui ne phu quoc  beach resorts…">
+    <meta name="meta" content="luxury vacation package deals, luxury 5 star hotels, luxury 5 star resort, luxury vacation packages, luxury beach holiday, luxury travel packages, luxury vacation packages all inclusive, luxury collection - all inclusive vacation packages, luxury collection vacation packages, luxurious all-inclusive resorts luxurious , luxury vacation packages in vietnam, mui ne phu quoc  beach resorts…">
+    <link rel="alternate" href="https://goreise.com" hreflang="en-us" />
+    @Styles.Render("~/Content/vinaday")
+    @*@Styles.Render("~/Content/hotel")*@
+    <link rel="alternate" hreflang="en-gb" href="alternateURL">
+    <link href="~/Content/plugins/countdown/assets/countdown/jquery.countdown.css" rel="stylesheet" />
+    <script>
+        (function () {
+            var _fbq = window._fbq || (window._fbq = []);
+            if (!_fbq.loaded) {
+                var fbds = document.createElement('script');
+                fbds.async = true;
+                fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(fbds, s);
+                _fbq.loaded = true;
+            }
+        })();
+        window._fbq = window._fbq || [];
+        window._fbq.push(['track', '6031342808565', { 'value': '0.00', 'currency': 'VND' }]);
+
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-68154187-9', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+    <noscript><img height="1" width="1" alt="" style="display: none" src="https://www.facebook.com/tr?ev=6031342808565&amp;cd[value]=0.00&amp;cd[currency]=VND&amp;noscript=1" /></noscript>
+    <link href="~/Content/search.css" rel="stylesheet" />
+</head>
+<body ng-controller="hotelController">
+    <div id="outer-wrap">
+        <div id="inner-wrap" itemtype="http://schema.org/Hotel" itemscope="">
+            <input type="hidden" value="@countdown" id="deal" />
+            @Html.Partial("_Header")
+
+
+            <div class="ibanner">
+                <div class="container header grid hidden-xs">
+
+                </div>
+                <div class="custom-bg"></div>
+                <div class="container">
+
+                    <div class="cbanner">
+                        <h1 id="start_your_vacation" style="text-shadow: 1px 1px 1px #65135b; margin-bottom: 0;">
+                            <span style="color: #65135b">Start Your Vacation</span>
+                        </h1>
+                        <h2 style="text-shadow: 1px 1px 1px #65135b; font-size: 19px; margin-top: 0;" class="hidden-xs">Luxury Resorts, Vacation Packages & more...</h2>
+                        <div class="isearch">
+						<div class="itabs clearfix">
+                                <div class="tab-head clearfix">
+                                    <ul class="nav nav-tabs">
+                                        <li role="presentation" class="lhotels active">
+                                            <a onclick="showHotelSearchForm();" style="cursor: pointer"><i class="fa fa-tasks"></i>Hotels</a>
+                                        </li>
+                                        <li role="presentation" class="ltours">
+                                            <a onclick="showTourSearchForm();" style="cursor: pointer"><i class="fa fa-crosshairs"></i>Tours & Day Trips</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="tab-content">
+
+                                    <div id="hotel-search-form">
+
+                                        <div class="form-group has-feedback">
+                                            <label class="control-label" for="search-key">Where are you going?</label>
+                                            <input type="text" class="form-control typeahead" ng-model="filters.key" id="search-key" aria-describedby="inputSuccess2Status" placeholder="Name of hotels, city country, regions" />
+                                            <span class="glyphicon glyphicon-map-marker form-control-feedback" aria-hidden="true"></span>
+                                        </div>
+                                        <div class="row input-daterange">
+                                            <div class="col-xs-6 col-sm-6">
+                                                <div class="form-group has-feedback">
+                                                    <label class="control-label" for="check-in">Check in:</label>
+                                                    <input type="text" class="form-control date-time" ng-model="filters.checkIn" id="check-in" placeholder="mm/dd/yyyy" readonly />
+                                                    <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6 col-sm-6">
+                                                <div class="form-group has-feedback">
+                                                    <label class="control-label" for="check-out">Check out:</label>
+                                                    <input type="text" class="form-control date-time" ng-model="filters.checkOut" id="check-out" placeholder="mm/dd/yyyy" readonly />
+                                                    <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-btn">
+                                            <a onclick="searchHotels();" class="btn btn-primary">Search</a>
+                                        </div>
+
+                                    </div>
+                                    <div id="tour-search-form" style="display: none;">
+                                        <div id="tour-form" style="display: none;">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group has-feedback">
+                                                        <label class="control-label">Country</label>
+                                                        <section class="select-style" style="border-radius: 1px;">
+                                                            <select class="form-control" id="country" style="border: none;">
+                                                                <option value="-1">Where are you going? </option>
+                                                                @if (countries.Any())
+                                                                {
+                                                                    foreach (var country in countries)
+                                                                    {
+                                                                        <option value="@country.CountryId">@country.Name</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        </section>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div id="city-list-item">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-btn">
+                                                <a class="btn btn-primary" onclick="searchCity();">Search</a>
+                                                <a style="cursor: pointer" onclick="showNameSearch();" class="change-search-type">OR BY NAME</a>
+                                            </div>
+                                        </div>
+                                        <div id="tour-name-form">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group has-feedback">
+                                                        <label class="control-label" for="search-key">Search tour with name</label>
+                                                        <input type="text" style="padding-left: 10px;" class="form-control" id="search-name" onkeypress="" placeholder="Search for Destinations, Tours and Activities" />
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group form-btn">
+                                                <a class="btn btn-primary" onclick="searchName();">Search</a>
+                                                <a style="cursor: pointer" onclick="showCitySearch();" class="change-search-type">OR BY CITY</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="itabs clearfix">
+                                <div class="tab-content">
+                                    <div id="hotel-search-form">
+                                        <div class="form-search clearfix">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 descriptionTitle">
+
+                                                <div class="form-inline">
+                                                    <div id="search-city-form">
+                                                        <div class="form-group">
+                                                            <input type="radio" id="selectTypeCity" name="selectType" checked="checked" value="City"/>
+                                                            <label for="selectTypeCity">Search By City</label>
+
+                                                            <div class="search-home-text">
+                                                                <fieldset>
+                                                                    <select id="country" style="border: 1px solid #e2e2e2; color: black; box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.01) inset; display: block; height: 34px; position: relative; width: 100%">
+                                                                        @if (countries.Count > 0)
+                                                                        {
+                                                                            <option selected="selected" value="-1">Where do you want to go? </option>
+                                                                            foreach (var country in countries)
+                                                                            {
+                                                                                <option value="@country.CountryId">@country.Name</option>
+                                                                            }
+                                                                        }
+                                                                    </select>
+                                                                </fieldset>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group" >
+                                                            <div style="height: 25px;"> </div>
+                                                            <div class="search-home-text" style="min-width: 200px;">
+                                                                <fieldset>
+                                                                    <div id="city-list">
+                                                                    </div>
+                                                                </fieldset>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input type="radio" id="selectTypeKeyword" name="selectType" value="Keyword"/>
+                                                            <label for="selectTypeKeyword">Search By Keywords</label>
+
+                                                            <div class="search-home-text">
+                                                                <fieldset style="margin-bottom: 20px">
+                                                                    <input type="text" class="form-control typeahead search-name" style="width: 300px;" id="search-key" aria-describedby="inputSuccess2Status" placeholder="Name of hotels, city country, regions"/>
+                                                                </fieldset>
+                                                            </div>
+                                                        </div>
+                                                        <div class="clearfix"></div>
+                                                        <div class="search-home-form">
+                                                            <a onclick="searchMain();" class="btn btn-primary">Find My Hotel</a>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="services services-home hidden-xs" style="background-color: #B6976B; color: white; height: 70px;">
+                <div class="container">
+                    <div>
+                        <ul>
+                            <li class="hidden-xs hidden-sm">
+                                <div class="title-services">How to use our services</div>
+                            </li>
+                            <li>
+                                <span class="fa fa-shopping-cart"></span>
+                                <p class="caption-services" style="color: white">
+                                    Browse our website for luxury travel ideas and holiday inspiration
+                                </p>
+                            </li>
+                            <li>
+                                <span class="fa fa-car"></span>
+                                <p class="caption-services" style="color: white">
+                                    Call us on (+84)028388387 to speak to Travel Consultant.
+                                </p>
+                            </li>
+                            <li>
+                                <span class="fa fa-plane"></span>
+                                <p class="caption-services">
+                                    Reading our monthly brochure to make you’re absolutely happy to book
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="sales">
+                <!-- Title -->
+                <div class="title-wrap">
+                    <div class="container">
+                        <div class="travel-title float-left">
+                            <h2>Hot Sale Today: <span>Ho Chi Minh city, Bangkok, Ha Noi, Phu Quoc Island & more</span></h2>
+                        </div>
+                        <a href="#" title="" class="awe-btn awe-btn-5 awe-btn-lager arrow-right text-uppercase float-right">ALL SALES</a>
+                    </div>
+                </div>
+                <!-- End Title -->
+                <!-- Hot Sales Content -->
+                <div class="container">
+                    <div class="sales-cn">
+                        <div class="row">
+                            <!-- HostSales Item -->
+                            <div class="col-xs-6 col-md-6">
+                                <div class="sales-item">
+                                    <a href="http://goreise.vn" target="_blank">
+                                        <img style="width: 100%;max-height:412px;" src="@Url.Content("~/images/home_banner2.jpg")" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- End HostSales Item -->
+                            <!-- End HostSales Item -->
+                            <!-- HostSales Item -->
+                            <div class="col-xs-6 col-md-6">
+                                <div class="sales-item ">
+                                    <a href="https://goreise.com/tour" target="_blank">
+                                        <img style="width: 100%;max-height:412px;" src="@Url.Content("~/images/home_banner.jpg")" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- End HostSales Item -->
+
+                        </div>
+                    </div>
+                </div>
+                <!-- End Hot Sales Content -->
+            </section>
+            <!-- End Sales -->
+            <!-- Travel Destinations -->
+            <section class="destinations">
+
+                <!-- Destinations Content -->
+                <div class="destinations-cn">
+
+                    <!-- Background -->
+                    <div class="bg-parallax bg-2"></div>
+                    <!-- End Background -->
+
+                    <div class="container">
+                        <div class="row">
+                            <!-- Destinations Grid -->
+                            <div class="col-md-12 col-lg-12">
+                                <div class="tab-content destinations-grid">
+                                    <!-- Tab One -->
+                                    <div id="destinations-1" class="clearfix tab-pane fade active in ">
+                                        <div class="col-xs-6 col-sm-4 col-md-6 col-lg-4">
+                                            <div class="destinations-item ">
+
+                                                <figure class="destinations-img">
+                                                    <a href="/vietnam/" title="Ho Chi Minh">
+                                                        <img alt="" src="/Content/images/hanoi.jpg" />
+                                                    </a>
+                                                    <div class="destinations-text">
+                                                        <div class="destinations-name">
+                                                            <a class="img" title="Ho Chi Minh" href="/vietnam/">
+                                                                VietNam
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </figure>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-4 col-md-6 col-lg-4">
+                                            <div class="destinations-item">
+
+                                                <figure class="destinations-img">
+                                                    <a href="/thailand/" title="Thailand">
+                                                        <img alt="" src="/Content/images/thailand.jpg" />
+                                                    </a>
+                                                    <div class="destinations-text">
+                                                        <div class="destinations-name">
+                                                            <a href="/thailand/" title="Thai Lan">Thailand</a>
+                                                        </div>
+
+                                                    </div>
+                                                </figure>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-4 col-md-6 col-lg-4">
+                                            <div class="destinations-item ">
+
+                                                <figure class="destinations-img">
+                                                    <a href="/laos/" title="Laos">
+                                                        <img src="/Content/images/laos.jpg" alt="">
+                                                    </a>
+                                                    <div class="destinations-text">
+                                                        <div class="destinations-name">
+                                                            <a href="/laos/" title="Laos">Laos</a>
+                                                        </div>
+
+                                                    </div>
+                                                </figure>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-4 col-md-6 col-lg-4">
+                                            <div class="destinations-item ">
+
+                                                <figure class="destinations-img">
+                                                    <a href="/cambodia/" title="Cambodia">
+                                                        <img src="/Content/images/cambodia.jpg" alt="">
+                                                    </a>
+                                                    <div class="destinations-text">
+                                                        <div class="destinations-name">
+                                                            <a href="/cambodia/" title="Cambodia">Cambodia</a>
+                                                        </div>
+
+                                                    </div>
+                                                </figure>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-4 col-md-6 col-lg-4">
+                                            <div class="destinations-item ">
+
+                                                <figure class="destinations-img">
+                                                    <a href="/myanmar/" title="Myanmar">
+                                                        <img src="/Content/images/myanmar.jpg" alt="">
+                                                    </a>
+                                                    <div class="destinations-text">
+                                                        <div class="destinations-name">
+                                                            <a href="/myanmar/" title="Myanmar">Myanmar</a>
+                                                        </div>
+
+                                                    </div>
+                                                </figure>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-4 col-md-6 col-lg-4">
+                                            <div class="destinations-item ">
+
+                                                <figure class="destinations-img">
+                                                    <a href="/indonesia/" title="Siem Reap">
+                                                        <img src="/Content/images/indonesia.jpg" alt="">
+                                                    </a>
+                                                    <div class="destinations-text">
+                                                        <div class="destinations-name">
+                                                            <a href="/indonesia/" title="Siem Reap">Indonesia</a>
+                                                        </div>
+
+                                                    </div>
+                                                </figure>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <!-- End Tab One -->
+
+
+                                </div>
+                            </div>
+                            <!-- ENd Destinations Grid -->
+                        </div>
+                    </div>
+                </div>
+                <!-- End Destinations Content -->
+            </section>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/style.css")">
+
+    <script src="~/Content/plugins/countdown/assets/countdown/jquery.countdown.js"></script>
+    <script src="~/Content/plugins/countdown/assets/js/script.js"></script>
+    <script src="~/Content/plugins/QuotesRotator/js/jquery.cbpQTRotator.min.js"></script>
+    <script src="~/Scripts/app1/home.js"></script>
+    <script src="~/Scripts/offcanvas-navigation.js"></script>
+    <script>
+
+    </script>
+    @Html.Partial("_Footer")
+    <a href="#" id="backToTop"></a>
+    <!-- Google Code for Remarketing Tag -->
+    <!--------------------------------------------------
+    Remarketing tags may not be associated with personally identifiable information or placed on pages related to sensitive categories. See more information and instructions on how to setup the tag on: http://google.com/ads/remarketingsetup
+    --------------------------------------------------->
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 982836284;
+        var google_custom_params = window.google_tag_params;
+        var google_remarketing_only = true;
+        /* ]]> */
+    </script>
+    <script>
+        $('#country option[value=-1]').prop('selected', true);
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+
+    </script>
+    <noscript>
+        <div style="display: inline;">
+            <img height="1" width="1" style="border-style: none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/982836284/?guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+</body>
+</html>

@@ -1,0 +1,80 @@
+﻿<div id="main-sidebar" class="sidebar sidebar-inverse">
+    <div class="sidebar-item">
+        <div class="sidebar-item">
+            <div class="media profile">
+                <div class="media-thumb media-left thumb-bordereb">
+                    <a class="img-shadow" href="javascript:void(0);">
+                        <img class="thumb" src="/Content/img/demo/demo-avatar9604.jpg">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h5 class="media-heading">Vinaday travel <small>as Administrator</small></h5>
+                    <p class="data">Last Access: 16 May 15:30</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul id="mainSideMenu" class="nav nav-list nav-side">
+        <li class="accordion-group">
+            <div class="accordion-heading @(ViewBag.Active == "Dashboard"?"active":"")">
+                <a href="#accDash" data-parent="#mainSideMenu" data-toggle="collapse" class="accordion-toggle">
+                    <span class="item-icon fontello-icon-monitor"></span> <i class="chevron fontello-icon-right-open-3"></i> Dashboards
+                </a>
+            </div>
+        </li>
+        <!-- // item accordionMenu Dashboard -->
+        <li class="accordion-group">
+            <div class="accordion-heading @(ViewBag.Active == "Tour" ? "active" : "")">
+                <a href="#tourForms" data-parent="#mainSideMenu" data-toggle="collapse" class="accordion-toggle">
+                    <span class="item-icon aweso-icon-list-alt"></span><i class="chevron fontello-icon-right-open-3"></i> Tours
+                </a>
+            </div>
+            <ul class="accordion-content nav nav-list @(ViewBag.Active == "Tour" ? "in" : "") collapse" id="tourForms">
+                <li class="@(ViewBag.Page == "Basic" ? "active" : "")"> <a href="/Tour/BasicInformation"> <i class="fontello-icon-right-dir"></i> Create </a> </li>
+                <li class="@(ViewBag.Page == "Management" ? "active" : "")"> <a href="/Tour/Management"> <i class="fontello-icon-right-dir"></i> Management </a> </li>
+            </ul>
+        </li>
+        <li class="accordion-group">
+            <div class="accordion-heading">
+                <a href="#accStatistics" data-parent="#mainSideMenu" data-toggle="collapse" class="accordion-toggle">
+                    <span class="item-icon fontello-icon-chart"></span> <i class="chevron fontello-icon-right-open-3"></i> Bookings
+                </a>
+            </div>
+            <ul class="accordion-content nav nav-list collapse" id="accStatistics">
+                <li> <a href="#"> <i class="fontello-icon-right-dir"></i> Create </a> </li>
+                <li> <a href="/Booking/TourOrder"> <i class="fontello-icon-right-dir"></i> Tour Order </a> </li>
+                <li> <a href="/Booking/HotelOrder"> <i class="fontello-icon-right-dir"></i> Hotel Order </a> </li>
+                <li> <a href="#"> <i class="fontello-icon-right-dir"></i> Approval </a> </li>
+                <li> <a href="#"> <i class="fontello-icon-right-dir"></i> History </a> </li>
+            </ul>
+        </li>
+        <li class="accordion-group">
+            <div class="accordion-heading">
+                <a href="#accTables" data-parent="#mainSideMenu" data-toggle="collapse" class="accordion-toggle">
+                    <span class="item-icon fontello-icon-align-justify"></span> <i class="chevron fontello-icon-right-open-3"></i> Referrers
+                </a>
+            </div>
+            <ul class="accordion-content nav nav-list collapse" id="accTables">
+                <li> <a href="/Configuration/RequestHotel"> <i class="fontello-icon-right-dir"></i> Hotel Request </a> </li>
+                <li> <a href="#"> <i class="fontello-icon-right-dir"></i> Email </a> </li>
+            </ul>
+        </li>
+        <li class="accordion-group">
+            <div class="accordion-heading">
+                <a href="#adminTables" data-parent="#mainSideMenu" data-toggle="collapse" class="accordion-toggle">
+                    <span class="item-icon fontello-icon-align-justify"></span> <i class="chevron fontello-icon-right-open-3"></i> Master admin
+                </a>
+            </div>
+            <ul class="accordion-content nav nav-list @(ViewBag.Active == "Admin" ? "in" : "") collapse" id="adminTables">
+                <li> <a href="/Configuration/CategoryDetail/1"> <i class="fontello-icon-right-dir"></i> Travel style </a> </li>
+                <li> <a href="/Configuration/CategoryDetail/2"> <i class="fontello-icon-right-dir"></i> Meals </a> </li>
+                <li> <a href="/Configuration/CategoryDetail/3"> <i class="fontello-icon-right-dir"></i> Transportations </a> </li>
+                <li> <a href="/Configuration/CategoryDetail/4"> <i class="fontello-icon-right-dir"></i> Group size </a> </li>
+                <li> <a href="/Configuration/CategoryDetail/5"> <i class="fontello-icon-right-dir"></i> Tour duration </a> </li>
+                <li> <a href="/Configuration/TourFeatured"> <i class="fontello-icon-right-dir"></i> Tour Featured </a> </li>
+                <li> <a href="/Configuration/HotelFeatured"> <i class="fontello-icon-right-dir"></i> Hotel Featured </a> </li>
+            </ul>
+        </li>
+    </ul>
+    <div class="sidebar-item"></div>
+</div>

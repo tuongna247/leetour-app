@@ -1,0 +1,117 @@
+﻿@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+@{
+    Tour tour = ViewBag.Tour;
+    //List<ItemModel> mealItems = ViewBag.Meals;
+    //List<ItemModel> transportItems = ViewBag.Transports;
+}
+@model List<Detail>
+<div class="panel-body">
+    <input type="hidden" id="child-tour-id" value="@tour.Id" />
+    @*@if (Model.Count > 0)
+    {*@
+        @if (tour.Type == (int) Utilities.TourType.Tour)
+        {
+            <section id="cd-timeline" class="cd-container">
+                @if (Model.Count > 0)
+                {
+                    foreach (Detail detail in Model)
+                    {
+                        if (detail == null)
+                        {
+                            continue;
+                        }
+                        <div class="cd-timeline-block">
+                            <div class="cd-timeline-img cd-success">
+                                <strong>@detail.SortOrder</strong>
+                            </div> <!-- cd-timeline-img -->
+                            <div class="cd-timeline-content">
+                                <h2>@detail.Itininary</h2>
+                                @Html.Raw(detail.Content)
+                                <hr/>
+                                <dl>
+                                    <dt>Meal</dt>
+                                    <dd>@(!string.IsNullOrEmpty(detail.Meal) ? detail.Meal.Substring(0, detail.Meal.Length - 2) : detail.Meal)</dd>
+                                    <dt>Transport</dt>
+                                    <dd>@(!string.IsNullOrEmpty(detail.Transport) ? detail.Transport.Substring(0, detail.Transport.Length - 2) : detail.Transport)</dd>
+                                </dl>
+                                <div class="pull-right">
+                                    <a onclick="updateItineraryForm('@detail.Id', 1)" href="javascript:void(0);" class="btn btn-success btn-xs"><small class="glyphicon glyphicon-edit"></small></a>
+                                    <a onclick="deleteItinerary('@detail.Id')" href="javascript:void(0);" class="btn btn-danger btn-xs"><small class="glyphicon glyphicon-trash"></small></a>
+                                </div>
+                                <span class="cd-date">Day @detail.SortOrder</span>
+                            </div> <!-- cd-timeline-content -->
+                        </div>
+                    }
+                }
+                <div class="cd-timeline-block text-center">
+                    <div class="cd-timeline-img cd-primary">
+                        <i class="fa fa-paperclip"></i>
+                    </div> <!-- cd-timeline-img -->
+                    <div class="cd-timeline-content">
+                        <a data-target="#add-itinerary-modal" data-toggle="modal" class="btn btn-success btn-addon m-b-sm btn-xs">Add new</a>
+
+                    </div> <!-- cd-timeline-content -->
+                </div>
+            </section>
+        }
+        else
+        {
+            <section class="panel">
+                @if (Model.Count > 0)
+                {
+                    foreach (Detail detail in Model)
+                    {
+                        <div class="panel-body">
+
+                            <h2>@detail.Itininary</h2>
+                            @Html.Raw(detail.Content)
+                            <hr/>
+                            <dl>
+                                <dt>Meal</dt>
+                                <dd>@(!string.IsNullOrEmpty(detail.Meal) ? detail.Meal.Substring(0, detail.Meal.Length - 2) : detail.Meal)</dd>
+                                <dt>Transport</dt>
+                                <dd>@(!string.IsNullOrEmpty(detail.Transport) ? detail.Transport.Substring(0, detail.Transport.Length - 2) : detail.Transport)</dd>
+                            </dl>
+                            <div class="pull-right">
+                                <a onclick="updateItineraryForm('@detail.Id', 2)" href="javascript:void(0);" class="btn btn-success btn-xs"><small class="glyphicon glyphicon-edit"></small></a>
+                                <a onclick="deleteItinerary('@detail.Id') " href="javascript:void(0);" class="btn btn-danger btn-xs"><small class="glyphicon glyphicon-trash"></small></a>
+                            </div>
+
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="pull-left">
+                        <a data-target="#add-itinerary-modal" data-toggle="modal" class="btn btn-success btn-addon m-b-sm btn-xs">Add new</a>
+                    </div>
+                }
+
+            </section>
+        }
+    @*}
+    else
+    {
+        <section id="cd-timeline" class="cd-container">
+            <div class="cd-timeline-block text-center">
+                <div class="cd-timeline-img cd-primary">
+                    <i class="fa fa-paperclip"></i>
+                </div> <!-- cd-timeline-img -->
+                <div class="cd-timeline-content">
+                    <a data-target="#add-itinerary-modal" data-toggle="modal" class="btn btn-success btn-addon m-b-sm btn-xs">Add new</a>
+
+                </div> <!-- cd-timeline-content -->
+            </div>
+        </section>
+    }*@
+
+    <hr />
+    <div class="pull-right">
+        <a class="btn btn-success m-b-sm" href="@(string.Format("/Product/TourPrice/{0}", tour.Id))">Save and Continue</a>
+        <a class="btn btn-default m-b-sm" href="@Url.Content("/Product/Tour")">Cancel</a>
+    </div>
+</div>

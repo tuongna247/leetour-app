@@ -1,0 +1,44 @@
+﻿@using Vinaday.Data.Models
+@{
+    List<Detail> tourDetails = ViewBag.TourDetails;
+}
+<style>
+    .table th, .table td {
+        text-align: center;
+    }
+</style>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Date</th>
+            <th scope="col">Title</th>
+            <th scope="col" class="hidden-tablet hidden-phone">Content</th>
+            <th scope="col">Meal</th>
+            <th scope="col">Transport</th>
+            <th scope="col" class="hidden-tablet hidden-phone">Create Date</th>
+            <th scope="col" class="action">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (tourDetails.Count > 0)
+        {
+            foreach (var tourDetail in tourDetails)
+            {
+                <tr class="rowlink">
+                    <td>@tourDetail.Id</td>
+                    <td>@(string.Format("Day {0}",tourDetail.SortOrder))</td>
+                    <td>@tourDetail.Itininary</td>
+                    <td>@Html.Raw(tourDetail.Content)</td>
+                    <td class="hidden-tablet hidden-phone">@(!string.IsNullOrEmpty(tourDetail.Meal) ? tourDetail.Meal.Substring(0, tourDetail.Meal.Length - 2) : tourDetail.Meal)</td>
+                    <td class="hidden-phone">@(!string.IsNullOrEmpty(tourDetail.Transport) ? tourDetail.Transport.Substring(0, tourDetail.Transport.Length - 2) : tourDetail.Transport)</td>
+                    <td class="hidden-phone">@tourDetail.ModifiedDate.ToShortDateString()</td>
+                    <td>
+                        <a style="color: #333; font-size: 15px; cursor: pointer;" class="fontello-icon-trash-1" onclick="deleteItinerary('@tourDetail.Id')"></a>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>

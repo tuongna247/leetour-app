@@ -1,0 +1,99 @@
+﻿@{
+    var userName = ViewBag.User;
+}
+
+<!-- Google Tag Manager -->
+<script>
+    (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+            new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MDGR7L');</script>
+<!-- End Google Tag Manager -->
+<style>
+    .offcanvas #nav .block {
+        z-index: 2;
+        position: relative;
+        float: right;
+    }
+
+    .offcanvas #nav {
+        z-index: 200;
+        position: relative;
+        overflow: hidden;
+        margin-right: 30px;
+    }
+    .offcanvas {
+    border-top: 4px solid #f58220;
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    height: 60px;
+    line-height: 55px;
+    z-index: 90;
+}
+</style>
+
+<div class="offcanvas" style="border-top: none">
+    <div class="container">
+        <header id="top" role="banner">
+            <div>
+                <div class="block">
+                    <a href="/" class="logo" style="position: relative; margin: 0 auto; padding: 0px 20px;">
+                        <img src="/Content/images/logo.png" alt="logo vinaday" style="width: 178px; margin-top: 0px;" />
+                    </a>
+                    <div class="hidden-sm hidden-md hidden-lg" style="">
+                        <a title="" href="#">
+                            <span class="fa fa-flash"></span>
+                            <span class="menu-text">My Account</span>
+                        </a>
+                    </div>
+                    <div class="hidden-sm hidden-md hidden-lg" style="">
+                        <a href="http://goreise.vn" title="Tiếng Việt"><i class="flag flag-18 flag-18-vn"></i></a>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </header>
+        <nav id="nav" role="navigation">
+            <div class="block">
+                <ul>
+                    <li class="visible-xs" style="text-align: left; padding-left: 18px;">
+                        <span class="logo"> <img alt="Light logo" src="/Content/images/logo-light.png" style="width: 289px;text-align: left"> </span>
+                    </li>
+                    <li>
+                        <a title="" href="#">
+                            <span class="fa fa-users"></span>
+                            <span class="menu-text">Join</span>
+                        </a>
+                    </li>
+                    <li style="text-align: right">
+                        <a title="" href="#">
+                            <span class="fa fa-flash"></span>
+                            <span class="menu-text">My Account ( Sign in )</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="http://goreise.vn" title="Tiếng Việt"><i class="flag flag-18 flag-18-vn"></i></a>
+                    </li>
+                </ul>
+                <a class="close-btn" id="nav-close-btn" href="#top" style="display: none;">Return to Content</a>
+                <div class="nav-footer">
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="search-field">
+        <div class="container">
+            <form method="get" role="search">
+                <input type="text" name="s" placeholder="Type then press enter..." />
+                <button type="submit" class="hidden btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

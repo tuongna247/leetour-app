@@ -1,0 +1,228 @@
+﻿@using System
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@model Vinaday.Data.Models.HotelPackage
+@{
+    ViewBag.Title = "Rooms - Hotel Management";
+    List<CatDetail>
+        promotionTypes = ViewBag.PromotionTypes;
+    var cancellations = ViewBag.Cancellations;
+    Vinaday.Data.Models.HotelPackage package = ViewBag.hotelPackage;
+    List<HotelImages> photos = ViewBag.Photos;
+}
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">edit new package</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="edit-RoomName">Package Name:</label>
+                    <input id="edit-RoomName" class="form-control m-b-sm" type="text" value="@package.RoomName" placeholder="Package Name">
+                </div>
+                <div class="form-group">
+                    <label for="edit-RoomNameVN">Package Name VN:</label>
+                    <input id="edit-RoomNameVN" class="form-control m-b-sm" type="text" value="@package.RoomNameVN" placeholder="Package Name VN">
+                </div>
+                <div class="form-group">
+                    <label for="edit-FromDate">From Date:</label>
+                    <input id="edit-FromDate" class="form-control m-b-sm date-picker" type="text" value="@package.FromDate.ToShortDateString()" placeholder="From Date">
+                </div>
+                <div class="form-group">
+                    <label for="edit-ToDate">To Date:</label>
+                    <input id="edit-ToDate" class="form-control m-b-sm date-picker" type="text" value="@package.ToDate.ToShortDateString()" placeholder="To Date">
+                </div>
+                <div class="form-group">
+                    <label for="edit-Night">Night:</label>
+                    <input id="edit-Night" class="form-control m-b-sm" type="text" value="@package.Night" placeholder="Night">
+                </div>
+                <div class="form-group">
+                    <label for="edit-Price">Price:</label>
+                    <input id="edit-Price" class="form-control m-b-sm" type="text" value="@package.Price" placeholder="Price">
+                </div>
+                <div class="form-group">
+                    <label for="edit-promotion">Image:</label>
+                    <div id="change-photo">
+                        <div class="thumbnail" style="padding: 23px">
+                            <div class="nailthumb-container" style="overflow: hidden; padding: 0;">
+                                <img id="room-image" src="@(!String.IsNullOrEmpty(Model.ImageUrl) ? Url.Content(Model.ImageUrl) : "/Content/img/no-image.jpg")" style="text-align: center; width: 100%;" class="nailthumb-image">
+                            </div>
+
+                        </div>
+                        <a class="no-m text-success" href="javascript:void(0);" onclick="showChangePhoto();"><h5>Change photo</h5></a>
+                        @if (photos.Any())
+                        {
+                            <h3>photos</h3>
+                        }
+                        else
+                        {
+                            <h3> no photos</h3>
+                        }
+                    </div>
+
+                    <div class="image-inbox-widget slimscroll" id="images-div" style="display: none;">
+                        @if (photos.Any())
+                        {
+                            <table id="images-table" class="table table-condensed table-hover">
+                                <tbody>
+                                    @foreach (HotelImages photo in photos)
+                                    {
+                                        var isImage = Model.ImageUrl == null ? false : Model.ImageUrl.Contains(photo.ImageThumbnail.Substring(2));
+                                        <tr onclick="selectImage(this)" style="cursor:pointer" class="inbox-item @(isImage?"active":"")">
+                                            <td><img style="width: 100%;" src="@Url.Content(string.Format("{0}-{1}.jpeg", photo.ImageThumbnail, 90))" alt="@photo.ImageName" /></td>
+                                            <td style="text-align: center; padding-top: 20% !important;">
+                                                <span class="glyphicon glyphicon-ok check-image" style="color: green; font-size: 30px;@(isImage?"display: inline":"display: none")"></span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>No content for this room, please upload image of room on hotel basic.</p>
+                        }
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="edit-cancellation">Cancellation :</label>
+                    <label for="edit-cancellation-policy">Cancellation policy</label>
+                    <div class="controls">
+                        <select id="edit-cancellation-policy" class="form-control">
+                            <option value="1">Hotel Standard Cancellation</option>
+                            <option value="2">Other Cancellation Policy</option>
+                        </select>
+                        <br />
+                        <select id="edit-cancellation-list" style="display: none" class="form-control">
+                            @foreach (var cancellation in cancellations)
+                            {
+                                <option value="@cancellation.Id" name="@cancellation.Description">@cancellation.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edit-promotion">Add Promotion (No change No Refun policy):</label>
+                    <div class="checker" id="uniform-add-promotion"><span><input id="edit-promotion" class="form-control m-b-sm" type="checkbox" value="@package.IsPromotion"></span></div>
+                    <input id="edit-promotion-discount" class="form-control m-b-sm" type="text" value="@package.DiscountValue" placeholder="Discount %">
+                </div>
+                <div class="form-group">
+                    <label for="edit-IncludingValue">Including:</label>
+                    <textarea id="edit-IncludingValue" class="form-control m-b-sm" type="tex" placeholder="Including">@package.IncludingValue</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-IncludingValueVN">Including VN:</label>
+                    <input type="hidden" id="edit-package-id" value="@package.Id" />
+                    <textarea id="edit-IncludingValueVN" class="form-control m-b-sm" type="tex" placeholder="Including VN">@package.IncludingValueVN</textarea>
+                </div>
+            </div>
+        </div><!-- Row -->
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default" data-dismiss="modal">Close</a>
+        <a class="btn btn-success" onclick="UpdatePackage();">Update</a>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".date-picker").datepicker({
+            orientation: "top auto",
+            autoclose: true
+        });
+        $('#edit-IncludingValue').summernote({
+            toolbar: [
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['table', ['table']],
+                ['view', ['fullscreen', 'codeview']],
+                ['help', ['help']]
+            ],
+            height: 200
+        });
+        $('#edit-IncludingValueVN').summernote({
+            toolbar: [
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['table', ['table']],
+                ['view', ['fullscreen', 'codeview']],
+                ['help', ['help']]
+            ],
+            height: 200
+        });
+        $("#edit-cancellation-policy").change(function () {
+            var selected = $("#edit-cancellation-policy").val();
+            if (selected == 1) {
+                $("#edit-cancellation-list").css("display", "none");
+                $("#edit-cancelation-name").css("display", "inline");
+
+                $("#edit-cancellation-description-hotel").css("display", "inline");
+                $("#edit-cancellation-description").css("display", "none");
+
+                $("#edit-cancel-name-hidden").val($("#cancelation-name").html());
+            } else {
+                $("#edit-cancelation-name").css("display", "none");
+                $("#edit-cancellation-list").css("display", "inline");
+
+                $("#edit-cancellation-description-hotel").css("display", "none");
+                $("#edit-edit-cancellation-description").css("display", "inline");
+
+                $("#edit-cancel-name-hidden").val($("#edit-cancellation-list").find(":selected").text());
+            }
+        });
+        $("#edit-cancellation-list").change(function () {
+            $("#edit-cancellation-description").html($("#edit-cancellation-list").find(":selected").attr("name"));
+            $("#edit-cancel-name-hidden").val($("#edit-cancellation-list").find(":selected").text());
+            $("#edit-cancel-id-hidden").val($("#edit-cancellation-list").val());
+        });
+    });
+    function UpdatePackage() {
+        var package = new Object();
+        package.Id = $("#edit-package-id").val();
+        package.HotelId = $("#hotel-id").val();
+        package.RoomName = $("#edit-RoomName").val();
+        package.RoomNameVN = $("#edit-RoomNameVN").val();
+        package.Price = $("#edit-Price").val();
+        package.FromDate = $("#edit-FromDate").val();
+        package.ToDate = $("#edit-ToDate").val();
+        package.CancellationId = $("#edit-cancellation-list").val();
+        package.CancellationName = $("#edit-cancellation-list").find(":selected").text();
+        package.IsPromotion = $("#edit-promotion").is(':checked') ? true : false;
+        package.DiscountValue = $("#edit-promotion-discount").val();
+        package.Including = '';
+        package.Night = $("#edit-Night").val();
+        debugger;
+        package.ImageUrl = $("#images-table .active img").attr("src");
+        package.IncludingValue = $("#edit-IncludingValue").code();
+        package.IncludingValueVN = $("#edit-IncludingValueVN").code();
+        blockUi(el);
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(package),
+            dataType: "json",
+            url: "http://goreise.com/rc/Product/UpdatePackage/"
+        })
+            .success(function (result) {
+                unblockUi(el);
+                if (result != "" && result.Status == 2) {
+                    successMessage(result.Message);
+                    setTimeout(function () {
+                        window.location.reload(1);
+                    }, 3000);
+                } else {
+                    errorMessage(result.Message);
+                }
+            })
+            .error(function () {
+                errorMessage("Connect to data is fail!");
+            });
+        return true;
+    }
+
+</script>

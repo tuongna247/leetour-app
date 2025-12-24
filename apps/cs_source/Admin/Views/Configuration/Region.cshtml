@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Active = "Region";
+    ViewBag.Title = "Region Management";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@model List<Vinaday.Data.Models.City>
+<div class="page-title">
+    <h3>Region Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="~/">Dashboard</a></li>
+            <li><a href="~/Configuration">Configuration</a></li>
+            <li class="active">Region Management</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <div class="form-group col-md-12">
+                        <a data-toggle="modal" data-target="#add-new-modal" class="btn btn-info btn-addon m-b-sm btn-xs"><i class="fa fa-plus"></i>Add new</a>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div id="loadPane"></div>
+                    </div>
+                    <div class="table-responsive col-md-12">
+                        <div id="div-region"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add-new-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new country</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+
+                        <label for="new-city-id">Country <span class="text-danger">*</span></label>
+                        <select class="form-control m-b-sm" id="new-city-id">
+                            @foreach (var city in Model)
+                            {
+                                <option value="@city.CityId">@city.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="new-name-en">Name <span class="text-danger">*</span></label>
+                        <input class="form-control" id="new-name-en" type="text" placeholder="Enter name">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="new-name-vn">Name vietnam <span class="text-danger">*</span></label>
+                        <input class="form-control" id="new-name-vn" type="text" placeholder="Enter name vietnam">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="new-description-en">Description <span class="text-danger">*</span></label>
+                        <input class="form-control" id="new-description-en" type="text" placeholder="Enter description">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="new-description-vn">Description vietnam <span class="text-danger">*</span></label>
+                        <input class="form-control" id="new-description-vn" type="text" placeholder="Enter description vietnam">
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div id="new-error-list" style="display: none;">
+                            <div id="new-error-item" class="alert alert-danger" role="alert">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="insertRegion();" class="btn btn-success">Add new</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-new-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Update country</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="edit-name-en">Name <span class="text-danger">*</span></label>
+                        <input class="form-control" id="edit-name-en" type="text" placeholder="Enter name">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="edit-name-vn">Name vietnam <span class="text-danger">*</span></label>
+                        <input class="form-control" id="edit-name-vn" type="text" placeholder="Enter name vietnam">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="edit-description-en">Description <span class="text-danger">*</span></label>
+                        <input class="form-control" id="edit-description-en" type="text" placeholder="Enter description">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="edit-description-vn">Description vietnam <span class="text-danger">*</span></label>
+                        <input class="form-control" id="edit-description-vn" type="text" placeholder="Enter description vietnam">
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div id="edit-error-list" style="display: none;">
+                            <div id="edit-error-item" class="alert alert-danger" role="alert">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="edit-region-id" value="" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="updateRegion();" class="btn btn-success">Save change</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    if (typeof jQuery == 'undefined') {
+        var e = document.createElement('script');
+        e.src = '@Url.Content("~/assets/js/region.js")';
+        e.type = 'text/javascript';
+        document.getElementsByTagName("head")[0].appendChild(e);
+    }
+</script>

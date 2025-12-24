@@ -1,0 +1,312 @@
+﻿@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@model BookingModel
+@{
+    ViewBag.Title = "Booking Payment | VINADAY GOREISE VN Co., Ltd";
+    List<Nationality> nationalities = ViewBag.Nationalities;
+    CancellationPolicy cancellation = ViewBag.Cancellation;
+    decimal price = 0;
+    decimal surcharge = 0;
+    decimal promotion = 0;
+    var imageUrl = (Model != null && Model.Image != null ? string.Format(Url.Content(string.Format("https://admin.goreise.com{0}", Url.Content(Model.Image.OriginalPath ?? "/Content/Images/no-image.jpg")))) : "/Content/Images/no-image.jpg");
+}
+<div class="pd-nav"></div>
+<div class="content stepbooking">
+    <div class="container">
+        <div class="row">
+
+            @if (Model != null)
+            {
+                string tourGroup = string.Empty;
+                string tourInclude = string.Empty;
+                switch (Model.RateType)
+                {
+
+                    case 1:
+                        tourGroup = Model.Product.TourGroup1;
+                        tourInclude = Model.Product.TourGroup1Include;
+                        break;
+                    case 2:
+                        tourGroup = Model.Product.TourGroup2;
+                        tourInclude = Model.Product.TourGroup2Include;
+                        break;
+                    case 3:
+                        tourGroup = Model.Product.TourGroup3;
+                        tourInclude = Model.Product.TourGroup3Include;
+                        break;
+                }
+
+
+                if (Model.Product != null)
+                {
+                    var @decimal = Model.Rate.RetailRate;
+                    price = @decimal != null ? Math.Round((decimal)@decimal, 2) : 0;
+                    if (Model.TourPriceOption > 0)
+                        price = price + Model.TourPriceOption;
+
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <div class="step-payment">
+                            <div class="icon-step">
+                                <div class="box-step box-step1 active">
+                                    <span class="fa fa-shopping-cart"></span>
+                                    <p style="padding-left: 16px;">Cart</p>
+                                </div>
+                                <div class="box-step box-step2">
+                                    <span class="fa fa-users"></span>
+                                    <p>Information</p>
+                                </div>
+                                <div class="box-step box-step3">
+                                    <span style="padding-top: 17px; text-indent: 19px;" class="fa fa-shield"></span>
+                                    <p>
+                                        Payment
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <section class="form checkout style-2">
+                            <div class="row">
+                                <div id="information">
+                                    <div class="col-md-8 " style="visibility: visible;">
+                                        <div class="box-aside payment-detail">
+                                            <div class="set-border">
+                                                <h2 class="title">
+                                                    <button class="o-InfoSectionCount o-InfoSectionCount--active" disabled="" role="tab" aria-current="true"><svg viewBox="0 0 26 26"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g class="bg" transform="translate(-211.000000, -20.000000)"><circle cx="224" cy="33" r="12"></circle></g></g><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="Helvetica-Bold, Helvetica" font-size="14" font-weight="bold"><g class="value"><text><tspan x="9" y="18">1</tspan></text></g></g></svg></button>
+                                                    Your Booking Details
+                                                </h2>
+                                                <div class="payment-detail-content">
+                                                    <div class="payment-detail-title">
+                                                        @Model.Product.Name<br />
+                                                        <input type="hidden" style="width: 100%" id="productname" value="@Model.Product.Name.Replace("✭","")" />
+                                                    </div>
+                                                    <div class="payment-detail-content-info" style="width: 100%; padding-left: 0px;">
+                                                        <ul>
+                                                            <li><i class="fa fa-angle-double-right"></i><span class="bold">Group Type: </span> @tourGroup;</li>
+                                                            <li><i class="fa fa-angle-double-right"></i><span class="bold">Include: </span> @Html.Raw(tourInclude);</li>
+                                                            <li>
+                                                                <i class="fa fa-angle-double-right"></i><span class="bold">Departure Date:  </span>
+                                                                @if (Model.DepartureOption != "none")
+                                                                {
+                                                                    @Model.DepartureOption
+                                                                }
+                                                                @Model.Order.StartDate.ToString("MMM-dd-yyyy")
+                                                            </li>
+                                                            <li><i class="fa fa-angle-double-right"></i><span class="bold">Duration: </span>@Model.Product.Duration</li>
+
+                                                        </ul>
+
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                    @if (Model.Promotion != null)
+                                                    {
+                                                        <div style="background-color: #fff4f4 !important; border-color: #ff006c; color: #ff006c; padding: 10px; font-weight: bold" class="helper">
+                                                            <span class="glyphicon glyphicon-gift" style="float: left; height: 45px; margin-right: 10px; color: #ff006c; font-size: 20px"></span>
+                                                            <span>Congratulations! You got a Great Deal: Get US$@Math.Round(promotion, 2) discount per Person! </span>
+                                                        </div>
+                                                    }
+                                                    <div id="information-price" class="row">
+                                                        <div class="col-md-12 ">
+                                                            <div id="accordion" class="panel-group ">
+                                                                @{
+                                                                    decimal totalPrice = Model.FinalRate;
+                                                                }
+                                                                <div id="PromotionSection" class="panel-body">
+
+                                                                    <table class="table table-hover" style="margin-bottom: 0;">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Quantity</th>
+                                                                                <th>Price</th>
+                                                                                <th style="text-align:right">Total</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td><span style="float: left">@Model.Rate.PersonNo Adult(s) </span> <span style="float: right">x</span></td>
+                                                                                <td>@price.ToString("##,###") <sup>vnd</sup></td>
+                                                                                <td style="text-align:right">@(((decimal)(price * Model.Rate.PersonNo)).ToString("##,###")) <sup>vnd</sup></td>
+                                                                            </tr>
+                                                                            @if (Model.Children > 0)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><span style="float: left">@Model.Children Children</span> <span style="float: right">x</span></td>
+                                                                                    <td>@((price * 3 / 4).ToString("##,###")) <sup>vnd</sup></td>
+                                                                                    <td style="text-align:right">@(((decimal)(Model.Children * price * 3 / 4)).ToString("##,###")) <sup>vnd</sup></td>
+                                                                                </tr>
+                                                                            }
+                                                                            <tr id="promotionRow" style="display:none">
+                                                                                <td colspan="2"><span style="float: left">Discount </span></td>
+                                                                                <td style="text-align:right"><span id="discountValue"></span> <sup>vnd</sup> </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <div style="padding:8px;">
+                                                                    <input type="hidden" id="price" value="@Model.Rate.RetailRate" />
+                                                                    <input type="hidden" id="numberChild" value="@Model.Children" />
+                                                                    <input type="hidden" id="numberAdult" value="@Model.Rate.PersonNo" />
+                                                                    <input type="hidden" id="discountCouponValue" value="" />
+                                                                    <span id="lblPromotionCode" style="font-weight:bold">Got a Promotion Code?</span>
+
+                                                                    <div id="inputPromotion" style="display:none">
+                                                                        <input id="promotionCode" value="" />
+                                                                    </div>
+                                                                    <a href="#promotionCode" id="btnAddPromotion" onclick="return addPromotion()">Add</a>
+
+
+                                                                    <a href="#promotionCode" id="btnApplyPromotion" style="display:none" onclick="return applyPromotion()">Apply</a>
+
+                                                                    <a href="#promotionCode" id="btnCancelPromotion" style="display:none" onclick="return cancelPromotion()">Cancel</a>
+                                                                    <a href="#PromotionSection" id="btnRemovePromotion" style="display:none" onclick="return removePromotion()">Remove</a>
+
+                                                                </div>
+                                                                <div class="panel panel-default" style="padding: 10px; font-size: 16px; background-color: lightgray;">
+                                                                    <div style="font-size: 13px;" class="payment-info-item">
+                                                                        <div class="panel-body">
+                                                                            <span class="pull-left" style="font-size: 15px; font-weight: bold">
+                                                                                Total Price
+                                                                            </span>
+                                                                            <strong class="pull-right" id="totalPrice" style="font-size: 15px; font-weight: bold">@totalPrice.ToString("##,###")<sup>VND</sup></strong>
+                                                                            <input type="hidden" id="totalAmount" value="@totalPrice" />
+                                                                        </div>
+
+                                                                        <div class="clear"></div>
+                                                                        <br />
+                                                                        <p style="font-size: 15px">
+                                                                            <span>Price includes </span> @Html.Raw(tourInclude)
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="box-aside">
+                                            <div class="set-border">
+                                                <h2 class="title " style="font-size: 17px">
+                                                    <button class="o-InfoSectionCount o-InfoSectionCount--active" disabled="" role="tab" aria-current="true"><svg viewBox="0 0 26 26"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g class="bg" transform="translate(-211.000000, -20.000000)"><circle cx="224" cy="33" r="12"></circle></g></g><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="Helvetica-Bold, Helvetica" font-size="14" font-weight="bold"><g class="value"><text><tspan x="9" y="18">2</tspan></text></g></g></svg></button>
+                                                    Your Information
+                                                </h2>
+                                                <div class="payment-detail-content">
+                                                    <div class="input-group tight">
+                                                        <span>
+                                                            <input type="radio" name="gender" style="height: 15px; box-shadow: none; padding: 10px;" placeholder="Gender" id="gender_male" value="Mr">
+                                                            <label for="gender_male" style="font-weight: normal">
+                                                                Mr
+                                                            </label>
+
+                                                            <input type="radio" name="gender" style="height: 15px; box-shadow: none; margin-left: 60px;" placeholder="Gender" id="gender_female" value="Ms">
+                                                            <label for="gender_female" style="font-weight: normal">
+                                                                Ms
+                                                            </label>
+                                                        </span>
+                                                    </div><!-- .input-group -->
+                                                    <div class="input-group tight">
+                                                    </div><!-- .input-group -->
+                                                    <div class="input-group tight">
+                                                        <input type="text" placeholder="First Name" class="lg" id="firt-name">
+                                                    </div><!-- .input-group -->
+
+                                                    <div class="input-group tight">
+
+                                                        <input type="text" placeholder="Last Name" class="lg" id="last-name">
+                                                    </div><!-- .input-group -->
+
+                                                    <div class="input-group tight">
+
+                                                        <input type="text" placeholder="Email " class="lg" id="email">
+                                                    </div><!-- .input-group -->
+
+                                                    <div class="input-group tight">
+
+                                                        <input type="text" placeholder="Email (re-confirm)" class="lg" id="confirm-email">
+                                                    </div><!-- .input-group -->
+
+                                                    <div class="input-group tight">
+                                                        <input type="number" placeholder="Phone Number / WhatsApp" class="lg" id="phone">
+                                                    </div><!-- .input-group -->
+
+                                                    <div class="input-group tight">
+
+                                                        <div class="select-style">
+                                                            <select name="country" class="lg" id="national">
+                                                                <option value="Select your nationality">Select your nationality</option>
+                                                                @if (nationalities != null && nationalities.Count > 0)
+                                                                {
+                                                                    foreach (var nationality in nationalities.Where(nationality => nationality != null))
+                                                                    {
+                                                                        <option value="@nationality.ID">@nationality.Name</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div><!-- .input-group -->
+                                                    <span class="input-group">
+                                                        <textarea placeholder="Pick-up point, Food restrictions ..." class="lg" id="special-request"></textarea>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                       
+                                        <div id="set-border">
+                                            <div class="check-out-header">
+                                                <h2 class="title" style="font-size: 17px">Payment Details</h2>
+                                            </div>
+
+                                            <div class="helper01" style="font-size: 14px;margin-bottom: 20px;">
+                                                <label style="margin: 0">Cancellation policy</label>
+                                                <br>
+                                                @Html.Raw(cancellation != null ? cancellation.Description : string.Empty)
+                                            </div>
+                                            <div class="input-group">
+                                                <a onclick="showPayLater();" class="pull-left" style="color: #58738a; cursor: pointer"> « Back to Your Information</a>
+                                                <a onclick="proceedPaymentCreditCard();" class="yellow_roundbtn pull-right">Book &amp; Pay Now!</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 " style="right: 0;">
+                                        <div class="set-border">
+                                            <div class="panel panel-default" style="padding: 6px; color: black;">
+                                                <a href="mailto:cs@vinaday.com" style="color: black">✉️ cs@vinaday.com</a> <br />
+                                                <a href="tel:842838388382" style="color: black">📞 (+84-28)38388382</a><br />
+                                                <a href="tel:84916388382" style="color: black">💬 (+84)916388382</a><br />
+                                            </div>
+                                            <div class="panel panel-default" style="padding: 6px; color: black;">
+                                                <img src="@Url.Content("~/Content/images/lowprice.png")" style="width: 100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/app/payment-tour.js")"></script>
+    <script>
+        function cbShowHideControl(ctl) {
+            if (ctl.checked) {
+                $(".other_gender").show();
+            } else {
+                $(".other_gender").hide();
+            }
+        }
+        function cbCreateGiftVoucher(ctl) {
+            if (ctl.checked) {
+                $(".gift_voucher").show();
+            } else {
+                $(".gift_voucher").hide();
+            }
+        }
+
+    </script>
+}

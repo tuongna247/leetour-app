@@ -1,0 +1,119 @@
+﻿@using Vinaday.Web.Framework
+@model Vinaday.Data.Models.Contact
+@if (Model != null)
+{
+    <div class="modal fade" id="update-contact-modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Update contact</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-salutation">Salutation</label>
+                                    <select id="basic-form-edit-contact-salutation" class="form-control m-b-sm">
+                                        <option @(Model.SALUTATION == "Mr." ? "selected" : "")>Mr.</option>
+                                        <option @(Model.SALUTATION == "Mrs." ? "selected" : "")>Mrs.</option>
+                                        <option @(Model.SALUTATION == "Ms." ? "selected" : "")>Ms.</option>
+                                        <option @(Model.SALUTATION == "Dr." ? "selected" : "")>Dr.</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-first-name">First Name</label>
+                                    <input id="basic-form-edit-contact-first-name" value="@Model.FIRSTNAME" class="form-control" placeholder="First Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-last-name">Last Name</label>
+                                    <input id="basic-form-edit-contact-last-name" value="@Model.LASTNAME" class="form-control" placeholder="Last Name">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <form>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-phone">Phone</label>
+                                    <input id="basic-form-edit-contact-phone" value="@Utilities.FormatPhone(Model.PHONE)" class="form-control" placeholder="Phone">
+                                </div>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-fax">Fax</label>
+                                    <input id="basic-form-edit-contact-fax" value="@Model.FAX" class="form-control" placeholder="Fax">
+                                </div>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-email">Email Address</label>
+                                    <input id="basic-form-edit-contact-email" value="@Model.EMAILADDRESS" class="form-control" placeholder="Email Address">
+                                </div>
+                            </form>
+                        </div>
+                    </div><!-- Row -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" onclick="saveContact('@Model.CONTACTID'); ">Save change</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="modal fade" id="update-contact-modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Update contact</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-salutation">Salutation</label>
+                                    <select id="basic-form-edit-contact-salutation" class="form-control m-b-sm">
+                                        <option>Mr.</option>
+                                        <option>Mrs.</option>
+                                        <option>Ms.</option>
+                                        <option>Dr.</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-first-name">First Name</label>
+                                    <input id="basic-form-edit-contact-first-name" class="form-control" placeholder="First Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-last-name">Last Name</label>
+                                    <input id="basic-form-edit-contact-last-name" class="form-control" placeholder="Last Name">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <form>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-phone">Phone</label>
+                                    <input id="basic-form-edit-contact-phone" class="form-control" placeholder="Phone">
+                                </div>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-fax">Fax</label>
+                                    <input id="basic-form-edit-contact-fax" class="form-control" placeholder="Fax">
+                                </div>
+                                <div class="form-group">
+                                    <label for="basic-form-edit-contact-email">Email Address</label>
+                                    <input id="basic-form-edit-contact-email" class="form-control" placeholder="Email Address">
+                                </div>
+                            </form>
+                        </div>
+                    </div><!-- Row -->
+                </div>
+                <div class="modal-footer">
+                    <input id="contact-type" type="hidden" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" onclick="saveContact('-1'); ">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

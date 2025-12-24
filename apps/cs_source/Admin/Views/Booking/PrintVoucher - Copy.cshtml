@@ -1,0 +1,221 @@
+﻿@using System.Globalization
+@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+@model Voucher
+@{
+    ViewBag.Title = "Order Detail - Management";
+    Layout = "~/Views/Shared/_PdfLayout.cshtml";
+    HotelImages hotelImage = null;
+    if (ViewBag.HotelImage != null)
+    {
+         hotelImage = (HotelImages)ViewBag.HotelImage;
+    }
+    Medium tourImage = null;
+    if (ViewBag.TourImage != null)
+    {
+        tourImage = (Medium)ViewBag.TourImage;
+    }
+
+}
+<style>
+    hr {
+        margin-bottom: 5px !important;
+        margin-top: 5px !important;
+    }
+
+    address {
+        margin-bottom: 0px !important;
+    }
+</style>
+<div class="panel-body" style="border: 2px dashed rgb(176, 176, 176)">
+    
+    @if (Model.Type == 2)
+    {
+        <table>
+            <tbody>
+                <tr>
+                    <td style="width: 50%; padding-right: 10px !important;position: relative; vertical-align: top">
+                        <div class="pull-left" style="vertical-align: top">
+                            <div style="top: 0; position: absolute;margin-top: -4px">
+                                <img src="~/assets/images/logo.png" style="width: 50%; margin-left: -9px" /><br />
+                               
+                                <p style="color: #eee">-----------------------------------------------------------------------------------------------------------</p>
+                            </div>
+                            <div style="vertical-align: top">
+                                <address>
+                                    @if (Model.Name != null)
+                                    {
+                                        <b>@Html.Raw(Model.Name.ToUpper())</b><br />
+                                    }
+                                    
+
+                                </address>
+                                @if (tourImage != null)
+                                {
+                                    <img style="width: 430px; height: 450px;" src="@Url.Content(tourImage.OriginalPath)"/>
+                                }
+                            </div>
+                            <div class="alert alert-info" style="position: absolute;bottom: 0">
+                                <h4>VINADAY GoREISE VietNam Co., Ltd</h4>
+                                <p style="color: #eee">----------------------------------------------------------------------------------------------------</p>
+                                <p>230 De tham, Pham Ngu Lao Ward, District 1,</p>
+                                <p>Ho Chi Minh City, Vietnam</p>
+                                <p>Telephone:  (+84)28 3838 8382 </p>
+                                <p>WhatsApp: (+84)916388382   or (+84)909450430  </p>
+                                <p>Email: cs@goreise.com</p>
+                            </div>
+
+                        </div>
+
+                    </td>
+                    <td style="width: 50%; padding-left: 10px !important">
+                        <div style="text-align: right; font-size: 30px">
+                            Tour Voucher
+                        </div>
+                        <table style="width: 100%">
+                            <tr><td style="width: 30%">Booking ID:</td><td ><b><span>@string.Format("00{0}", Model.BookingId)</span></b></td> </tr>
+                            <tr><td >PNR:</td><td ><b><span>@string.Format("{0}", ViewBag.Pnr)</span></b></td> </tr>
+                            <tr><td >Name of Guest:</td><td ><b><span>@Model.Guest</span></b></td> </tr>
+                            <tr><td >Nationality:</td><td ><b><span>@Model.Nationality</span></b></td> </tr>
+                        </table>
+                      
+                        <hr/>
+                        <table style="width: 100%">
+                            <tr><td style="width: 30%">Check-in Date:</td><td><b><span>@Model.CheckIn.ToString("MMM dd, yyyy")</span></b></td> </tr>
+                            <tr><td>Adults:</td><td><b><span>@string.Format("0{0}", Model.Adult)</span></b></td> </tr>
+                            <tr><td>Children:</td><td><b><span>@string.Format("0{0}", Model.Children)</span></b></td> </tr>
+                        </table>
+                        <hr/>
+                            <table style="width: 100%">
+                                <tr><td style="width: 30%">Meals Included:</td><td><b>@Model.Meal</b></td> </tr>
+                            </table>
+                        <hr/>
+                        <address>
+                            <span>Special Requests (Subject to Availability):</span><br/>
+                            <b><span>@Html.Raw(Model.Promotion)</span></b>
+                        </address>
+                        <hr/>
+                        <address>
+                            Cancellation Policy: <br/>
+                            <p><b>@Html.Raw(Model.Cancellation)</b></p>
+
+                        </address>
+                        <h4>Notes</h4>
+                        <p>
+                            * IMPORTANT: At check-in, you must present the credit card used to make this booking and a valid photo IP with the same name.
+                            Failure to do so may result in the hotel requesting additional payment or your reservation not being honored. If you have submitted additional documentation for
+                            a third party booking or paid a different payment method,please disregard the note above.
+                        </p>
+                        <p>
+                            * All rooms are guaranteed on the day of arrival. In the case of a no-show, your room(s) will be released and you will be subject to the terms and conditions of
+                            the Cancellation/No-Show Policy specified at the time you made the booking as well as noted in the Confirmation Email.
+                        </p>
+                        <p>* The total price for this booking does not include mini-bar items, telephone usage, laundry service, etc. The hotel will bill you directly.</p>
+                        <p>
+                            * In cases where Breakfast is included with the room rate, please note that certain hotels may charge extra for children travelling with their parents.
+                            If applicable, the hotel will bill you directly. Upon arrival, if you have any questions, please verify with the hotel.
+                        </p>
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    }
+    else if (Model.Type == 1)
+    {
+        <table>
+            <tbody>
+                <tr>
+                    <td style="width: 50%; padding-right: 10px !important;position: relative;">
+                        <div class="pull-left">
+                            <div style="top: 0; position: absolute; margin-top: -4px">
+                                <img src="~/assets/images/logo.png" style="width: 50%; margin-left: -9px"/><br/>
+                                <table style="width: 100%">
+                                    <tr><td><b>@Html.Raw(Model.Name)</b></td> </tr>
+                                    <tr><td><i><span>@Model.Localtion</span></i></td> </tr>
+                                    <tr><td><span>@Html.Raw(Model.HotelPhone)</span></td> </tr>
+                                </table>
+                                <p style="color: #eee">-----------------------------------------------------------------------------------------------------------</p>
+                            </div>
+                            <div>
+                                @if (hotelImage != null)
+                                {
+                                    <img style="width: 430px; height: 450px;" src="@Url.Content(hotelImage.ImageOrigin)" />
+                                }
+                            </div>
+                            <div class="alert alert-info" style="position: absolute;bottom: 0">
+                                <h4>VINADAY GoREISE VietNam Co., Ltd</h4>
+                                <p style="color: #eee">----------------------------------------------------------------------------------------------------</p>
+                                <p>230 De tham, Pham Ngu Lao Ward, District 1,</p>
+                                <p>Ho Chi Minh City, Vietnam</p>
+                                <p>Telephone:  (+84)28 3838 8382 </p>
+                                <p>WhatsApp: (+84)916388382   or (+84)909450430  </p>
+                                <p>Email: cs@goreise.com</p>
+                            </div>
+
+                        </div>
+
+                    </td>
+                    <td style="width: 50%; padding-left: 10px !important">
+                        <div style="text-align: right; font-size: 30px">
+                            Hotel Voucher
+                        </div>
+                        <table style="width: 100%">
+                            <tr><td style="width: 30%">Booking ID:</td><td><b><span>@string.Format("00{0}", Model.BookingId)</span></b></td> </tr>
+                            <tr><td>PNR:</td><td><b><span>@string.Format("{0}", ViewBag.Pnr)</span></b></td> </tr>
+                            <tr><td>Name of Guest:</td><td><b><span>@Model.Guest</span></b></td> </tr>
+                            <tr><td>Nationality:</td><td><b><span>@Model.Nationality</span></b></td> </tr>
+                        </table>
+                        <hr/>
+                        <table style="width: 100%">
+                            <tr><td style="width: 30%">Check-in Date:</td><td><b><span>@Model.CheckIn.ToString("MMM dd, yyyy")</span></b></td> </tr>
+                            <tr><td>Check-out Date:</td><td><b><span>@Model.CheckOut.ToString("MMM dd, yyyy")</span></b></td> </tr>
+                            <tr><td>Nights:</td><td><b><span>@string.Format("0{0}", (Model.CheckOut - Model.CheckIn).Days)</span></b></td> </tr>
+                            <tr><td>Adults:</td><td><b><span>@string.Format("0{0}", Model.Adult)</span></b></td> </tr>
+                            <tr><td>Children:</td><td><b><span>@string.Format("0{0}", Model.Children)</span></b></td> </tr>
+                            <tr><td>Rooms:</td><td><b><span>@string.Format("0{0}", Model.Quantity)</span></b></td> </tr>
+                            <tr><td>Extra Beds:</td><td><b><span>@string.Format("0{0}", Model.Extra)</span></b></td> </tr>
+                        </table>
+                        <hr/>
+                        <table style="width: 100%">
+                            <tr><td style="width: 30%">Room Type:</td><td><b><span>@Model.Description</span></b></td> </tr>
+                            <tr><td>Meals Included:</td><td><b><span>@Model.Meal</span></b></td> </tr>
+                        </table>
+
+                        <hr/>
+                        <address>
+                            <span>Special Requests (Subject to Availability):</span><br/>
+                            <b><span>@Html.Raw(Model.Promotion)</span></b>
+                        </address>
+                        <hr/>
+                        <address>
+                            Cancellation Policy:<br/>
+                            <p><b>@Html.Raw(Model.Cancellation)</b>
+                            </p>
+                        </address>
+                        <h4>Notes</h4>
+                        <p>
+                            * IMPORTANT: At check-in, you must present the credit card used to make this booking and a valid photo IP with the same name.
+                            Failure to do so may result in the hotel requesting additional payment or your reservation not being honored. If you have submitted additional documentation for
+                            a third party booking or paid a different payment method,please disregard the note above.
+                        </p>
+                        <p>
+                            * All rooms are guaranteed on the day of arrival. In the case of a no-show, your room(s) will be released and you will be subject to the terms and conditions of
+                            the Cancellation/No-Show Policy specified at the time you made the booking as well as noted in the Confirmation Email.
+                        </p>
+                        <p>* The total price for this booking does not include mini-bar items, telephone usage, laundry service, etc. The hotel will bill you directly.</p>
+                        <p>
+                            * In cases where Breakfast is included with the room rate, please note that certain hotels may charge extra for children travelling with their parents.
+                            If applicable, the hotel will bill you directly. Upon arrival, if you have any questions, please verify with the hotel.
+                        </p>
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    }
+
+
+</div>

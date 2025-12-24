@@ -1,0 +1,87 @@
+﻿@using System.Collections.Generic
+@using Vinaday.Data.Models
+@{
+    List<CancellationPolicy> cancellationPolicies = ViewBag.CancellationPolicies;
+}
+@model List<Vinaday.Data.Models.Extention.CancellationModel>
+
+
+    <h4>Cancelation Policy</h4>
+    <div class="row">
+        <div class="col-md-12">
+            <form>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="form-group">
+                                    <label>Check in Date from</label>
+                                    <input type="text" id="from-date" class="form-control date-picker">
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <label>Check in Date until</label>
+                                    <input type="text" id="until-date" class="form-control date-picker">
+                                </div>
+
+                            </th>
+                            <th>
+                                <label>Cancellation Policy</label>
+                                <div class="form-group">
+                                    <select id="cancellation" class="form-control m-b-sm">
+                                        <option value="-1">Select cancellation</option>
+                                        @foreach (var cancellationPolicy in cancellationPolicies)
+                                        {
+                                        <option value="@cancellationPolicy.Id">@cancellationPolicy.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="form-group">
+                                    <a href="javascript:void(0);" onclick="addCancellation();" class="btn btn-small btn-info"> Add</a>
+                                </div>
+
+                            </th>
+                        </tr>
+                    </thead>
+
+                </table>
+            </form>
+
+        </div>
+        <div class="col-md-12">
+            @if (Model != null)
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                
+                        <tbody>
+                            @foreach (var hotelCancelation in Model)
+                            {
+                                <tr>
+                                    <th>
+                                        <blockquote>
+                                            <p>Apply from: <cite><b>@hotelCancelation.CheckInFrom.ToString("MM/dd/yyyy")</b> to <b>@hotelCancelation.CheckOutTo.ToString("MM/dd/yyyy")</b></cite></p>
+                                            <p>@hotelCancelation.Description</p>
+                                            <footer><cite>@hotelCancelation.Name</cite></footer>
+                                        </blockquote>
+                                    </th>
+                                    <th class="text-center">
+                                        <a class="btn btn-danger btn-xs" href="javascript:void(0);" onclick="deleteCancellation('@hotelCancelation.Id')">
+                                            <small class="glyphicon glyphicon-trash"></small>
+                                        </a>
+                                    </th>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div><!-- Row -->
+    <div class="clearfix"></div>
+    <div class="pull-right">
+        <a href="javascript:void(0);" class="btn btn-success m-b-sm">Save and Complete</a>
+    </div>

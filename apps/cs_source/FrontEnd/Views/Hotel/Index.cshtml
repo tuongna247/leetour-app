@@ -1,0 +1,342 @@
+﻿@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@{
+    List<Country> countries = ViewBag.GetCountries;
+    Deals deal = ViewBag.Deal;
+    var countdown = deal != null ? (deal.Countdown - DateTime.Now).TotalHours : 0;
+    List<HotelModel> hotels = ViewBag.HotelSimilars;
+    List<HotelModel> hotelNices = ViewBag.HotelNices;
+    List<Vinaday.Web.Home.Models.ViewListTourMapping> tours = ViewBag.Tours;
+    List<TourModel> tourSimilars = ViewBag.TourSimilars;
+    List<HotelModel> tourCities = ViewBag.TourCities;
+    List<HotelModel> tourListCities = ViewBag.TourListCities;
+    //List<Country> countries = ViewBag.Countries;
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>goreise.com: Luxury Hotels & Resorts - Vacation Packages </title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="content-language" content="en-us" />
+    <meta name="p:domain_verify" content="a4ecc80122954f5d87d32c589df1bc70" />
+    <meta name="msvalidate.01" content="9FA5185F018B486BE7BD03AF994F2EF6" />
+    <meta name="description" content="luxury vacation package deals, luxury 5 star hotels, luxury 5 star resort, luxury vacation packages, luxury beach holiday, luxury travel packages, luxury vacation packages all inclusive, luxury collection - all inclusive vacation packages, luxury collection vacation packages, luxurious all-inclusive resorts luxurious , luxury vacation packages in vietnam, mui ne phu quoc  beach resorts…">
+    <meta name="meta" content="luxury vacation package deals, luxury 5 star hotels, luxury 5 star resort, luxury vacation packages, luxury beach holiday, luxury travel packages, luxury vacation packages all inclusive, luxury collection - all inclusive vacation packages, luxury collection vacation packages, luxurious all-inclusive resorts luxurious , luxury vacation packages in vietnam, mui ne phu quoc  beach resorts…">
+    <link rel="alternate" href="https://goreise.com" hreflang="en-us" />
+    <link href="https://goreisecom-1080e.kxcdn.com/Content/vinaday?v=vNBYd4Hl1LnX6AbVQJh7zOpmnCAZDoKpjCfUCqARpv41" rel="stylesheet" />
+    <link href="https://goreisecom-1080e.kxcdn.com/Content/tour-css?v=UYaxc1EwBVGXdiH2pzk_8JbfycxMu19hrZU_7KKYp1Y1" rel="stylesheet" />
+    <link href="https://goreisecom-1080e.kxcdn.com/Content/css/all.css" rel="stylesheet" />
+    <link href="https://goreisecom-1080e.kxcdn.com/Content/index.css" rel="stylesheet" />
+
+    @*@Styles.Render("~/Content/vinaday")
+    <link href="@Url.Content("~/Content/css/all.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/index.css")" rel="stylesheet" />*@
+    <!-- TrustBox script -->
+    <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+    <!-- End TrustBox script -->
+    <link rel="alternate" hreflang="en-gb" href="alternateURL">
+    <link href="~/Content/plugins/countdown/assets/countdown/jquery.countdown.css" rel="stylesheet" />
+    <script>
+        (function () {
+            var _fbq = window._fbq || (window._fbq = []);
+            if (!_fbq.loaded) {
+                var fbds = document.createElement('script');
+                fbds.async = true;
+                fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(fbds, s);
+                _fbq.loaded = true;
+            }
+        })();
+        window._fbq = window._fbq || [];
+        window._fbq.push(['track', '6031342808565', { 'value': '0.00', 'currency': 'VND' }]);
+
+
+    </script>
+    <style>
+        .content-section h2 {
+            color: #fff;
+            font-weight: 100;
+            font-size: 14px !important;
+        }
+    </style>
+    <noscript><img height="1" width="1" alt="" style="display: none" src="https://www.facebook.com/tr?ev=6031342808565&amp;cd[value]=0.00&amp;cd[currency]=VND&amp;noscript=1" /></noscript>
+    <link href="~/Content/search.css" rel="stylesheet" />
+</head>
+<body ng-controller="hotelController">
+    <div id="outer-wrap">
+        <div id="inner-wrap" itemtype="http://schema.org/Hotel" itemscope="">
+            <input type="hidden" value="@countdown" id="deal" />
+            @Html.Partial("_Header")
+
+
+            <div class="ibanner">
+                <div class="custom-bg"></div>
+                <div class="container">
+                    <div class="cbanner">
+                        <h1 id="start_your_vacation" style="text-shadow: 1px 1px 1px #65135b; margin-bottom: 0;">
+                            <span style="color: #65135b">Start Your Vacation</span>
+                        </h1>
+                        <h2 style="text-shadow: 1px 1px 1px #65135b; font-size: 19px; margin-top: 0;" class="hidden-xs">Luxury Resorts, Vacation Packages & more...</h2>
+                        <div class="isearch">
+
+                            <div class="itabs clearfix">
+                                <div class="tab-content">
+                                    <div id="hotel-search-form">
+                                        <div class="form-search clearfix">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 descriptionTitle">
+
+                                                <div class="form-inline">
+                                                    <div id="search-city-form">
+                                                        <div class="form-group">
+                                                            <input type="radio" id="selectTypeCity" name="selectType" checked="checked" value="City" />
+                                                            <label for="selectTypeCity">Search By City</label>
+
+                                                            <div class="search-home-text">
+                                                                <fieldset>
+                                                                    <select id="country" style="border: 1px solid #e2e2e2; color: black; box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.01) inset; display: block; height: 34px; position: relative; width: 100%">
+                                                                        @if (countries.Count > 0)
+                                                                        {
+                                                                            <option selected="selected" value="-1">Where do you want to go? </option>
+                                                                            foreach (var country in countries)
+                                                                            {
+                                                                                <option value="@country.CountryId">@country.Name</option>
+                                                                            }
+                                                                        }
+                                                                    </select>
+                                                                </fieldset>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div style="height: 25px;"> </div>
+                                                            <div class="search-home-text" style="min-width: 200px;">
+                                                                <fieldset>
+                                                                    <div id="city-list">
+                                                                    </div>
+                                                                </fieldset>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input type="radio" id="selectTypeKeyword" name="selectType" value="Keyword" />
+                                                            <label for="selectTypeKeyword">Search By Keywords</label>
+
+                                                            <div class="search-home-text">
+                                                                <fieldset style="margin-bottom: 20px">
+                                                                    <input type="text" class="form-control typeahead search-name" style="width: 300px;" id="search-key" aria-describedby="inputSuccess2Status" placeholder="Name of hotels, city country, regions" />
+                                                                </fieldset>
+                                                            </div>
+                                                        </div>
+                                                        <div class="clearfix"></div>
+                                                        <div class="search-home-form">
+                                                            <a onclick="searchMain();" class="btn btn-primary">Find My Hotel</a>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" style="max-width: 1220px; padding-top:5px;">
+                <section class="content-section form checkout style-2" style="margin-top: 20px; background-color: transparent">
+                    <div class="row">
+                        <div id="show-inquiry" style="background-color: transparent">
+
+                            <div class="col-md-3 hidden-md-down  hidden-xs" style="margin-bottom: 10px;">
+
+                                <div style="padding: 6px; background-color: white; margin-bottom: 10px;">
+                                    <div>
+                                        <div class="social-cover-photo-CoverPhoto__no_cover_photo--5ssTp social-cover-photo-CoverPhoto__narrow--3DL3N">
+
+                                        </div>
+                                        <img class="img-circle img-responsive" style="width:100px; margin: -38px auto 10px" src="/Content/images/NoProfile.jpg" alt="">
+                                    </div>
+                                    <h1 style="margin-bottom: -10px;font-size:14px;">
+                                        Hello <b>Guest</b>
+                                    </h1>
+                                    <h2 style="font-size:14px;">
+                                        Let's talk about your holiday
+                                    </h2>
+
+                                </div>
+
+                                <div class="hidden-md-down  hidden-xs" id="information-price" style="background-color: white;">
+                                    <p style="text-align: center;" class="hidden-xs">
+                                        <div id="TA_selfserveprop154" class="TA_selfserveprop">
+                                            <ul id="h6DI3PTvG" class="TA_links Hha3WH8pO"><li id="vJj7gTabhxgk" class="sZ6hIQIVjkr"><a target="_blank" href="https://www.tripadvisor.com/"><img src="https://www.tripadvisor.com/img/cdsi/img2/branding/150_logo-11900-2.png" alt="TripAdvisor" /></a></li></ul>
+                                        </div>
+                                        <script async src="https://www.jscache.com/wejs?wtype=selfserveprop&amp;uniq=154&amp;locationId=2608200&amp;lang=en_US&amp;rating=true&amp;nreviews=0&amp;writereviewlink=true&amp;popIdx=true&amp;iswide=false&amp;border=false&amp;display_version=2" data-loadtrk onload="this.loadtrk = true"></script>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 " style="">
+                                <div style="padding: 6px; background-color: white;">
+                                    <h2 style="text-align: center;color:black">OUR CONCEPT</h2>
+                                    <div style="font-size: 14px; margin: 10px 5px; text-align: justify">
+                                        Now you don’t need to spend your valuable time checking the millions of hotels, resorts, day trips and holiday packages for your upcoming trip. You can choose from our collection of more than 500 luxury hotels, resorts, day trips and holiday packages in Southeast Asia which are hand-picked by dedicated, highly-experienced teams. To keep up with the demands of luxury travel, each booking is carefully handled by a dedicated GOREISE team member. Each GOREISE specialist has been trained to meet the unique needs of each guest, providing impeccable service that leaves guests dazzled and wanting to return again.
+                                    </div>
+                                    <div class="video-overlay" style="padding-top: 10px;">
+                                        <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/363468482" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" height="315" allowfullscreen></iframe></div>        
+                                        <div class="frameCover" data-type="video" data-selector=".frameCover" style=""></div>
+                                    </div>
+                                </div>
+                                <div style="background-color: white; margin-top: 10px;">
+                                    <a href="https://goreise.com/inquiry" alt="Tailor tour">
+                                        <img src="@Url.Content("~/Content/images/tour/tour_content_banner.jpg")" style="width: 100%;" />
+
+                                    </a>
+
+                                </div>
+
+                                <div style="padding: 6px; background-color: white; margin-top: 10px;">
+                                    <div style="font-weight:bolder; font-size:22px">
+                                        Recommended for you
+                                    </div>
+                                    <div style="font-weight:bolder; font-size:16px">
+                                        Top Promotion today
+                                    </div>
+                                    <div class="owl-carousel-hotel owl-theme">
+                                        @foreach (var hotel in hotels)
+                                        {
+                                            <a class="featured-item grid-col grid-col--3" href="@hotel.HotelUrl">
+                                                <div class="featured-picture" style="background-image: url('@Url.Content(hotel.ImageUrl)')"></div>
+                                                <div class="featured-box--verticalAlignBottom featured-box--textAlignLeft">
+                                                    <div class="featured-content">
+                                                        <h2 class="featured-title"><b>@hotel.Name</b></h2>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        }
+                                    </div>
+                                   
+                                    <div style="font-weight:bolder; font-size:16px">
+                                        Best Luxury Lodging @DateTime.Now.Year
+                                    </div>
+                                    <div class="owl-carousel-hotel owl-theme">
+                                        @foreach (var hotel in hotelNices)
+                                        {
+                                            <a class="featured-item grid-col grid-col--3" href="@hotel.HotelUrl">
+                                                <div class="featured-picture" style="background-image: url('@Url.Content(hotel.ImageUrl)')"></div>
+                                                <div class="featured-box--verticalAlignBottom featured-box--textAlignLeft">
+                                                    <div class="featured-content">
+                                                        <h2 class="featured-title"><b>@hotel.Name</b></h2>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+
+                                @if (tours.Count > 0)
+                                {
+                                    <table class="table table-striped table-td-middle-align " style="background-color: white">
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <b>TOP-SELLING TOURS</b>
+                                                </td>
+                                            </tr>
+                                            @foreach (var tour in tours)
+                                            {
+                                                var link = Url.Action("Detail", "Tour", new { id = tour.Id, title = tour.PageUrl, country = tour.SHORTNAME });
+                                                <tr class="table-departure__item ">
+                                                    <td style="width: 100%">
+                                                        <a href="@link" style="font-size: 10px; line-height: 14px; color: black; vertical-align: middle" title="@tour.Name">@tour.Name</a><br />
+                                                        <a href="@link" title="Book now" style="color: red; font-weight: bold; font-size: 11px;" class="book-link">@tour.Duration</a>
+
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                        <div id="un-show-inquiry" style="display: none; text-align: center; margin-top: 10%">
+                            <p>Your Inquiry has been sent</p>
+                            <br />
+                            <a href="https://vinadaytravel.com">Go back >></a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/style.css")">
+
+    <script src="~/Content/plugins/countdown/assets/countdown/jquery.countdown.js"></script>
+    <script src="~/Content/plugins/countdown/assets/js/script.js"></script>
+    <script src="~/Content/plugins/QuotesRotator/js/jquery.cbpQTRotator.min.js"></script>
+    <script src="~/Scripts/app1/home.js"></script>
+    <script src="~/Scripts/offcanvas-navigation.js"></script>
+    <script>
+
+    </script>
+    @Html.Partial("_Footer")
+    <a href="#" id="backToTop"></a>
+    <!-- Google Code for Remarketing Tag -->
+    <!--------------------------------------------------
+    Remarketing tags may not be associated with personally identifiable information or placed on pages related to sensitive categories. See more information and instructions on how to setup the tag on: http://google.com/ads/remarketingsetup
+    --------------------------------------------------->
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 982836284;
+        var google_custom_params = window.google_tag_params;
+        var google_remarketing_only = true;
+        /* ]]> */
+    </script>
+    <script>
+        $(document).ready(function () {
+            var owl_hotel = $('.owl-carousel-hotel');
+            owl_hotel.owlCarousel({
+                stagePadding: 10,
+                items: 2,
+                loop: true,
+                //margin: 20,
+                autoplay: true,
+                autoplayTimeout: 1000,
+                autoplayHoverPause: true
+            });
+            var owl_tour = $('.owl-carousel-tour');
+            owl_tour.owlCarousel({
+                stagePadding: 10,
+                items: 2,
+                loop: true,
+                //margin: 20,
+                autoplay: true,
+                autoplayTimeout: 1000,
+                autoplayHoverPause: true
+            });
+        });
+        $('#country option[value=-1]').prop('selected', true);
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+
+    </script>
+    <noscript>
+        <div style="display: inline;">
+            <img height="1" width="1" style="border-style: none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/982836284/?guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+</body>
+</html>

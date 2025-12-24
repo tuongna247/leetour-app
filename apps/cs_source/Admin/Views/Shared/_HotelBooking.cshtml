@@ -1,0 +1,153 @@
+﻿@using System.Linq
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+
+@using System.Security.Claims
+@using Vinaday.Web.Framework
+@if (Model != null)
+{
+    ProductModel product = Model;
+    Customer customer = ViewBag.Customer;
+    var nationality = ViewBag.Nationality;
+    var role = ((ClaimsIdentity)User.Identity).Claims
+      .Where(c => c.Type == ClaimTypes.Role)
+      .Select(c => c.Value).FirstOrDefault();
+    <div class="modal fade" id="create-booking-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="clearfix">
+
+                        <div class="pull-right">
+                            <p class="text-right">
+                                <b>@string.Format("{0} {1}",customer.Firstname,customer.Lastname)</b><br>
+                                @Utilities.FormatPhone(customer.PhoneNumber)<br>
+                                @customer.Email<br />
+                                @nationality
+                            </p>
+                        </div>
+                        <div class="pull-left">
+                            <p class="text-left">
+                                <b>@product.Name</b><br>
+                                @product.DetailName<br />
+                                Check-in: @product.CheckIn.ToShortDateString()<br>
+                                Check-out: @product.CheckOut.ToShortDateString()<br>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Night</th>
+                                    <th>Date</th>
+                                    <th>Q.ty</th>
+                                    <th>Price</th>
+                                    <th>Surcharge</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @*<tr>
+                                        <td>1</td>
+                                        <td>03/24/2015</td>
+                                        <td>1</td>
+                                        <td>$195.65</td>
+                                        <td>N/A</td>
+                                        <td>$195.65</td>
+                                    </tr>*@
+                                @if (product.Details.Count > 0)
+                                {
+                                    var index = 1;
+                                    foreach (var detail in product.Details)
+                                    {
+
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>@detail.Date.ToShortDateString()</td>
+                                            <td>@detail.Quantity</td>
+                                            <td>$@detail.PriceRoom</td>
+                                            <td>@Html.Raw(detail.PriceSurcharge > 0 ? string.Format("${0}", detail.PriceSurcharge) : "N/A")</td>
+                                            <td>$@((detail.PriceRoom + detail.PriceSurcharge) * detail.Quantity)</td>
+                                        </tr>
+                                        index += 1;
+                                    }
+                                }
+                                @if (product.TotalTaxeFee > 0)
+                                {
+                                    <tr>
+                                        <td colspan="5">Taxes and service charges are collected by hotel suppliers.</td>
+                                        <td>$@product.TotalTaxeFee</td>
+                                    </tr>
+                                }
+                                @if (product.TotalSave >0)
+                                {
+                                    <tr>
+                                        <td colspan="5">Special Sale.</td>
+                                        <td>$@product.TotalSave</td>
+                                    </tr>
+                                }
+
+                                <tr>
+                                    <td style="text-align: right;" colspan="5"><strong>Total</strong></td>
+                                    <td><strong>$@(product.FinalPrice- product.TotalSave)</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        @if (product.CancellationPolicy != null)
+                        {
+                            <div class="alert alert-danger">
+                                <h4>CANCELLATION POLICY</h4>
+                                <p>
+                                    @Html.Raw(product.CancellationPolicy.Description)
+                                </p>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(customer.Street))
+                        {
+                            <div class="alert alert-success">
+                                <h4>SPECIAL DISCOUNT</h4>
+                                <p>@customer.Street</p>
+                            </div>
+                        }
+                        @if (product.Promotion != null)
+                        {
+                            <div class="alert alert-success">
+                                <h4>SPECIAL DISCOUNT</h4>
+                                <p>@product.Promotion.Name</p>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default pull-left" data-dismiss="modal">Close</a>
+                    <a class="btn btn-success" onclick="addHotelBooking(3);">Create</a>
+                    @if (role.Contains("Master Admin"))
+                    {
+                        <a class="btn btn-primary" onclick="addHotelBooking(4);">Create and confirm</a>
+                    }
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="modal fade" id="create-booking-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <p>Product is not available.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

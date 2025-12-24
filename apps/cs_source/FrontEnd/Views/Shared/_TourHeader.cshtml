@@ -1,0 +1,94 @@
+﻿@{
+    var userName = ViewBag.User;
+}
+<div class="offcanvas">
+    <div class="container">
+        <header id="top" role="banner">
+            <div class="block">
+                <a href="/" class="logo">
+                    <img src="/Content/images/logo.png" alt="logo vinaday" style="width: 178px; margin-top: 0px;" />
+                </a>
+                <a class="nav-btn" id="nav-open-btn" href="#nav">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </header>
+        <nav id="nav" role="navigation">
+            <div class="block">
+                <ul>
+                    <li class="visible-xs" style="text-align: left; padding-left: 18px;">
+                        <span class="logo"> <img alt="Light logo" src="/Content/images/logo-light.png" style="width: 255px; text-align: left"  > </span>
+                    </li>
+                    <li>
+                        <a title="vinaday best price" href="/">
+                            <span class="fa fa-home"></span>
+                            <span class="menu-text">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="vinaday tour" href="https://goreise.com/hotel">
+                            <span class="fa fa-bed"></span>
+                            <span class="menu-text">Hotel</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="vinaday tour" href="https://goreise.com/tour">
+                            <span class="fa fa-ship"></span>
+                            <span class="menu-text">Tours</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="" href="https://goreise.com/inquiry">
+                            <span class="fa fa-users"></span>
+                            <span class="menu-text">Customized Tours</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="" href="https://goreise.com/concept">
+                            <span class="fa fa-flash"></span>
+                            <span class="menu-text">Concept</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="http://vn.goreise.com" title="Tiếng Việt"><i class="flag flag-18 flag-18-vn"></i></a>
+                    </li>
+                </ul>
+                <a class="close-btn" id="nav-close-btn" href="#top" style="display: none;">Return to Content</a>
+                <div class="nav-footer">
+
+                    <h5><i class="fa fa-rocket"></i>Pages to visit</h5>
+                    <ul>
+                        <li><a href="/about-us">About Us</a></li>
+                        <li><a href="/privacy-policy">Privacy Policy</a></li>
+                        <li><a href="/websites-rules">Website's Rules</a></li>
+                        <li><a href="/rewards">Rewards</a></li>
+                        <li><a href="/partners">Partners</a></li>
+                        <li><a href="/affiliate-partners">Affiliate Partners</a></li>
+                        <li><a href="/payment-information">Payment</a></li>
+                        <li><a href="/careers">Careers</a></li>
+                        <li><a href="/help-faqs">Help FAQs</a></li>
+                    </ul>
+                    <h5><i class="fa fa-rss"></i>Get in touch</h5>
+                    <ul>
+                        <li><a href="tel:+84 916388382" title="Tel goreise.com"><i class="fa fa-phone"></i>+84 916388382</a></li>
+                        <li>
+                            <a href="mailto://cs@vinaday.com" title="Email goreise.com">
+                                <i class="fa fa-envelope"></i>cs@vinaday.com
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="navbar-form"> <i class="fa fa-times"></i>  </div>
+    </div>
+    <div class="search-field">
+        <div class="container">
+            <form method="get" role="search">
+                <input type="text" name="s" placeholder="Type then press enter..." />
+                <button type="submit" class="hidden btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

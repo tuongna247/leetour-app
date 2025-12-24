@@ -1,0 +1,88 @@
+﻿@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@{
+
+    ViewBag.Title = "Tour List";
+    Layout = "~/Views/Shared/_LayoutSlidebar.cshtml";
+    List<Vinaday.Web.Home.Models.ViewListTourMapping> tours = ViewBag.Tours;
+    List<HotelModel> hotels = ViewBag.HotelSimilars;
+    List<TourModel> tourSimilars = ViewBag.TourSimilars;
+    List<HotelModel> tourCities = ViewBag.TourCities;
+    List<HotelModel> tourListCities = ViewBag.TourListCities;
+    List<Country> countries = ViewBag.Countries;
+    var index = 0;
+    string city = ViewBag.City ?? "";
+}
+<link rel='stylesheet' href='https://demo.themesberg.com/pixel-pro/css/pixel.css'>
+<div class="row" style="padding: 0px 10px 0px 30px">
+    <div class="col-md-9 mx-auto" style="margin:20px;">
+        <article class="breadcrumb" xmlns:v="http://rdf.data-vocabulary.org/#">
+            <span typeof="v:Breadcrumb">
+                <a property="v:title" rel="v:url" href="/">
+                    Home
+                </a>&nbsp;››&nbsp;
+            </span>
+            <span typeof="v:Breadcrumb">
+                Who We Are?
+            </span>
+        </article>
+        <h1 class="heading-section">Who We Are?</h1>
+        <div class="timeline timeline-one">
+            <div class="timeline-item">
+                <h4>2007</h4>
+                <p>
+                    vinaday - online tourist services for train & bus tickets.
+                </p>
+            </div>
+            <div class="timeline-item">
+                <h4>2010: VINADAY TRAVEL</h4>
+                <p>
+                    The travel company established in Saigon, Vietnam specializes in organizing the Vietnam throughout tours and hostels for backpackers and young travelers.
+                </p>
+            </div>
+            <div class="timeline-item">
+                <h4>2016: VINADAY goREISE</h4>
+                <p>
+                    Goreise.com established is a sole aim to develop luxury and customized products for businessmen, high-end customers,apart for the low-budget and ordinary products. VINADAY goREISE continuously expands  and boosts the products thru Southeast Asian Countries such as Laos, Cambodia, Myanmar…
+                </p>
+            </div>
+            <div class="timeline-item">
+                <h4>2020-2021</h4>
+                <p>
+                    In a Covid19 pandemic, such is an extremely difficult period to impact on everyone including us. Our services and plans were mostly suspended.
+                </p>
+            </div>
+            <div class="timeline-item">
+                <h4>2022: goreise and VINADAY TRAVEL </h4>
+                <p>
+                    After the Covid-19 pandemic, to avoid putting “ all your eggs in one basket” , the company decided to divide into two business parts VINADAY GOREISE and VINADAY TRAVEL
+                    <ul>
+                        <il>goreise by VINADAY GOREISE: specialize in the investment fields, vietnam visa services and business trips</il>
+                        <il>VINADAY TRAVEL specialize in tours and travel services for all travellers</il>
+                    </ul>
+                    We’re so grateful that we greatly welcome you all  in our ahead journey
+                </p>
+            </div>
+        </div>
+        <div style="padding:10px;">
+            <img src="@Url.Content("~/Content/images/background/banner_home.png")" />
+        </div>
+    </div>
+    <div class="col-md-3 mx-auto third-colum">
+        <div class="border_dashed" style="margin-top:100px;">
+            <h4 style="text-align:center; ">Contact Us</h4>
+            <div style="text-align:center">
+                Online  WhatsApp Support  <br />
+                +84916388382<br />
+                <span style="text-align:center;width:100%;">(Business Setup)</span><br />
+                +84919185990 <br />
+                <span style="text-align: center; width: 100%;">(Tours)</span><br />
+                @*+84909450430 <br />
+                <span style="text-align: center; width: 100%;">(Visa,TRC)</span><br />*@
+            </div>
+            <div style="vertical-align:middle;text-align:center;width:100%;"><img src="@Url.Content("~/images/background/support icon.png")" style="width:140px; text-align:center" /></div>
+
+        </div>
+    </div>
+</div>
+

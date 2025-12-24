@@ -1,0 +1,111 @@
+﻿@using Vinaday.Data.Models.Extention
+@model System.Collections.Generic.List<RoomControlModel>
+@if (Model.Count > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-hover" id="room-result">
+            <thead>
+                <tr>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Day</th>
+                    <th class="text-center">Guaranteed </th>
+                    <th class="text-center">Used Guaranteed </th>
+                    <th class="text-center">Regular</th>
+                    <th class="text-center">Used Regular</th>
+                    <th class="text-center">Close Out Regular</th>
+                    <th class="text-center">Auto Top Up</th>
+                    <th class="text-center">Total Available</th>
+                    <th class="text-center"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="alert alert-success">
+                    <th class="text-center" colspan="4"></th>
+
+                    <th class="text-center">
+                        <input id="regular" type="text" class="text-center form-control" maxlength="3" />
+                    </th>
+                    <th class="text-center"></th>
+                    <th class="text-center">
+                        <select id="close-out-regular" class="form-control">
+                            <option value="-1"></option>
+                            <option value="0">Check All</option>
+                            <option value="1">Uncheck All</option>
+                        </select>
+                    </th>
+                    <th class="text-center">
+                        <input id="auto-top-up" type="text" class="text-center form-control" maxlength="3" />
+                    </th>
+                    <th class="text-right" colspan="2" style="text-align: right!important">
+                        <a href="javascript:void(0);" onclick="fillAllRoomForm();" class="btn btn-success btn-xs"><small class="glyphicon glyphicon-check"></small> Auto</a>
+                        @*<a href="javascript:void(0);" onclick="fillAll();" class="btn btn-small btn-info">Auto Fill</a>*@
+                    </th>
+                </tr>
+
+
+                @foreach (var roomControl in Model)
+                {
+                    if (roomControl.IsPast)
+                    {
+                        <tr class="active @(roomControl.Date.ToString("ddd").Contains("Sun") || roomControl.Date.ToString("ddd").Contains("Sat") ? "info" : "")">
+                            <th class="text-center">@roomControl.Date.ToString("MMM-dd-yyyy")</th>
+                            <th class="text-center">@roomControl.Date.ToString("ddd")</th>
+                            <th class="text-center">@roomControl.Guaranteed</th>
+                            <th class="text-center">@roomControl.UseGuaranteed</th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control regular" value="@roomControl.Regular" maxlength="3" disabled />
+                            </th>
+                            <th class="text-center">@roomControl.UseRegular</th>
+                            <th class="text-center">
+                                <input class="checkbox text-center close-out-regular" type="checkbox" @(roomControl.CloseOutRegular ? "checked" : "") disabled>
+                            </th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control auto-top-up" value="@roomControl.AutoTopUp" maxlength="3" disabled />
+                            </th>
+                            <th class="text-center">@roomControl.TotalAvailable</th>
+                            <th class="text-center">
+                                <input type="hidden" class="text-center" value="@roomControl.Id">
+                            </th>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr class="currentRecords @(roomControl.Date.ToString("ddd").Contains("Sun") || roomControl.Date.ToString("ddd").Contains("Sat") ? "info" : "")">
+                            <th class="text-center">@roomControl.Date.ToString("MMM-dd-yyyy")</th>
+                            <th class="text-center">@roomControl.Date.ToString("ddd")</th>
+                            <th class="text-center">@roomControl.Guaranteed</th>
+                            <th class="text-center">@roomControl.UseGuaranteed</th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control regular" value="@roomControl.Regular" maxlength="3" />
+                            </th>
+                            <th class="text-center">@roomControl.UseRegular</th>
+                            <th class="text-center">
+                                <input class="checkbox text-center close-out-regular" type="checkbox" @(roomControl.CloseOutRegular ? "checked" : "")>
+                            </th>
+                            <th class="text-center">
+                                <input type="text" class="text-center form-control auto-top-up" value="@roomControl.AutoTopUp" maxlength="3" />
+                            </th>
+                            <th class="text-center">@roomControl.TotalAvailable</th>
+                            <th class="text-center">
+                                <input type="hidden" class="text-center" value="@roomControl.Id">
+                            </th>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+    <div class="pull-right">
+        <a href="javascript:void(0);" onclick="updateRooms();" class="btn btn-success m-b-sm">Save change</a>
+    </div>
+}
+else
+{
+    <div class="form-group">
+        <div class="alert alert-danger" style="margin-bottom: -5px;" role="alert">
+            No available room for this hotel.
+        </div>
+    </div>
+}

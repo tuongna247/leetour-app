@@ -1,0 +1,40 @@
+﻿@using Vinaday.Data.Models.Extention
+@model List<HotelModel>
+@if (Model.Count > 0)
+{
+    <section class="content">
+
+        @foreach (var hotelRecently in Model.Where(hotelRecently => hotelRecently != null))
+        {
+            <div class="popular-item activity-box anim fadeInLeft animated" data-wow-delay="0.2s" style="visibility: visible; -webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+                <div class="left">
+                    <a href="@hotelRecently.HotelUrl"
+                       title="@hotelRecently.Name">
+                        <img src="@(!string.IsNullOrEmpty(hotelRecently.ImageUrl) ? string.Format("https://goreise.com/{0}", Url.Content(hotelRecently.ImageUrl)) : "/Content/images/demo/general/no-image.jpg")" alt="@hotelRecently.Name" />
+                    </a>
+                </div>
+                <div class="right">
+                    <h2 class="h2_city">
+                        <a href="@hotelRecently.HotelUrl"
+                           title="@hotelRecently.Name" class="city">@hotelRecently.Name</a>
+                        <span style="margin: 1px 1px -4px" class="star star_@(@hotelRecently.Rating)"></span>
+                    </h2>
+                    <address>
+                        @hotelRecently.Address
+                    </address>
+                    <p class="p_recent">
+                        @Html.Raw(hotelRecently.CreateDate)
+                    </p>
+                </div>
+            </div>
+        }
+    </section>
+}
+else
+{
+    <p>No content for this page.</p>
+}
+
+
+
+

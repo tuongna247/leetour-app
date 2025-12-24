@@ -1,0 +1,314 @@
+﻿@using System
+@using System.Activities.Expressions
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+@{
+    ViewBag.Title = "TestPrint";
+    Layout = "~/Views/Shared/_PdfLayout.cshtml";
+    OrderModel order = ViewBag.Order;
+}
+
+@if (Model.Type == (int)Utilities.Product.Hotel)
+{
+    <div class="panel panel-transparent">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-4" style="padding-left: 0 !important">
+                    <img src="@Url.Content(Model.ImagePath)" alt=""/><br/>
+                    <address>
+                        Charge Date: @DateTime.Now.ToString("dd MMM .yyyy")<br/>
+                        <b>Booking No.: @Model.Id</b><br/>
+                        <b>PNR: @Model.Pnr</b>
+
+                    </address>
+                </div>
+                <div class="col-md-8 text-right">
+                    <h1>VINADAY goREISE</h1>
+                    <address>
+                        98A Le Lai street District 1, Ho Chi Minh City Vietnam<br />
+                        Tell: (84-28) -38 388 382<br/>
+                        Email: cs@vinaday.com
+                    </address>
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                    <div class="pull-right">
+                        <p class="text-right">
+                            <strong>Receipt to</strong><br/>
+                            @Model.Customer.Firstname @Model.Customer.Lastname<br/>
+                            @Utilities.FormatPhone(Model.Customer.PhoneNumber)<br/>
+                            @Model.Customer.Email
+                        </p>
+                    </div>
+                    <div class="pull-left">
+                        <p class="text-left">
+                            <strong>@Model.ProductLink</strong><br/>
+                            @Model.ProductName<br/>
+                            Check-in: @Model.StartDate<br/>
+                            Check-out: @Model.EndDate
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-12 table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Date</th>
+                                <th>Q.ty</th>
+                                <th>Price</th>
+                                <th>Surcharge</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model.OrderInformations.Count > 0)
+                            {
+                                var index = 1;
+                                foreach (var detail in Model.OrderInformations)
+                                {
+
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@detail.Date</td>
+                                        <td>@detail.Quantity</td>
+                                        <td>$@detail.Price</td>
+                                        <td>@Html.Raw(detail.Surcharge > 0 ? string.Format("${0}", detail.Surcharge) : "N/A")</td>
+                                        <td>$@((detail.Price + detail.Surcharge) * detail.Quantity)</td>
+                                    </tr>
+                                    index += 1;
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-8">
+
+                    @if (!string.IsNullOrEmpty(Model.CancellationPolicy))
+                    {
+                        <h4>CANCELLATION POLICY</h4>
+                                                    <p>
+                                                        @Html.Raw(Model.CancellationPolicy)
+                                                    </p>
+                    }
+
+                    <div class="text-left">
+                        <div>
+                            <h4 class="no-m m-t-sm">Guest's Signature</h4>
+                            <br />
+                            <br />
+                            <br />
+                            <h2 class="no-m">----------------</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-right">
+                        <div>
+                            <h4 class="no-m m-t-sm">Taxes and service charges</h4>
+                            <h2 class="no-m">@Html.Raw(Model.TaxFee)</h2>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.SurchargeName))
+                        {
+                            <div>
+                                <hr>
+                                <h4 class="no-m m-t-sm">Surcharge</h4>
+                                <h2 class="no-m">-$@Model.SurchargeFee</h2>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.DiscountName))
+                        {
+                            <div>
+                                <hr>
+                                <h4 class="no-m m-t-sm">Discount</h4>
+                                <h2 class="no-m">-@Model.Discount</h2>
+                            </div>
+                        }
+                        <div>
+                            <hr>
+                            <h4 class="no-m m-t-md text-success">Total</h4>
+                            <h1 class="no-m text-success">$@Model.Amount</h1>
+                        </div>
+                    </div>
+
+                </div>
+            </div><!--row-->
+        </div>
+    </div>
+}
+else if (Model.Type == (int)Utilities.Product.Tour)
+{
+    <div class="panel panel-transparent">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-4" style="padding-left: 0!important">
+                    <img src="~/assets/images/logo.png" alt="" /><br />
+                    <address>
+                        Charge Date: @DateTime.Now.ToString("dd MMM .yyyy")<br />
+                        <b>Booking No.: @Model.Id</b><br />
+                        <b>PNR: @Model.Pnr</b>
+
+                    </address>
+                </div>
+                <div class="col-md-8 text-right">
+                    <h1>VINADAY Co., Ltd</h1>
+                    <address>
+                        98A Le Lai street District 1, Ho Chi Minh City Vietnam<br />
+                        Tell: (84-28) -38 388 382<br/>
+                        Email: cs@vinaday.com
+                    </address>
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                    <div class="pull-right">
+                        <p class="text-right">
+                            <strong>Receipt to</strong><br/>
+                            @Model.Customer.Firstname @Model.Customer.Lastname<br/>
+                            @Utilities.FormatPhone(Model.Customer.PhoneNumber)<br/>
+                            @Model.Customer.Email
+                        </p>
+                    </div>
+                    <div class="pull-left">
+                        <p class="text-left">
+                            <strong>@Model.ProductName</strong><br/>
+                            Check-in: @Model.StartDate<br/>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-12 table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Date</th>
+                                <th>Q.ty</th>
+                                <th>Price</th>
+                                <th>Surcharge</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>1</td>
+                                <td>@Model.StartDate</td>
+                                <td>@Model.Quantity</td>
+                                <td>$@Model.Price</td>
+                                <td>@Html.Raw("N/A")</td>
+                                <td>$@((Model.Price) * Model.Quantity)</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-8">
+                    @if (!string.IsNullOrEmpty(Model.CancellationPolicy))
+                    {
+                        <h4>CANCELLATION POLICY</h4>
+                                                    <p>
+                                                        @Html.Raw(Model.CancellationPolicy)
+                                                    </p>
+                    }
+                    <div class="text-left">
+                        <div>
+                            <h4 class="no-m m-t-sm">Guest's Signature</h4>
+                            <br />
+                            <br />
+                            <br />
+                            <h2 class="no-m">----------------</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-right">
+                        <div>
+                            <h4 class="no-m m-t-sm">Taxes and service charges</h4>
+                            <h2 class="no-m">@Html.Raw(Model.TaxFee)</h2>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.SurchargeName))
+                        {
+                            <div>
+                                <hr>
+                                <h4 class="no-m m-t-sm">Surcharge</h4>
+                                <h2 class="no-m">-$@Model.SurchargeFee</h2>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.DiscountName))
+                        {
+                            <div>
+                                <hr>
+                                <h4 class="no-m m-t-sm">Discount</h4>
+                                <h2 class="no-m">-@Model.Discount</h2>
+                            </div>
+                        }
+                        <div>
+                            <hr>
+                            <h4 class="no-m m-t-md text-success">Total</h4>
+                            <h1 class="no-m text-success">$@Model.Amount</h1>
+                        </div>
+                    </div>
+
+                </div>
+            </div><!--row-->
+        </div>
+    </div>
+}
+else if (Model.Type == (int)Utilities.Product.OtherServices)
+{
+    <table style="width: 800px;">
+        <tr>
+            <td style="width: 40%">
+                <img src="@Model.ImagePath" alt=""/><br/>
+                <address>
+                    Charge Date: @DateTime.Now.ToString("dd MMM .yyyy")<br/>
+                    <b>Booking No.: @Model.Id</b><br/>
+                    <b>PNR: @Model.Pnr</b>
+
+                </address>
+            </td>
+            <td style="width: 60%">
+                <h1>VINADAY Co., Ltd</h1>
+                <address>
+                    98A Le Lai street District 1, Ho Chi Minh City Vietnam<br />
+                    Tell: (84-28) -38 388 382<br/>
+                    Email: cs@vinaday.com
+                </address>
+            </td>
+        </tr>
+        <tr><td colspan="2">&nbsp;</td></tr>
+        <tr><td colspan="2">&nbsp;</td></tr>
+
+    </table>      
+                                
+    <table class="table table-bordered" style="width: 800px;">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Q.ty</th>
+                <th>Price</th>
+                <th>Surcharge</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>1</td>
+                <td>@Model.StartDate</td>
+                <td>@Model.Quantity</td>
+                <td>$@Model.Price</td>
+                <td>@Html.Raw("N/A")</td>
+                <td>$@((Model.Price) * Model.Quantity)</td>
+            </tr>
+
+        </tbody>
+    </table>
+                         
+}
+          
+
+

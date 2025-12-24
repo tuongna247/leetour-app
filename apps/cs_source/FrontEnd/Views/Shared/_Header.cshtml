@@ -1,0 +1,97 @@
+﻿@{
+    var userName = ViewBag.User;
+}
+
+<!-- Google Tag Manager -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-245004625-1">
+</script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-245004625-1');
+</script>
+<!-- End Google Tag Manager -->
+<style>
+    .topmenu {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+<div class="offcanvas" style="border-top: none">
+    <div class="container">
+        <header id="top" role="banner">
+            <div class="block">
+                <a href="/" class="logo">
+                    <img src="/images/background/logo-transparency.png" alt="logo vinaday" style="width: 170px; margin-top: 0px;" />
+                </a>
+                <a class="nav-btn" id="nav-open-btn" href="#nav">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </header>
+        <nav id="nav" role="navigation">
+            <div class="block">
+                <ul>
+                    <li class="visible-xs" style="text-align: left; padding-left: 18px;">
+                        <span class="logo"> <img alt="Light logo" src="/images/background/logo-transparency.png" style="width: 250px;text-align: left"> </span>
+                    </li>
+                    <li>
+                        <a title="vinaday best price" href="/">
+                            <span class="fa fa-home"></span>
+                            <span class="menu-text">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="vinaday tour" target="_blank" href="https://goreise.com/tour">
+                            <span class="fa fa-ship"></span>
+                            <span class="menu-text">Tours</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="" target="_blank" href="https://goreise.com/inquiry">
+                            <span class="fa fa-users"></span>
+                            <span class="menu-text">Customized Tours</span>
+                        </a>
+                    </li>
+                </ul>
+                <a class="close-btn" id="nav-close-btn" href="#top" style="display: none;">Return to Content</a>
+                <div class="nav-footer">
+                    <h5><i class="fa fa-rocket"></i>Pages to visit</h5>
+                    <ul>
+                        <li><a href="/about-us">About Us</a></li>
+                        <li><a href="/privacy-policy">Privacy Policy</a></li>
+                        <li><a href="/websites-rules">Website's Rules</a></li>
+                        <li><a href="/rewards">Rewards</a></li>
+                        <li><a href="/partners">Partners</a></li>
+                        <li><a href="/affiliate-partners">Affiliate Partners</a></li>
+                        <li><a href="/payment-information">Payment</a></li>
+                        <li><a href="/careers">Careers</a></li>
+                        <li><a href="/help-faqs">Help FAQs</a></li>
+                    </ul>
+                    <h5><i class="fa fa-rss"></i>Get in touch</h5>
+                    <ul>
+                        <li><a href="tel:+842838388382" title="Tel goreise.com"><i class="fa fa-phone"></i>(84-28) - 38 388 382</a></li>
+                        <li>
+                            <a href="mailto://cs@vinaday.com" title="Email goreise.com">
+                                <i class="fa fa-envelope"></i>cs@vinaday.com
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="search-field">
+        <div class="container">
+            <form method="get" role="search">
+                <input type="text" name="s" placeholder="Type then press enter..." />
+                <button type="submit" class="hidden btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

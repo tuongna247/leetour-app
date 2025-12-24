@@ -1,0 +1,575 @@
+﻿@using System
+@using System.Activities.Expressions
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+@{
+    ViewBag.Title = "PrintReceipt";
+    Layout = "~/Views/Shared/_PdfLayout.cshtml";
+    OrderModel order = ViewBag.Order;
+    //RateExchange rateExchange = ViewBag.RateExchange;
+    decimal discount = 0;
+    var fullName = ViewBag.FullName;
+    decimal taxFee = 0;
+}
+<style>
+    p {
+        font-size: 15px !important;
+    }
+
+    body {
+        color: #333 !important;
+        font-size: 15px !important;
+    }
+
+    address {
+        font-size: 13px !important;
+    }
+
+    .modal-footer p {
+        font-size: 13px !important;
+    }
+</style>
+<div style="border: 2px dashed rgb(176, 176, 176); padding: 20px 10px;margin: 0;">
+    <div>
+        @if (order.Type == (int)Utilities.Product.Hotel)
+        {
+            decimal totalHotelPrice = 0;
+
+            <div class="panel-body" style="margin-top: -30px !important;">
+                <div class="row">
+                    <table style="width:100%">
+                        <tr>
+                            <td class="text-left" style="width:40%">
+                                <img src="~/assets/images/logo.png" alt="" style="width: 200px; margin-left: -10px;" /><br />
+                                <address>
+                                    Booking No.: <b>@string.Format("00{0}", order.Id)</b><br />
+                                    PNR: <b>@order.Pnr</b>
+
+                                </address>
+                            </td>
+                            <td class="text-right" style="width:60%; ">
+                                <h2>VINADAY goREISE</h2>
+                                <address>
+                                    98A Le Lai street District 1, Ho Chi Minh City Vietnam<br />
+                                    Tell: (84-28) -38 388 382<br>
+                                    Email: cs@vinaday.com
+                                </address>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div style="width: 100%">
+                        <h3 style="text-align: center; padding: 0!important; margin: 0!important;">OFFICIAL RECEIPT</h3>
+                        <hr>
+                        <div class="pull-right">
+                            <p class="text-right">
+                                <strong>Receipt to</strong><br>
+                                @order.Customer.Firstname @order.Customer.Lastname<br>
+                                @Utilities.FormatPhone(order.Customer.PhoneNumber)<br>
+                                @order.Customer.Email
+                            </p>
+                        </div>
+                        <div class="pull-left">
+                            <p class="text-left">
+                                <strong>@order.ProductLink</strong><br>
+                                @order.ProductName<br>
+                                Check-in: @order.StartDate<br>
+                                Check-out: @order.EndDate
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Date</th>
+                                    <th>Q.ty</th>
+                                    <th>Price</th>
+                                    <th>Surcharge</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (order.OrderInformation2s != null && order.OrderInformation2s.Count > 0)
+                                {
+                                    decimal.TryParse(order.TaxFee, out taxFee);
+                                    var index = 1;
+                                    foreach (var detail in order.OrderInformation2s)
+                                    {
+
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>@detail.Date</td>
+                                            <td>@detail.Quantity</td>
+                                            <td>@Utilities.RoundingTo(string.Format("{0:N0}", @detail.Price ), 10)<sup>đ</sup></td>
+                                            <td>N/A</td>
+                                            <td>@Utilities.RoundingTo((long)(((detail.Price * detail.Quantity ) ) ),10)<sup>đ</sup></td>
+                                        </tr>
+                                        index += 1;
+                                        totalHotelPrice += (decimal)((detail.Price ) * detail.Quantity) ;
+                                    }
+
+                                    <tr>
+                                        <td colspan="6">Taxes and service charges are collected by operator suppliers .</td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <table style="width:100%">
+                        <tr>
+                            <td class="pull-left" style="width:60%">
+                                @if (!string.IsNullOrEmpty(order.CancellationPolicy))
+                                {
+                                    <h4>CANCELLATION POLICY</h4>
+                                    <p>
+                                        @Html.Raw(order.CancellationPolicy)
+                                    </p>
+                                }
+                            </td>
+                            <td class="pull-right" style="width:30%">
+                                <div class="text-right">
+                                    @if (order.Status == (int)Utilities.BookingStatus.Paid)
+                                    {
+                                        <div>
+                                            <h4 class="no-m m-t-sm">Paid</h4>
+                                            <h2 class="no-m">
+                                                @switch (order.PaymentMethod)
+                                                {
+                                                    case (int)Utilities.PaymentMethod.Cash:
+                                                        <span class="pull-right">
+                                                            <b><i class="glyphicon glyphicon-usd"></i> Cash</b>
+                                                        </span>
+                                                        break;
+                                                    case (int)Utilities.PaymentMethod.Credit:
+                                                        <span class="pull-right">
+                                                            <b><i class="glyphicon glyphicon-credit-card"></i> Credit</b>
+                                                        </span>
+                                                        break;
+                                                    case (int)Utilities.PaymentMethod.Transfer:
+                                                        <span class="pull-right">
+                                                            <b><i class="glyphicon glyphicon-transfer"></i> Transfer</b>
+                                                        </span>
+                                                        break;
+                                                }
+                                            </h2>
+                                            <br />
+                                            <hr>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div>
+                                            <h4 class="no-m m-t-sm">Unpaid yet </h4>
+                                            <hr>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(order.SurchargeName))
+                                    {
+                                        decimal surchargeFee;
+                                            decimal.TryParse(order.SurchargeFee, out surchargeFee);
+                                        <div>
+                                            <h4 class="no-m m-t-sm">Surcharge</h4>
+                                            <h2 class="no-m">
+                                                -@string.Format("{0:N0}", surchargeFee)<sup>đ</sup>
+                                            </h2>
+                                            <hr>
+                                        </div>
+                                    }
+                                    @if (order.ExtraBed > 0)
+                                            {
+                                        <div>
+
+                                            <h4 class="no-m m-t-sm">Extra Bed Fee</h4>
+                                            <h2 class="no-m">
+                                                +@Utilities.RoundingTo((long)order.ExtraBed,500)<sup>đ</sup>
+                                            </h2>
+                                            <hr>
+                                        </div>
+                                    }
+                                    @if (order.ThirdPersonFee > 0)
+                                            {
+                                        <div>
+
+                                            <h4 class="no-m m-t-sm">Third Person Fee</h4>
+                                            <h2 class="no-m">
+                                                +@String.Format("{0:N0}", order.ThirdPersonFee)<sup>đ</sup>
+                                            </h2>
+                                            <hr>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(order.DiscountName))
+                                    {
+                                        decimal.TryParse(order.Discount, out discount);
+                                        <div>
+
+                                            <h4 class="no-m m-t-sm">Discount</h4>
+                                            <h2 class="no-m">
+                                                -@string.Format("{0:N0}", discount)<sup>đ</sup>
+                                            </h2>
+                                            <hr>
+                                        </div>
+                                    }
+                                    <div>
+                                        <h4 class="no-m m-t-md">Total</h4>
+                                        <h1 class="no-m ">
+                                            @String.Format("{0:N0}", order.Amount)<sup>đ</sup>
+                                        </h1>
+                                    </div>
+                                    @if (order.CancelFee > 0)
+                                    {
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Cancel Fee</h4>
+                                            <h1 class="no-m text-success">@String.Format("{0:N0}", order.CancelFee)</h1>
+                                        </div>
+					 <div>
+	                                        <hr>
+	                                        <h4 class="no-m m-t-md text-success">Do refund</h4>
+	                                        <h1 class="no-m text-success">@String.Format("{0:N0}", (order.Amount - order.CancelFee))</h1>
+	                                    </div>
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Total Final</h4>
+                                            <h1 class="no-m text-success">@String.Format("{0:N0}", order.CancelFee)</h1>
+                                        </div>
+                                    }
+                                    @if (order.TotalRefund > 0)
+                                    {
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Refund</h4>
+                                            <h1 class="no-m text-success">@String.Format("{0:N0}", order.TotalRefund)</h1>
+                                        </div>
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Total Final</h4>
+                                            <h1 class="no-m text-success">@String.Format("{0:N0}", (order.Amount + Utilities.RoundingToLong(order.ExtraBed, 500) + Utilities.RoundingToLong(order.ThirdPersonFee, 500) - Utilities.RoundingToLong(order.TotalRefund * order.RateExchange, 500)))</h1>
+                                        </div>
+                                    }
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+
+                </div><!--row-->
+            </div>
+
+        }
+        else if (order.Type == (int)Utilities.Product.Tour)
+        {
+
+            <div class="panel-body" style="margin-top: -30px !important;">
+                <div class="row">
+                    <table style="width:100%">
+                        <tr>
+                            <td class="text-left" style="width:40%">
+                                <img src="~/assets/images/logo.png" alt="" style="width: 200px; margin-left: -10px;" /><br />
+                                <address>
+                                    Booking No.: <b>@string.Format("00{0}", order.Id)</b><br />
+                                    PNR: <b>@order.Pnr</b>
+                                </address>
+                            </td>
+                            <td class="text-right" style="width:60%">
+                                <h2>VINADAY goREISE</h2>
+                                <address>
+                                    98A Le Lai street District 1, Ho Chi Minh City Vietnam<br />
+                                    Tell: (84-28) -38 388 382<br>
+                                    Email: cs@vinaday.com
+                                </address>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div style="width: 100%">
+                        <h3 style="text-align: center; padding: 0!important; margin: 0!important;">OFFICIAL RECEIPT</h3>
+                        <hr>
+                        <div class="pull-right">
+                            <p class="text-right">
+                                <strong>Receipt to</strong><br>
+                                @order.Customer.Firstname @order.Customer.Lastname<br>
+                                @Utilities.FormatPhone(order.Customer.PhoneNumber)<br>
+                                @order.Customer.Email
+                            </p>
+                        </div>
+                        <div class="pull-left">
+                            <p class="text-left">
+                                <strong>@order.ProductName</strong><br>
+                                Check-in: @order.StartDate<br>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Date</th>
+                                    <th>Q.ty</th>
+                                    <th>Price</th>
+                                    <th>Surcharge</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>@order.StartDate</td>
+                                    <td>@order.Quantity</td>
+                                    <td>@string.Format("{0:N0}", @order.Price)<sup>đ</sup></td>
+                                    <td>@Html.Raw("N/A")</td>
+                                    <td>@string.Format("{0:N0}", (order.Price) * order.Quantity)<sup>đ</sup></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Taxes and service charges are collected by operator suppliers .</td>
+                               
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <table style="width:100%">
+                        <tr>
+                            <td class="text-left" style="width:60%">
+                                @if (!string.IsNullOrEmpty(order.CancellationPolicy))
+                                {
+                                    <h4>CANCELLATION POLICY</h4>
+                                    <p>
+                                        @Html.Raw(order.CancellationPolicy)
+                                       
+                                    </p>
+                                }
+                            </td>
+                            <td class="text-left" style="width:40%">
+                                <div class="text-right">
+                                    @if (!string.IsNullOrEmpty(order.Discount))
+                                    {
+                                        decimal.TryParse(order.Discount, out discount);
+                                        <div>
+                                            <h4 class="no-m m-t-sm">Discount</h4>
+                                            <h2 class="no-m">-@String.Format("{0:N0}", discount)<sup>đ</sup></h2>
+                                            <hr>
+                                        </div>
+                                    }
+                                    <div>
+                                        <h4 class="no-m m-t-md">Total</h4>
+                                        <h1 class="no-m">@string.Format("{0:N0}", order.Amount)<sup>đ</sup></h1>
+                                    </div>
+                                    @if (order.CancelFee > 0)
+                                    {
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Cancel Fee</h4>
+                                            <h1 class="no-m text-success">@String.Format("{0:N0}", order.CancelFee)</h1>
+                                        </div>
+					 <div>
+	                                        <hr>
+	                                        <h4 class="no-m m-t-md text-success">Do refund</h4>
+	                                        <h1 class="no-m text-success">@String.Format("{0:N0}", (order.Amount - order.CancelFee) )</h1>
+	                                    </div>
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Total Final</h4>
+                                            <h1 class="no-m text-success">@String.Format("{0:N0}", order.CancelFee)</h1>
+                                        </div>
+                                    }
+                                    @if (order.TotalRefund > 0)
+                                    {
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Refund</h4>
+                                            <h1 class="no-m text-success">@String.Format("{0:N0}", order.TotalRefund)</h1>
+                                        </div>
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Total Final</h4>
+                                            <h1 class="no-m text-success">@String.Format("{0:N0}", (order.Amount + order.ExtraBed + order.ThirdPersonFee - order.TotalRefund))</h1>
+                                        </div>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div><!--row-->
+            </div>
+
+        }
+        else if (order.Type == (int)Utilities.Product.OtherServices)
+        {
+
+            <div class="panel-body" style="margin-top: -30px !important;">
+                <div class="row">
+                    <table style="width:100%">
+                        <tr>
+                            <td class="text-left" style="width:40%">
+                                <img src="~/assets/images/logo.png" alt="" style="width: 200px; margin-left: -10px;" /><br />
+                                <address>
+                                    Booking No.: <b>@string.Format("00{0}", order.Id)</b><br />
+                                    PNR: <b>@order.Pnr</b>
+                                </address>
+                            </td>
+                            <td class="text-right" style="width:60%">
+                                <h2>VINADAY goREISE</h2>
+                                <address>
+                                    98A Le Lai street District 1, Ho Chi Minh City Vietnam<br />
+                                    Tell: (84-28) -38 388 382<br>
+                                    Email: cs@vinaday.com
+                                </address>
+                            </td>
+                        </tr>
+                    </table>
+                    <div style="width: 100%">
+                        <h3 style="text-align: center; padding: 0!important; margin: 0!important;">OFFICIAL RECEIPT</h3>
+                        <hr>
+                        <div class="pull-right">
+                            <p class="text-right">
+                                <strong>Receipt to</strong><br>
+                                @order.Customer.Firstname @order.Customer.Lastname<br>
+                                @Utilities.FormatPhone(order.Customer.PhoneNumber)<br>
+                                @order.Customer.Email
+                            </p>
+                        </div>
+                        <div class="pull-left">
+                            <p class="text-left">
+                                <strong>@order.ProductName</strong><br>
+                                @order.Note<br>
+                                Check-in: @order.StartDate<br>
+                                Check-out: @order.EndDate<br>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Date</th>
+                                    <th>Q.ty</th>
+                                    <th>Price</th>
+                                    <th>Surcharge</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>@order.StartDate</td>
+                                    <td>@order.Quantity</td>
+                                    <td>@string.Format("{0:N0}", @order.Price)<sup>đ</sup></td>
+                                    <td>@Html.Raw("N/A")</td>
+                                    <td>@string.Format("{0:N0}", (order.Price) * order.Quantity)<sup>đ</sup></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                 
+                    <table style="width:100%">
+                        <tr>
+                            <td class="text-left" style="width:60%">
+                                @if (!string.IsNullOrEmpty(order.CancellationPolicy))
+                                {
+                                    <h4>CANCELLATION POLICY</h4>
+                                    <p>
+                                        @Html.Raw(order.CancellationPolicy)
+
+                                    </p>
+                                }
+                            </td>
+                            <td class="text-left" style="width:40%">
+                                <div class="text-right">
+                                    @if (!string.IsNullOrEmpty(order.DiscountName) && !string.IsNullOrEmpty(order.Discount))
+                                    {
+                                        decimal dis;
+                                        decimal.TryParse(order.Discount, out dis);
+                                        <div>
+                                            <h4 class="no-m m-t-sm">Discount</h4>
+                                            <h2 class="no-m"> -@string.Format("{0:N0}", dis)<sup>đ</sup></h2>
+                                            <hr>
+                                        </div>
+                                    }
+                                    <div>
+                                        <h4 class="no-m m-t-md">Total</h4>
+                                        <h1 class="no-m text-success">
+                                            @string.Format("{0:N0}", (order.Amount))<sup>đ</sup>
+                                        </h1>
+                                    </div>
+                                    @if (order.CancelFee > 0)
+                                    {
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Cancel Fee</h4>
+                                            <h1 class="no-m text-success">@string.Format("{0:N0}", order.CancelFee)</h1>
+                                        </div>
+					 <div>
+	                                        <hr>
+	                                        <h4 class="no-m m-t-md text-success">Do refund</h4>
+	                                        <h1 class="no-m text-success">@string.Format("{0:N0}", (order.Amount - order.CancelFee) )</h1>
+	                                    </div>
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Total Final</h4>
+                                            <h1 class="no-m text-success">@string.Format("{0:N0}", order.CancelFee)</h1>
+                                        </div>
+                                    }
+                                    @if (order.TotalRefund > 0)
+                                    {
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Refund</h4>
+                                            <h1 class="no-m text-success">@string.Format("{0:N0}", order.TotalRefund)</h1>
+                                        </div>
+                                        <div>
+                                            <hr>
+                                            <h4 class="no-m m-t-md text-success">Total Final</h4>
+                                            <h1 class="no-m text-success">@string.Format("{0:N0}", (order.Amount + order.ExtraBed + order.ThirdPersonFee - order.TotalRefund))</h1>
+                                        </div>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div><!--row-->
+            </div>
+
+        }
+
+    </div>
+    <div>
+        <div class="pull-left text-left">
+            @if (order.Status == (int)Utilities.BookingStatus.Paid)
+            {
+                <div>
+                    <h4 class="no-m m-t-sm">Guest's Signature</h4>
+                    <br />
+                    <br />
+                    <br />
+                    <h2 class="no-m">----------------</h2>
+                </div>
+            }
+        </div>
+        <div class=" pull-right text-right">
+            <div>
+                <h4 class="no-m m-t-sm">Issued by</h4>
+                <br>
+                <br>
+                <br>
+                <h2 class="no-m">----------------</h2>
+                <span class="text-right pull-right" style="width: 200px">@fullName</span>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <p class="text-left" style="width: 100%;font-size: 13px">
+            In principle, all payments and receipts in Vietnam must be paid in Vietnamese Dong.<br />
+            Theo Luật định, toàn bộ thanh toán ở Việt Nam phải thanh toán bằng tiền Đồng.<br />
+            <small style="font-weight: bold;font-size: 13px">* Rate Exchange: 1 US Dollar = @Utilities.RoundingTo(string.Format("{0:N0}", order.RateExchange), 500)<sup>đ</sup></small>
+        </p>
+    </div>
+</div>

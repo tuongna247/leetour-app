@@ -1,0 +1,225 @@
+﻿@model Vinaday.Data.Models.Extention.ProductModel
+@{
+    ViewBag.Title = "Shopping Cart | vinaday.com";
+}
+<div class="pd-nav"></div>
+@if (Model.Details == null)
+{
+    <div class="content stepbooking">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12" style="text-align: center;">
+                    <h2>Product is not exists !!</h2>
+                    <p><a class="btn btn-default" href="http://www.vinaday.com/">Back to vinaday.com</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="content stepbooking">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <section class="step-payment">
+                        <div class="icon-step">
+                            <div class="box-step box-step1">
+                                <span class="fa fa-shopping-cart"></span>
+                                <p style="padding-left: 16px;">Cart</p>
+                            </div>
+                            <div class="box-step box-step2">
+                                <span style="border-color: #ccc" class="fa fa-users"></span>
+                                <p>Customer Information</p>
+                            </div>
+                            <div class="box-step box-step3">
+                                <span style="padding-top: 17px; text-indent: 19px;" class="fa fa-shield"></span>
+                                <p>Payment</p>
+                            </div>
+                        </div>
+                    </section>
+                    <!--step-payment-->
+                    <section class="content-section form checkout style-2">
+                        <div class="row">
+                            <div class="col-md-12 fadeInLeft " style="visibility: visible;">
+                                <div class="check-out-header">
+                                    <i style="padding-top: 7px; text-indent: 6px;" class="fa fa-shopping-cart"></i>
+                                    <h2 class="title">Your purchase</h2>
+                                </div>
+                                <p style="font-size: 12px; margin-left: 31px; margin-top: -25px; text-align: left;">95% of guests would book with us again.</p>
+                                <div class="row">
+                                    <div class="col-md-5 col-md-push-7 anim fadeInLeft">
+                                        <div id="accordion" class="panel-group">
+                                            <div class="panel panel-default" style="margin-top: 0;">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" style="text-decoration: none;" class="clearfix">
+                                                            <span class="pull-left">@Model.DetailName</span><strong class="pull-right">@Model.TotalPrice.ToString("#,###.##")<sup>USD</sup></strong>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseOne" class="panel-collapse collapse in" style="height: auto;">
+                                                    <div class="panel-body">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Night</th>
+                                                                    <th>Date</th>
+                                                                    <th>Rooms</th>
+                                                                    <th>Price</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if (Model.Details.Count > 0)
+                                                                {
+                                                                    foreach (var detail in Model.Details)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@detail.Night</td>
+                                                                            <td>@detail.Date.ToString("MM/dd/yyyy")</td>
+                                                                            <td>@detail.Quantity</td>
+                                                                            <td>@detail.PriceRoom.ToString("#,###.##")<sup>USD</sup></td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title"> <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="clearfix collapsed"><span class="pull-left">Taxes and Services Fees</span><strong class="pull-right">@Model.TotalTaxeFee.ToString("#,###.##")<sup>USD</sup></strong> </a> </h4>
+                                                </div>
+                                                <div id="collapseTwo" class="panel-collapse collapse">
+                                                    <div class="panel-body">
+                                                        <p style="font-size: 15px; text-align: left; line-height: 23px; color: #555;">
+                                                            Taxes and service charges are collected by hotel suppliers. <br>
+                                                            -Service charges 5% <br>
+                                                            -Hotel tax 10%
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a class="clearfix collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                                            <span class="pull-left">Surcharge fees</span>
+                                                            <strong class="pull-right">@(Model.TotalSurcharge > 0 ? Model.TotalSurcharge.ToString("#,###.##") : "0")<sup>USD</sup> </strong>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseThree" class="panel-collapse collapse" style="height: 0px;">
+                                                    <div class="panel-body">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Night</th>
+                                                                    <th>Date</th>
+                                                                    <th>Rooms</th>
+                                                                    <th>Price</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if (Model.Details.Count > 0)
+                                                                {
+                                                                    foreach (var surcharge in Model.Details)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@surcharge.Night</td>
+                                                                            <td>@surcharge.Date.ToString("MM/dd/yyyy")</td>
+                                                                            <td>@surcharge.Quantity</td>
+                                                                            <td>@(surcharge.PriceSurcharge > 0 ? surcharge.PriceSurcharge.ToString("#,###.##") : "0")<sup>USD</sup></td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a href="#collapseFour" data-parent="#accordion" data-toggle="collapse" class="clearfix collapsed">
+                                                            <span class="pull-left">Saving</span>
+                                                            <strong class="pull-right">@(Model.TotalSave > 0 ? Model.TotalSave.ToString("#,###.##") : "0")<sup>USD</sup> </strong>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div class="panel-collapse collapse" id="collapseFour">
+                                                    <div class="panel-body">
+                                                        <div>
+                                                            <p style="font-size: 15px; text-align: left; line-height: 23px; color: #555;">
+                                                                @if (Model.TotalSave > 0)
+                                                                {
+                                                                    <span class="glyphicon glyphicon-gift" style="float: left;height: 45px;margin-right: 10px;"></span>
+                                                                    if (Model.Promotion != null)
+                                                                    {
+                                                                        @Html.Raw(Model.Promotion.Name)
+                                                                        <br />
+                                                                        @Model.Promotion.Description
+                                                                    }
+
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="border-top: 1px solid #6ebff3; margin-top: 10px;" class="payment-info-item">
+                                            <a href="http://www.hotel.vinaday.com" style="color: #6ebff3" class="pull-left bold hidden-xs">Find more hotel »</a>
+                                            <p style="line-height: inherit" class="pull-right bold">
+                                                <span style="font-size: 13px; font-weight: bold">Total price: </span>@Model.FinalPrice.ToString("#,###.##")<sup>USD</sup> <br>
+                                                <span style="color: #468847; font-weight: bold; font-size: 15px; margin-top: 0;"><i class="fa fa-check"></i> Best Price Guarantee</span>
+                                            </p>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7 col-md-pull-5 anim fadeInRight">
+                                        <div class="box-aside payment-detail">
+                                            <div class="payment-detail-content">
+                                                <div class="payment-detail-title">@Model.Name<span class="star star_@(Model.Rating)"></span></div>
+                                                <div class="image"> <img src="@(!string.IsNullOrEmpty(Model.ImageUrl) ? string.Format("http://vinaday.com{0}", Url.Content(Model.ImageUrl)) : "/Content/images/demo/general/no-image.jpg")" alt="@Model.Name"> </div>
+                                                <div class="payment-detail-content-info">
+                                                    <ul>
+                                                        <li><i class="fa fa-angle-double-right"></i><span class="bold">@Model.DetailName</span></li>
+                                                        <li><i class="fa fa-angle-double-right"></i><span class="bold">Location: </span>@Model.Location</li>
+                                                        <li><i class="fa fa-angle-double-right"></i><span class="bold">Check-in: </span>@Model.CheckIn.Date.ToString("MM/dd/yyyy")</li>
+                                                        <li><i class="fa fa-angle-double-right"></i><span class="bold">Check-out: </span>@Model.CheckOut.Date.ToString("MM/dd/yyyy")</li>
+                                                        <li><i class="fa fa-angle-double-right"></i><span class="bold">Stay: </span>@Model.Stay</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="clear"></div>
+                                            </div>
+                                        </div>
+                                        <article class="box-signin fadeInLeft clearfix " style="visibility: visible;">
+                                            <div class="title"><strong>Checkout as a guest or login</strong></div>
+                                            <p><strong>Register and save time!</strong></p>
+                                            <ul>
+                                                <li>Fast and easy check out</li>
+                                                <li>Easy access to your account</li>
+                                                <li>Earn points and enjoy unlimited complementary meals</li>
+                                            </ul>
+                                            <div class="button">
+
+                                                <input type="button" onclick=" location.href = '/payment'; return false; " class="btn btn-primary btn-pr-active" value="Checkout as Guest">
+                                                <input type="button" class="btn btn-primary btn-pr-active" value="Login">
+                                            </div>
+                                        </article>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <span id="message_sent"><i class="fa-check fa"></i></span>
+                    </section>
+                    <!--checkout-->
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

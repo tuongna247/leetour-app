@@ -1,0 +1,123 @@
+﻿
+@using System.Linq
+@using System.Security.Claims
+@using System.Web
+@using System.Web.Security
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Content Editor - Dashboard";
+    Layout = "~/Views/Shared/_ContentLayout.cshtml";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+         .Where(c => c.Type == ClaimTypes.Role)
+         .Select(c => c.Value).FirstOrDefault();
+
+    var avatar = ((ClaimsIdentity)User.Identity).FindFirst("Avatar").Value;
+    var firstName = ((ClaimsIdentity)User.Identity).FindFirst("FirstName").Value;
+    var lastName = ((ClaimsIdentity)User.Identity).FindFirst("LastName").Value;
+}
+<div class="profile-cover">
+    <div class="row">
+        <div class="col-md-3 profile-image">
+            <div class="profile-image-container">
+                <img src="@avatar" alt="">
+            </div>
+        </div>
+        <div class="col-md-12 profile-info">
+            <div class=" profile-info-value">
+                <h3>1020</h3>
+                <p>Hotels</p>
+            </div>
+            <div class=" profile-info-value">
+                <h3>1780</h3>
+                <p>Tours</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-3 user-profile">
+            <h3 class="text-center">@string.Format("{0} {1}",firstName,lastName)</h3>
+            <p class="text-center">@role</p>
+            <hr>
+
+        </div>
+        <div class="col-md-9 m-t-lg">
+            <div class="panel panel-white">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Booking Stats</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive project-stats">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>Total</th>
+                                            <th>Progress</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Holding Booking</td>
+                                            <td><span class="label label-info">Holding</span></td>
+                                            <td>ewqewqewq</td>
+                                            <td>
+                                                <div class="progress progress-sm">
+                                                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+
+                        <div class="stats-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Inbox</h4>
+                                <div class="panel-control">
+                                    <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Reload" class="panel-reload"><i class="icon-reload"></i></a>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="panel-body">
+                                    <div class="inbox-widget slimscroll">
+
+                                        <a href="#">
+                                            <div class="inbox-item">
+                                                <div class="inbox-item-img"><img src="/Content/img/NoProfile.jpg" class="img-circle" alt=""></div>
+                                                <p class="inbox-item-author">dfdsfadfds</p>
+                                                <p class="inbox-item-text">rewrvdf sdfhtd ghgfdhghrtyurhgf.</p>
+                                                <p class="inbox-item-date">
+                                                    dasdsadsa
+                                                </p>
+                                            </div>
+                                        </a>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+

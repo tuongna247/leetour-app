@@ -1,0 +1,35 @@
+﻿@using Vinaday.Data.Models
+
+@{
+    List<CatDetail> facilities = ViewBag.RoomFacilities;
+
+}
+@if (facilities != null)
+{
+    <table class="table table-condensed table-hover">
+        <tbody>
+            @foreach (var facility in facilities)
+            {
+                if (facility.CheckedItem.Contains("true"))
+                {
+                    <tr onclick="updateRoomFacility(@facility.Id, 'Remove');" style="cursor:pointer">
+                        <td style="padding: 5px!important;">@facility.Name</td>
+                        <td style="padding: 5px!important;text-align: center">
+                            <span class="glyphicon glyphicon-ok" style="color: green;"></span>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr onclick="updateRoomFacility(@facility.Id, 'Add');" style="cursor:pointer">
+                        <td style="padding: 5px!important;">@facility.Name</td>
+                        <td style="padding: 5px!important;text-align: center">
+                            <span class="glyphicon glyphicon-remove" style="color: red;"></span>
+                        </td>
+                    </tr>
+                }
+
+            }
+        </tbody>
+    </table>
+}

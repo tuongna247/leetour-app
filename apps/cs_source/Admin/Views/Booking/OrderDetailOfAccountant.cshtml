@@ -1,0 +1,328 @@
+﻿@using System.Activities.Statements
+@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+@using System.Security.Claims
+@model AccountantOrders
+@{
+    ViewBag.Title = "Order Detail - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).FirstOrDefault();
+    if (role.Contains("Master Admin"))
+    {
+        Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    }
+    else if (role.Contains("Accountant"))
+    {
+        Layout = "~/Views/Shared/_AccountantLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_SaleLayout.cshtml";
+    }
+    List<AccountantOrderDetails> orderInformations = ViewBag.OrderInformations;
+    RateExchange exchange = ViewBag.Exchange;
+}
+<div class="page-title">
+    <h3>Order Detail Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="~/">Product</a></li>
+            <li class="active">Order Detail</li>
+        </ol>
+    </div>
+    <small style="float: right; font-weight: bold">* Current Rate Exchange: 1 US Dollar = @Utilities.RoundingTo(String.Format("{0:N0}", exchange.CurrentPrice), 500)<sup>đ</sup> </small>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            @if (Model != null)
+            {
+                <input type="hidden" id="order-id" value="@Model.Id" />
+                <div class="row">
+                    <div id="receipt-vietnam">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="panel panel-transparent">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4" style="padding-left: 0 !important">
+                                                    <img src="~/assets/images/logo.png" alt="" style="width: 200px; margin-left: -10px;" /><br />
+                                                    <address>
+                                                        Booking No.:<b> @string.Format("00{0}", Model.Id)</b><br />
+                                                        PNR:<b> @Model.Pnr</b>
+                                                    </address>
+                                                </div>
+                                                <div class="col-md-8 text-right">
+                                                    <h1>LY NGO VIETNAM Co.,Ltd</h1>
+                                                    <address>
+                                                        228 De Tham, Pham Ngu Lao Ward District 1, Ho Chi Minh City Vietnam<br>
+                                                        Tell: (84-28) -38 388 382<br>
+                                                        Email: cs@vinaday.com
+                                                    </address>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <hr>
+                                                    <div class="pull-right">
+                                                        <p class="text-right">
+                                                            <strong>Receipt to</strong><br>
+                                                            @Model.GuestFullName<br>
+                                                            @Utilities.FormatPhone(Model.GuestPhone)<br>
+                                                            @Model.GuestEmail
+                                                        </p>
+                                                    </div>
+                                                    <div class="pull-left">
+                                                        <p class="text-left">
+                                                            <strong>@Model.Name</strong><br>
+                                                            @Model.Description<br>
+                                                            Check-in: @Model.CheckIn.ToString("MM/dd/yyyy")<br>
+                                                            Check-out: @Model.CheckOut.ToString("MM/dd/yyyy")
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12 table-responsive">
+                                                    <table class="table table-hover table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Id</th>
+                                                                <th>Date</th>
+                                                                <th>Q.ty</th>
+                                                                <th>Price</th>
+                                                                <th>Surcharge</th>
+                                                                <th>Amount</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                            @if (orderInformations.Count > 0)
+                                                            {
+                                                                var index = 1;
+                                                                foreach (var detail in orderInformations)
+                                                                {
+
+                                                                    <tr>
+                                                                        <td>@index</td>
+                                                                        <td>@detail.Date</td>
+                                                                        <td>@detail.Quantity</td>
+                                                                        <td>@Utilities.RoundingTo(String.Format("{0:N0}", @detail.Price * Model.RateExchange), 500)<sup>đ</sup></td>
+                                                                        <td>@Html.Raw(detail.Surcharge > 0 ? string.Format("{0}<sup>đ</sup>", Utilities.RoundingTo(String.Format("{0:N0}", detail.Surcharge * Model.RateExchange), 500)) : "N/A")</td>
+                                                                        <td>@Utilities.RoundingTo(String.Format("{0:N0}", ((detail.Price + detail.Surcharge) * detail.Quantity) * Model.RateExchange), 500)<sup>đ</sup></td>
+                                                                    </tr>
+                                                                    index += 1;
+                                                                }
+                                                                if (Model.Type != (int)Utilities.Product.OtherServices)
+                                                                {
+                                                                    <tr>
+                                                                        <td colspan="5">Taxes and service charges are collected by operator suppliers (15%).</td>
+                                                                        <td>@Html.Raw(String.Format("{0}<sup>đ</sup>", Utilities.RoundingTo(String.Format("{0:N0}", Model.TaxFee * Model.RateExchange), 500)))</td>
+                                                                    </tr>
+                                                                }
+
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-md-8">
+
+                                                    @if (!string.IsNullOrEmpty(Model.Cancellation))
+                                                    {
+                                                        <h4>CANCELLATION POLICY</h4>
+                                                        <p>
+                                                            @Html.Raw(Model.Cancellation)
+                                                        </p>
+                                                    }
+                          
+                                                </div>
+                                       
+                                            </div><!--row-->
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <p class="pull-left text-left">
+                                        In principle, all payments and receipts in Vietnam must be paid in Vietnamese Dong.<br />
+                                        Theo Luật định, toàn bộ thanh toán ở Việt Nam phải thanh toán bằng tiền Đồng.<br />
+                                        <small style="font-weight: bold">* Rate Exchange: 1 US Dollar = @Utilities.RoundingTo(String.Format("{0:N0}", Model.RateExchange), 500)<sup>đ</sup></small>
+                                    </p>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" onclick="printReceiptVietnam();" class="btn btn-success"><i class="fa fa-print"></i> Print</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->
+<div style="display: none">
+    <iframe id="downloadIframe"></iframe>
+</div>
+<div id="payment-div"></div>
+<div class="modal fade" id="approved-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Payment method</h4>
+            </div>
+            <div class="modal-body">
+                <div id="payment-method">
+                    <div class="tabs-left" role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <input type="hidden" value="1" />
+                                <a href="#cash" role="tab" data-toggle="tab" aria-expanded="true">
+                                    <i class="glyphicon glyphicon-usd"></i> Cash
+                                </a>
+                            </li>
+                            <li role="presentation" class="">
+                                <input type="hidden" value="2" />
+                                <a href="#credit" role="tab" data-toggle="tab" aria-expanded="false">
+                                    <i class="glyphicon glyphicon-credit-card"></i><span> Credit</span>
+                                </a>
+                            </li>
+                            <li role="presentation" class="">
+                                <input type="hidden" value="3" />
+                                <a href="#transfer" role="tab" data-toggle="tab" aria-expanded="false">
+                                    <i class="glyphicon glyphicon-transfer"></i><span> Transfer</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content" style="padding-top: 0;">
+
+                            <div role="tabpanel" class="tab-pane fade active in" id="cash">
+                                <div class="control-group">
+                                    <h3>
+                                        <i class="glyphicon glyphicon-usd"></i><span> Cash</span>
+                                        <small>method selected!.</small>
+                                    </h3>
+                                    <label class="control-label">Please select "Apply" bottom to approve this booking. </label>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="credit">
+                                <h3>
+                                    <i class="glyphicon glyphicon-credit-card"></i><span> Credit</span>
+                                    <small>method selected!.</small>
+                                </h3>
+
+                                <div class="form-group">
+                                    <label for="credit-method">Please input credit number and select "Apply" bottom.</label>
+                                    <input type="text" style="width: 60%;font-weight: bold;text-align: center" class="form-control" id="credit-method" placeholder="****-****-****-****">
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="transfer">
+                                <h3>
+                                    <i class="glyphicon glyphicon-transfer"></i><span> Transfer</span>
+                                    <small>method selected!.</small>
+                                </h3>
+                                <div class="form-group">
+                                    <label for="credit-method">Please input transfer number and select "Apply" bottom.</label>
+                                    <input type="text" style="width: 60%;font-weight: bold;text-align: center" class="form-control" id="transfer-method" placeholder="****-****-****-****">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal">Close</a>
+                <a class="btn btn-success" onclick="changeStatus(4);">Apply</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="change-status-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel"><span id="title"></span> booking</h4>
+            </div>
+            <div class="modal-body">
+                <div id="value-group" class="form-group clearfix">
+                    <label id="label-change-value" for="change-value">Value <span class="text-danger">*</span></label>
+                    <input type="text" id="change-value" class="form-control" name="change-value">
+                </div>
+
+                <div id="note-group" class="form-group clearfix">
+                    <label for="note">Note <span class="text-danger">*</span></label>
+                    <textarea style="width: 100%" id="note" rows="5"></textarea>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="show-card-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"> Confirm Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group clearfix" style="margin-bottom: 0">
+                    <input type="password" id="password" class="form-control text-center" name="password">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-success" style="width: 100%" onclick="showCard();">Show Card Number</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="edit-hotel-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span></span> Extra Option</h4>
+            </div>
+            <div class="modal-body">
+
+                <div role="alert" class="alert alert-success">
+                    <strong>Third Person Fee: </strong> <span>$</span><a style="font-weight: bold" href="javascript:void(0);" id="thirdperson"></a>
+                </div>
+                <div role="alert" class="alert alert-warning">
+                    <strong>Extra Bed Fee: </strong><span>$</span><a style="font-weight: bold" href="javascript:void(0);" id="extra-value"></a>
+                </div>
+                <textarea style="width: 100%" id="note-edit" rows="5" placeholder="Please add a note for this action!"></textarea>
+                <small class="pull-left" style="color: #f25656">* Click on price to edit</small>
+            </div>
+            <div class="modal-footer">
+                <div id="modal-footer-hotel">
+                    <a data-dismiss="modal" class="btn btn-default">Close</a>
+                    <a id="change-status" class="btn btn-success" onclick="EditSurchargeExtraBed()">Save Change</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    if (typeof jQuery == 'undefined') {
+        var e = document.createElement('script');
+        e.src = '@Url.Content("~/assets/plugins/jquery/jquery-2.1.3.min.js")';
+        e.type = 'text/javascript';
+
+        document.getElementsByTagName("head")[0].appendChild(e);
+        var e1 = document.createElement('script');
+        e1.src = '@Url.Content("~/assets/js/pages/orderofaccount.js")';
+        e1.type = 'text/javascript';
+        document.getElementsByTagName("head")[0].appendChild(e1);
+    }
+</script>

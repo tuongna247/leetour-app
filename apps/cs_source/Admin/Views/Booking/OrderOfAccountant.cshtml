@@ -1,0 +1,87 @@
+﻿@using System
+@using System.Collections.Generic
+@using Vinaday.Admin.Models
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@using Vinaday.Web.Framework
+
+@{
+    ViewBag.Title = "Order - Management";
+    Layout = "~/Views/Shared/_AccountantLayout.cshtml";
+    //List<OrderModel> orders = ViewBag.Orders;
+    RateExchange rateExchange = ViewBag.Exchange;
+}
+<div class="page-title">
+    <h3>Order Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="~/">Dashboard</a></li>
+            <li class="active">Order Management</li>
+        </ol>
+    </div>
+    <small style="float: right; font-weight: bold">* Rate Exchange: 1 US Dollar = @String.Format("{0:N}", rateExchange.CurrentPrice)VND</small>
+</div>
+
+
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading" style="margin-bottom: 30px">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <input type="text" class="form-control m-b-sm date-picker" placeholder="From" id="start-date" value="@DateTime.Now.AddDays(-7).ToShortDateString()">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control m-b-sm date-picker" placeholder="To" id="end-date" value="@DateTime.Now.ToShortDateString()">
+                        </div>
+                        <div class="form-group">
+                            <a onclick="getOrdersForAccountant();" href="javascript:void(0);" class="btn btn-info m-b-sm">Search</a>
+                        </div>
+                        <div class="form-group pull-right">
+                            <a onclick="exportData();" href="javascript:void(0);" class="btn btn-success m-b-sm">Export</a>
+                        </div>
+                    </div>
+               
+                </div>
+                <div class="panel-body">
+                    <div id="load-pane-before"></div>
+                    <div id="order-list" style="min-height: 200px">
+                       
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->
+<div id="change-status-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <input id="order-id1" type="hidden" />
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel"><span id="title"></span> booking</h4>
+            </div>
+            <div class="modal-body">
+                <div id="value-group" class="form-group clearfix">
+                    <label id="label-change-value" for="change-value">Value <span class="text-danger">*</span></label>
+                    <input type="text" id="change-value" class="form-control" name="change-value">
+                </div>
+
+                <div id="note-group" class="form-group clearfix">
+                    <label for="note">Note <span class="text-danger">*</span></label>
+                    <textarea style="width: 100%" id="note" rows="5"></textarea>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/orderacctjs")
+}

@@ -1,0 +1,41 @@
+﻿@model Vinaday.Data.Models.CancellationPolicy
+<div class="modal fade" id="cancellation-modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add new cancellation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form>
+                            <div class="form-group">
+                                <label for="cancellation-code">Code:</label>
+                                <input id="cancellation-code" class="form-control" type="text" placeholder="Enter code" value="@Model.Code">
+                            </div>
+                            <div class="form-group">
+                                <label for="cancellation-name">Name:</label>
+                                <input id="cancellation-name" class="form-control" placeholder="Enter name" value="@Model.Name"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="cancellation-description">Description:<span class="help-inline"> (English)</span></label>
+                                <textarea id="cancellation-description" class="form-control" rows="5" placeholder="Enter english description" value="@Model.Description">@Model.Description</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="cancellation-description-vn">Description:<span class="help-inline"> (Local)</span></label>
+                                <textarea id="cancellation-description-vn" class="form-control" rows="5" placeholder="Enter local description" value="@Model.DescriptionVn">@Model.DescriptionVn</textarea>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div><!-- Row -->
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="cancellation-id" value="@Model.Id"/>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" onclick="saveCancellation();">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

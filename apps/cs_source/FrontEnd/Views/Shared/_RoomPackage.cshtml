@@ -1,0 +1,95 @@
+﻿@{
+    Vinaday.Data.Models.RateExchange exchange = ViewBag.Exchange;
+    var isRequest = 0;
+    var packageList = (List<Vinaday.Data.Models.HotelPackage>)Model;
+    var packageGroup = packageList.GroupBy(a => a.RoomName);
+
+}
+
+@if (Model.Count > 0)
+{
+
+    <input type="hidden" id="check-in-hidden" value="@(String.Format("{0:MM-dd-yyyy}", ViewBag.CheckIn))" />
+    foreach (var packageItem in packageList.OrderBy(a => a.Night).ToList())
+    {
+        <article class="room-row clearfix hidden-xs package-item" data-night="@packageItem.Night" style="border-top:none;background-color:white;">
+            <div class="room-type-content">
+                <span style="color: #65135b; font-size: 15px;display:block;">
+                    @packageItem.Night<text> Nights</text>
+                </span>
+                <span style="color: #65135b; font-weight: bold; font-size: 18px;">@packageItem.RoomName</span><br />
+                <img style="width: 100%; height: 100%; max-width: 200px; max-height: 200px; margin-top: 10px;" src="@(!string.IsNullOrEmpty(packageItem.ImageUrl) ? "https://admin.goreise.com" + @Url.Content(string.Format("{0}", packageItem.ImageUrl.Replace("//", "/"))) : "/Content/images/demo/general/no-image.jpg")" />
+            </div>
+            <div class="room-promotion" style="">
+                <div class="room-rate-content-n tooltip-style" style="text-align: left; width: 50%">
+                    @if (packageItem.IncludingValue != null)
+                    {
+                        <text><b><i>Included</i></b> <br /></text>
+                        <p style="font-style: italic;text-align:left;float:left">
+                            - @(packageItem.IncludingValue.Contains(",") ? Html.Raw(String.Join("<br/>-", packageItem.IncludingValue.Split(','))) : Html.Raw(packageItem.IncludingValue))
+                        </p>
+                    }
+                    <br />
+                    <p style="clear:both;text-align:left;">
+                        <a style=" width:100%; font-size: 11px; font-weight: bold;color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="No fees for cancellation. Please, read more at the Hotel Policy"><i class="fa fa-check"></i> FREE Cancellation</a>
+                    </p>
+                </div>
+                <div class="room-book-content-n" style="float:left">
+                    <span style="display:block;">
+                        Price Only
+                    </span>
+                    <strong style="color: #D9534F;text-align:center; font-size:24px;">@Math.Round((packageItem.Price * exchange.CurrentPrice ?? 1), 2).ToString("#,###").Replace(",", ".")<sup>@exchange.Description</sup> </strong>
+                    <a style="font-size: 15px; padding-bottom: 3px; padding-top: 3px; padding-left: 14px; padding-right: 18px;" onclick="BookPackage('@packageItem.RoomName');" href="#reserve-form" title="" class="btn btn-sm btn-primary icon fadeIn animated animated book-it">Reserve Now</a>
+                </div>
+            </div>
+        </article>
+        <div class="visible-xs">
+            <div class="room-type-content" style="width:100%; margin-top:20px;border-top:solid 1px #ccc">
+                <span style="color: #65135b; font-weight: bold; font-size: 18px;">@packageItem.RoomName</span><br />
+                @if (packageItem.IncludingValue != null)
+                {
+                    <text><b><i>Included</i></b> <br /></text>
+                    <p style="font-style: italic">
+                        - @(packageItem.IncludingValue.Contains(",") ? Html.Raw(String.Join("<br/>-", packageItem.IncludingValue.Split(','))) : Html.Raw(packageItem.IncludingValue))
+                    </p>
+                }
+                <img style="width: 100%; height: 100%; max-width: 200px; max-height: 200px; margin-top: 10px;" src="@(!string.IsNullOrEmpty(packageItem.ImageUrl) ? "https://admin.goreise.com" + @Url.Content(string.Format("{0}", packageItem.ImageUrl.Replace("//", "/"))) : "/Content/images/demo/general/no-image.jpg")" />
+            </div>
+            <div class="room-info-content" style="color: #65135b; font-size: 15px;width:100%;text-align:right">
+                @(packageItem.Night + 1) <text>Days /</text> @packageItem.Night<text> Nights</text>
+            </div>
+            <div class="clearfix rate-plan-n" style="width:100%;">
+                <!--separator-->
+                <div class="room-promotion">
+                    <div class="room-rate-content-n tooltip-style" style="text-align: right; width: 100%">
+                        <p style="margin: 0;">
+                            <strong style="color: #D9534F">@Math.Round((packageItem.Price * exchange.CurrentPrice ?? 1), 2).ToString("#,###").Replace(",", ".")<sup>@exchange.Description</sup> </strong>
+                        </p>
+                        <a style="font-size: 11px; font-weight: bold; color: #58738a" href="javascript:void(0)" data-toggle="tooltip" data-original-title="No fees for cancellation. Please, read more at the Hotel Policy"><i class="fa fa-check"></i> FREE Cancellation</a>
+                    </div>
+                    <!--room-rate-content-->
+                    <div style="width: 100%;">
+                        <div style="float:left"> &nbsp; &nbsp; &nbsp;</div>
+                        <a style="font-size: 15px; padding-bottom: 3px; padding-top: 3px; padding-left: 14px; padding-right: 18px;" href="#reserve-form" onclick="BookPackage('@packageItem.RoomName');" title="" class="btn btn-sm btn-primary icon fadeIn animated animated book-it">Reserve Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <input type="hidden" id="book-request-hidden" value="@isRequest" />
+    <input type="hidden" id="packageName" value="" />
+}
+else
+{
+    <p style="text-align:center;font-size:16px;color:black;padding-top:10px;">
+        This property is only available as part of a tailor-made tour.<br />
+        Please call us on (+84)919185990 or Send Inquiry to start planning your holiday
+        <a style="background: #a3238e none repeat scroll 0 0" href="javascript:void(0)" title="Inquire Now" onclick="fillRequestFrom('')" class="btn btn-sm btn-primary icon fadeIn animated animated book-request">Inquire Now</a>
+    </p>
+}
+
+<script>
+    function BookPackage(name) {
+        $("#packageName").val(name);
+    }
+</script>

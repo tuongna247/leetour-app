@@ -1,0 +1,113 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@model Hotel
+
+@{
+    ViewBag.Title = "Hotel Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+       .Where(c => c.Type == ClaimTypes.Role)
+       .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+}
+<div class="page-title">
+    <h3>Hotel Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/Product/Hotel">Hotel Management</a></li>
+            <li class="active">Hotel Basic</li>
+        </ol>
+    </div>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading clearfix">
+                    <div role="group" class="pull-right">
+                        @if (Model.Id > 0)
+                        {
+                            <a disabled href="#" class="btn btn-success m-b-sm">Basic Info</a>
+                            <input type="hidden" id="hotel-id" value="@Model.Id" />
+                            <a href="@(string.Format("http://goreise.com/rc/Product/RoomManagement/{0}", Model.Id))" class="btn btn-success m-b-sm">Room Management</a>
+                            <a href="@(string.Format("http://goreise.com/rc/Product/RoomControl/{0}", Model.Id))" class="btn btn-success m-b-sm">Room Control</a>
+                            <a href="@(string.Format("http://goreise.com/rc/Product/HotelPackage/{0}", Model.Id))" class="btn btn-success m-b-sm">Package</a>
+                            <a href="@(string.Format("http://goreise.com/rc/Product/RateControl/{0}", Model.Id))" class="btn btn-success m-b-sm">Rate Control</a>
+                            <a href="@(string.Format("http://goreise.com/rc/Product/Surcharge/{0}", Model.Id))" class="btn btn-success m-b-sm">Surcharges</a>
+                            <a href="@(string.Format("http://goreise.com/rc/Product/Promotion/{0}", Model.Id))" class="btn btn-success m-b-sm">Promotions</a>
+                            <a href="@(string.Format("http://goreise.com/rc/Product/HotelSeo/{0}", Model.Id))" class="btn btn-success m-b-sm">SEO</a>
+                            <a href="@(string.Format("http://goreise.com/rc/Product/Review/{0}", Model.Id))" class="btn btn-success m-b-sm">Reviews</a>
+                        }
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="panel-body">
+                    <div class="tabs-left" role="tabpanel" id="tab-hotel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            @if (Model.Id > 0)
+                            {
+                                <li role="presentation" class="active"><a href="#tabBasic" onclick="getTabBasic();" role="tab" data-toggle="tab">Step 1: <i>General Information</i></a></li>
+                                <li role="presentation"><a href="#tabContact" onclick="getTabContact();" role="tab" data-toggle="tab">Step 2: <i>Contact Information</i></a></li>
+                                <li role="presentation"><a href="#tabProperty" onclick="getTabProperty();" role="tab" data-toggle="tab">Step 3: <i>Property Details</i></a></li>
+                                @*<li role="presentation"><a href="#tabStyle" onclick="getTabStyle();" role="tab" data-toggle="tab">Step 4: <i>Hotel Styles</i></a></li>*@
+                                <li role="presentation"><a href="#tabStyle" onclick="getTabStyle();" role="tab" data-toggle="tab">Step 4: <i>The Collection</i></a></li>
+                                <li role="presentation"><a href="#tabHotelFacility" onclick="getTabHotelFacility();" role="tab" data-toggle="tab">Step 5: <i>Hotel Facilities</i></a></li>
+                                <li role="presentation"><a href="#tabRoomFacility" onclick="getTabRoomFacility();" role="tab" data-toggle="tab">Step 6: <i>Room Facilities</i></a></li>
+                                <li role="presentation"><a href="#tabSportRecreation" onclick="getTabSportRecreation();" role="tab" data-toggle="tab">Step 7: <i>Sports and Recreations</i></a></li>
+                                <li role="presentation"><a href="#tabPicture" onclick="getTabPicture();" role="tab" data-toggle="tab">Step 8: <i>Hotel Pictures</i></a></li>
+                                <li role="presentation"><a href="#tabUseful" onclick="getTabUseful();" role="tab" data-toggle="tab">Step 9: <i>Useful Information</i></a></li>
+                                <li role="presentation"><a href="#tabCancellation" onclick="getTabCancellation();" role="tab" data-toggle="tab">Step 10: <i>Cancellation Policy</i></a></li>
+                            }
+
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content @(Model.Id > 0 ? "col-md-9" : "col-md-12")">
+                            <div id="loadPane"></div>
+                            <div role="tabpanel" class="tab-pane active fade in" id="tabBasic">
+                                <div id="divBasic"></div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tabContact">
+                                <div id="divContact"></div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tabProperty">
+                                <div id="divProperty"></div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tabStyle">
+                                <div id="divStyle"></div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tabHotelFacility">
+                                <div id="divHotelFacility"></div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tabRoomFacility">
+                                <div id="divRoomFacility"></div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tabSportRecreation">
+                                <div id="divSportRecreation"></div>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane fade" id="tabPicture">
+                                <div id="divPicture"></div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tabUseful">
+                                <div id="divUseful"></div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tabCancellation">
+                                <div id="divCancellation"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/hoteljs")
+}

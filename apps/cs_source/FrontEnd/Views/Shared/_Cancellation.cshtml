@@ -1,0 +1,27 @@
+﻿@using Vinaday.Data.Models.Extention
+@model List<CancellationModel>
+@if (Model != null && Model.Count > 0)
+{
+    @*<p class="info-title">
+        You need to know
+    </p>*@
+    <ul>
+        @foreach (CancellationModel promotion in Model.Where(c => c.CheckOutTo > DateTime.Now))
+        {
+            if (promotion.CheckOutTo.Year < DateTime.Now.Year)
+            {
+                continue;
+            }
+            <li style="display: none">
+                <p style="font-weight: bold;font-size: 12px">@promotion.CheckInFrom.ToString("MMM/dd/yyyy") - @promotion.CheckOutTo.ToString("MMM/dd/yyyy")</p>
+                <p>@promotion.Description</p>
+            </li>
+
+        }
+    </ul>
+    <div style="margin-top: 10px; text-align: left;" class="clearfix">
+        <a style="color: #58738a" id="loadMoreCancelltaion" href="javascript:void(0);">Show all policies</a>
+        <a style="color: #58738a" id="showLessCancelltaion" href="javascript:void(0);">Hide policies</a>
+    </div>
+    
+}

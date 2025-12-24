@@ -1,0 +1,10 @@
+﻿
+<option value="-1" selected>Select Adult(s)</option>
+@if ((List<Vinaday.Data.Models.Rate>)Model !=null)
+{
+    var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+    foreach (var rate in  (List<Vinaday.Data.Models.Rate>)Model)
+    {
+        <option value="@rate.PersonNo">@rate.PersonNo Adult(s)</option>
+    }
+}

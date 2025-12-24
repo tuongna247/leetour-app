@@ -1,0 +1,293 @@
+﻿@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@model ProductModel
+@{
+    ViewBag.Title = "Booking Payment | VINADAY GOREISE VN Co., Ltd";
+    List<Vinaday.Data.Models.Nationality> nationalities = ViewBag.Nationalities;
+    List<CancellationModel> cancellationPolicies = ViewBag.CancellationPolicies;
+    var role = ((ClaimsIdentity)User.Identity).Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).FirstOrDefault();
+    Customer customer = ViewBag.Customer;
+}
+<div class="pd-nav"></div>
+<div class="content stepbooking">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div class="step-payment">
+                    <div class="icon-step">
+                        <div class="box-step box-step1 active">
+                            <span class="fa fa-shopping-cart"></span>
+
+                            <p style="padding-left: 16px;">Giỏ hàng</p>
+
+                        </div>
+                        <div class="box-step box-step2">
+                            <span class="fa fa-users"></span>
+
+                            <p>Thông tin</p>
+
+                        </div>
+                        <div class="box-step box-step3">
+                            <span style="padding-top:17px;text-indent: 19px;" class="fa fa-shield"></span>
+
+                            <p>Thanh toán</p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <section class="form checkout style-2">
+                    <div class="row">
+                        <div id="information">
+                            <div class="col-md-8 " style="visibility: visible;">
+                                <div class="check-out-header">
+                                    <h2 class="title">Chi tiết đơn hàng</h2>
+                                </div>
+                                <div class="box-aside payment-detail">
+                                    <div class="payment-detail-content">
+                                        <div class="payment-detail-title">
+                                            @Model.Name<span class="star star_@(Model.Rating)"></span>
+                                            <br />
+                                            <span style="font-size: 15px; font-weight: normal; display: block">@Model.Location</span>
+                                        </div>
+
+                                        <div>
+                                            <span class="bold">Voucher: </span>@Model.DetailName <br />
+                                            <span class="bold">Số lượng: </span>@Model.Quantity <br />
+                                            <span class="bold">Giá tiền: </span>@(Model.FinalPrice > 0 ? Model.FinalPrice.ToString("##,###.##") : "0") đ <br />
+                                            <span class="bold">Thành tiền: </span>@(Model.TotalPrice > 0 ? Model.TotalPrice.ToString("##,###.##") : "0") đ
+                                            <input type="hidden" id="totalAmount" value="@Model.FinalPrice.ToString("#,###.##")00" />
+                                        </div>
+                                        <div class="clear"></div>
+
+                                    </div>
+                                </div>
+
+
+
+                                <div id="pay-later">
+                                    <div class="check-out-header">
+                                        <h2 class="title pull-left" style="font-size: 17px">Vui lòng nhập thông tin tài khoản</h2>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div>
+                                        <div class="input-group tight">
+                                            <span>
+                                                <input type="radio" name="gender" style="height: 15px;box-shadow:none; padding: 10px;" placeholder="Gender" id="gender_male" value="Ông">
+                                                <label for="gender_male" style="font-weight: normal">
+                                                    Ông
+                                                </label>
+
+                                                <input type="radio" name="gender" style="height: 15px; box-shadow: none; margin-left: 60px;" placeholder="Gender" id="gender_female" value="Bà">
+                                                <label for="gender_female" style="font-weight: normal">
+                                                    Bà
+                                                </label>
+                                            </span>
+                                        </div><!-- .input-group -->
+                                        <div class="input-group tight">
+                                        </div><!-- .input-group -->
+                                        <div class="input-group tight">
+                                            <input type="hidden" id="productname" value="@Model.DetailName" />
+                                            <input type="text" placeholder="Nhập Tên" class="lg" id="firt-name" value="@customer.Firstname">
+                                        </div><!-- .input-group -->
+
+                                        <div class="input-group tight">
+
+                                            <input type="text" placeholder="Nhập Họ" class="lg" id="last-name" value="@customer.Lastname">
+                                        </div><!-- .input-group -->
+
+                                        <div class="input-group tight">
+
+                                            <input type="text" placeholder="Nhập địa chỉ e-mail" class="lg" id="email" value="@customer.Email">
+                                        </div><!-- .input-group -->
+
+                                        <div class="input-group tight">
+
+                                            <input type="text" placeholder="Nhập lại địa chỉ e-mail" class="lg" id="confirm-email" value="@customer.Email">
+                                        </div><!-- .input-group -->
+
+                                        <div class="input-group tight">
+
+                                            <input type="number" placeholder="Nhập số điện thoại/ WhatsApp" class="lg" id="phone" value="@customer.PhoneNumber">
+                                        </div><!-- .input-group -->
+
+                                        <div class="input-group tight">
+
+                                            <div class="select-style">
+                                                <select name="country" class="lg" id="national">
+                                                    <option value="Select your nationality">Select your nationality</option>
+                                                    @if (nationalities != null && nationalities.Count > 0)
+                                                    {
+                                                        foreach (var nationality in nationalities.Where(nationality => nationality != null))
+                                                        {
+                                                            <option @(customer.NationalId == nationality.ID ? "selected" : "") value="@nationality.ID">@nationality.Name</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div><!-- .input-group -->
+                                    </div>
+                                    <span class="input-group">
+                                        <textarea placeholder="Điểm đón, thực phẩm ... " class="lg" id="special-request"></textarea>
+                                    </span>
+                                    <div class="input-group ">
+                                        <div>
+                                            <input type="checkbox" name="cb_book_other_person" onchange="cbShowHideControl(this)" style="height: 12px; box-shadow: none; padding: 10px;" placeholder="Gender" id="cb_book_other_person" value="true">
+                                            <label for="cb_book_other_person">
+                                                Đặt giúp người khác
+                                            </label>
+                                        </div>
+                                        <div style="display:none" class="other_gender">
+                                            <span>
+                                                <input type="radio" name="gender_other_person" style="height: 15px; box-shadow: none; padding: 10px;" placeholder="Gender" id="gender_other_person" value="Ông">
+                                                <label for="gender_other_person_male" style="font-weight: normal">
+                                                    Ông
+                                                </label>
+
+                                                <input type="radio" name="gender_other_person" style="height: 15px; box-shadow: none; margin-left: 60px;" placeholder="Gender" id="gender_other_person_female" value="Bà">
+                                                <label for="gender_other_person_female" style="font-weight: normal">
+                                                    Bà
+                                                </label>
+                                            </span>
+                                        </div>
+                                        <div style="display:none" class="other_gender">
+                                            <div class="input-group tight">
+                                                <input type="text" placeholder="Họ" class="lg" id="firt_name_other_person">
+                                            </div>
+                                            <div class="input-group tight">
+                                                <input type="text" placeholder="Tên" class="lg" id="last_name_other_person">
+                                            </div>
+                                        </div>
+                                    </div><!-- .input-group -->
+                                    <div class="input-group ">
+                                        <div>
+                                            <input type="checkbox" name="cb_gift_voucher" onchange="cbCreateGiftVoucher(this)" style="height: 12px; box-shadow: none; padding: 10px;" id="cb_gift_voucher" value="true">
+                                            <label for="cb_gift_voucher">
+                                                Mua làm quà tặng
+                                            </label>
+                                        </div>
+                                        <div style="display:none" class="gift_voucher">
+                                            <div class="input-group tight">
+                                                <select name="gift_type" id="gift_type" class="lg">
+                                                    <option value="Tất cả">Tất cả </option>
+                                                    <option value="Sinh nhật">Sinh nhật </option>
+                                                    <option value="Đám cưới">Đám cưới</option>
+                                                    <option value="Cám ơn">Cám ơn</option>
+                                                    <option value="Div">Div.</option>
+                                                    <option value="Giáng Sinh">Giáng sinh</option>
+                                                    <option value="Lê">Lễ</option>
+                                                </select>
+                                            </div>
+                                            <div class="input-group tight">
+                                            </div>
+                                            <div class="input-group ">
+                                                <textarea placeholder="Tin nhắn cá nhân" class="lg" id="personal_message"></textarea>
+                                            </div>
+
+                                        </div>
+                                    </div><!-- .input-group -->
+                                    <div class="input-group tight">
+                                    </div><!-- .input-group -->
+
+                                    <div id="information-price" class="row">
+                                        <div class="col-md-12 ">
+                                            <div id="accordion" class="panel-group ">
+                                                <div class="panel panel-default" style="padding: 10px; font-size: 16px;background-color: lightgray;">
+                                                    <div class="panel-body">
+                                                        <span class="pull-left bold">@Model.Quantity Voucher </span>
+                                                        <strong class="pull-right">x @(Model.FinalPrice > 0 ? Model.FinalPrice.ToString("##,###.##") : "0") đ </strong>
+                                                    </div>
+                                                    <hr/>
+                                                    <div class="panel-body">
+                                                        <span class="pull-left"><span class="bold">Tổng cộng </span></span>
+                                                        <strong class="pull-right">@(Model.TotalPrice > 0 ? Model.TotalPrice.ToString("#,###.##") : "0")<sup>đ</sup> </strong>
+                                                        <input type="hidden" id="totalAmount" value="@Model.TotalPrice.ToString("#,###.##")00" />
+                                                        <br />
+                                                        <p style="font-size:13px ">@Html.Raw(Model.Include)</p>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="check-out-header">
+                                        <h2 class="title" style="font-size: 17px">Chọn hình thức thanh toán</h2>
+                                    </div>
+                                    <div id="paymentType">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="1" id="paymentVISA" name="paymentType">
+                                                <img src="~/Content/images/demo/general/card.jpg" alt="visa card" title="visa card" class="visa-card">
+                                                +4% phí quản trị website
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="2" id="paymentPayLater" checked name="paymentType">
+                                                Trả sau: Chuyển khoản hoặc tiền mặt ( không tính phí quản trị website )
+                                            </label>
+                                        </div>
+                                    </div>
+ <hr />
+                                    <div style="" class="payment-info-item">
+                                        <p class="pull-right  bold">
+                                            <span style="font-size: 13px; font-weight: bold">Tổng cộng: </span>@(Model.TotalPrice > 0 ? Model.TotalPrice.ToString("##,###.##") : "0")<sup>đ</sup>
+                                        </p>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" disabled="" checked="" id="accept-terms">
+                                            Tôi chấp nhận Điều kiện và các điều khoản kinh doanh của VGG.
+                                        </label>
+                                    </div>
+                                    <span class="input-group">
+                                        <a onclick="proceedHotelVoucherPayment();" class="yellow_roundbtn pull-right" id="proceed">Mua ngay!</a>
+                                    </span>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+                        <div id="information-price1">
+                            <div id="accordion1" class="panel-group box-right-top">
+                            </div>
+                            <div class="col-md-4 " style="right: 0;">
+                                <div class="panel panel-default" style="padding: 6px;">
+                                    <a href="mailto:cs@vinaday.com" style="color: black">✉️ cs@vinaday.com</a> <br />
+                                    <a href="tel:842838388382" style="color: black">📞 +84 916388382</a><br />
+                                    <a href="tel:84916388382" style="color: black">💬 (+84)916388382</a><br />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+<script>
+        function cbShowHideControl(ctl) {
+            if (ctl.checked) {
+                $(".other_gender").show();
+            } else {
+                $(".other_gender").hide();
+            }
+        }
+        function cbCreateGiftVoucher(ctl) {
+            if (ctl.checked) {
+                $(".gift_voucher").show();
+            } else {
+                $(".gift_voucher").hide();
+            }
+        }
+        
+    </script>
+    @Scripts.Render("~/bundles/payment")
+}

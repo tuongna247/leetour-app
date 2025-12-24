@@ -1,0 +1,192 @@
+﻿@using System
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Web.Framework
+@using Vinaday.Data.Models
+@{
+    ViewBag.Title = "Deal Tour Hotel - Management";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+           .Where(c => c.Type == ClaimTypes.Role)
+           .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : (role.Contains("Master SEO") ? "~/Views/Shared/_MasterSEO.cshtml" : "~/Views/Shared/_ContentLayout.cshtml");
+    var hotelList = ViewBag.HotelList as List<Hotel>;
+    var tourList = ViewBag.TourList as List<Tour>; ;
+    var cityList = ViewBag.City as List<City>; ;
+}
+
+<div class="page-title">
+    <h3>Deal Tour Hotel List</h3>
+</div>
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+
+                    <a class="btn btn-info btn-addon m-b-sm btn-xs" onclick="showAddDeal();"><i class="fa fa-plus"></i>Add new</a>
+                    @if (Model != null)
+                    {
+                        <div class="table-responsive">
+                            <table id="tour-list-2" class="display table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Name<span class="column-sorter"></span></th>
+                                        <th> City<span class="column-sorter"></span></th>
+                                        <th> Country<span class="column-sorter"></span></th>
+                                        <th>Room Type<span class="column-sorter"></span></th>
+                                        <th>Link<span class="column-sorter"></span></th>
+                                        <th>Price<span class="column-sorter"></span></th>
+                                        <th>Discount<span class="column-sorter"></span></th>
+                                        <th>Banner<span class="column-sorter"></span></th>
+                                        <th>Hotel Avarta<span class="column-sorter"></span></th>
+                                        <th>Expired Date<span class="column-sorter"></span></th>
+                                        <th>DealType<span class="column-sorter"></span></th>
+                                        <th style="width: 160px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (DealHotelTours coupon in Model)
+                                    {
+                                        <tr>
+                                            <td>@coupon.DealName</td>
+                                            <td>@coupon.LocationCity</td>
+                                            <td>@coupon.LocationCountry</td>
+                                            <td>@coupon.RoomType</td>
+                                            <td> @coupon.LinkDetail</td>
+                                            <td>@coupon.Price</td>
+                                            <td>@coupon.Discount</td>
+                                            <td>@coupon.DealAvarta</td>
+                                            <td>@coupon.DealBanner</td>
+                                            <td>@coupon.ExpiredDate</td>
+                                            <td>@coupon.DealType</td>
+
+                                            <td style="width: 160px;">
+                                                <a href="#" onclick="EditDeal('@coupon.Id')">Edit</a> | <a href="#" onclick="DeleteDeal('@coupon.Id')">Delete</a>
+
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Row -->
+</div>
+<div class="modal fade" id="couponCode-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add new deal </h4>
+
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="wizardForm" method="POST" enctype="multipart/form-data" action="@Url.Content("~/Product/InsertDealTourHotel")">
+                            <div class="row">
+                                <div id="load-pane-wizard"></div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <label for="Name">Deal Name:</label>
+                                        <input type="text" class="form-control " name="DealName" id="Name" placeholder="Deal Name">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="Link">Page Link:</label>
+                                        <input type="text" class="form-control " name="LinkDetail" id="LinkDetail" placeholder="http://">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="form-group col-md-4">
+                                        <label for="City">City:</label>
+                                        <input type="text" class="form-control " name="LocationCity" id="LocationCity" placeholder="City">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="Country">Country:</label>
+                                        <input type="text" class="form-control " name="LocationCountry" id="LocationCountry" placeholder="Country">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="ExpiredDate">Expired date:</label>
+                                        <input type="text" class="form-control m-b-sm date-picker" name="ExpiredDate" id="ExpiredDate">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="form-group col-md-4">
+                                        <label for="Price">Price:</label>
+                                        <input type="text" class="form-control " id="Price" name="Price" placeholder="Price">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="Discount">Discount:</label>
+                                        <input type="text" class="form-control " id="Discount" name="Discount" placeholder="Discount">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="Days">Days:</label>
+                                        <input type="text" placeholder="Enter day(s)" id="Night" name="Night" class="form-control ">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <label for="DealAvarta">Avarta:</label>
+                                        <input type="file" class="form-control " id="DealAvarta" name="DealAvarta" placeholder="Avarta">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="DealBanner">Banner:</label>
+                                        <input type="file" class="form-control " id="DealBanner" name="DealBanner" placeholder="DealBanner">
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <label for="DealType">Hotel/Tour (1,2):</label><br/>
+                                        <input type="text" id="DealType" name="DealType" placeholder="Hotel 1/ Tour 2"/>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="RoomType">Room Type</label><br/>
+                                        <input type="text" id="RoomType" name="RoomType"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <input type="submit" value="Finish" class="btn btn-default">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div><!-- Row -->
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-couponCode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" id="couponCode-edit">
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/dealtourHoteljs")
+    <script>
+        $(document).ready(function () {
+            $('#tour-list-2').dataTable({
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [],
+                "lengthMenu": [[25, 50, 100, 500, 1000, 3000], [25, 50, 100, 500, 1000, 3000]]
+
+            });
+         
+        });
+</script>
+}
+

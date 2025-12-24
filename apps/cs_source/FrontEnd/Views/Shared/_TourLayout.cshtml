@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html class="en-US" lang="en-US" data-channel="vinaday">
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta charset="utf-8">
+    <meta name="description" content="@ViewBag.Description" />
+    <meta name="keywords" content="@ViewBag.Keywords" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="msvalidate.01" content="4EE2B38A81436FC84FFF359AB3071B0E" />
+    @RenderSection("nofollow", false)
+    <link rel="alternate" href="https://goreise.com" hreflang="en-us" />
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;subset=latin,cyrillic" rel="stylesheet" type="text/css">
+    @Styles.Render("~/Content/tour-css")
+    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/Content/tour_detail")
+
+    @if (IsSectionDefined("Styles"))
+    {@RenderSection("Styles", required: false)}
+    <script type='application/ld+json'>
+        {
+        "@@context": "http://www.schema.org",
+        "@@type": "TravelAgency",
+        "name": "Vinaday Travel",
+        "url": "https://vinadaytravel.com",
+        "logo": "https://vinadaytravel.com/blog/wp-content/uploads/2018/10/logo-Vinaday-Travel-2.png",
+        "image": "https://vinadaytravel.com/blog/wp-content/uploads/2018/10/logo-Vinaday-Travel-2.png",
+        "description": "VINADAY goREISE Vinaday Travel specializing in arranging and managing quality tourism destinations for people travelling within Vietnam, Laos, Cambodia, Thailand, Myanmar Our popular trips are Mekong Delta Trip, Cu Chi Tunnels …",
+        "address": {
+        "@@type": "PostalAddress",
+        "streetAddress": "1th floor, 230 De Tham, Pham Ngu Lao Ward, Distric 1, HCMC",
+        "addressLocality": "HCM",
+        "addressRegion": "AA",
+        "postalCode": "70000",
+        "addressCountry": "Vietnam"
+        },
+        "geo": {
+        "@@type": "GeoCoordinates",
+        "latitude": "10.767833",
+        "longitude": "106.6917963"
+        },
+        "hasMap": "https://www.google.com/maps?cid=5810638270893728819&hl=vi&_ga=2.30493501.306306877.1543288630-853305580.1534385490",
+        "openingHours": "Mo, Tu, We, Th, Fr, Sa, Su 08:00-21:00",
+        "contactPoint": {
+        "@@type": "ContactPoint",
+        "telephone": "+84 916388382",
+        "contactType": "Hotline"
+        }
+        }
+    </script>
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1678764492335447');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1"
+             src="https://www.facebook.com/tr?id=1678764492335447&ev=PageView
+&noscript=1" />
+    </noscript>
+    <!-- End Facebook Pixel Code -->
+    <!-- TrustBox script -->
+    <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+    <!-- End TrustBox script -->
+    <!-- Google Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-245004625-1">
+    </script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-245004625-1');
+    </script>
+    <!-- End Google Tag Manager -->
+</head>
+<body ng-controller="hotelController">
+    <div id="outer-wrap">
+        <div id="inner-wrap" itemtype="http://schema.org/Hotel" itemscope="">
+            @Html.Partial("_Header")
+            @RenderBody()
+            @Html.Partial("_TourFooter")
+            @Scripts.Render("~/bundles/app")
+            @Scripts.Render("~/bundles/modernizr")
+            <script src="~/Content/plugins/countdown/assets/countdown/jquery.countdown.js"></script>
+            <script src="~/Content/plugins/countdown/assets/js/script.js"></script>
+            <script src="~/Content/plugins/QuotesRotator/js/jquery.cbpQTRotator.min.js"></script>
+            <script src="~/Scripts/app1/home.js"></script>
+            <script src="~/Scripts/offcanvas-navigation.js"></script>
+            <script src="~/Scripts/tours/js/common.js"></script>
+            @RenderSection("scripts", false)
+        </div>
+    </div>
+    <a href="#" id="backToTop"></a>
+    <!--Start of Zendesk Chat Script-->
+    <script type="text/javascript">
+        window.$zopim || (function (d, s) {
+            var z = $zopim = function (c) { z._.push(c) }, $ = z.s =
+            d.createElement(s), e = d.getElementsByTagName(s)[0]; z.set = function (o) {
+                z.set.
+                _.push(o)
+            }; z._ = []; z.set._ = []; $.async = !0; $.setAttribute("charset", "utf-8");
+            $.src = "https://v2.zopim.com/?4OC2gL4fBb9JwAqMRtNnIgJ772KM69RL"; z.t = +new Date; $.
+            type = "text/javascript"; e.parentNode.insertBefore($, e)
+        })(document, "script");
+    </script>
+    <!--End of Zendesk Chat Script-->
+</body>
+</html>
+

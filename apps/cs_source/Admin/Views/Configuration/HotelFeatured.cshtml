@@ -1,0 +1,77 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+
+@{
+    ViewBag.Title = "Admin - Hotel Featured";
+    var role = ((ClaimsIdentity)User.Identity).Claims
+     .Where(c => c.Type == ClaimTypes.Role)
+     .Select(c => c.Value).FirstOrDefault();
+    Layout = role.Contains("Master Admin") ? "~/Views/Shared/_MasterLayout.cshtml" : "~/Views/Shared/_ContentLayout.cshtml";
+    List<Hotel> hotels = ViewBag.Hotels;
+    List<HotelModel> hotelModels = ViewBag.Featureds;
+    var index = 1;
+}
+
+
+<div class="page-title">
+    <h3>Category Management</h3>
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="~/">Dashboard</a></li>
+            <li><a href="~/Configuration">Configuration</a></li>
+            <li class="active">Hotel Featured</li>
+        </ol>
+    </div>
+</div>
+
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table id="region-data-table" class="table table-bordered table-striped table-condensed table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col" class="action">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var hotelModel in hotelModels)
+                                {
+                                    <tr>
+                                        <td style="text-align: center;"><span class="badge badge-success">@index</span></td>
+                                        <td style="text-align: center;">
+
+                                            <img style="width: 200px;" src="@hotelModel.ImageUrl" alt="@hotelModel.Name">
+
+                                        </td>
+                                        <td style="text-align: center;">@hotelModel.Name</td>
+                                        <td style="width: 300px;">
+                                            <div class="form-group">
+                                                <select class="hotels form-control m-b-sm">
+                                                    @foreach (var hotel in hotels)
+                                                    {
+                                                        <option value="@hotel.Id" @(hotel.Id == hotelModel.Id ? "selected" : string.Empty)>@hotel.Name</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                                    index++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

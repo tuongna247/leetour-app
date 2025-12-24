@@ -1,0 +1,500 @@
+﻿@using System.Security.Claims
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@model ProductModel
+@{
+    ViewBag.Title = "vinaday.vn - Thanh toán";
+    Layout = "~/Views/Shared/_LayoutVn.cshtml";
+    List<Vinaday.Data.Models.Nationality>
+    nationalities = ViewBag.Nationalities;
+    List<CancellationModel>
+        cancellationPolicies = ViewBag.CancellationPolicies;
+    var role = ((ClaimsIdentity)User.Identity).Claims
+    .Where(c => c.Type == ClaimTypes.Role)
+    .Select(c => c.Value).FirstOrDefault();
+    Customer customer = ViewBag.Customer;
+}
+<div class="pd-nav"></div>
+<div class="content stepbooking">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div class="step-payment">
+                    <div class="icon-step">
+                        <div class="box-step box-step1 active">
+                            <span class="fa fa-shopping-cart"></span>
+
+                            <p style="padding-left: 16px;">Giỏ hàng</p>
+
+                        </div>
+                        <div class="box-step box-step2">
+                            <span class="fa fa-users"></span>
+
+                            <p>Thông tin</p>
+
+                        </div>
+                        <div class="box-step box-step3">
+                            <span style="padding-top:17px;text-indent: 19px;" class="fa fa-shield"></span>
+
+                            <p>Thanh toán</p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <section class=" form checkout style-2">
+                    <div class="row">
+                        <div id="information-price">
+                            <div class="col-md-4 col-md-push-8 anim fadeInRight">
+
+                                <div id="accordion" class="panel-group box-right-top">
+                                    <a style="display: none;" href="#">Thành viên VINADAY goREISE ? Đăng nhập<span> ›</span></a>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" style="text-decoration: none;" class="clearfix">
+                                                    <span class="pull-left">@Model.DetailName</span><strong class="pull-right">@((Model.TotalPrice).ToString("##,###").Replace(",", "."))<sup>đ</sup></strong>
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseOne" class="panel-collapse collapse in" style="height: auto;">
+                                            <div class="panel-body">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Đêm</th>
+                                                            <th>Ngày</th>
+                                                            <th>Số lượng</th>
+                                                            <th>Giá</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if (Model.Details.Count > 0)
+                                                        {
+                                                            foreach (var detail in Model.Details)
+                                                            {
+                                                                <tr>
+                                                                    <td>@detail.Night</td>
+                                                                    <td>@detail.Date.ToString("dd/MM/yyyy")</td>
+                                                                    <td>@detail.Quantity</td>
+                                                                    <td>@(detail.PriceRoom > 0 ? (detail.PriceRoom).ToString("##,###").Replace(",", ".") : "0")<sup>đ</sup></td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="clearfix collapsed">
+                                                    <span class="pull-left">Thuế và phí dịch vụ</span><strong class="pull-right">@((Model.TotalTaxeFee).ToString("##,###").Replace(",", "."))<sup>đ</sup></strong>
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseTwo" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <p style="font-size: 15px; text-align: left; line-height: 23px; color: #555;">
+                                                    Thuế và phí dịch vụ của khách sạn cung cấp. <br>
+                                                    -Phí dịch vụ 5% <br>
+                                                    -Thuế của khách sạn 10%
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="clearfix collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                                    <span class="pull-left">Phụ thu</span>
+                                                    <strong class="pull-right">
+                                                        @(Model.TotalSurcharge > 0 ? (Model.TotalSurcharge).ToString("##,###").Replace(",", ".") : "0")<sup>đ</sup>
+                                                    </strong>
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseThree" class="panel-collapse collapse" style="height: 0px;">
+                                            <div class="panel-body">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Đêm</th>
+                                                            <th>Ngày</th>
+                                                            <th>Số lượng</th>
+                                                            <th>Giá</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if (Model.Details.Count > 0)
+                                                        {
+                                                            foreach (var surcharge in Model.Details)
+                                                            {
+                                                                <tr>
+                                                                    <td>@surcharge.Night</td>
+                                                                    <td>@surcharge.Date.ToString("dd/MM/yyyy")</td>
+                                                                    <td>@surcharge.Quantity</td>
+                                                                    <td>@(surcharge.PriceSurcharge > 0 ? (surcharge.PriceSurcharge).ToString("##,###").Replace(",", ".") : "0")<sup>đ</sup></td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a href="#collapseFour" data-parent="#accordion" data-toggle="collapse" class="clearfix collapsed">
+                                                    <span class="pull-left">Tiết kiệm</span>
+                                                    <strong class="pull-right">@(Model.TotalSave > 0 ? (Model.TotalSave).ToString("##,###").Replace(",", ".") : "0")<sup>đ</sup> </strong>
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div class="panel-collapse collapse" id="collapseFour">
+                                            <div class="panel-body">
+                                                <div>
+                                                    <p style="font-size: 15px; text-align: left; line-height: 23px; color: #555;">
+                                                        @if (Model.TotalSave > 0)
+                                                        {
+                                                            <span class="glyphicon glyphicon-gift" style="float: left; height: 45px; margin-right: 10px;"></span>
+                                                            if (Model.Promotion != null)
+                                                            {
+                                                                @Html.Raw(Model.Promotion.Name)
+                                                                <br />
+                                                                @Html.Raw(Model.Promotion.Description)
+
+                                                            }
+
+                                                        }
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="price-final">
+                                    <h4 class="panel-title clearfix">
+                                        <span class="pull-left">Tổng cộng</span>
+                                        <strong class="pull-right">@((Model.FinalPrice).ToString("##,###").Replace(",", "."))<sup>đ</sup> </strong>
+                                    </h4>
+                                    <p>(Giá đã bao gồm các loại thuế và Phí dịch vụ)</p>
+                                </div>
+                                <!--price-final-->
+                            </div>
+                        </div>
+
+                        <div id="loading-bar" style="border: none; display: none; margin-top: 50px; padding-left: 48%;" class="box-aside">
+                            <div class="contener_general">
+                                <div class="contener_mixte">
+                                    <div class="ballcolor ball_1">&nbsp;</div>
+                                </div>
+                                <div class="contener_mixte">
+                                    <div class="ballcolor ball_2">&nbsp;</div>
+                                </div>
+                                <div class="contener_mixte">
+                                    <div class="ballcolor ball_3">&nbsp;</div>
+                                </div>
+                                <div class="contener_mixte">
+                                    <div class="ballcolor ball_4">&nbsp;</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="information">
+                            <div class="col-md-8 col-md-pull-4 anim fadeInLeft">
+                                <div class="check-out-header">
+
+                                    <h2 class="title">Đặt phòng của bạn</h2>
+                                </div>
+                                <div class="box-aside payment-detail">
+                                    <div class="payment-detail-content">
+                                        <div class="payment-detail-title">
+                                            @Model.Name<span class="star star_@(Model.Rating)"></span>
+                                            <br />
+                                            <span style="font-size: 15px; font-weight: normal; display: block">@Model.Location</span>
+                                        </div>
+                                        <div class="image">
+                                            <img src="@Model.ImageUrl" alt="@Model.Name">
+                                        </div>
+                                        <div class="payment-detail-content-info">
+                                            <ul>
+                                                <li><i class="fa fa-angle-double-right"></i><span class="bold">@Model.DetailName</span></li>
+                                                <li><i class="fa fa-angle-double-right"></i><span class="bold">Ngày nhận phòng: </span>@Model.CheckIn.Date.ToString("dd/MM/yyyy")</li>
+                                                <li><i class="fa fa-angle-double-right"></i><span class="bold">Ngày trả phòng: </span>@Model.CheckOut.Date.ToString("dd/MM/yyyy")</li>
+                                                <li><i class="fa fa-angle-double-right"></i><span class="bold">Ở từ: </span>@Model.Stay</li>
+                                            </ul>
+                                        </div>
+                                        <div class="clear"></div>
+                                        @if (Model.TotalSave > 0)
+                                        {
+
+                                            if (Model.Promotion != null)
+                                            {
+                                                <div class="helper" style="background-color: #fff4f4 !important; border-color: #ff006c; color: #ff006c; padding: 10px; font-weight: bold">
+                                                    <span style="float: left; height: 45px; margin-right: 10px; color: #ff006c; font-size: 20px" class="glyphicon glyphicon-gift"></span>
+                                                    <span>Chúc mừng bạn đã đặt được phòng @Html.Raw(Model.Promotion.Name) </span>
+                                                </div>
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+
+                                @if (Model.TotalSave > 0)
+                                {
+                                    if (Model.CancellationPolicy != null)
+                                    {
+                                        <div class="helper">
+                                            <label style="margin: 0">Điều kiện hủy phòng</label>
+                                            <br>
+                                            @Html.Raw(Model.CancellationPolicy.DescriptionVn)
+                                        </div>
+                                    }
+
+                                }
+                                else
+                                {
+
+                                    <a href="#collapse-cancellation" data-toggle="collapse" style="text-decoration: none;" class="clearfix">
+                                        <div class="helper">
+                                            Tin vui! Chúng tôi không tính phí huỷ phòng. <span style="font-weight: bold;text-decoration: underline">Vui lòng xem thêm Chính sách khách sạn <i class="fa fa-angle-double-down"></i></span>
+                                        </div>
+                                    </a>
+
+                                    <div id="collapse-cancellation" class="panel-collapse collapse" style="height: auto;">
+
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                @if (cancellationPolicies.Count > 0)
+                                                {
+                                                    foreach (var cancellationPolicy in cancellationPolicies)
+                                                    {
+                                                        <tr>
+                                                            <td>@cancellationPolicy.CheckInFrom.ToString("dd-MM-yyyy") - @cancellationPolicy.CheckOutTo.ToString("dd-MM-yyyy")</td>
+                                                            <td>@cancellationPolicy.DescriptionVn</td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                }
+                                <div id="pay-later">
+                                    <div class="check-out-header">
+                                        <h2 class="title pull-left" style="font-size: 17px">Nhập tất cả thông tin cần thiết</h2>
+                                        @if ((role == "Master Admin" || role == "Member") && role != string.Empty)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            <a class="pull-right" href="javascript:void(0);" onclick="login();">
+                                                <h2 class="title" style="color: #009933;font-size: 14px;">Bạn đã có tài khoản?</h2>
+                                            </a>
+                                        }
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div>
+                                        <span class="input-group tight">
+
+                                            <input type="text" placeholder="Nhập Tên" class="lg" id="firt-name" value="@customer.Firstname">
+                                        </span><!-- .input-group -->
+
+                                        <span class="input-group tight">
+
+                                            <input type="text" placeholder="Nhập Họ" class="lg" id="last-name" value="@customer.Lastname">
+                                        </span><!-- .input-group -->
+
+                                        <span class="input-group tight">
+
+                                            <input type="text" placeholder="Nhập địa chỉ e-mail" class="lg" id="email" value="@customer.Email">
+                                        </span><!-- .input-group -->
+
+                                        <span class="input-group tight">
+
+                                            <input type="text" placeholder="Nhập lại địa chỉ e-mail" class="lg" id="confirm-email" value="@customer.Email">
+                                        </span><!-- .input-group -->
+
+                                        <span class="input-group tight">
+
+                                            <input type="text" placeholder="Nhập số điện thoại" class="lg" id="phone" value="@customer.PhoneNumber">
+                                        </span><!-- .input-group -->
+
+                                        <span class="input-group tight">
+
+                                            <div class="select-style">
+                                                <select name="country" class="lg" id="national">
+                                                    <option value="Chọn quốc tịch">Chọn quốc tịch</option>
+                                                    @if (nationalities != null && nationalities.Count > 0)
+                                                    {
+                                                        foreach (var nationality in nationalities.Where(nationality => nationality != null))
+                                                        {
+                                                            <option @(customer.NationalId == nationality.ID ? "selected" : "") value="@nationality.ID">@nationality.Name</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </span><!-- .input-group -->
+                                    </div>
+                                    <span class="input-group">
+                                        <textarea placeholder="Điểm đón, Thực phẩm ..." class="lg" id="special-request"></textarea>
+                                    </span><!-- .input-group -->
+
+                                    <div class="check-out-header">
+                                        <h2 class="title" style="font-size: 17px">Chọn hình thức thanh toán</h2>
+                                    </div>
+                                    <div id="paymentTypeVn">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="1" id="paymentVISA" name="paymentType">
+                                                <img src="~/Content/images/demo/general/card.jpg" alt="visa card" title="visa card" class="visa-card">
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="2" id="paymentPayLater" checked name="paymentType">
+                                                Pay Later
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div style="border-top: 1px solid #6ebff3" class="payment-info-item">
+                                        <p class="pull-right  bold">
+                                            <span style="font-size: 13px; font-weight: bold">Tổng cộng: </span>@((Model.FinalPrice).ToString("##,###").Replace(",", "."))<sup>đ</sup>
+                                        </p>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="send-notification">
+                                            Gửi cho tôi những giảm giá đặc biệt mới nhất của VINADAY, chương trình khuyến mãi, ở miễn phí, nâng cấp thành viện miễn phí!
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" disabled="" checked="" id="accept-terms">
+                                            Tôi chấp nhận Điều kiện và các điều khoản kinh doanh của VINADAY.
+                                        </label>
+                                    </div>
+                                    <span class="input-group">
+                                        <a onclick="proceedPaymentVn();" class="yellow_roundbtn pull-right" id="proceed">Đặt phòng &amp; Trả sau!</a>
+                                    </span>
+                                </div>
+                                <div id="pay-credit-card" style="display: none">
+                                    <div class="check-out-header">
+
+                                        <h2 class="title" style="font-size: 17px">Chi tiết thanh toán</h2>
+                                    </div>
+                                    <div>
+                                        <span class="input-group tight">
+
+                                            <div class="select-style">
+                                                <select class="lg" id="card-holder-payment-method">
+                                                    <option value="0">Nhấp chọn danh mục</option>
+                                                    <option value="Visa">Visa</option>
+                                                    <option value="MasterCard">MasterCard</option>
+                                                    <option value="Amex">American Express</option>
+                                                </select>
+                                            </div>
+                                        </span>
+                                        <span class="input-group tight">
+
+                                        </span>
+                                        <span class="input-group tight">
+
+                                            <input type="text" placeholder="Tên trên thẻ" class="lg" id="card-holder-firt-name">
+                                        </span>
+
+                                        <span class="input-group tight">
+
+                                            <input type="text" placeholder="Họ trên thẻ" class="lg" id="card-holder-last-name">
+                                        </span>
+
+                                        <span class="input-group tight">
+
+                                            <input type="text" placeholder="Số thẻ" class="lg" id="card-holder-card-number">
+                                        </span>
+
+                                        <span class="input-group tight">
+                                            <div class="col-md-4 col-xs-6">
+                                                <input type="text" placeholder="CVV" id="card-holder-cvv" maxlength="500" class="lg" style="margin-left: -15px!important">
+                                            </div>
+                                            <div class="col-md-4 col-xs-3">
+                                                <div class="select-style" style=" margin-left: -30px;margin-right: 0px;">
+                                                    <select title="Exp Month" class="lg" id="card-holder-exp-month">
+                                                        <option selected="selected" value="0">Tháng</option>
+                                                        <option value="1">01</option>
+                                                        <option value="2">02</option>
+                                                        <option value="3">03</option>
+                                                        <option value="4">04</option>
+                                                        <option value="5">05</option>
+                                                        <option value="6">06</option>
+                                                        <option value="7">07</option>
+                                                        <option value="8">08</option>
+                                                        <option value="9">09</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-xs-3">
+                                                <div class="select-style" style=" margin-left: -15px;margin-right: -15px;">
+                                                    <select title="Exp Year" class="lg" id="card-holder-exp-year">
+                                                        <option selected="selected" value="0">Năm</option>
+                                                        <option value="2015">2015</option>
+                                                        <option value="2016">2016</option>
+                                                        <option value="2017">2017</option>
+                                                        <option value="2018">2018</option>
+                                                        <option value="2019">2019</option>
+                                                        <option value="2020">2020</option>
+                                                        <option value="2021">2021</option>
+                                                        <option value="2022">2022</option>
+                                                        <option value="2023">2023</option>
+                                                        <option value="2024">2024</option>
+                                                        <option value="2025">2025</option>
+                                                        <option value="2026">2026</option>
+                                                        <option value="2027">2027</option>
+                                                        <option value="2028">2028</option>
+                                                        <option value="2029">2029</option>
+                                                        <option value="2030">2030</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </span>
+                                        <span class="input-group tight" style="width: 100%">
+                                            <input type="text" placeholder="Địa chỉ" class="lg" id="card-holder-address">
+                                        </span>
+                                    </div>
+                                    <span class="input-group">
+                                        <a onclick="showPayLater();" class="pull-left" style="color: #58738a;cursor: pointer">« Quay lại Chi tiết đặt phòng</a>
+                                        <a onclick="proceedPaymentCreditCardVn();" class="yellow_roundbtn pull-right">Thanh toán và đặt phòng ngay!</a>
+                                    </span>
+
+                                </div>
+                            </div>
+
+                        </div>
+                      
+                        <!-- .col-lg-8 -->
+
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    if (typeof jQuery == 'undefined') {
+        var e = document.createElement('script');
+        e.src = '@Url.Content("~/Scripts/app/payment.js")';
+        e.type = 'text/javascript';
+        document.getElementsByTagName("head")[0].appendChild(e);
+    }
+</script>
+
+

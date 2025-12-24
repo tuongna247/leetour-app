@@ -1,0 +1,640 @@
+﻿@using System
+@using System.Activities.Statements
+@using System.Text.RegularExpressions
+@*@using Microsoft.Owin.Security.Facebook*@
+@using Vinaday.Data.Models
+@using Vinaday.Data.Models.Extention
+@model Vinaday.Data.Models.Extention.TourModel
+
+@{
+    Layout = "~/Views/Shared/_TourLayout.cshtml";
+}
+<style>
+    #owl-demo2 .item span {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .content-section h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #404040;
+    }
+
+    .content-section h1 {
+        font-size: 26px !important;
+    }
+
+    .content-section {
+        padding-top: 0px !important;
+    }
+
+    .subpage {
+        margin-top: 0px !important;
+    }
+
+    .bar-sticky {
+        display: block;
+        border-bottom: 3px solid #ffc20e;
+        background-color: #65135B;
+    }
+
+        .bar-sticky .navbar-brand {
+            font-size: 1.4rem;
+        }
+
+        .bar-sticky .btn-prime, .bar-sticky .hero__cta {
+            font-size: 1.2rem;
+        }
+
+
+    .bar-action {
+        border-bottom: 3px solid #ffc20e;
+        padding: 2.1rem 0;
+        position: absolute;
+        z-index: 1001;
+        font-size: 0.9rem;
+    }
+
+        .bar-action em {
+            position: relative;
+            top: 2px;
+            font-style: normal;
+            font-size: 1.1rem;
+        }
+
+        .bar-action img {
+            margin: 0 12px 0 2px;
+        }
+
+    .bar-action--message .btn {
+        margin-left: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+
+    .overflow-auto {
+        overflow: auto !important;
+    }
+
+    .overflow-hidden {
+        overflow: hidden !important;
+    }
+
+    .check-availability-wrapper {
+        border: 1px solid #d9d9d9;
+        background-color: #f5f5f5;
+        padding: 24px 24px 60px 24px;
+    }
+
+    .position-static {
+        position: static !important;
+    }
+
+    .position-relative {
+        position: relative !important;
+    }
+
+    .position-absolute {
+        position: absolute !important;
+    }
+
+    .position-fixed {
+        position: fixed !important;
+    }
+
+    .position-sticky {
+        position: -webkit-sticky !important;
+        position: sticky !important;
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+    }
+
+    .pl-0, .px-0 {
+        padding-left: 0 !important;
+    }
+
+    .pl-3, .px-3 {
+        padding-left: 1rem !important;
+    }
+
+    .tour-radio-select {
+        width: 18px;
+    }
+
+    .justify-content-center {
+        justify-content: center !important;
+    }
+
+    .flex-column {
+        flex-direction: column !important;
+    }
+
+    .d-flex {
+        display: flex !important;
+    }
+
+    .float-left {
+        float: left !important;
+    }
+
+    .ml-3, .mx-3 {
+        margin-left: 1rem !important;
+    }
+
+    .mb-3, .my-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .w-100 {
+        width: 100% !important;
+    }
+
+    .tour-option .special-banner {
+        background-color: #eb7200;
+        color: #fff;
+        font-size: .7rem;
+        padding: 4px 7px;
+        display: table;
+        margin-bottom: 2px;
+    }
+
+    .mb-0, .my-0 {
+        margin-bottom: 0 !important;
+    }
+
+    .w-100 {
+        width: 100% !important;
+    }
+
+    .tour-option .tg-description.tg-mask {
+        max-height: 1.68rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .tour-option.chosen .tour-option-details {
+        display: block;
+    }
+
+    .pl-3, .px-3 {
+        padding-left: 1rem !important;
+    }
+
+    .pr-3, .px-3 {
+        padding-right: 1rem !important;
+    }
+
+    .start-times {
+        max-height: 6rem;
+        overflow: hidden;
+    }
+
+        .start-times .single-start-time.available.selected, .start-times .start-time.available.selected {
+            background: #007d9e;
+            color: #fff;
+        }
+
+        .start-times .single-start-time.available, .start-times .start-time.available {
+            border: 1px solid #007d9e;
+        }
+
+        .start-times .single-start-time, .start-times .start-time {
+            width: 105px;
+        }
+
+    container, .selected-title-container {
+        min-height: 5rem;
+    }
+
+    .add-to-cart-container, .selected-title-container {
+        min-height: 4rem;
+    }
+
+    @@media (min-width: 992px) .pb-lg-0, .py-lg-0 {
+        padding-bottom: 0 !important;
+    }
+
+    @@media (min-width: 576px) .selected-price-container .selected-price-breakdown {
+        font-size: .8rem;
+    }
+
+    .selected-price-container .selected-price-breakdown {
+        font-size: .7rem;
+    }
+
+    .line-height-sm {
+        line-height: 1.1;
+    }
+
+    @@media (min-width: 768px) .text-md-right {
+        text-align: right !important;
+    }
+
+    price {
+        font-size: 1.5rem;
+    }
+
+    .selected-price-container .selected-price {
+        font-size: 1.25rem;
+    }
+
+    .font-weight-medium {
+        font-weight: 500;
+    }
+
+    .text-dark {
+        color: #262626 !important;
+    }
+
+    .tour-option.chosen {
+        font-weight: 400;
+        border: 1px solid #8c8c8c;
+        background-color: #fff;
+    }
+
+    .tour-grade-title {
+        font-size: 18px;
+        font-weight: bold !important;
+    }
+
+    .tour-grade-wrapper {
+        border: 1px solid #d9d9d9;
+    }
+
+    .tour-select {
+        font-size: 1.1em;
+    }
+
+    .font-weight-medium {
+        font-weight: 500;
+    }
+
+    .tour-select b {
+        color: #eb7200;
+    }
+
+    .mb-3, .my-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .pl-3, .px-3 {
+        padding-left: 1rem !important;
+    }
+
+    .pr-3, .px-3 {
+        padding-right: 1rem !important;
+    }
+
+    .pt-3, .py-3 {
+        padding-top: 1rem !important;
+    }
+
+    .pb-2, .py-2 {
+        padding-bottom: .5rem !important;
+    }
+
+    .mb-1, .my-1 {
+        margin-bottom: .25rem !important;
+    }
+
+    .mt-1, .my-1 {
+        margin-top: .25rem !important;
+    }
+
+    .nad-enabled .tour-option-unavailable .price-break-down-line-items, .nad-enabled .tour-option-unavailable .price-total, .nad-enabled .tour-option-unavailable .tg-description.summary .section-block, .tour-option:not(.chosen) .tour-option-details {
+        display: none;
+    }
+
+    @@media (min-width: 1281px) {
+        .min_height {
+            min-height: 416px;
+        }
+    }
+
+    @@media (min-width: 1025px) and (max-width: 1280px) {
+        .min_height {
+            min-height: 416px;
+            margin-bottom: 0px;
+            padding-bottom: 5px !important;
+        }
+    }
+
+    @@media (min-width: 768px) and (max-width: 1024px) {
+        .min_height {
+            min-height: inherit;
+            margin-bottom: 0px;
+            padding-bottom: 5px !important;
+        }
+    }
+
+    /*
+        ##Device = Tablets, Ipads (landscape)
+        ##Screen = B/w 768px to 1024px
+    */
+
+    @@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+        .min_height {
+            min-height: inherit;
+            margin-bottom: 0px;
+            padding-bottom: 5px;
+        }
+    }
+
+    @@media (min-width: 320px) and (max-width: 480px) {
+        .min_height {
+            min-height: inherit;
+            margin-bottom: 0px;
+            padding-bottom: 5px;
+        }
+    }
+</style>
+
+
+@if (Model.Tour != null)
+{
+    <section class="content-section content-section-vinaday" style="background-color:white">
+        <div class="container">
+            <div class="subpage ">
+                <ul class="breadcrumb">
+                    <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                        <a href="https://goreise.com" itemprop="url">
+                            <span itemprop="title">Home</span>
+                        </a>
+                    </li>
+                    <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemprop="child">
+                        <a href="https://goreise.com/tour/" itemprop="url">
+                            <span itemprop="title">Tours &amp; Day Trips</span>
+                        </a>
+                    </li>
+                    <li>
+                        <span itemprop="title" style="font-weight: normal;">@Html.Raw(Model.Tour.Name)</span>
+                        <input type="hidden" id="hdnTourId" value="@Model.Tour.Id" />
+                        <input type="hidden" id="tourId" value="@Model.Tour.Id">
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-md-8 col-sm-8">
+                    <div class="fullscreen">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div id="slider1_container" style="display: none; position: relative; margin: 0 auto; width: 848px; height: 470px; overflow: hidden;">
+                                    <!-- Loading Screen -->
+                                    <div u="loading" style="position: absolute; top: 0px; left: 0px;">
+                                        <div style="filter: alpha(opacity=70); opacity: 0.7; position: absolute; display: block; background-color: #000; top: 0px; left: 0px; width: 100%; height: 100%;">
+                                        </div>
+                                        <div style="position: absolute; display: block; background: url(/Content/images/design/loading.gif) no-repeat center center; top: 0px; left: 0px; width: 100%; height: 100%;">
+                                        </div>
+                                    </div>
+                                    <!-- Slides Container -->
+                                    <div u="slides" style="cursor: move; position: absolute; left: 0px; top: 0px; width: 848px; height: 470px; overflow: hidden;">
+
+                                        @if (Model.Medium.Count > 0)
+                                        {
+                                            foreach (var media in Model.Medium)
+                                            {
+                                                <div class="custom-bg">
+                                                    <img u="image" alt="@media.Title" src='@(media != null ? string.Format("https://goreise.com/admin/{0}", Url.Content(media.OriginalPath)) : "/content/images/vinaday-background.jpg")' />
+                                                </div>
+
+                                            }
+                                        }
+                                    </div>
+                                    <div u="navigator" class="jssorb03" style="bottom: 16px; right: 6px;">
+                                        <!-- bullet navigator item prototype -->
+                                        <div u="prototype">
+                                            <div u="numbertemplate"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <h4 property="name" itemprop="name" class="fadeInLeft animated" style="visibility: visible;text-align:left;font-size:20px;">@Html.Raw(Model.Tour.Name)</h4>
+                            </div>
+                        </div>
+                        <!--library-images-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2>Your first-hand experiences really help other travelers. Thanks!</h2>
+                                <form class="form.checkout">
+                                    <div class="input-group tight">
+                                        <b>Activity that you are reviewing : @Html.Raw(Model.Tour.Name)</b>
+                                    </div>
+                                    <div class="input-group tight">
+                                        <div id="rateBox"></div>
+                                        <input type="hidden" id="hdnRate" />
+                                        @*<select name="star" id="star" class="lg">
+                                                <option>Your overall rating of this attraction  </option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                            </select>*@
+                                    </div>
+                                    <div class="input-group tight">
+                                        <input id="GuestName" name="GuestName" value="" type="text" style="width:100%" class="lg" placeholder="Your Name?">
+                                    </div>
+                                    <div class="input-group tight">
+                                        <input id="title_review" name="title_review" value="" type="text" style="width:100%" class="lg" placeholder="Title of your review">
+                                    </div>
+
+                                    <div class="input-group tight">
+                                        <textarea id="review" name="review" value="" type="text" style="width:100%" class="lg" placeholder="Your review"></textarea>
+                                    </div>
+                                    <div class="input-group tight">
+                                        <input id="travel-date" name="travel_date" value="" type="text" style="width:100%" class="lg" placeholder="When did you visit?">
+                                    </div>
+                                    <div class="input-group tight">
+                                        <input id="start" onclick="return SaveReview()" value="Submit your review" type="button" class="btn btn-primary">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4 col-sm-4">
+                    @*<div>Recent reviews of this activity</div>
+                        <div>
+                            star,review,title_review,travel_date,
+
+                        </div>*@
+                </div>
+            </div>
+
+
+
+        </div>
+    </section>
+}
+else
+{
+    <p>No content for this page. Please contact goreise.com admin. </p>
+}
+
+@section Styles{
+    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/Content/vinaday")
+    <link href="/Content/plugins/fxss-rate/rate.css" rel="stylesheet">
+    <style>
+        .input-group {
+            margin: 10px;
+            /*min-height:40px;*/
+            width: 100%;
+            line-height: 28px;
+        }
+    </style>
+
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="@Url.Content("~/Content/plugins/QuotesRotator/js/jquery.cbpQTRotator.min.js")"></script>
+
+
+    <script src="https://goreise.com/Scripts/jssor.slider.mini.js"></script>
+    <script src="https://goreise.com/Scripts/tours/js/detail.js"></script>
+    <script src="@Url.Content("~/Scripts/tours/tour.js")"></script>
+    <script src="/Content/plugins/fxss-rate/rate.js"></script>
+
+    <script src="/Scripts/offcanvas-navigation.js"></script>
+    <script src="/Scripts/tours/js/common.js"></script>
+    @Scripts.Render("~/plugins/dataPicker")
+    <script>
+        $("#rateBox").rate({
+            length: 5,
+            value:4,
+            readonly: false,
+            size: '20px',
+            selectClass: 'fxss_rate_select',
+            incompleteClass: 'fxss_rate_no_all_select',
+            customClass: 'custom_class',
+            callback: function (object) {
+                $("#hdnRate").val(object.index + 1);
+                console.log($("#hdnRate").val());
+            }
+        });
+        var total = 0;
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        $('.input-group.date').datepicker({
+            todayBtn: "linked",
+            startDate: '1d',
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+
+        if (date.getHours() > 12) {
+            today.setDate(today.getDate() + 1);
+        }
+        $('.input-group.date').datepicker('setDate', today);
+
+        function SaveReview() {
+            var IntParam1 = $("#hdnRate").val();
+            var IntParam2 = $("#hdnTourId").val();
+            var StrParam1 = $("#title_review").val();
+            var StrParam2 = $("#review").val();
+            var StrParam3 = $("#travel-date").val();
+            var StrParam4 = $("#GuestName").val();
+            var object = { IntParam1, IntParam2, StrParam1, StrParam2, StrParam3, StrParam4 };
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(object),
+                dataType: "json",
+                url: "/Tour/UserReviewEditSave"
+            })
+                .success(function (result) {
+                    console.log(result);
+                    if (result !== "" && result.Status === 2) {
+                        window.location.href = window.location.href.replace("UserReviewEdit", "tour");
+                    } else {
+                        $('html,body').animate({
+                            scrollTop: 0
+                        }, 700);
+                        //swal({
+                        //    title: "",
+                        //    text: "Please wait a moment ...",
+                        //    imageUrl: "/Content/images/processing.gif",
+                        //    allowOutsideClick: "false",
+                        //    showConfirmButton: false,
+                        //    timer: 100
+                        //});
+                        // var error = "Error";
+                        //alert(error);
+                    }
+                })
+                .error(function (error) {
+                    //alert(error);
+                    console.log("loi");
+                });
+            return false;
+        }
+        //$(".tour-option-available").click(){
+        //    console.log("tuong");
+        //}
+        function printDiv() {
+            var id = $("#hdnTourId").val();
+            var url = window.location.pathname;
+            window.location.href = "/Tour/PrintPdf/" + id + '?url=' + url;
+        }
+
+        function detectmob() {
+            if (navigator.userAgent.match(/Android/i)
+                || navigator.userAgent.match(/webOS/i)
+                || navigator.userAgent.match(/iPhone/i)
+                || navigator.userAgent.match(/iPad/i)
+                || navigator.userAgent.match(/iPod/i)
+                || navigator.userAgent.match(/BlackBerry/i)
+                || navigator.userAgent.match(/Windows Phone/i)
+            ) {
+                $("#notification").show();
+                //   $("#inner-wrap").css("margin-top", "76px");
+            } else {
+
+            }
+        }
+        detectmob();
+        var total = 0;
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        $('#travel-date').datepicker({
+            todayBtn: "linked",
+            maxDate: '0',
+            minDate: new Date(2019, 1, 1),
+            //startDate: '1d',
+            keyboardNavigation: false,
+            // forceParse: true,
+            calendarWeeks: true,
+            autoclose: true
+        });
+        // When the user scrolls the page, execute myFunction
+        window.onscroll = function () { myFunction() };
+
+        // Get the navbar
+        var navbar = document.getElementById("sticky-bar-cta");
+        // Get the offset position of the navbar
+        var sticky = 300;
+
+        // Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {
+                $("#sticky-bar-cta").show();
+            } else {
+                $("#sticky-bar-cta").hide();
+            }
+        }
+
+    </script>
+}

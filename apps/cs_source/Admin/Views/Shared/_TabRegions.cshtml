@@ -1,0 +1,40 @@
+﻿@model List<Vinaday.Data.Models.Region1>
+@if (Model.Count > 0)
+{
+    <table id="table-regions" class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col" class="hidden-phone">Name</th>
+                <th scope="col" class="hidden-phone">Description</th>
+                <th scope="col" class="hidden-phone">Name vietnam</th>
+                <th scope="col" class="hidden-phone">Description vietnam</th>
+                <th scope="col" class="action" style="text-align: center;width: 200px">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var regionModel in Model)
+            {
+                <tr>
+                    <td id="@regionModel.Id">@regionModel.Id</td>
+                    <td class="hidden-phone">@regionModel.Name</td>
+                    <td class="hidden-phone">@regionModel.Description</td>
+                    <td class="hidden-phone">@regionModel.NameVn</td>
+                    <td class="hidden-phone">@regionModel.DescriptionVn</td>
+                    <td class="action" style="text-align: center; width: 200px">
+                        <span class="quick-menu-icon" style="cursor: pointer">
+                            <a class="btn btn-success btn-xs" onclick="editForm('@regionModel.Id', '@regionModel.Name', '@regionModel.NameVn','@regionModel.Description', '@regionModel.DescriptionVn');"><small class="glyphicon glyphicon-edit"></small></a>
+                            <a class="btn btn-danger btn-xs" onclick="deleteRegion('@regionModel.Id')"><small class="glyphicon glyphicon-trash"></small></a>
+                        </span>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No content for this Item</p>
+}

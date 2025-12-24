@@ -1,0 +1,111 @@
+﻿@using System.Collections.Generic
+@using Vinaday.Data.Models
+@using Vinaday.Web.Framework
+@model Hotel
+@{
+    List<CatDetail> catDetails = ViewBag.Categories;
+    List<Region1> regions = ViewBag.Regions;
+
+}
+@if (Model != null)
+{
+    <h4>Hotel Description</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <form>
+                <div class="form-group">
+                    <label for="property-form-hotel-name-en">Hotel Name</label>
+                    <input id="property-form-hotel-name-en" class="form-control" value="@Model.Name" placeholder="Hotel Name">
+                </div>
+
+                <div class="form-group">
+                    <label for="property-form-star">Star Rating</label>
+                    <select id="property-form-star" class="form-control m-b-sm">
+                        @*@for (var i = 1; i < 6; i++)
+                        {
+                            <option value="@i" @((Model.StartRating / 2) == i ? "selected" : "")>@i</option>
+                        }*@
+                        <option value="2" @((Model.StartRating) == 2 ? "selected" : "")>1</option>
+                        <option value="3" @((Model.StartRating) == 3 ? "selected" : "")>1.5</option>
+                        <option value="4" @((Model.StartRating) == 4 ? "selected" : "")>2</option>
+                        <option value="5" @((Model.StartRating) == 5 ? "selected" : "")>2.5</option>
+                        <option value="6" @((Model.StartRating) == 6 ? "selected" : "")>3</option>
+                        <option value="7" @((Model.StartRating) == 7 ? "selected" : "")>3.5</option>
+                        <option value="8" @((Model.StartRating) == 8 ? "selected" : "")>4</option>
+                        <option value="9" @((Model.StartRating) == 9 ? "selected" : "")>4.5</option>
+                        <option value="10" @((Model.StartRating) == 10 ? "selected" : "")>5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="property-form-number">Number of Rooms</label>
+                    @*<select id="property-form-number" class="form-control m-b-sm">
+                        @for (var i = 1; i < 101; i++)
+                        {
+                            <option value="@i" @(Model.NumberOfRoom == i ? "selected" : "")>@i</option>
+                        }
+
+                    </select>*@
+                    <input id="property-form-number" value="@Model.NumberOfRoom" class="form-control" placeholder="Number of room">
+                </div>
+                <div class="form-group">
+                    <label for="property-form-address-en">Street Address (English)</label>
+                    <textarea id="property-form-address-en" class="form-control" placeholder="Street Address (English)">@Model.StreetAddressEnglish</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="property-form-address-en">Lat/Long</label>
+                    <input id="property-form-hotel-latitude" class="form-control" value="@Model.Latitude" placeholder="Latitude">
+                    <input id="property-form-hotel-longtitude" class="form-control" value="@Model.Longtitude" placeholder="Longtitude">
+                </div>
+            </form>
+
+        </div>
+        <div class="col-md-6">
+            <form>
+                <div class="form-group">
+                    <label for="property-form-hotel-name-vn">Hotel Name (Local Language)</label>
+                    <input id="property-form-hotel-name-vn" value="@Model.HotelNameLocal" class="form-control" placeholder="Hotel Name (Local)">
+                </div>
+                <div class="form-group">
+                    <label for="property-form-type">Type of Accommodation</label>
+                    <select id="property-form-type" class="form-control m-b-sm">
+                        @foreach (var catDetail in catDetails)
+                        {
+                            <option value="@catDetail.Name" @(catDetail.Name.Contains(Model.HotelStyleName) ? "selected" : "")>@catDetail.Name</option>
+                        }
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="property-form-region">Area</label>
+                    <select id="property-form-region" class="form-control m-b-sm">
+                        @foreach (var region in regions)
+                        {
+                            <option value="@region.Id" @(region.Id == Model.RegionId ? "selected" : "")>@region.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="property-form-address-vn">Street Address (Local Language)</label>
+                    <textarea id="property-form-address-vn" class="form-control" placeholder="Street Address (Local Language)">@Model.StreetAddressLocal</textarea>
+                </div>
+            </form>
+        </div>
+    </div><!-- Row -->
+    <div class="clearfix"></div>
+
+    <div class="clearfix"></div>
+    <div class="pull-right">
+        <a onclick="getTabStyle();" class="btn btn-default m-b-sm">Skip and Continue</a>
+        <a onclick="saveTabProperty();" class="btn btn-success m-b-sm">Save and Continue</a>
+    </div>
+    <div class="clearfix"></div>
+    <div id="error-list" style="display: none;">
+        <div id="error-item" class="alert alert-danger" role="alert">
+        </div>
+    </div>
+}
+else
+{
+    <p>Cannot get content for this time.</p>
+}
+
