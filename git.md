@@ -169,6 +169,113 @@ git push origin <branch>
 
 ---
 
+## SSH Configuration & Management
+
+### Search and List SSH Files
+
+**List SSH directory contents**
+```bash
+ls -la ~/.ssh
+```
+
+**Find all .ssh directories on the system**
+```bash
+find ~ -name ".ssh" -type d 2>/dev/null
+```
+
+**Find all SSH key files (private keys)**
+```bash
+find ~/.ssh -type f ! -name "*.pub" ! -name "known_hosts*" ! -name "config" 2>/dev/null
+```
+
+**Find all SSH public keys**
+```bash
+find ~/.ssh -name "*.pub" 2>/dev/null
+```
+
+**Show SSH config and all keys**
+```bash
+cat ~/.ssh/config && echo -e "\n--- SSH Keys ---" && ls -1 ~/.ssh/*.pub
+```
+
+### SSH Key Management
+
+**Generate new SSH key**
+```bash
+ssh-keygen -t rsa -b 4096 -C "your.email@example.com" -f ~/.ssh/keyname
+```
+
+**Test SSH connection to GitHub**
+```bash
+ssh -T git@github.com
+```
+
+**Add SSH key to ssh-agent**
+```bash
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/keyname
+```
+
+**Copy SSH public key to clipboard (Windows)**
+```bash
+cat ~/.ssh/keyname.pub | clip
+```
+
+**Copy SSH public key to clipboard (Mac)**
+```bash
+pbcopy < ~/.ssh/keyname.pub
+```
+
+**Copy SSH public key to clipboard (Linux)**
+```bash
+xclip -sel clip < ~/.ssh/keyname.pub
+```
+
+### Configure Multiple GitHub Accounts
+
+**Example SSH config for multiple accounts**
+```bash
+# Account 1 (default)
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_rsa_account1
+
+# Account 2
+Host github-account2
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_rsa_account2
+```
+
+**Use specific SSH key for a repository**
+```bash
+# Clone with specific host
+git clone git@github-account2:username/repo.git
+
+# Or change existing remote
+git remote set-url origin git@github-account2:username/repo.git
+```
+
+### Switch Between HTTPS and SSH
+
+**Check current remote URL**
+```bash
+git remote -v
+```
+
+**Change from HTTPS to SSH**
+```bash
+git remote set-url origin git@github.com:username/repo.git
+```
+
+**Change from SSH to HTTPS**
+```bash
+git remote set-url origin https://github.com/username/repo.git
+```
+
+---
+
 ## Cleanup Tasks
 
 - [ ] Remove `nul` file if not needed
