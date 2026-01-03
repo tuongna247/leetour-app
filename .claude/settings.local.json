@@ -51,7 +51,9 @@
       "Bash(mv:*)",
       "Bash(mongosh:*)",
       "Bash(mongo:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(clip:*)"
     ],
     "deny": [],
     "ask": []
