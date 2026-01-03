@@ -1,16 +1,60 @@
 const mongoose = require('mongoose');
 
+// DayTripRate Schema - pricing tiers based on group size and age
+const dayTripRateSchema = new mongoose.Schema({
+  persons: {
+    type: Number,
+    required: true,
+    min: 1,
+    description: 'Number of persons in group (e.g., 1, 2-5, 6+)'
+  },
+  netRate: {
+    type: mongoose.Schema.Types.Decimal128,
+    required: true,
+    get: val => val ? parseFloat(val.toString()) : 0,
+    description: 'Net cost/wholesale price'
+  },
+  retailRate: {
+    type: mongoose.Schema.Types.Decimal128,
+    required: true,
+    get: val => val ? parseFloat(val.toString()) : 0,
+    description: 'Retail selling price'
+  },
+  ageFrom: {
+    type: Number,
+    min: 0,
+    default: null,
+    description: 'Minimum age for this rate (null for all ages)'
+  },
+  ageTo: {
+    type: Number,
+    min: 0,
+    default: null,
+    description: 'Maximum age for this rate (null for all ages)'
+  },
+  description: {
+    type: String,
+    trim: true,
+    default: '',
+    description: 'Rate description (e.g., "Adult", "Child 6-12", "Group 1-2 pax")'
+  }
+}, {
+  timestamps: true,
+  toJSON: { getters: true },
+  toObject: { getters: true }
+});
+
 const reviewSchema = new mongoose.Schema({
   user: {
     name: { type: String, required: true },
     email: { type: String, required: true },
     avatar: { type: String, default: '/images/profile/user-1.jpg' }
   },
-  guestName: { type: String }, // For compatibility with Detail.cshtml
-  title: { type: String, default: '' }, // Review title
+  guestName: { type: String },
+  title: { type: String, default: '' },
   rating: { type: Number, required: true, min: 1, max: 5 },
   comment: { type: String, required: true },
-  reviewContent: { type: String }, // Alias for comment, for compatibility
+  reviewContent: { type: String },
   date: { type: Date, default: Date.now },
   verified: { type: Boolean, default: false }
 });
@@ -306,35 +350,54 @@ const tourOptionSchema = new mongoose.Schema({
 }, { _id: true });
 
 const tourSchema = new mongoose.Schema({
+  // Core Tour Information (aligned with DAYTRIP.cs)
+  daytripId: {
+    type: Number,
+    unique: true,
+    sparse: true,
+    description: 'Legacy C# DAYTRIPID for migration compatibility'
+  },
+  name: {
+    type: String,
+    required: [true, 'Tour name is required'],
+    trim: true,
+    maxlength: [500, 'Name cannot exceed 500 characters'],
+    description: 'Tour name (DAYTRIP.NAME)'
+  },
   title: {
     type: String,
-    required: [true, 'Tour title is required'],
     trim: true,
-    maxlength: [200, 'Title cannot exceed 200 characters']
+    maxlength: [500, 'Title cannot exceed 500 characters'],
+    description: 'Tour title (DAYTRIP.Title)'
   },
   description: {
     type: String,
     required: [true, 'Tour description is required'],
-    trim: true
+    trim: true,
+    description: 'Full tour description (DAYTRIP.DESCRIPTION)'
+  },
+  overView: {
+    type: String,
+    trim: true,
+    default: '',
+    description: 'Tour overview summary (DAYTRIP.OverView)'
   },
   shortDescription: {
     type: String,
     trim: true,
     maxlength: [300, 'Short description cannot exceed 300 characters']
   },
-  overview: {
-    type: String,
-    trim: true,
-    default: ''
-  },
-  duration: {
-    type: String,
-    default: '8 hours'
+
+  // Pricing
+  priceFrom: {
+    type: mongoose.Schema.Types.Decimal128,
+    get: val => val ? parseFloat(val.toString()) : 0,
+    description: 'Starting price (DAYTRIP.PRICE_FROM)'
   },
   price: {
     type: Number,
-    required: [true, 'Tour price is required'],
-    min: [0, 'Price must be positive']
+    min: [0, 'Price must be positive'],
+    description: 'Current/default price'
   },
   originalPrice: {
     type: Number,
@@ -343,48 +406,235 @@ const tourSchema = new mongoose.Schema({
   currency: {
     type: String,
     default: 'USD',
-    enum: ['USD', 'EUR', 'GBP', 'JPY', 'AUD']
+    enum: ['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'VND']
   },
+  commissionRate: {
+    type: Number,
+    min: 0,
+    max: 100,
+    description: 'Commission percentage (DAYTRIP.CommissionRate)'
+  },
+
+  // Duration and Timing
+  duration: {
+    type: String,
+    default: '8 hours',
+    description: 'Tour duration (DAYTRIP.Duration)'
+  },
+  startingTime: {
+    type: String,
+    description: 'Default start time (DAYTRIP.StartingTime)'
+  },
+
+  // Location (aligned with DAYTRIP.cs)
+  location: {
+    type: String,
+    trim: true,
+    description: 'Location name/description (DAYTRIP.Location)'
+  },
+  locationId: {
+    type: Number,
+    description: 'Location ID (DAYTRIP.LocationId)'
+  },
+  city: {
+    type: String,
+    trim: true,
+    description: 'City name (DAYTRIP.City)'
+  },
+  country: {
+    type: String,
+    trim: true,
+    description: 'Country name (DAYTRIP.Country)'
+  },
+  countryId: {
+    type: Number,
+    description: 'Country ID (DAYTRIP.CountryId)'
+  },
+  locationDetails: {
+    type: locationSchema,
+    description: 'Extended location information for map/coordinates'
+  },
+
   category: {
     type: String,
     required: [true, 'Category is required'],
-    enum: ['Cultural', 'Adventure', 'Nature', 'Historical', 'Food & Drink', 'Entertainment', 'Sports']
+    enum: ['Cultural', 'Adventure', 'Nature', 'Historical', 'Food & Drink', 'Entertainment', 'Sports', 'Other']
   },
   subcategory: {
     type: String,
     default: 'General Tours'
   },
-  location: {
-    type: locationSchema,
-    required: [true, 'Location is required']
+  travelStyle: {
+    type: String,
+    trim: true,
+    description: 'Travel style (DAYTRIP.TravelStyle)'
+  },
+
+  // Tour Details (aligned with DAYTRIP.cs)
+  pickupPoint: {
+    type: String,
+    trim: true,
+    description: 'Pickup location (DAYTRIP.PickupPoint)'
+  },
+  dropOffPoint: {
+    type: String,
+    trim: true,
+    description: 'Drop-off location (DAYTRIP.DropOffPoint)'
+  },
+  groupSize: {
+    type: String,
+    trim: true,
+    description: 'Group size information (DAYTRIP.GroupSize)'
+  },
+  transport: {
+    type: String,
+    trim: true,
+    description: 'Transportation details (DAYTRIP.Transport)'
+  },
+
+  // Content Fields
+  hightLight: {
+    type: String,
+    trim: true,
+    description: 'Tour highlights HTML (DAYTRIP.HightLight)'
+  },
+  include: {
+    type: String,
+    trim: true,
+    description: 'What\'s included HTML (DAYTRIP.Include)'
+  },
+  exclude: {
+    type: String,
+    trim: true,
+    description: 'What\'s excluded HTML (DAYTRIP.Exclude)'
+  },
+  programeDetail: {
+    type: String,
+    trim: true,
+    description: 'Detailed program/itinerary (DAYTRIP.ProgrameDetail)'
+  },
+  notes: {
+    type: String,
+    trim: true,
+    default: '',
+    description: 'Additional notes (DAYTRIP.Notes)'
+  },
+
+  // Images
+  image: {
+    type: String,
+    trim: true,
+    description: 'Primary image URL (DAYTRIP.IMAGE)'
   },
   images: [imageSchema],
   featuredImage: featuredImageSchema,
   galleryImages: [galleryImageSchema],
+
+  // Schedule and Capacity
   schedule: scheduleSchema,
   capacity: capacitySchema,
+
+  // Compatibility fields (array format)
   included: [{ type: String }],
   excluded: [{ type: String }],
-  includeActivity: { type: String, default: '' }, // HTML content for included items
-  excludeActivity: { type: String, default: '' }, // HTML content for excluded items
+  includeActivity: { type: String, default: '' },
+  excludeActivity: { type: String, default: '' },
   highlights: [{ type: String }],
-  notes: { type: String, default: '' }, // Additional tour notes
+
   difficulty: {
     type: String,
     enum: ['Easy', 'Moderate', 'Hard', 'Expert'],
     default: 'Easy'
   },
-  ageRestriction: ageRestrictionSchema,
-  cancellation: cancellationSchema,
+
+  // SEO Fields (aligned with DAYTRIP.cs)
+  url: {
+    type: String,
+    trim: true,
+    description: 'SEO-friendly URL slug (DAYTRIP.URL)'
+  },
+  seoKeyword: {
+    type: String,
+    trim: true,
+    description: 'SEO keywords (DAYTRIP.SEO_Keyword)'
+  },
+  seoDescription: {
+    type: String,
+    trim: true,
+    description: 'SEO meta description (DAYTRIP.SEO_DESCRIPTION)'
+  },
+  seo: seoSchema,
+
+  // Rating and Reviews
+  startRating: {
+    type: Number,
+    min: 0,
+    max: 5,
+    default: 0,
+    description: 'Average rating (DAYTRIP.START_RATING)'
+  },
   rating: {
     average: { type: Number, default: 0, min: 0, max: 5 },
     count: { type: Number, default: 0 }
   },
   reviews: [reviewSchema],
-  guide: guideSchema,
-  tags: [{ type: String }],
-  keywords: [{ type: String }], // Searchable keywords (exposed from seo.keywords)
-  type: { type: String, enum: ['daytrip', 'tour'], default: 'daytrip' }, // Alias for tourType
+
+  // Booking Settings (aligned with DAYTRIP.cs)
+  startBooking: {
+    type: Number,
+    description: 'Start booking days before departure (DAYTRIP.STARTBOOKING)'
+  },
+  endBooking: {
+    type: Number,
+    description: 'End booking days before departure (DAYTRIP.ENDBOOKING)'
+  },
+
+  // Cancellation Policy Fields (aligned with DAYTRIP.cs)
+  cancelPolicyType: {
+    type: Number,
+    description: 'Cancellation policy type (DAYTRIP.CANCELPOLICYTYPE)'
+  },
+  cancelPolicyFromDay: {
+    type: Number,
+    description: 'Cancellation policy from days (DAYTRIP.CANCELPOLICY_FROMDAY)'
+  },
+  cancelPolicyToDay: {
+    type: Number,
+    description: 'Cancellation policy to days (DAYTRIP.CANCELPOLICY_TODAY)'
+  },
+  cancelPolicyValue1: {
+    type: String,
+    trim: true,
+    description: 'Cancellation policy value 1 (DAYTRIP.CANCELPOLICYVALUE1)'
+  },
+  cancelPolicyValue1Vn: {
+    type: String,
+    trim: true,
+    description: 'Cancellation policy value 1 Vietnamese (DAYTRIP.CANCELPOLICYVALUE1_VN)'
+  },
+  cancelPolicyValue2: {
+    type: String,
+    trim: true,
+    description: 'Cancellation policy value 2 (DAYTRIP.CANCELPOLICYVALUE2)'
+  },
+  cancelPolicyValue2Vn: {
+    type: String,
+    trim: true,
+    description: 'Cancellation policy value 2 Vietnamese (DAYTRIP.CANCELPOLICYVALUE2_VN)'
+  },
+
+  // Operator Information
+  operatorId: {
+    type: Number,
+    description: 'Tour operator ID (DAYTRIP.OperatorId)'
+  },
+
+  // Status
+  status: {
+    type: Number,
+    default: 1,
+    description: 'Tour status: 0=inactive, 1=active (DAYTRIP.Status)'
+  },
   isActive: {
     type: Boolean,
     default: true
@@ -393,18 +643,33 @@ const tourSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+
+  ageRestriction: ageRestrictionSchema,
+  cancellation: cancellationSchema,
+  guide: guideSchema,
   booking: bookingSchema,
+
+  // Pricing Tiers (aligned with DayTripRate.cs)
+  dayTripRates: [dayTripRateSchema],
+
+  // Tour Options and Itinerary
   tourOptions: [tourOptionSchema],
+  itinerary: [itinerarySchema],
+
+  // Promotions and Surcharges
+  surcharges: [surchargeSchema],
+  promotions: [promotionSchema],
+  cancellationPolicies: [cancellationPolicySchema],
+
+  tags: [{ type: String }],
+  keywords: [{ type: String }],
+  type: { type: String, enum: ['daytrip', 'tour'], default: 'daytrip' },
   tourType: {
     type: String,
     enum: ['daytrip', 'tour'],
     default: 'daytrip'
   },
-  itinerary: [itinerarySchema],
-  surcharges: [surchargeSchema],
-  promotions: [promotionSchema],
-  cancellationPolicies: [cancellationPolicySchema],
-  seo: seoSchema,
+
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -417,30 +682,80 @@ const tourSchema = new mongoose.Schema({
 });
 
 // Indexes for better performance
-tourSchema.index({ title: 'text', description: 'text' });
+tourSchema.index({ name: 'text', title: 'text', description: 'text' });
+tourSchema.index({ daytripId: 1 });
 tourSchema.index({ category: 1, isActive: 1 });
-tourSchema.index({ 'location.country': 1, 'location.city': 1 });
-tourSchema.index({ price: 1 });
+tourSchema.index({ status: 1 });
+tourSchema.index({ country: 1, city: 1 });
+tourSchema.index({ 'locationDetails.country': 1, 'locationDetails.city': 1 });
+tourSchema.index({ price: 1, priceFrom: 1 });
 tourSchema.index({ createdBy: 1 });
-tourSchema.index({ 'rating.average': -1 });
+tourSchema.index({ operatorId: 1 });
+tourSchema.index({ startRating: -1, 'rating.average': -1 });
 tourSchema.index({ createdAt: -1 });
 
 // Pre-save middleware to generate slug and sync fields
 tourSchema.pre('save', function(next) {
-  if (this.isModified('title') && !this.seo.slug) {
-    this.seo.slug = this.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  // Sync name and title
+  if (!this.name && this.title) {
+    this.name = this.title;
+  } else if (!this.title && this.name) {
+    this.title = this.name;
   }
 
-  if (this.isModified('title') && !this.seo.metaTitle) {
-    this.seo.metaTitle = this.title;
+  // Generate URL slug from name or title
+  if (this.isModified('name') || this.isModified('title')) {
+    const baseText = this.name || this.title;
+    if (baseText && !this.url) {
+      this.url = baseText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+    if (baseText && !this.seo.slug) {
+      this.seo.slug = baseText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+  }
+
+  // Sync SEO fields
+  if (this.isModified('name') || this.isModified('title')) {
+    const titleText = this.name || this.title;
+    if (titleText && !this.seo.metaTitle) {
+      this.seo.metaTitle = titleText;
+    }
   }
 
   if (this.isModified('description') && !this.seo.metaDescription) {
     this.seo.metaDescription = this.description.substring(0, 160);
   }
 
+  if (this.isModified('overView') && !this.seoDescription) {
+    this.seoDescription = this.overView.substring(0, 160);
+  }
+
   if (this.isModified('description') && !this.shortDescription) {
     this.shortDescription = this.description.substring(0, 100) + '...';
+  }
+
+  // Sync location fields with locationDetails
+  if (this.locationDetails) {
+    if (!this.country && this.locationDetails.country) {
+      this.country = this.locationDetails.country;
+    }
+    if (!this.city && this.locationDetails.city) {
+      this.city = this.locationDetails.city;
+    }
+  }
+
+  // Sync status and isActive
+  if (this.isModified('status')) {
+    this.isActive = this.status === 1;
+  } else if (this.isModified('isActive')) {
+    this.status = this.isActive ? 1 : 0;
+  }
+
+  // Sync rating fields
+  if (this.isModified('rating.average') && !this.startRating) {
+    this.startRating = this.rating.average;
+  } else if (this.isModified('startRating') && !this.rating.average) {
+    this.rating.average = this.startRating;
   }
 
   // Sync type with tourType
@@ -450,11 +765,14 @@ tourSchema.pre('save', function(next) {
     this.tourType = this.type;
   }
 
-  // Sync keywords with seo.keywords
+  // Sync keywords with seo.keywords and seoKeyword
   if (this.isModified('seo.keywords') && (!this.keywords || this.keywords.length === 0)) {
     this.keywords = this.seo.keywords;
   } else if (this.isModified('keywords') && (!this.seo.keywords || this.seo.keywords.length === 0)) {
     this.seo.keywords = this.keywords;
+  }
+  if (this.isModified('seoKeyword') && (!this.keywords || this.keywords.length === 0)) {
+    this.keywords = this.seoKeyword.split(',').map(k => k.trim());
   }
 
   // Sync review fields

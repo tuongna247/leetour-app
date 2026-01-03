@@ -2,9 +2,16 @@ import mongoose from 'mongoose';
 import { generateBookingId, generateBookingReference } from '../utils/bookingId.js';
 
 const BookingSchema = new mongoose.Schema({
-  bookingId: { 
-    type: String, 
-    required: true, 
+  // Primary Keys (aligned with DAYTRIPBOOKING.cs)
+  id: {
+    type: Number,
+    unique: true,
+    sparse: true,
+    description: 'Legacy C# ID for migration (DAYTRIPBOOKING.ID)'
+  },
+  bookingId: {
+    type: String,
+    required: true,
     unique: true,
     default: () => generateBookingId()
   },
@@ -14,9 +21,20 @@ const BookingSchema = new mongoose.Schema({
     unique: true,
     sparse: true
   },
-  
+  receiptId: {
+    type: String,
+    trim: true,
+    description: 'Receipt ID (DAYTRIPBOOKING.RECEIPTID)'
+  },
+
+  // Tour/Daytrip Reference (aligned with DAYTRIPBOOKING.cs)
+  daytripId: {
+    type: Number,
+    description: 'C# daytrip ID (DAYTRIPBOOKING.DaytripID)'
+  },
   tour: {
     tourId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tour', required: true },
+    name: { type: String, description: 'Tour name (DAYTRIPBOOKING.NAME)' },
     title: { type: String, required: true },
     shortDescription: { type: String },
     description: { type: String },
@@ -75,6 +93,11 @@ const BookingSchema = new mongoose.Schema({
     selectedTimeSlot: { type: String, required: true }
   },
   
+  // Customer Information (aligned with DAYTRIPBOOKING.cs)
+  customerId: {
+    type: Number,
+    description: 'Customer ID reference (DAYTRIPBOOKING.CUSTOMERID)'
+  },
   customer: {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -90,7 +113,60 @@ const BookingSchema = new mongoose.Schema({
     dateOfBirth: { type: Date },
     nationality: { type: String }
   },
-  
+
+  // Guest Information (aligned with DAYTRIPBOOKING.cs)
+  guestFirstName: {
+    type: String,
+    trim: true,
+    description: 'Guest first name (DAYTRIPBOOKING.GuestFirstName)'
+  },
+  guestLastName: {
+    type: String,
+    trim: true,
+    description: 'Guest last name (DAYTRIPBOOKING.GuestLastName)'
+  },
+  guestNationality: {
+    type: Number,
+    description: 'Guest nationality ID (DAYTRIPBOOKING.GuestNationality)'
+  },
+  ownerNotStayAtHotel: {
+    type: Boolean,
+    default: false,
+    description: 'Owner not staying flag (DAYTRIPBOOKING.OwnerNotStayAtHotel)'
+  },
+
+  // Booking Details (aligned with DAYTRIPBOOKING.cs)
+  date: {
+    type: Date,
+    description: 'Booking date (DAYTRIPBOOKING.Date)'
+  },
+  checkIn: {
+    type: Date,
+    description: 'Check-in date (DAYTRIPBOOKING.CHECK_IN)'
+  },
+  checkOut: {
+    type: Date,
+    description: 'Check-out date (DAYTRIPBOOKING.CHECK_OUT)'
+  },
+  day: {
+    type: Number,
+    description: 'Number of days (DAYTRIPBOOKING.DAY)'
+  },
+  startTime: {
+    type: String,
+    trim: true,
+    description: 'Start time (DAYTRIPBOOKING.STARTTIME)'
+  },
+  rooms: {
+    type: Number,
+    description: 'Number of rooms (DAYTRIPBOOKING.ROOMS)'
+  },
+
+  // Participants (extended from C# model)
+  person: {
+    type: Number,
+    description: 'Number of persons (DAYTRIPBOOKING.Person)'
+  },
   participants: {
     adults: { type: Number, required: true, min: 1 },
     children: { type: Number, default: 0, min: 0 },
@@ -105,6 +181,32 @@ const BookingSchema = new mongoose.Schema({
     }]
   },
   
+  // Pricing (aligned with DAYTRIPBOOKING.cs)
+  roomRate: {
+    type: mongoose.Schema.Types.Decimal128,
+    get: val => val ? parseFloat(val.toString()) : 0,
+    description: 'Room/person rate (DAYTRIPBOOKING.ROOM_RATE)'
+  },
+  feeTax: {
+    type: mongoose.Schema.Types.Decimal128,
+    get: val => val ? parseFloat(val.toString()) : 0,
+    description: 'Tax and fees (DAYTRIPBOOKING.FEE_TAX)'
+  },
+  surcharge: {
+    type: mongoose.Schema.Types.Decimal128,
+    get: val => val ? parseFloat(val.toString()) : 0,
+    description: 'Additional surcharge (DAYTRIPBOOKING.SURCHARGE)'
+  },
+  surchargeName: {
+    type: String,
+    trim: true,
+    description: 'Surcharge description (DAYTRIPBOOKING.SURCHARGENAME)'
+  },
+  total: {
+    type: mongoose.Schema.Types.Decimal128,
+    get: val => val ? parseFloat(val.toString()) : 0,
+    description: 'Total booking cost (DAYTRIPBOOKING.TOTAL)'
+  },
   pricing: {
     basePrice: { type: Number, required: true },
     adultPrice: { type: Number, required: true },
@@ -117,7 +219,17 @@ const BookingSchema = new mongoose.Schema({
     total: { type: Number, required: true },
     currency: { type: String, default: 'USD' }
   },
-  
+
+  // Payment (aligned with DAYTRIPBOOKING.cs)
+  paymentStatus: {
+    type: Number,
+    default: 0,
+    description: 'Payment status code (DAYTRIPBOOKING.PaymentStatus)'
+  },
+  paymentType: {
+    type: Number,
+    description: 'Payment type code (DAYTRIPBOOKING.PaymentType)'
+  },
   payment: {
     method: {
       type: String,
@@ -134,14 +246,64 @@ const BookingSchema = new mongoose.Schema({
     refundAmount: { type: Number, default: 0 },
     refundDate: { type: Date }
   },
+
+  // Refund Information (aligned with DAYTRIPBOOKING.cs)
+  isRefund: {
+    type: Boolean,
+    default: false,
+    description: 'Refund status (DAYTRIPBOOKING.ISREFUND)'
+  },
+  refundFee: {
+    type: mongoose.Schema.Types.Decimal128,
+    get: val => val ? parseFloat(val.toString()) : 0,
+    description: 'Refund fee amount (DAYTRIPBOOKING.RefundFee)'
+  },
   
+
+  // Additional Booking Details (aligned with DAYTRIPBOOKING.cs)
+  description: {
+    type: String,
+    trim: true,
+    description: 'Booking description/notes (DAYTRIPBOOKING.DESCRIPTION)'
+  },
+  specialRequest: {
+    type: String,
+    trim: true,
+    description: 'Special requests (DAYTRIPBOOKING.SpecialRequest)'
+  },
+  specialRequests: { type: String }, // Alias for compatibility
+
+  // System Fields (aligned with DAYTRIPBOOKING.cs)
+  amenBooking: {
+    type: Boolean,
+    default: false,
+    description: 'Amended booking flag (DAYTRIPBOOKING.AMENBOOKING)'
+  },
+  sendReceipt: {
+    type: Boolean,
+    default: false,
+    description: 'Receipt sent flag (DAYTRIPBOOKING.SENDRECEIPT)'
+  },
+  sendVoucher: {
+    type: Boolean,
+    default: false,
+    description: 'Voucher sent flag (DAYTRIPBOOKING.SENDVOUCHER)'
+  },
+  ipLocation: {
+    type: String,
+    trim: true,
+    description: 'IP location of booking (DAYTRIPBOOKING.IPLOCATION)'
+  },
+  editBy: {
+    type: Number,
+    description: 'User ID who edited (DAYTRIPBOOKING.EDITBY)'
+  },
+
   status: {
     type: String,
     enum: ['pending', 'confirmed', 'cancelled', 'completed', 'refunded'],
     default: 'pending'
   },
-  
-  specialRequests: { type: String },
   
   confirmation: {
     code: { type: String },
@@ -202,11 +364,19 @@ BookingSchema.pre('save', async function(next) {
 });
 
 // Indexes for efficient queries
+BookingSchema.index({ id: 1 });
 BookingSchema.index({ bookingId: 1 });
 BookingSchema.index({ bookingReference: 1 });
+BookingSchema.index({ receiptId: 1 });
+BookingSchema.index({ daytripId: 1 });
+BookingSchema.index({ customerId: 1 });
 BookingSchema.index({ 'customer.email': 1 });
 BookingSchema.index({ 'tour.tourId': 1 });
 BookingSchema.index({ status: 1 });
+BookingSchema.index({ paymentStatus: 1 });
 BookingSchema.index({ 'payment.status': 1 });
+BookingSchema.index({ date: -1 });
+BookingSchema.index({ checkIn: 1 });
+BookingSchema.index({ createdAt: -1 });
 
 export default mongoose.models.Booking || mongoose.model('Booking', BookingSchema);
