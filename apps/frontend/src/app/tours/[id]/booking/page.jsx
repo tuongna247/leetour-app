@@ -214,7 +214,7 @@ const BookingPage = () => {
       const apiBookingData = {
         tour: {
           tourId: bookingData.tour.tourId,
-          title: tour.title,
+          title: tour.name || tour.title,
           price: tour.price,
           selectedDate: bookingData.tour.date ? bookingData.tour.date.toISOString().split('T')[0] : null,
           selectedTimeSlot: bookingData.tour.timeSlot || '09:00 AM'
@@ -765,7 +765,7 @@ const BookingPage = () => {
                 {tour && (
                   <Box sx={{ mb: 2 }}>
                     <Typography variant="subtitle1" gutterBottom>
-                      {tour.title}
+                      {tour.name || tour.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" gutterBottom>
                       {tour.location.city}, {tour.location.country}

@@ -74,7 +74,7 @@ export async function GET(request) {
 
     // Build filter object based on user role
     let filter = {};
-    
+
     // Role-based filtering: mods can only see their own tours
     if (user.role === 'mod') {
       filter.createdBy = user._id;
@@ -82,12 +82,16 @@ export async function GET(request) {
     // Admins can see all tours, customers shouldn't access this endpoint
 
     // Filter by status for admin
-    if (status === 'active') {
-      filter.isActive = true;
-    } else if (status === 'inactive') {
+    // Default to 'active' if status is not specified for safety
+    if (status === 'inactive') {
       filter.isActive = false;
+    } else if (status === 'all') {
+      // Explicitly show all tours (both active and inactive)
+      // Don't add isActive filter
+    } else {
+      // Default case: show only active tours (includes when status='active' or undefined)
+      filter.isActive = true;
     }
-    // If status is 'all' or not specified, show all tours
 
     if (category) {
       filter.category = category;

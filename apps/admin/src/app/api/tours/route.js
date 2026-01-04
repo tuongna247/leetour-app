@@ -1,97 +1,77 @@
 import { NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
-import Tour from '@/models/Tour';
+
+// Proxy all tour requests to the centralized API server
+const API_SERVER_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export async function GET(request) {
   try {
-    await connectDB();
-    
     const { searchParams } = new URL(request.url);
-    
-    const page = parseInt(searchParams.get('page')) || 1;
-    const limit = Math.min(parseInt(searchParams.get('limit')) || 10, 100);
-    const category = searchParams.get('category');
-    const location = searchParams.get('location');
-    const minPrice = searchParams.get('minPrice');
-    const maxPrice = searchParams.get('maxPrice');
-    const search = searchParams.get('search');
-    const featured = searchParams.get('featured');
-    const sortBy = searchParams.get('sortBy') || searchParams.get('sort') || 'createdAt';
-    const sortOrder = searchParams.get('sortOrder') || 'desc';
+    const queryString = searchParams.toString();
 
-    // Build filter object
-    let filter = { isActive: true };
+    // Forward request to API server
+    const apiUrl = `${API_SERVER_URL}/api/tours${queryString ? `?${queryString}` : ''}`;
 
-    if (category) {
-      filter.category = category;
+    // Get auth token from request headers
+    const authHeader = request.headers.get('authorization');
+
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
     }
 
-    if (location) {
-      filter.location = { $regex: location, $options: 'i' };
-    }
-
-    if (minPrice || maxPrice) {
-      filter.price = {};
-      if (minPrice) filter.price.$gte = parseFloat(minPrice);
-      if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
-    }
-
-    if (search) {
-      filter.$text = { $search: search };
-    }
-
-    if (featured === 'true') {
-      filter.isFeatured = true;
-    }
-
-    // Build sort object
-    const sort = {};
-    
-    // Handle special sort cases
-    if (sortBy === 'latest') {
-      sort['createdAt'] = -1;
-    } else if (sortBy === 'price_low') {
-      sort['price'] = 1;
-    } else if (sortBy === 'price_high') {
-      sort['price'] = -1;
-    } else if (sortBy === 'rating') {
-      sort['averageRating'] = -1;
-    } else {
-      sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
-    }
-
-    // Execute query with pagination
-    const skip = (page - 1) * limit;
-    const tours = await Tour.find(filter)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .select('-reviews'); // Exclude reviews for performance
-
-    const total = await Tour.countDocuments(filter);
-
-    return NextResponse.json({
-      status: 200,
-      data: {
-        tours,
-        totalPages: Math.ceil(total / limit),
-        currentPage: page,
-        total,
-        pagination: {
-          page,
-          limit,
-          total,
-          pages: Math.ceil(total / limit)
-        }
-      },
-      msg: 'success'
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers,
     });
 
+    const data = await response.json();
+
+    return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error('Get tours error:', error);
+    console.error('Proxy error:', error);
     return NextResponse.json({
       status: 500,
-      msg: 'Failed to fetch tours',
+      msg: 'Failed to fetch tours from API server',
+      error: error.message
+    }, { status: 500 });
+  }
+}
+
+export async function POST(request) {
+  try {
+    const body = await request.json();
+
+    // Forward request to API server
+    const apiUrl = `${API_SERVER_URL}/api/tours`;
+
+    // Get auth token from request headers
+    const authHeader = request.headers.get('authorization');
+
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+
+    return NextResponse.json(data, { status: response.status });
+  } catch (error) {
+    console.error('Proxy error:', error);
+    return NextResponse.json({
+      status: 500,
+      msg: 'Failed to create tour on API server',
       error: error.message
     }, { status: 500 });
   }

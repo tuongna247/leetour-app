@@ -87,7 +87,7 @@ export default function AdminToursPage() {
         ...(categoryFilter && { category: categoryFilter })
       });
 
-      const response = await authenticatedFetch(`/api/admin/tours?${params}`);
+      const response = await authenticatedFetch(`/api/tours?admin=true&${params}`);
       const data = await response.json();
 
       if (data.status === 200) {
@@ -116,7 +116,7 @@ export default function AdminToursPage() {
   const handleDeleteTour = async (tourId) => {
     try {
       console.log('Attempting to delete tour:', tourId);
-      const response = await authenticatedFetch(`/api/admin/tours/${tourId}`, {
+      const response = await authenticatedFetch(`/api/tours/${tourId}`, {
         method: 'DELETE',
       });
 
@@ -319,12 +319,12 @@ export default function AdminToursPage() {
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         <Avatar
                           src={tour.images?.[0]?.url}
-                          alt={tour.title}
+                          alt={tour.name || tour.title}
                           sx={{ width: 50, height: 50 }}
                         />
                         <Box>
                           <Typography variant="subtitle2" noWrap>
-                            {tour.title}
+                            {tour.name || tour.title}
                             {tour.isFeatured && (
                               <StarIcon sx={{ ml: 1, color: 'warning.main', fontSize: 16 }} />
                             )}
@@ -433,7 +433,7 @@ export default function AdminToursPage() {
         <DialogTitle>Delete Tour</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete &quot;{deleteDialog.tour?.title}&quot;? This action cannot be undone.
+            Are you sure you want to delete &quot;{deleteDialog.tour?.name || deleteDialog.tour?.title}&quot;? This action cannot be undone.
           </Typography>
         </DialogContent>
         <DialogActions>

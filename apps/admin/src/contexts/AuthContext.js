@@ -75,9 +75,8 @@ const authReducer = (state, action) => {
 // Create context
 const AuthContext = createContext();
 
-// API base URL - using Next.js API routes
-const API_BASE_URL = typeof window !== 'undefined' ? window.location.origin : 
-  process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001';
+// API base URL - using centralized API server
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 // Auth provider component
 export const AuthProvider = ({ children }) => {

@@ -22,7 +22,9 @@ const ToursContent = () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
       const queryString = searchParams.toString();
-      const response = await fetch(`${apiUrl}/api/tours?${queryString}`);
+      // Add limit parameter to fetch all active tours (default is 10)
+      const separator = queryString ? '&' : '';
+      const response = await fetch(`${apiUrl}/api/tours?${queryString}${separator}limit=100`);
       const data = await response.json();
 
       if (data.status === 200) {

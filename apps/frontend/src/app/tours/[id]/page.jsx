@@ -283,7 +283,7 @@ const TourDetailPage = () => {
   const tourImages = tour.images || [];
   const currentImage = tourImages[currentImageIndex] || {
     url: '/images/tours/default-tour.jpg',
-    alt: tour.title
+    alt: tour.name || tour.title
   };
   const reviews = tour.reviews || [];
   const averageRating = reviews.length > 0
@@ -306,7 +306,7 @@ const TourDetailPage = () => {
           <Link underline="hover" color="inherit" href="/tours">
             Tours &amp; Day Trips
           </Link>
-          <Typography color="text.primary">{tour.title}</Typography>
+          <Typography color="text.primary">{tour.name || tour.title}</Typography>
         </MuiBreadcrumbs>
 
         {/* Tour Title and Info */}
@@ -320,7 +320,7 @@ const TourDetailPage = () => {
               mb: 1
             }}
           >
-            {tour.title}
+            {tour.name || tour.title}
           </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -363,7 +363,7 @@ const TourDetailPage = () => {
                     height: '100%',
                     objectFit: 'cover',
                   }}
-                  alt={currentImage.alt || tour.title}
+                  alt={currentImage.alt || tour.name || tour.title}
                   src={currentImage.url}
                 />
 
@@ -622,7 +622,7 @@ const TourDetailPage = () => {
 
           {/* Detailed Itinerary */}
           <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-            Detailed Itinerary of {tour.title}
+            Detailed Itinerary of {tour.name || tour.title}
           </Typography>
           {tour.itinerary && tour.itinerary.map((day, index) => (
             <Box key={index} sx={{ mb: 3 }}>

@@ -92,7 +92,7 @@ export default function EditTourPage() {
     const fetchTour = async () => {
       try {
         setLoading(true);
-        const response = await authenticatedFetch(`/api/admin/tours/${tourId}`);
+        const response = await authenticatedFetch(`/api/tours/${tourId}?admin=true`);
         const data = await response.json();
 
         if (data.status === 200) {
@@ -170,8 +170,8 @@ export default function EditTourPage() {
       setSaving(true);
 
       // Validate required fields
-      if (!formData.title || !formData.description || !formData.price || !formData.location?.city) {
-        showAlert('Please fill in all required fields', 'error');
+      if (!formData.name || !formData.description || !formData.price || !formData.location?.city) {
+        showAlert('Please fill in all required fields (Name, Description, Price, City)', 'error');
         setSaving(false);
         return;
       }
@@ -184,7 +184,7 @@ export default function EditTourPage() {
         highlights: formData.highlights.filter(item => item.trim())
       };
 
-      const response = await fetch(`/api/admin/tours/${tourId}`, {
+      const response = await authenticatedFetch(`/api/tours/${tourId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -400,13 +400,23 @@ export default function EditTourPage() {
                 Basic Information
               </Typography>
               <Grid container spacing={2}>
+                <Grid size={{ xs: 12 }}>
+                  <TextField
+                    fullWidth
+                    label="Tour Name *"
+                    value={formData.name || ''}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    required
+                    helperText="Primary tour name (displayed on frontend)"
+                  />
+                </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     fullWidth
-                    label="Tour Title *"
-                    value={formData.title}
+                    label="Tour Title"
+                    value={formData.title || ''}
                     onChange={(e) => handleInputChange('title', e.target.value)}
-                    required
+                    helperText="Alternative title (optional, syncs with name)"
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>

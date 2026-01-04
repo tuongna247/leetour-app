@@ -28,7 +28,7 @@ const TourCardTailwind = ({ tour }) => {
         <div className="relative">
           <img
             src={primaryImage?.url || '/images/tours/default-tour.jpg'}
-            alt={tour.title}
+            alt={tour.name || tour.title}
             className="w-full h-48 object-cover"
             loading="lazy"
             onError={(e) => {
@@ -60,7 +60,7 @@ const TourCardTailwind = ({ tour }) => {
               {hasHalfStar && <i className="fas fa-star-half-alt text-yellow-400"></i>}
             </span>
           </div>
-          <h3 className="font-bold text-sm mb-2">{tour.title}</h3>
+          <h3 className="font-bold text-sm mb-2">{tour.name || tour.title}</h3>
           <div className="flex justify-between items-end mt-4">
             <div>
               <span className="text-xs text-gray-500">from</span>

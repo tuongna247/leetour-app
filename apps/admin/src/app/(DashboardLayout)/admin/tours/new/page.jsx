@@ -197,7 +197,7 @@ export default function AddNewTourPage() {
         images: formData.images.filter(img => img.url.trim())
       };
 
-      const response = await authenticatedFetch('/api/admin/tours', {
+      const response = await authenticatedFetch('/api/tours', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

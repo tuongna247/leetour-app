@@ -1,32 +1,115 @@
 import { NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
-import Tour from '@/models/Tour';
+
+// Proxy all tour detail requests to the centralized API server
+const API_SERVER_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export async function GET(request, { params }) {
   try {
-    await connectDB();
-    const { id } = await params;
+    const { id } = params;
+    const { searchParams } = new URL(request.url);
+    const queryString = searchParams.toString();
 
-    const tour = await Tour.findOne({ _id: id, isActive: true });
-    
-    if (!tour) {
-      return NextResponse.json({
-        status: 404,
-        msg: 'Tour not found'
-      }, { status: 404 });
+    // Forward request to API server
+    const apiUrl = `${API_SERVER_URL}/api/tours/${id}${queryString ? `?${queryString}` : ''}`;
+
+    // Get auth token from request headers
+    const authHeader = request.headers.get('authorization');
+
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
     }
 
-    return NextResponse.json({
-      status: 200,
-      data: tour,
-      msg: 'success'
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers,
     });
 
+    const data = await response.json();
+
+    return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error('Get tour error:', error);
+    console.error('Proxy error:', error);
     return NextResponse.json({
       status: 500,
-      msg: 'Failed to fetch tour',
+      msg: 'Failed to fetch tour from API server',
+      error: error.message
+    }, { status: 500 });
+  }
+}
+
+export async function PUT(request, { params }) {
+  try {
+    const { id } = params;
+    const body = await request.json();
+
+    // Forward request to API server
+    const apiUrl = `${API_SERVER_URL}/api/tours/${id}`;
+
+    // Get auth token from request headers
+    const authHeader = request.headers.get('authorization');
+
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
+
+    const response = await fetch(apiUrl, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+
+    return NextResponse.json(data, { status: response.status });
+  } catch (error) {
+    console.error('Proxy error:', error);
+    return NextResponse.json({
+      status: 500,
+      msg: 'Failed to update tour on API server',
+      error: error.message
+    }, { status: 500 });
+  }
+}
+
+export async function DELETE(request, { params }) {
+  try {
+    const { id } = params;
+
+    // Forward request to API server
+    const apiUrl = `${API_SERVER_URL}/api/tours/${id}`;
+
+    // Get auth token from request headers
+    const authHeader = request.headers.get('authorization');
+
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
+
+    const response = await fetch(apiUrl, {
+      method: 'DELETE',
+      headers,
+    });
+
+    const data = await response.json();
+
+    return NextResponse.json(data, { status: response.status });
+  } catch (error) {
+    console.error('Proxy error:', error);
+    return NextResponse.json({
+      status: 500,
+      msg: 'Failed to delete tour on API server',
       error: error.message
     }, { status: 500 });
   }
