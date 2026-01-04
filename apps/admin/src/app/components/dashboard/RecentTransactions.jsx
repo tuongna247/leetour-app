@@ -21,7 +21,8 @@ const RecentTransactions = () => {
   useEffect(() => {
     const fetchRecentBookings = async () => {
       try {
-        const response = await fetch('/api/bookings?limit=6');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const response = await fetch(`${apiUrl}/api/bookings?limit=6`);
         const data = await response.json();
         if (data.status === 200) {
           setBookings(data.data.bookings);

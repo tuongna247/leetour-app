@@ -30,7 +30,8 @@ const ProductPerformance = () => {
     const fetchTours = async () => {
         try {
             setLoading(true);
-            const response = await fetch('/api/tours?limit=10&sortBy=createdAt&sortOrder=desc');
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const response = await fetch(`${apiUrl}/api/tours?limit=10&sortBy=createdAt&sortOrder=desc`);
             const data = await response.json();
             
             if (data.status === 200) {
