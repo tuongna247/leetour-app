@@ -286,7 +286,10 @@ export const AuthProvider = ({ children }) => {
 
   // Authenticated fetch function
   const authenticatedFetch = async (url, options = {}) => {
-    console.log('🔐 AuthenticatedFetch called:', { url, method: options.method || 'GET' });
+    // Convert relative URLs to absolute URLs pointing to API server
+    const absoluteUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
+
+    console.log('🔐 AuthenticatedFetch called:', { url, absoluteUrl, method: options.method || 'GET' });
     console.log('🔐 Current auth state:', {
       hasToken: !!state.token,
       tokenPreview: state.token?.substring(0, 20) + '...',
@@ -308,7 +311,7 @@ export const AuthProvider = ({ children }) => {
         },
       };
 
-      const response = await fetch(url, config);
+      const response = await fetch(absoluteUrl, config);
       console.log('🔐 Response status:', response.status);
 
       // If unauthorized, logout user
@@ -341,7 +344,7 @@ export const AuthProvider = ({ children }) => {
       };
 
       console.log('🔐 Request with Bearer token');
-      const response = await fetch(url, config);
+      const response = await fetch(absoluteUrl, config);
       console.log('🔐 Response status:', response.status);
 
       // If unauthorized, logout user

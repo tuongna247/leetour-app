@@ -3,7 +3,7 @@ import connectDB from '@/lib/mongodb';
 import Tour from '@/models/Tour';
 
 /**
- * GET /api/admin/tours/[id]/images
+ * GET /api/tours/[id]/images
  * Get all images for a tour
  */
 export async function GET(request, { params }) {
@@ -39,7 +39,7 @@ export async function GET(request, { params }) {
 }
 
 /**
- * POST /api/admin/tours/[id]/images
+ * POST /api/tours/[id]/images
  * Upload new images for a tour
  */
 export async function POST(request, { params }) {
@@ -194,7 +194,7 @@ export async function POST(request, { params }) {
 }
 
 /**
- * DELETE /api/admin/tours/[id]/images?imageId=xxx
+ * DELETE /api/tours/[id]/images?imageId=xxx
  * Delete an image
  */
 export async function DELETE(request, { params }) {

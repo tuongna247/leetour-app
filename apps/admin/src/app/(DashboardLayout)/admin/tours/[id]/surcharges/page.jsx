@@ -46,7 +46,7 @@ export default function TourSurchargesPage() {
   const fetchTour = async () => {
     try {
       setLoading(true);
-      const response = await authenticatedFetch(`/api/admin/tours/${tourId}`);
+      const response = await authenticatedFetch(`//${tourId}`);
       const data = await response.json();
 
       if (data.status === 200) {
@@ -72,7 +72,7 @@ export default function TourSurchargesPage() {
     try {
       setSaving(true);
 
-      const response = await authenticatedFetch(`/api/admin/tours/${tourId}`, {
+      const response = await authenticatedFetch(`/api/tours/${tourId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ surcharges }),

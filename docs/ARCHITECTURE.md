@@ -343,7 +343,7 @@ Developer Machine                    GitHub                    Production Server
 1. Admin creates tour
    Admin Dashboard (admin.goreise.com)
    │
-   │ POST /api/admin/tours
+   │ POST /api/tours
    │ with tour data + images
    │
    ▼

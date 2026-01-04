@@ -3,7 +3,7 @@ import Tour from '@/models/Tour';
 import dbConnect from '@/lib/mongodb';
 
 /**
- * GET /api/admin/tours/[id]/itineraries
+ * GET /api/tours/[id]/itineraries
  * Get all itineraries for a tour
  */
 export async function GET(request, { params }) {
@@ -39,7 +39,7 @@ export async function GET(request, { params }) {
 }
 
 /**
- * POST /api/admin/tours/[id]/itineraries
+ * POST /api/tours/[id]/itineraries
  * Add a new itinerary day to a tour
  */
 export async function POST(request, { params }) {
@@ -110,7 +110,7 @@ export async function POST(request, { params }) {
 }
 
 /**
- * PUT /api/admin/tours/[id]/itineraries
+ * PUT /api/tours/[id]/itineraries
  * Update an existing itinerary day
  */
 export async function PUT(request, { params }) {
@@ -177,7 +177,7 @@ export async function PUT(request, { params }) {
 }
 
 /**
- * DELETE /api/admin/tours/[id]/itineraries?itineraryId=xxx
+ * DELETE /api/tours/[id]/itineraries?itineraryId=xxx
  * Delete an itinerary day
  */
 export async function DELETE(request, { params }) {

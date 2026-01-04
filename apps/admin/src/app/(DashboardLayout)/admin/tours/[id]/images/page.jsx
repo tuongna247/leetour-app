@@ -65,7 +65,7 @@ export default function TourImagesPage() {
     const fetchTourImages = async () => {
       try {
         setLoading(true);
-        const response = await authenticatedFetch(`/api/admin/tours/${tourId}`);
+        const response = await authenticatedFetch(`/api/tours/${tourId}`);
         const data = await response.json();
 
         if (data.status === 200) {
@@ -98,7 +98,7 @@ export default function TourImagesPage() {
     try {
       setSaving(true);
 
-      const response = await fetch(`/api/admin/tours/${tourId}`, {
+      const response = await fetch(`/api/tours/${tourId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

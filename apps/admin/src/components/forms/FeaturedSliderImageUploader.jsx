@@ -45,7 +45,7 @@ export default function FeaturedSliderImageUploader({
       }
 
       // Call the upload API
-      const response = await fetch(`/api/admin/tours/${tourId}/images`, {
+      const response = await fetch(`/api/tours/${tourId}/images`, {
         method: 'POST',
         body: formData
       });

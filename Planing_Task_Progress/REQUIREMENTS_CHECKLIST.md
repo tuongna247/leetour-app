@@ -18,7 +18,7 @@
   - Base price
   - Pricing tiers based on passenger count
   - Active/inactive status
-- ✅ **API**: [/api/admin/tours/[id]/options](apps/api/src/app/api/admin/tours/[id]/options/)
+- ✅ **API**: [/api/tours/[id]/options](apps/api/src/app/api/tours/[id]/options/)
   - Already existed (confirmed in git status)
 - ✅ **UI**: [TourOptionsSection.jsx](apps/admin/src/components/forms/TourOptionsSection.jsx)
   - Already existed
@@ -34,7 +34,7 @@
   - Amount type (percentage, fixed)
   - Amount value
   - Active/inactive status
-- ✅ **API**: [/api/admin/tours/[id]/surcharges](apps/api/src/app/api/admin/tours/[id]/surcharges/route.js)
+- ✅ **API**: [/api/tours/[id]/surcharges](apps/api/src/app/api/tours/[id]/surcharges/route.js)
   - GET - List all surcharges
   - POST - Create surcharge
   - PUT - Update surcharge
@@ -58,7 +58,7 @@
   - Valid date range
   - Days before departure (for early bird/last minute)
   - Minimum passengers (for group discount)
-- ✅ **API**: [/api/admin/tours/[id]/promotions](apps/api/src/app/api/admin/tours/[id]/promotions/route.js)
+- ✅ **API**: [/api/tours/[id]/promotions](apps/api/src/app/api/tours/[id]/promotions/route.js)
   - GET - List all promotions
   - POST - Create promotion
   - PUT - Update promotion
@@ -81,7 +81,7 @@
   - Refund percentage
   - Description
   - Display order
-- ✅ **API**: [/api/admin/tours/[id]/cancellation-policies](apps/api/src/app/api/admin/tours/[id]/cancellation-policies/route.js)
+- ✅ **API**: [/api/tours/[id]/cancellation-policies](apps/api/src/app/api/tours/[id]/cancellation-policies/route.js)
   - GET - List all policies
   - POST - Create policy
   - PUT - Update policy
@@ -130,7 +130,7 @@
   - Image validation (type, size max 10MB)
   - Multiple upload support
   - Delete functionality
-- ✅ **API**: [/api/admin/tours/[id]/images](apps/api/src/app/api/admin/tours/[id]/images/route.js)
+- ✅ **API**: [/api/tours/[id]/images](apps/api/src/app/api/tours/[id]/images/route.js)
   - GET - List all images
   - POST - Upload new image (with imageType)
   - PUT - Update image metadata
@@ -174,7 +174,7 @@
   - Meals (breakfast, lunch, dinner)
   - Accommodation
   - Timestamps
-- ✅ **API**: [/api/admin/tours/[id]/itineraries](apps/api/src/app/api/admin/tours/[id]/itineraries/route.js)
+- ✅ **API**: [/api/tours/[id]/itineraries](apps/api/src/app/api/tours/[id]/itineraries/route.js)
   - GET - List all itinerary days
   - POST - Add new day
   - PUT - Update day
@@ -460,11 +460,11 @@
 4. [pdfGenerator.js](apps/api/src/utils/pdfGenerator.js) - New
 
 ### API Routes (10)
-1. [itineraries/route.js](apps/api/src/app/api/admin/tours/[id]/itineraries/route.js)
-2. [surcharges/route.js](apps/api/src/app/api/admin/tours/[id]/surcharges/route.js)
-3. [promotions/route.js](apps/api/src/app/api/admin/tours/[id]/promotions/route.js)
-4. [cancellation-policies/route.js](apps/api/src/app/api/admin/tours/[id]/cancellation-policies/route.js)
-5. [images/route.js](apps/api/src/app/api/admin/tours/[id]/images/route.js)
+1. [itineraries/route.js](apps/api/src/app/api/tours/[id]/itineraries/route.js)
+2. [surcharges/route.js](apps/api/src/app/api/tours/[id]/surcharges/route.js)
+3. [promotions/route.js](apps/api/src/app/api/tours/[id]/promotions/route.js)
+4. [cancellation-policies/route.js](apps/api/src/app/api/tours/[id]/cancellation-policies/route.js)
+5. [images/route.js](apps/api/src/app/api/tours/[id]/images/route.js)
 6. [reviews/route.js](apps/api/src/app/api/tours/[id]/reviews/route.js)
 7. [admin/reviews/route.js](apps/api/src/app/api/admin/reviews/route.js)
 8. [admin/reviews/[id]/route.js](apps/api/src/app/api/admin/reviews/[id]/route.js)

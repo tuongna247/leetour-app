@@ -85,7 +85,7 @@ export default function TourPricingManagementPage() {
   const fetchTourPricing = async () => {
     try {
       setLoading(true);
-      const response = await authenticatedFetch(`/api/admin/tours/${tourId}`);
+      const response = await authenticatedFetch(`/api/tours/${tourId}`);
       const data = await response.json();
 
       if (data.status === 200) {
@@ -117,7 +117,7 @@ export default function TourPricingManagementPage() {
     try {
       setSaving(true);
 
-      const response = await authenticatedFetch(`/api/admin/tours/${tourId}`, {
+      const response = await authenticatedFetch(`/api/tours/${tourId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

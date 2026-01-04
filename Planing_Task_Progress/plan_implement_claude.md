@@ -511,7 +511,7 @@ ALTER TABLE bookings ADD COLUMN staff_user_id UUID REFERENCES users(id);
   - Location: [apps/admin/src/models/Tour.js](apps/admin/src/models/Tour.js)
   - Location: [apps/api/src/models/Tour.js](apps/api/src/models/Tour.js)
 - **API Endpoints**: Tour options CRUD endpoints implemented
-  - Admin API: [apps/api/src/app/api/admin/tours/[id]/options/](apps/api/src/app/api/admin/tours/[id]/options/)
+  - Admin API: [apps/api/src/app/api/tours/[id]/options/](apps/api/src/app/api/tours/[id]/options/)
   - Public API: [apps/api/src/app/api/tours/[id]/options/](apps/api/src/app/api/tours/[id]/options/)
 - **Pricing Calculator**: Dynamic pricing calculation utility
   - Location: [apps/api/src/utils/pricingCalculator.js](apps/api/src/utils/pricingCalculator.js)
@@ -580,7 +580,7 @@ ALTER TABLE bookings ADD COLUMN staff_user_id UUID REFERENCES users(id);
    - [ ] Display images on frontend tour pages
 
 3. **Files to Create/Modify**
-   - `apps/api/src/app/api/admin/tours/[id]/images/route.js` (new)
+   - `apps/api/src/app/api/tours/[id]/images/route.js` (new)
    - `apps/api/src/utils/imageUpload.js` (new)
    - `apps/admin/src/components/forms/TourImageUploader.jsx` (new)
    - `apps/frontend/src/components/TourImageGallery.jsx` (new)
@@ -613,7 +613,7 @@ ALTER TABLE bookings ADD COLUMN staff_user_id UUID REFERENCES users(id);
    - [ ] Add reordering capability
 
 3. **Files to Create/Modify**
-   - `apps/api/src/app/api/admin/tours/[id]/itineraries/route.js` (new)
+   - `apps/api/src/app/api/tours/[id]/itineraries/route.js` (new)
    - `apps/admin/src/components/forms/ItineraryEditor.jsx` (new)
    - `apps/frontend/src/components/TourItinerary.jsx` (new)
 
@@ -631,7 +631,7 @@ ALTER TABLE bookings ADD COLUMN staff_user_id UUID REFERENCES users(id);
 
 2. **Files to Create/Modify**
    - `apps/api/src/models/Surcharge.js` (new)
-   - `apps/api/src/app/api/admin/tours/[id]/surcharges/route.js` (new)
+   - `apps/api/src/app/api/tours/[id]/surcharges/route.js` (new)
    - `apps/admin/src/components/forms/SurchargeManager.jsx` (new)
    - Update: `apps/api/src/utils/pricingCalculator.js`
 
@@ -650,7 +650,7 @@ ALTER TABLE bookings ADD COLUMN staff_user_id UUID REFERENCES users(id);
 
 2. **Files to Create/Modify**
    - `apps/api/src/models/Promotion.js` (new)
-   - `apps/api/src/app/api/admin/tours/[id]/promotions/route.js` (new)
+   - `apps/api/src/app/api/tours/[id]/promotions/route.js` (new)
    - `apps/admin/src/components/forms/PromotionManager.jsx` (new)
    - Update: `apps/api/src/utils/pricingCalculator.js`
 

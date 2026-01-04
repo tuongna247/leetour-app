@@ -3,7 +3,7 @@ import Tour from '@/models/Tour';
 import dbConnect from '@/lib/mongodb';
 
 /**
- * GET /api/admin/tours/[id]/promotions
+ * GET /api/tours/[id]/promotions
  * Get all promotions for a tour
  */
 export async function GET(request, { params }) {
@@ -36,7 +36,7 @@ export async function GET(request, { params }) {
 }
 
 /**
- * POST /api/admin/tours/[id]/promotions
+ * POST /api/tours/[id]/promotions
  * Add a new promotion to a tour
  */
 export async function POST(request, { params }) {
@@ -121,7 +121,7 @@ export async function POST(request, { params }) {
 }
 
 /**
- * PUT /api/admin/tours/[id]/promotions
+ * PUT /api/tours/[id]/promotions
  * Update an existing promotion
  */
 export async function PUT(request, { params }) {
@@ -213,7 +213,7 @@ export async function PUT(request, { params }) {
 }
 
 /**
- * DELETE /api/admin/tours/[id]/promotions?promotionId=xxx
+ * DELETE /api/tours/[id]/promotions?promotionId=xxx
  * Delete a promotion
  */
 export async function DELETE(request, { params }) {

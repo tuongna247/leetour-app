@@ -4,7 +4,7 @@ import dbConnect from '@/lib/mongodb';
 import { uploadImage, deleteImageFromCloudinary } from '@/utils/imageUpload';
 
 /**
- * GET /api/admin/tours/[id]/images
+ * GET /api/tours/[id]/images
  * Get all images for a tour
  */
 export async function GET(request, { params }) {
@@ -37,7 +37,7 @@ export async function GET(request, { params }) {
 }
 
 /**
- * POST /api/admin/tours/[id]/images
+ * POST /api/tours/[id]/images
  * Upload new images for a tour
  */
 export async function POST(request, { params }) {
@@ -121,7 +121,7 @@ export async function POST(request, { params }) {
 }
 
 /**
- * PUT /api/admin/tours/[id]/images
+ * PUT /api/tours/[id]/images
  * Update image metadata (alt, type, order, primary)
  */
 export async function PUT(request, { params }) {
@@ -198,7 +198,7 @@ export async function PUT(request, { params }) {
 }
 
 /**
- * DELETE /api/admin/tours/[id]/images?imageId=xxx
+ * DELETE /api/tours/[id]/images?imageId=xxx
  * Delete an image
  */
 export async function DELETE(request, { params }) {

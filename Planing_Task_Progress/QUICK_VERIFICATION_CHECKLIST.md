@@ -5,7 +5,7 @@
 ### ✅ Code Changes Completed
 
 - [x] **API PATCH Handler Added**
-  - File: `apps/admin/src/app/api/admin/tours/[id]/route.js`
+  - File: `apps/admin/src/app/api/tours/[id]/route.js`
   - Lines: 91-129
   - Method: PATCH
   - Purpose: Partial updates for pricing data
@@ -99,10 +99,10 @@
 ### API Endpoints
 ```bash
 # Test GET (should work)
-curl http://localhost:3000/api/admin/tours/[TOUR_ID]
+curl http://localhost:3000/api/tours/[TOUR_ID]
 
 # Test PATCH (NEW - should work now)
-curl -X PATCH http://localhost:3000/api/admin/tours/[TOUR_ID] \
+curl -X PATCH http://localhost:3000/api/tours/[TOUR_ID] \
   -H "Content-Type: application/json" \
   -d '{"surcharges": []}'
 
@@ -123,7 +123,7 @@ curl -X PATCH http://localhost:3000/api/admin/tours/[TOUR_ID] \
 ### Console Check
 - Open browser DevTools → Console
 - No errors expected
-- PATCH request to `/api/admin/tours/[id]` should return 200
+- PATCH request to `/api/tours/[id]` should return 200
 
 ---
 

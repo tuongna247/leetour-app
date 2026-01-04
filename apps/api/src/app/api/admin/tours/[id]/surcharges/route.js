@@ -3,7 +3,7 @@ import Tour from '@/models/Tour';
 import dbConnect from '@/lib/mongodb';
 
 /**
- * GET /api/admin/tours/[id]/surcharges
+ * GET /api/tours/[id]/surcharges
  * Get all surcharges for a tour
  */
 export async function GET(request, { params }) {
@@ -36,7 +36,7 @@ export async function GET(request, { params }) {
 }
 
 /**
- * POST /api/admin/tours/[id]/surcharges
+ * POST /api/tours/[id]/surcharges
  * Add a new surcharge to a tour
  */
 export async function POST(request, { params }) {
@@ -113,7 +113,7 @@ export async function POST(request, { params }) {
 }
 
 /**
- * PUT /api/admin/tours/[id]/surcharges
+ * PUT /api/tours/[id]/surcharges
  * Update an existing surcharge
  */
 export async function PUT(request, { params }) {
@@ -197,7 +197,7 @@ export async function PUT(request, { params }) {
 }
 
 /**
- * DELETE /api/admin/tours/[id]/surcharges?surchargeId=xxx
+ * DELETE /api/tours/[id]/surcharges?surchargeId=xxx
  * Delete a surcharge
  */
 export async function DELETE(request, { params }) {

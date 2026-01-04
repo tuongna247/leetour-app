@@ -3,7 +3,7 @@ import Tour from '@/models/Tour';
 import dbConnect from '@/lib/mongodb';
 
 /**
- * GET /api/admin/tours/[id]/cancellation-policies
+ * GET /api/tours/[id]/cancellation-policies
  * Get all cancellation policies for a tour
  */
 export async function GET(request, { params }) {
@@ -41,7 +41,7 @@ export async function GET(request, { params }) {
 }
 
 /**
- * POST /api/admin/tours/[id]/cancellation-policies
+ * POST /api/tours/[id]/cancellation-policies
  * Add a new cancellation policy to a tour
  */
 export async function POST(request, { params }) {
@@ -127,7 +127,7 @@ export async function POST(request, { params }) {
 }
 
 /**
- * PUT /api/admin/tours/[id]/cancellation-policies
+ * PUT /api/tours/[id]/cancellation-policies
  * Update an existing cancellation policy
  */
 export async function PUT(request, { params }) {
@@ -209,7 +209,7 @@ export async function PUT(request, { params }) {
 }
 
 /**
- * DELETE /api/admin/tours/[id]/cancellation-policies?policyId=xxx
+ * DELETE /api/tours/[id]/cancellation-policies?policyId=xxx
  * Delete a cancellation policy
  */
 export async function DELETE(request, { params }) {

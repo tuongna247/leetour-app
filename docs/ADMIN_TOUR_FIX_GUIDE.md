@@ -35,7 +35,7 @@ The admin server is already running at: **http://localhost:3000**
 4. Click "Create Tour"
 5. **Open Browser Console (F12)** and look for:
    ```
-   🔐 AuthenticatedFetch called: {url: '/api/admin/tours', method: 'POST'}
+   🔐 AuthenticatedFetch called: {url: '/api/tours', method: 'POST'}
    🔐 Current auth state: {...}
    🔐 Response status: XXX
    Create tour response status: XXX
@@ -48,7 +48,7 @@ The admin server is already running at: **http://localhost:3000**
 3. Confirm deletion
 4. **Open Browser Console (F12)** and look for:
    ```
-   🔐 AuthenticatedFetch called: {url: '/api/admin/tours/[id]', method: 'DELETE'}
+   🔐 AuthenticatedFetch called: {url: '/api/tours/[id]', method: 'DELETE'}
    Attempting to delete tour: [id]
    Delete response status: XXX
    Delete response data: {...}

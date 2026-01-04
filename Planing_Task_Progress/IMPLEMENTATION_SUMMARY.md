@@ -114,13 +114,13 @@ This document summarizes the implementation of new features for the Leetour Tour
 ### 3. API Endpoints
 
 #### Tour Itinerary Management
-**File**: [apps/api/src/app/api/admin/tours/[id]/itineraries/route.js](apps/api/src/app/api/admin/tours/[id]/itineraries/route.js)
+**File**: [apps/api/src/app/api/tours/[id]/itineraries/route.js](apps/api/src/app/api/tours/[id]/itineraries/route.js)
 
 **Endpoints**:
-- ✅ `GET /api/admin/tours/[id]/itineraries` - Get all itinerary days
-- ✅ `POST /api/admin/tours/[id]/itineraries` - Add new itinerary day
-- ✅ `PUT /api/admin/tours/[id]/itineraries` - Update itinerary day
-- ✅ `DELETE /api/admin/tours/[id]/itineraries?itineraryId=xxx` - Delete itinerary day
+- ✅ `GET /api/tours/[id]/itineraries` - Get all itinerary days
+- ✅ `POST /api/tours/[id]/itineraries` - Add new itinerary day
+- ✅ `PUT /api/tours/[id]/itineraries` - Update itinerary day
+- ✅ `DELETE /api/tours/[id]/itineraries?itineraryId=xxx` - Delete itinerary day
 
 **Features**:
 - Automatic sorting by day number
@@ -128,13 +128,13 @@ This document summarizes the implementation of new features for the Leetour Tour
 - Rich itinerary data (meals, activities, accommodation)
 
 #### Surcharge Management
-**File**: [apps/api/src/app/api/admin/tours/[id]/surcharges/route.js](apps/api/src/app/api/admin/tours/[id]/surcharges/route.js)
+**File**: [apps/api/src/app/api/tours/[id]/surcharges/route.js](apps/api/src/app/api/tours/[id]/surcharges/route.js)
 
 **Endpoints**:
-- ✅ `GET /api/admin/tours/[id]/surcharges` - Get all surcharges
-- ✅ `POST /api/admin/tours/[id]/surcharges` - Add new surcharge
-- ✅ `PUT /api/admin/tours/[id]/surcharges` - Update surcharge
-- ✅ `DELETE /api/admin/tours/[id]/surcharges?surchargeId=xxx` - Delete surcharge
+- ✅ `GET /api/tours/[id]/surcharges` - Get all surcharges
+- ✅ `POST /api/tours/[id]/surcharges` - Add new surcharge
+- ✅ `PUT /api/tours/[id]/surcharges` - Update surcharge
+- ✅ `DELETE /api/tours/[id]/surcharges?surchargeId=xxx` - Delete surcharge
 
 **Features**:
 - Date range validation
@@ -142,13 +142,13 @@ This document summarizes the implementation of new features for the Leetour Tour
 - Multiple surcharge types (holiday, weekend, peak_season, special_event, custom)
 
 #### Promotion Management
-**File**: [apps/api/src/app/api/admin/tours/[id]/promotions/route.js](apps/api/src/app/api/admin/tours/[id]/promotions/route.js)
+**File**: [apps/api/src/app/api/tours/[id]/promotions/route.js](apps/api/src/app/api/tours/[id]/promotions/route.js)
 
 **Endpoints**:
-- ✅ `GET /api/admin/tours/[id]/promotions` - Get all promotions
-- ✅ `POST /api/admin/tours/[id]/promotions` - Add new promotion
-- ✅ `PUT /api/admin/tours/[id]/promotions` - Update promotion
-- ✅ `DELETE /api/admin/tours/[id]/promotions?promotionId=xxx` - Delete promotion
+- ✅ `GET /api/tours/[id]/promotions` - Get all promotions
+- ✅ `POST /api/tours/[id]/promotions` - Add new promotion
+- ✅ `PUT /api/tours/[id]/promotions` - Update promotion
+- ✅ `DELETE /api/tours/[id]/promotions?promotionId=xxx` - Delete promotion
 
 **Features**:
 - Early bird promotions (X days before departure)
@@ -158,13 +158,13 @@ This document summarizes the implementation of new features for the Leetour Tour
 - Percentage or fixed discount
 
 #### Cancellation Policy Management
-**File**: [apps/api/src/app/api/admin/tours/[id]/cancellation-policies/route.js](apps/api/src/app/api/admin/tours/[id]/cancellation-policies/route.js)
+**File**: [apps/api/src/app/api/tours/[id]/cancellation-policies/route.js](apps/api/src/app/api/tours/[id]/cancellation-policies/route.js)
 
 **Endpoints**:
-- ✅ `GET /api/admin/tours/[id]/cancellation-policies` - Get all policies
-- ✅ `POST /api/admin/tours/[id]/cancellation-policies` - Add new policy
-- ✅ `PUT /api/admin/tours/[id]/cancellation-policies` - Update policy
-- ✅ `DELETE /api/admin/tours/[id]/cancellation-policies?policyId=xxx` - Delete policy
+- ✅ `GET /api/tours/[id]/cancellation-policies` - Get all policies
+- ✅ `POST /api/tours/[id]/cancellation-policies` - Add new policy
+- ✅ `PUT /api/tours/[id]/cancellation-policies` - Update policy
+- ✅ `DELETE /api/tours/[id]/cancellation-policies?policyId=xxx` - Delete policy
 
 **Features**:
 - Tiered refund structure
@@ -633,7 +633,7 @@ import TourImageUploader from '@/components/forms/TourImageUploader';
 
 ```javascript
 // Create surcharge
-POST /api/admin/tours/[id]/surcharges
+POST /api/tours/[id]/surcharges
 {
   "surchargeName": "Christmas Holiday",
   "surchargeType": "holiday",

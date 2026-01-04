@@ -158,10 +158,10 @@ All API endpoints are served from the API app on port 3001:
 - `POST /api/tours/[id]/reviews` - Add review
 
 ### Admin
-- `GET /api/admin/tours` - Admin tour management
-- `POST /api/admin/tours` - Create new tour
-- `PUT /api/admin/tours/[id]` - Update tour
-- `DELETE /api/admin/tours/[id]` - Delete tour
+- `GET /api/tours` - Admin tour management
+- `POST /api/tours` - Create new tour
+- `PUT /api/tours/[id]` - Update tour
+- `DELETE /api/tours/[id]` - Delete tour
 - `GET /api/admin/users` - Manage users
 - `GET /api/admin/suppliers` - Manage suppliers
 

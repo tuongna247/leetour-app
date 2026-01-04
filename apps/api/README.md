@@ -63,11 +63,11 @@ npm start
 - `GET /api/auth/me` - Get current user
 
 ### Admin
-- `GET /api/admin/tours` - List all tours (admin)
-- `POST /api/admin/tours` - Create a new tour
-- `GET /api/admin/tours/[id]` - Get tour details
-- `PUT /api/admin/tours/[id]` - Update tour
-- `DELETE /api/admin/tours/[id]` - Delete tour
+- `GET /api/tours` - List all tours (admin)
+- `POST /api/tours` - Create a new tour
+- `GET /api/tours/[id]` - Get tour details
+- `PUT /api/tours/[id]` - Update tour
+- `DELETE /api/tours/[id]` - Delete tour
 - `GET /api/admin/users` - List all users
 - `GET /api/admin/suppliers` - List all suppliers
 

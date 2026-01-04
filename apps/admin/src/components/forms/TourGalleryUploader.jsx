@@ -57,7 +57,7 @@ export default function TourGalleryUploader({
       formData.append('alt', file.name.replace(/\.[^/.]+$/, ''));
       formData.append('isPrimary', 'true');
 
-      const response = await fetch(`/api/admin/tours/${tourId}/images`, {
+      const response = await fetch(`/api/tours/${tourId}/images`, {
         method: 'POST',
         body: formData
       });
@@ -92,7 +92,7 @@ export default function TourGalleryUploader({
         formData.append('imageType', 'gallery');
         formData.append('alt', file.name.replace(/\.[^/.]+$/, ''));
 
-        const response = await fetch(`/api/admin/tours/${tourId}/images`, {
+        const response = await fetch(`/api/tours/${tourId}/images`, {
           method: 'POST',
           body: formData
         });
