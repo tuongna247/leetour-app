@@ -24,7 +24,8 @@ const MonthlyEarnings = () => {
   useEffect(() => {
     const fetchMonthlyData = async () => {
       try {
-        const response = await fetch('/api/bookings?limit=1000');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const response = await fetch(`${apiUrl}/api/bookings?limit=1000`);
         const data = await response.json();
         
         if (data.status === 200) {

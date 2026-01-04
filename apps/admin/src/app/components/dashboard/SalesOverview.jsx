@@ -25,7 +25,8 @@ const SalesOverview = () => {
     useEffect(() => {
         const fetchBookingData = async () => {
             try {
-                const response = await fetch('/api/bookings?limit=100');
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+                const response = await fetch(`${apiUrl}/api/bookings?limit=100`);
                 const data = await response.json();
                 
                 if (data.status === 200) {
