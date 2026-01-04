@@ -1,0 +1,21 @@
+Based on the seed data in apps/api/src/app/api/seed/route.js:
+1. System Administrator
+Email: admin@leetour.com
+Password: admin123
+Role: Admin (full access)
+Username: admin
+2. Vietnam Admin (Country-level admin)
+Email: vietnam.admin@leetour.com
+Password: admin123
+Role: Country Admin
+Username: vietnam_admin
+3. Supplier/Tour Operator
+Email: owner@saigontours.com
+Password: supplier123
+Role: Supplier
+Username: supplier_owner
+4. Accountant
+Email: finance@leetour.com
+Password: finance123
+Role: Accountant
+Username: accountant
