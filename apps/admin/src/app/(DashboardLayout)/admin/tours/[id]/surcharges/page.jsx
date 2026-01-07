@@ -46,7 +46,7 @@ export default function TourSurchargesPage() {
   const fetchTour = async () => {
     try {
       setLoading(true);
-      const response = await authenticatedFetch(`//${tourId}`);
+      const response = await authenticatedFetch(`/api/tours/${tourId}?admin=true`);
       const data = await response.json();
 
       if (data.status === 200) {
