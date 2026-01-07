@@ -51,7 +51,8 @@ export async function GET(request, { params }) {
     const isAdminRequest = searchParams.get('admin') === 'true';
     const user = await getUserFromRequest(request);
 
-    const identifier = params.id;
+    const awaitedParams = await params;
+    const identifier = awaitedParams.id;
     let tour;
 
     // Check if identifier is a valid MongoDB ObjectId (24 hex characters)
@@ -118,7 +119,8 @@ export async function PUT(request, { params }) {
       }, { status: 403 });
     }
 
-    const { id } = params;
+    const awaitedParams = await params;
+    const { id } = awaitedParams;
     const data = await request.json();
 
     const tour = await Tour.findById(id);
@@ -135,6 +137,38 @@ export async function PUT(request, { params }) {
         status: 403,
         msg: 'Access denied. You can only update tours you created.'
       }, { status: 403 });
+    }
+
+    // Clean up embedded document IDs (promotions, surcharges, etc.)
+    // Remove _id for new items (non-ObjectId strings), keep _id for existing items (valid ObjectIds)
+    const cleanEmbeddedIds = (items) => {
+      if (!Array.isArray(items)) return items;
+      return items.map(item => {
+        if (item._id) {
+          // Check if it's a valid MongoDB ObjectId (24 hex characters)
+          const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(item._id);
+          if (!isValidObjectId) {
+            // Remove invalid _id (likely a temporary frontend ID)
+            const { _id, ...rest } = item;
+            return rest;
+          }
+        }
+        return item;
+      });
+    };
+
+    // Clean embedded document arrays
+    if (data.promotions) {
+      data.promotions = cleanEmbeddedIds(data.promotions);
+    }
+    if (data.surcharges) {
+      data.surcharges = cleanEmbeddedIds(data.surcharges);
+    }
+    if (data.itinerary) {
+      data.itinerary = cleanEmbeddedIds(data.itinerary);
+    }
+    if (data.cancellationPolicies) {
+      data.cancellationPolicies = cleanEmbeddedIds(data.cancellationPolicies);
     }
 
     const updatedTour = await Tour.findByIdAndUpdate(
@@ -175,6 +209,11 @@ export async function PUT(request, { params }) {
   }
 }
 
+// PATCH - Partial update tour (admin only) - alias to PUT
+export async function PATCH(request, { params }) {
+  return PUT(request, { params });
+}
+
 // DELETE - Delete tour (admin only, soft delete)
 export async function DELETE(request, { params }) {
   try {
@@ -197,7 +236,8 @@ export async function DELETE(request, { params }) {
       }, { status: 403 });
     }
 
-    const { id } = params;
+    const awaitedParams = await params;
+    const { id } = awaitedParams;
 
     const tour = await Tour.findById(id);
     if (!tour) {
