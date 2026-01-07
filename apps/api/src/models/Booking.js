@@ -202,8 +202,7 @@ BookingSchema.pre('save', async function(next) {
 });
 
 // Indexes for efficient queries
-BookingSchema.index({ bookingId: 1 });
-BookingSchema.index({ bookingReference: 1 });
+// Note: bookingId and bookingReference already have indexes from unique: true
 BookingSchema.index({ 'customer.email': 1 });
 BookingSchema.index({ 'tour.tourId': 1 });
 BookingSchema.index({ status: 1 });

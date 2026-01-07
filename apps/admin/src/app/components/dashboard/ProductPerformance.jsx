@@ -71,7 +71,7 @@ const ProductPerformance = () => {
         if (event.target.closest('button') || event.target.closest('a')) {
             return;
         }
-        router.push(`/tours/${tourId}`);
+        router.push(`/admin/tours/${tourId}`);
     };
 
     if (loading) {
@@ -215,7 +215,7 @@ const ProductPerformance = () => {
                                                 <IconButton
                                                     size="small"
                                                     component={Link}
-                                                    href={`/tours/${tour._id}`}
+                                                    href={`/admin/tours/${tour._id}/edit`}
                                                     sx={{ color: 'primary.main' }}
                                                 >
                                                     <IconEye size={18} />
